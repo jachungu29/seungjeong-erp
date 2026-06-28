@@ -1,0 +1,205 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>승정 ERP · 설계기준 v1</title>
+<style>
+:root{--bg:#f4f6fb;--side:#0f1b2d;--side2:#16273f;--sidetx:#cdd9ec;--sidedim:#7e93b4;--card:#ffffff;--line:#e2e8f2;--tx:#1c2942;--dim:#64748b;--accent:#2563eb;--accent2:#1d4ed8;--ok:#16a34a;--warn:#d97706;--mono:"JetBrains Mono",Consolas,monospace;--kr:Pretendard,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}html,body{margin:0;height:100%}body{background:var(--bg);color:var(--tx);font-family:var(--kr);font-size:14px}
+#app{display:flex;flex-direction:column;height:100vh}
+.top{display:flex;align-items:center;gap:14px;background:var(--card);border-bottom:1px solid var(--line);padding:0 16px;height:54px;flex:0 0 54px}
+.brand{font-weight:800;font-size:17px;color:var(--accent2);white-space:nowrap}
+.brand span{font-size:11px;color:var(--dim);font-family:var(--mono);font-weight:600;margin-left:4px}
+.crumb{color:var(--dim);font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crumb b{color:var(--tx)}
+.actions{display:flex;align-items:center;gap:8px}
+.actions input{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font:inherit;font-size:13px;width:150px;background:var(--bg)}
+.tbtn{border:1px solid var(--line);background:var(--bg);color:var(--tx);border-radius:8px;padding:7px 11px;font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.tbtn:hover{border-color:var(--accent)}
+.tbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.save{font-size:11.5px;color:var(--ok);font-family:var(--mono);white-space:nowrap}
+.body{display:flex;flex:1;min-height:0}
+.side{width:290px;flex:0 0 290px;background:var(--side);color:var(--sidetx);overflow-y:auto;padding:8px 6px 40px}
+.side::-webkit-scrollbar{width:8px}.side::-webkit-scrollbar-thumb{background:#2a3c58;border-radius:8px}
+.addroot{display:none;width:calc(100% - 8px);margin:4px;padding:8px;border:1px dashed #34527d;background:transparent;color:#8fb4ee;border-radius:8px;font:inherit;font-size:12.5px;cursor:pointer}
+.addroot:hover{border-color:var(--accent);color:#bcd6ff}
+.nrow{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;cursor:pointer;min-height:32px}
+.nrow:hover{background:var(--side2)}
+.nrow.sel{background:var(--accent);color:#fff}
+.nrow.sel .ncode,.nrow.sel .nlv{color:#dbe8ff}
+.tw{width:14px;flex:0 0 14px;text-align:center;color:var(--sidedim);font-size:10px}
+.dotc{width:9px;height:9px;border-radius:3px;flex:0 0 9px}
+.ncode{font-family:var(--mono);font-size:10px;color:var(--sidedim);flex:0 0 auto}
+.nko{font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nlv{font-family:var(--mono);font-size:8.5px;color:var(--sidedim);border:1px solid #2a3c58;border-radius:4px;padding:0 4px;flex:0 0 auto}
+.nact{display:none;gap:2px;flex:0 0 auto}
+.editing .nrow:hover .nact{display:flex}
+.editing .nrow.sel .nact{display:flex}
+.nact button{width:22px;height:22px;border:1px solid #2a3c58;background:#0c1626;color:#9fb3d4;border-radius:5px;cursor:pointer;font-size:11px;padding:0;line-height:1}
+.nact button:hover{border-color:var(--accent);color:#fff}
+.nact .d:hover{border-color:#ef4444;color:#ef4444}
+.nact .a:hover{border-color:var(--ok);color:#4ade80}
+.main{flex:1;overflow-y:auto;padding:22px 26px 60px}
+.scr-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.bigcode{font-family:var(--mono);font-weight:800;font-size:13px;color:#fff;background:var(--accent);border-radius:7px;padding:4px 9px}
+.scr-t{font-size:23px;font-weight:800}
+.scr-en{font-family:var(--mono);font-size:13px;color:var(--dim)}
+.path{color:var(--dim);font-size:12.5px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0;max-width:880px}
+.card h3{margin:0 0 10px;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;max-width:920px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;cursor:pointer;transition:.12s}
+.tile:hover{border-color:var(--accent);box-shadow:0 2px 10px rgba(37,99,235,.08)}
+.tile .tc{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700}
+.tile .tk{font-size:14px;font-weight:700;margin-top:3px}
+.tile .ts{font-size:11.5px;color:var(--dim);margin-top:3px}
+textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit;font-size:13.5px;resize:vertical;background:#fcfdff}
+.muted{color:var(--dim);font-size:12.5px;line-height:1.7}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-width:120px}
+.kpi b{display:block;font-size:24px;color:var(--accent2);font-weight:800}
+.kpi span{font-size:12px;color:var(--dim)}
+.badge{font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:5px;margin-left:6px}
+.bn{background:#fef3e2;color:#b45309;border:1px solid #fcd9a8}
+.bl{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd}
+.tip{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:10px;padding:11px 14px;font-size:12.5px;max-width:880px;margin:14px 0}
+.hidefile{display:none}
+</style></head><body>
+<div id="app">
+ <header class="top">
+  <div class="brand">승정 ERP <span>설계기준 v1</span></div>
+  <div class="crumb" id="crumb"></div>
+  <div class="actions">
+   <input id="search" placeholder="메뉴 검색…" oninput="onSearch(this.value)">
+   <button class="tbtn" id="editBtn" onclick="toggleEdit()">설계 편집: 끔</button>
+   <button class="tbtn" onclick="doExport()">내보내기</button>
+   <button class="tbtn" onclick="document.getElementById('imp').click()">불러오기</button>
+   <button class="tbtn" onclick="doReset()">초기화</button>
+   <span class="save" id="save">저장됨</span>
+   <input type="file" id="imp" class="hidefile" accept=".json" onchange="doImport(this)">
+  </div>
+ </header>
+ <div class="body">
+  <nav class="side" id="side"></nav>
+  <main class="main" id="main"></main>
+ </div>
+</div>
+<script>
+var SEED = [{"id": "n1_85643", "ko": "기준정보", "en": "Master Data", "flags": "", "ch": [{"id": "n2_18208", "ko": "제조기준", "en": "Standard", "flags": "", "ch": [{"id": "n3_72022", "ko": "공장/라인", "en": "Plant/Line", "flags": "", "ch": [], "code": "01-01-01"}, {"id": "n4_25510", "ko": "설비 관리", "en": "Equipment Management", "flags": "", "ch": [], "code": "01-01-02"}, {"id": "n5_42874", "ko": "금형 관리", "en": "Mold Management", "flags": "", "ch": [], "code": "01-01-03"}, {"id": "n6_80160", "ko": "공구(CNC)", "en": "Tooling(CNC)", "flags": "", "ch": [], "code": "01-01-04"}], "code": "01-01"}, {"id": "n7_55662", "ko": "품목/자재", "en": "품목/Material", "flags": "", "ch": [{"id": "n8_68868", "ko": "품번 마스터", "en": "Part Master", "flags": "", "ch": [{"id": "n7_9858", "ko": "수직사출(마스터)", "en": "Vertical Injection Molding Machine(Master)", "flags": "", "ch": [], "code": "01-02-01-01"}, {"id": "n8_20134", "ko": "수평사출기(마스터)", "en": "Horizontal Injection Molding Machine(Master)", "flags": "", "ch": [], "code": "01-02-01-02"}, {"id": "n10_18556", "ko": "이중사출(마스터)", "en": "Double(Two-shot) Injection Molding Machine(Master)", "flags": "", "ch": [], "code": "01-02-01-03"}, {"id": "n11_94568", "ko": "BODY조립(마스터)", "en": "Body Assembly Line", "flags": "", "ch": [], "code": "01-02-01-04"}, {"id": "n12_88071", "ko": "HOSE 조랍(마스터)", "en": "Hose Assembly Line", "flags": "", "ch": [], "code": "01-02-01-05"}], "code": "01-02-01"}, {"id": "n9_11451", "ko": "원자재/BOM", "en": "Raw Material/BOM", "flags": "", "ch": [{"id": "n13_14936", "ko": "수직사출BOM", "en": "Vertical Injection Molding Machine", "flags": "", "ch": [], "code": "01-02-02-01"}, {"id": "n14_76352", "ko": "수평사출BOM", "en": "Horizontal Injection Molding Machine", "flags": "", "ch": [], "code": "01-02-02-02"}, {"id": "n15_57936", "ko": "이중사출BOM", "en": "Double(Two-shot) Injection Molding Machine", "flags": "", "ch": [], "code": "01-02-02-03"}, {"id": "n16_29661", "ko": "BODY조립BOM", "en": "Body Assembly Line", "flags": "", "ch": [], "code": "01-02-02-04"}, {"id": "n17_14619", "ko": "HOSE 조립BOM", "en": "Hose Assembly Line", "flags": "", "ch": [], "code": "01-02-02-05"}], "code": "01-02-02"}], "code": "01-02"}, {"id": "n10_46156", "ko": "거래/인력", "en": "거래/인력", "flags": "", "ch": [{"id": "n11_63142", "ko": "거래선(납품처)", "en": "Customer(Delivery Site)", "flags": "", "ch": [], "code": "01-03-01"}, {"id": "n12_89350", "ko": "공급처 관리", "en": "Supplier Management", "flags": "", "ch": [], "code": "01-03-02"}, {"id": "n13_79939", "ko": "작업자 관리", "en": "Worker Management", "flags": "", "ch": [], "code": "01-03-03"}], "code": "01-03"}, {"id": "n14_17430", "ko": "데이터 도구", "en": "데이터 도구", "flags": "", "ch": [{"id": "n15_76394", "ko": "엑셀 일괄등록", "en": "Excel Bulk Upload", "flags": "", "ch": [], "code": "01-04-01"}], "code": "01-04"}], "color": "#1E6BC4", "code": "01"}, {"id": "n16_97562", "ko": "영업·판매 관리", "en": "Sales & Distribution", "flags": "", "ch": [{"id": "n17_98396", "ko": "수주 관리", "en": "Order Management", "flags": "", "ch": [{"id": "n18_15743", "ko": "수주 등록", "en": "Order Registration", "flags": "", "ch": [], "code": "02-01-01"}, {"id": "n19_45163", "ko": "수주 조회", "en": "Order Inquiry", "flags": "", "ch": [], "code": "02-01-02"}, {"id": "n20_80871", "ko": "수주 변경/취소", "en": "Order Change / Cancel", "flags": "", "ch": [], "code": "02-01-03"}, {"id": "n21_83956", "ko": "납기 관리", "en": "Delivery Date Management", "flags": "", "ch": [], "code": "02-01-04"}, {"id": "n22_9027", "ko": "수주 변경이력", "en": "Order Change History", "flags": "", "ch": [], "code": "02-01-05"}], "code": "02-01"}, {"id": "n23_62051", "ko": "고객·거래선", "en": "Customer / Partner", "flags": "", "ch": [{"id": "n24_74601", "ko": "고객 등록", "en": "Customer Registration", "flags": "", "ch": [], "code": "02-02-01"}, {"id": "n25_72361", "ko": "고객 요구사항", "en": "Customer Requirements", "flags": "", "ch": [], "code": "02-02-02"}, {"id": "n26_18482", "ko": "단가·견적 관리", "en": "Pricing / Quotation", "flags": "", "ch": [], "code": "02-02-03"}], "code": "02-02"}, {"id": "n27_6846", "ko": "판매·매입.매출", "en": "Distribution·Purchase .Sales", "flags": "", "ch": [{"id": "n28_79201", "ko": "판매 계획", "en": "Sales Plan", "flags": "", "ch": [], "code": "02-03-01"}, {"id": "n29_59461", "ko": "매출 현황", "en": "Sales Status", "flags": "", "ch": [], "code": "02-03-02"}, {"id": "n30_36940", "ko": "수금·미수 관리", "en": "Collection / Receivables", "flags": "", "ch": [], "code": "02-03-03"}], "code": "02-03"}], "color": "#0E7490", "code": "02"}, {"id": "n34_99391", "ko": "작업지시", "en": "Work Order", "flags": "", "ch": [{"id": "n35_91493", "ko": "지시 관리", "en": "Order Management", "flags": "", "ch": [{"id": "n36_94173", "ko": "작업지시 등록", "en": "Work Order Registration", "flags": "", "ch": [], "code": "03-01-01"}, {"id": "n37_44835", "ko": "작업지시 조회", "en": "Work Order Inquiry", "flags": "", "ch": [], "code": "03-01-02"}, {"id": "n38_75990", "ko": "지시 수정/취소", "en": "Order Edit/Cancel", "flags": "", "ch": [], "code": "03-01-03"}, {"id": "n39_27688", "ko": "우선순위 관리", "en": "Priority Management", "flags": "", "ch": [], "code": "03-01-04"}], "code": "03-01"}], "color": "#155AAB", "code": "03"}, {"id": "n40_55534", "ko": "생산실적", "en": "Production", "flags": "", "ch": [{"id": "n41_54320", "ko": "실적 입력", "en": "Performance Entry", "flags": "", "ch": [{"id": "n42_52318", "ko": "실적 입력", "en": "Performance Entry", "flags": "", "ch": [], "code": "04-01-01"}, {"id": "n43_9168", "ko": "공정별 동적항목", "en": "Process Dynamic Fields", "flags": "", "ch": [], "code": "04-01-02"}, {"id": "n44_83991", "ko": "불량 상세등록", "en": "Defect Detail Registration", "flags": "", "ch": [], "code": "04-01-03"}], "code": "04-01"}, {"id": "n45_72346", "ko": "LOT/추적", "en": "LOT/Traceability", "flags": "", "ch": [{"id": "n46_27999", "ko": "LOT 자동생성", "en": "LOT Auto Generation", "flags": "", "ch": [], "code": "04-02-01"}, {"id": "n47_69407", "ko": "LOT 바코드 발행", "en": "LOT Barcode Printing", "flags": "", "ch": [], "code": "04-02-02"}, {"id": "n48_45875", "ko": "자재 자동차감(BOM)", "en": "n", "flags": "", "ch": [], "code": "04-02-03"}], "code": "04-02"}, {"id": "n49_15943", "ko": "실적 관리", "en": "Performance Management", "flags": "", "ch": [{"id": "n50_99039", "ko": "입력 이력 조회", "en": "Entry History Inquiry", "flags": "", "ch": [], "code": "04-03-01"}, {"id": "n51_85116", "ko": "실적 수정/삭제", "en": "Performance Edit/Delete", "flags": "", "ch": [], "code": "04-03-02"}], "code": "04-03"}], "color": "#1A7E3A", "code": "04"}, {"id": "n52_38843", "ko": "생산현황조회", "en": "Status Inquiry", "flags": "", "ch": [{"id": "n53_81874", "ko": "현황 조회", "en": "Status Inquiry", "flags": "", "ch": [{"id": "n54_19095", "ko": "일일 생산현황", "en": "Daily Production Status", "flags": "", "ch": [], "code": "05-01-01"}, {"id": "n55_24558", "ko": "기간별 조회", "en": "Period Inquiry", "flags": "", "ch": [], "code": "05-01-02"}, {"id": "n56_20205", "ko": "계획대비 실적", "en": "n", "flags": "", "ch": [], "code": "05-01-03"}], "code": "05-01"}, {"id": "n57_91441", "ko": "분석", "en": "Analysis", "flags": "", "ch": [{"id": "n58_57717", "ko": "불량 분석(파레토)", "en": "Defect Analysis(파레토)", "flags": "", "ch": [], "code": "05-02-01"}, {"id": "n59_71653", "ko": "OEE 분석", "en": "OEE Analysis", "flags": "", "ch": [], "code": "05-02-02"}, {"id": "n60_28440", "ko": "4M 변경이력", "en": "4M Change History", "flags": "", "ch": [], "code": "05-02-03"}], "code": "05-02"}, {"id": "n61_96351", "ko": "보고/출력", "en": "Report/출력", "flags": "", "ch": [{"id": "n62_64741", "ko": "작업일보", "en": "n", "flags": "", "ch": [], "code": "05-03-01"}, {"id": "n63_61658", "ko": "생산보고시스템", "en": "n", "flags": "", "ch": [], "code": "05-03-02"}, {"id": "n64_66482", "ko": "월간 보고서 관리", "en": "nl", "flags": "", "ch": [], "code": "05-03-03"}, {"id": "n65_80940", "ko": "생산부 월간생산보고", "en": "nl", "flags": "", "ch": [], "code": "05-03-04"}, {"id": "n66_14873", "ko": "엑셀 다운로드", "en": "Excel Download", "flags": "", "ch": [], "code": "05-03-05"}, {"id": "n67_44504", "ko": "감사 추적", "en": "Audit Traceability", "flags": "", "ch": [], "code": "05-03-06"}], "code": "05-03"}], "color": "#1B4E8C", "code": "05"}, {"id": "n68_12680", "ko": "품질관리", "en": "Quality", "flags": "", "ch": [{"id": "n69_23980", "ko": "검사", "en": "Inspection", "flags": "", "ch": [{"id": "n70_62852", "ko": "검사기준 관리", "en": "Inspection Standard Management", "flags": "", "ch": [], "code": "06-01-01"}, {"id": "n71_71942", "ko": "검사실적 입력", "en": "Inspection Performance Entry", "flags": "", "ch": [], "code": "06-01-02"}, {"id": "n72_69290", "ko": "검사이력/SPC", "en": "Inspection History/SPC", "flags": "", "ch": [], "code": "06-01-03"}], "code": "06-01"}, {"id": "n73_47532", "ko": "추적/개선", "en": "Traceability/개선", "flags": "", "ch": [{"id": "n74_9302", "ko": "LOT 추적", "en": "LOT Traceability", "flags": "", "ch": [], "code": "06-02-01"}, {"id": "n75_53850", "ko": "클레임(8D)", "en": "Claim(8D)", "flags": "", "ch": [], "code": "06-02-02"}, {"id": "n76_63845", "ko": "선별 이력", "en": "Sorting History", "flags": "", "ch": [], "code": "06-02-03"}, {"id": "n77_68823", "ko": "초기허용불량/폐기", "en": "nl", "flags": "", "ch": [], "code": "06-02-04"}], "code": "06-02"}, {"id": "n78_76404", "ko": "품질 자원", "en": "품질 자원", "flags": "", "ch": [{"id": "n79_14089", "ko": "계측기 관리", "en": "nl", "flags": "", "ch": [], "code": "06-03-01"}, {"id": "n80_30606", "ko": "도면 관리", "en": "nl", "flags": "", "ch": [], "code": "06-03-02"}, {"id": "n81_9397", "ko": "교육훈련 관리", "en": "nl", "flags": "", "ch": [], "code": "06-03-03"}], "code": "06-03"}], "color": "#8E3080", "code": "06"}, {"id": "n82_98389", "ko": "자재출하", "en": "Material & Shipment", "flags": "", "ch": [{"id": "n83_99359", "ko": "자재/재고", "en": "Material/Inventory", "flags": "", "ch": [{"id": "n84_81126", "ko": "재고 현황", "en": "Inventory Status", "flags": "", "ch": [], "code": "07-01-01"}, {"id": "n85_69573", "ko": "자재 입고", "en": "Material Receiving", "flags": "", "ch": [], "code": "07-01-02"}, {"id": "n86_50269", "ko": "수입 검사", "en": "Incoming Inspection", "flags": "", "ch": [], "code": "07-01-03"}], "code": "07-01"}, {"id": "n87_17379", "ko": "출하", "en": "Shipment", "flags": "", "ch": [{"id": "n88_59129", "ko": "출하 관리", "en": "Shipment Management", "flags": "", "ch": [], "code": "07-02-01"}, {"id": "n89_52133", "ko": "출하 검사", "en": "Shipment Inspection", "flags": "", "ch": [], "code": "07-02-02"}], "code": "07-02"}, {"id": "n90_29798", "ko": "이력", "en": "History", "flags": "", "ch": [{"id": "n91_64513", "ko": "입출고 이력", "en": "Issue History", "flags": "", "ch": [], "code": "07-03-01"}], "code": "07-03"}], "color": "#B86A00", "code": "07"}, {"id": "n92_60497", "ko": "설비보전", "en": "Maintenance", "flags": "", "ch": [{"id": "n93_48839", "ko": "설비", "en": "Equipment", "flags": "", "ch": [{"id": "n94_30663", "ko": "설비 현황", "en": "Equipment Status", "flags": "", "ch": [], "code": "08-01-01"}], "code": "08-01"}, {"id": "n95_67842", "ko": "보전", "en": "Maintenance", "flags": "", "ch": [{"id": "n96_4601", "ko": "보전 계획", "en": "Maintenance Plan", "flags": "", "ch": [], "code": "08-02-01"}, {"id": "n97_4073", "ko": "보전 작업", "en": "Maintenance Work", "flags": "", "ch": [], "code": "08-02-02"}, {"id": "n98_66478", "ko": "고장/비가동", "en": "Breakdown/Downtime", "flags": "", "ch": [{"id": "n5_32081", "ko": "MTTR", "en": "Mean Time To Failure", "flags": "", "ch": [], "code": "08-02-03-01"}, {"id": "n6_79219", "ko": "MTBF", "en": "Mean Time Between Failures", "flags": "", "ch": [], "code": "08-02-03-02"}], "code": "08-02-03"}], "code": "08-02"}], "color": "#2A5A7A", "code": "08"}, {"id": "n99_49071", "ko": "금형수명관리", "en": "Mold Lifecycle", "flags": "", "ch": [{"id": "n100_41816", "ko": "수명", "en": "Lifecycle", "flags": "", "ch": [{"id": "n101_73831", "ko": "수명 현황(Shot)", "en": "Lifecycle Status(SHOT)", "flags": "", "ch": [], "code": "09-01-01"}], "code": "09-01"}, {"id": "n102_83737", "ko": "보전/설정", "en": "Maintenance/Setting", "flags": "", "ch": [{"id": "n103_92481", "ko": "보전 이력", "en": "Maintenance History", "flags": "", "ch": [], "code": "09-02-01"}, {"id": "n104_35585", "ko": "설정 변경", "en": "Setting Change", "flags": "", "ch": [], "code": "09-02-02"}], "code": "09-02"}], "color": "#4A6272", "code": "09"}, {"id": "n105_23592", "ko": "물류·창고 (WMS)", "en": "Warehouse (WMS)", "flags": "", "ch": [{"id": "n106_21318", "ko": "입출고", "en": "Inbound / Outbound", "flags": "", "ch": [{"id": "n107_63768", "ko": "입고 처리", "en": "Inbound", "flags": "", "ch": [], "code": "10-01-01"}, {"id": "n108_30679", "ko": "출고 처리", "en": "Outbound", "flags": "", "ch": [], "code": "10-01-02"}, {"id": "n109_55582", "ko": "입출고 이력", "en": "In / Out History", "flags": "", "ch": [], "code": "10-01-03"}], "code": "10-01"}, {"id": "n110_64112", "ko": "재고·로케이션", "en": "Stock / Location", "flags": "", "ch": [{"id": "n111_92821", "ko": "창고 재고", "en": "Warehouse Stock", "flags": "", "ch": [], "code": "10-02-01"}, {"id": "n112_25800", "ko": "로케이션 관리", "en": "Location Management", "flags": "", "ch": [], "code": "10-02-02"}, {"id": "n113_19871", "ko": "재고 실사", "en": "Stock Count", "flags": "", "ch": [], "code": "10-02-03"}], "code": "10-02"}, {"id": "n114_27259", "ko": "피킹·적치", "en": "Picking / Putaway", "flags": "", "ch": [{"id": "n115_74739", "ko": "피킹 지시", "en": "Picking Order", "flags": "", "ch": [], "code": "10-03-01"}, {"id": "n116_72386", "ko": "적치 관리", "en": "Putaway Management", "flags": "", "ch": [], "code": "10-03-02"}], "code": "10-03"}], "color": "#0D9488", "code": "10"}, {"id": "n128_65245", "ko": "비전 AI 검사", "en": "Vision AI Inspection", "flags": "", "ch": [{"id": "n129_9663", "ko": "비전 검사", "en": "Vision Inspection", "flags": "", "ch": [{"id": "n130_18847", "ko": "외관 검사", "en": "Appearance Inspection", "flags": "", "ch": [], "code": "11-01-01"}, {"id": "n131_70998", "ko": "치수 검사", "en": "Dimension Inspection", "flags": "", "ch": [], "code": "11-01-02"}, {"id": "n132_52971", "ko": "불량 자동판정", "en": "Auto Defect Judgment", "flags": "", "ch": [], "code": "11-01-03"}], "code": "11-01"}, {"id": "n133_53324", "ko": "영상 분석", "en": "Video Analysis", "flags": "", "ch": [{"id": "n134_34795", "ko": "CCTV 영상 분석", "en": "CCTV Video Analysis", "flags": "", "ch": [], "code": "11-02-01"}, {"id": "n135_40297", "ko": "안전 감지", "en": "Safety Detection", "flags": "", "ch": [], "code": "11-02-02"}], "code": "11-02"}], "color": "#7C3AED", "code": "11"}, {"id": "n136_81923", "ko": "데이터 인프라 (DB·Storage)", "en": "Data Infrastructure", "flags": "", "ch": [{"id": "n137_76606", "ko": "정형 DB", "en": "Structured DB", "flags": "", "ch": [{"id": "n138_74638", "ko": "생산·품질 DB", "en": "Production / Quality DB", "flags": "", "ch": [], "code": "12-01-01"}, {"id": "n139_46918", "ko": "설비·자재 DB", "en": "Equipment / Material DB", "flags": "", "ch": [], "code": "12-01-02"}, {"id": "n140_63696", "ko": "AI 검증 DB", "en": "AI Validation DB", "flags": "", "ch": [], "code": "12-01-03"}], "code": "12-01"}, {"id": "n141_9286", "ko": "비정형 Storage", "en": "Unstructured Storage", "flags": "", "ch": [{"id": "n142_86350", "ko": "이미지·영상·로그", "en": "Image / Video / Log", "flags": "", "ch": [], "code": "12-02-01"}, {"id": "n143_62289", "ko": "AI 학습데이터", "en": "AI Training Data", "flags": "", "ch": [], "code": "12-02-02"}, {"id": "n144_99629", "ko": "백업·AI 모델", "en": "Backup / AI Model", "flags": "", "ch": [], "code": "12-02-03"}], "code": "12-02"}, {"id": "n145_38838", "ko": "DB·Storage 연계", "en": "DB-Storage Link", "flags": "", "ch": [{"id": "n146_65775", "ko": "역할 분리", "en": "Role Separation", "flags": "", "ch": [], "code": "12-03-01"}, {"id": "n147_42523", "ko": "경로 참조", "en": "Path Reference", "flags": "", "ch": [], "code": "12-03-02"}, {"id": "n148_72567", "ko": "연계 관리", "en": "Linkage Management", "flags": "", "ch": [], "code": "12-03-03"}], "code": "12-03"}], "color": "#475569", "code": "12"}, {"id": "n149_99932", "ko": "시스템관리", "en": "System Admin", "flags": "", "ch": [{"id": "n150_27862", "ko": "시스템", "en": "시스템", "flags": "", "ch": [{"id": "n151_6288", "ko": "공통코드 관리", "en": "n", "flags": "", "ch": [], "code": "13-01-01"}, {"id": "n152_47743", "ko": "사용자 관리", "en": "n", "flags": "", "ch": [], "code": "13-01-02"}, {"id": "n153_46532", "ko": "접속 로그", "en": "n", "flags": "", "ch": [], "code": "13-01-03"}], "code": "13-01"}], "color": "#9A1010", "code": "13"}, {"id": "n154_10451", "ko": "AI 관리", "en": "AI Management", "flags": "", "ch": [{"id": "n155_49127", "ko": "AI", "en": "AI", "flags": "", "ch": [{"id": "n156_52712", "ko": "AI 개발이력 대시보드", "en": "nl", "flags": "", "ch": [], "code": "14-01-01"}], "code": "14-01"}], "color": "#6D28D9", "code": "14"}, {"id": "n157_69553", "ko": "공통 유틸", "en": "Utilities", "flags": "", "ch": [{"id": "n158_40348", "ko": "보안/접근", "en": "보안/Access", "flags": "", "ch": [{"id": "n159_87326", "ko": "인증/세션관리", "en": "Authentication/Session Management", "flags": "", "ch": [], "code": "15-01-01"}, {"id": "n160_84344", "ko": "역할기반 접근제어", "en": "Role-Based Access Control", "flags": "", "ch": [], "code": "15-01-02"}, {"id": "n161_7508", "ko": "감사 로깅", "en": "Audit Logging", "flags": "", "ch": [], "code": "15-01-03"}], "code": "15-01"}, {"id": "n162_58406", "ko": "출력/데이터", "en": "출력/데이터", "flags": "", "ch": [{"id": "n163_8888", "ko": "PDF 보고서", "en": "PDF Report", "flags": "", "ch": [], "code": "15-02-01"}, {"id": "n164_7557", "ko": "바코드 생성", "en": "Barcode Generation", "flags": "", "ch": [], "code": "15-02-02"}, {"id": "n165_78692", "ko": "DB 백업", "en": "DB Backup", "flags": "", "ch": [], "code": "15-02-03"}], "code": "15-02"}], "color": "#2A3F54", "code": "15"}, {"id": "ext_13", "ko": "원가관리", "en": "Cost Management", "flags": "", "ch": [{"id": "ext_05", "ko": "원가 집계", "en": "Cost Aggregation", "flags": "", "ch": [{"id": "ext_01", "ko": "재료비(BOM연동)", "en": "", "flags": "", "ch": []}, {"id": "ext_02", "ko": "노무·가공비", "en": "", "flags": "", "ch": []}, {"id": "ext_03", "ko": "금형·경비", "en": "", "flags": "", "ch": []}, {"id": "ext_04", "ko": "포장·물류비", "en": "", "flags": "", "ch": []}]}, {"id": "ext_07", "ko": "품질비용", "en": "Quality Cost", "flags": "", "ch": [{"id": "ext_06", "ko": "품질비용(COPQ)", "en": "", "flags": "l", "ch": []}]}, {"id": "ext_12", "ko": "원가 종합", "en": "Cost Summary", "flags": "", "ch": [{"id": "ext_08", "ko": "표준원가·단가", "en": "", "flags": "", "ch": []}, {"id": "ext_09", "ko": "실제원가 집계", "en": "", "flags": "", "ch": []}, {"id": "ext_10", "ko": "원가 종합 보고서", "en": "", "flags": "", "ch": []}, {"id": "ext_11", "ko": "원가종합·견적", "en": "", "flags": "", "ch": []}]}], "color": "#B45309"}, {"id": "ext_20", "ko": "안전·환경", "en": "Safety & Environment", "flags": "", "ch": [{"id": "ext_16", "ko": "안전", "en": "Safety", "flags": "", "ch": [{"id": "ext_14", "ko": "안전점검", "en": "", "flags": "", "ch": []}, {"id": "ext_15", "ko": "소방점검", "en": "", "flags": "", "ch": []}]}, {"id": "ext_19", "ko": "5S·환경", "en": "5S & Environment", "flags": "", "ch": [{"id": "ext_17", "ko": "3정5S 체크", "en": "", "flags": "", "ch": []}, {"id": "ext_18", "ko": "ESG·CFT 활동", "en": "", "flags": "", "ch": []}]}], "color": "#DC2626"}, {"id": "ext_30", "ko": "인사·근태", "en": "HR & Attendance", "flags": "", "ch": [{"id": "ext_23", "ko": "인력", "en": "Workforce", "flags": "", "ch": [{"id": "ext_21", "ko": "사원 관리", "en": "", "flags": "", "ch": []}, {"id": "ext_22", "ko": "작업자 국적관리", "en": "", "flags": "", "ch": []}]}, {"id": "ext_27", "ko": "근태", "en": "Attendance", "flags": "", "ch": [{"id": "ext_24", "ko": "근태 관리", "en": "", "flags": "", "ch": []}, {"id": "ext_25", "ko": "휴가 신청/승인", "en": "", "flags": "", "ch": []}, {"id": "ext_26", "ko": "잔업 신청·승인", "en": "", "flags": "", "ch": []}]}, {"id": "ext_29", "ko": "교육", "en": "Training", "flags": "", "ch": [{"id": "ext_28", "ko": "교육·자격 관리", "en": "", "flags": "", "ch": []}]}], "color": "#0891B2"}, {"id": "ext_37", "ko": "회계·경리", "en": "Accounting", "flags": "", "ch": [{"id": "ext_32", "ko": "전표", "en": "Voucher", "flags": "", "ch": [{"id": "ext_31", "ko": "전표 입력", "en": "", "flags": "", "ch": []}]}, {"id": "ext_34", "ko": "매입매출", "en": "Purchase/Sales", "flags": "", "ch": [{"id": "ext_33", "ko": "매입/매출 관리", "en": "", "flags": "", "ch": []}]}, {"id": "ext_36", "ko": "비용", "en": "Expense", "flags": "", "ch": [{"id": "ext_35", "ko": "비용 5분류", "en": "", "flags": "", "ch": []}]}], "color": "#4338CA"}];
+var LV=["대분류","중분류","소분류","소분류1","소분류2","소분류3","소분류4","세부"];
+var KEY="SJ_ERP_DESIGN_v2";
+var TREE=load(), EXP={}, SEL=null, EDIT=false, QUERY="";
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function load(){try{var t=JSON.parse(localStorage.getItem(KEY)||"null");if(t&&t.length)return t;}catch(e){}return clone(SEED);}
+function save(){localStorage.setItem(KEY,JSON.stringify(TREE));flash();}
+function flash(){var s=document.getElementById("save");s.textContent="저장됨 "+new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});}
+function pad(n){return(n<10?"0":"")+n;}
+function assign(n){(n.ch||[]).forEach(function(c,j){c.code=n.code+"-"+pad(j+1);assign(c);});}
+function computeCodes(){TREE.forEach(function(r,i){r.code=pad(i+1);assign(r);});}
+function findP(id,arr,parent,path){arr=arr||TREE;path=path||[];for(var i=0;i<arr.length;i++){var cp=path.concat(arr[i]);if(arr[i].id===id)return{arr:arr,i:i,node:arr[i],parent:parent,path:cp};var r=findP(id,arr[i].ch,arr[i],cp);if(r)return r;}return null;}
+function uid(){return"n"+Date.now().toString(36)+Math.floor(Math.random()*1e4);}
+function badges(f){var t="";if((f||"").indexOf("n")>=0)t+='<span class="badge bn">신규</span>';if((f||"").indexOf("l")>=0)t+='<span class="badge bl">연계</span>';return t;}
+function matchQ(n){if(!QUERY)return true;if((n.ko||"").toLowerCase().indexOf(QUERY)>=0)return true;return(n.ch||[]).some(matchQ);}
+
+function renderNav(){
+ computeCodes();
+ var s=document.getElementById("side");var h="";
+ h+='<button class="addroot" id="addrootbtn" onclick="addRoot()" style="display:'+(EDIT?"block":"none")+'">＋ 대분류 추가</button>';
+ TREE.forEach(function(n){h+=row(n,0);});
+ s.innerHTML=h;
+}
+function row(n,depth){
+ if(!matchQ(n))return"";
+ var has=n.ch&&n.ch.length;
+ var open=QUERY?true:(EXP[n.id]===true);
+ var tw=has?(open?"▾":"▸"):"";
+ var lab=LV[Math.min(depth,LV.length-1)];
+ var sel=(SEL===n.id)?" sel":"";
+ var h='<div class="nrow'+sel+'" style="padding-left:'+(8+depth*14)+'px" onclick="clickNode(\''+n.id+'\','+has+')">';
+ h+='<span class="tw">'+tw+'</span>';
+ if(depth===0)h+='<span class="dotc" style="background:'+(n.color||"#5a6b78")+'"></span>';
+ h+='<span class="ncode">'+n.code+'</span>';
+ h+='<span class="nko">'+n.ko+'</span>';
+ h+='<span class="nlv">'+lab+'</span>';
+ h+='<span class="nact">'
+   +'<button class="a" title="하위 추가" onclick="event.stopPropagation();addC(\''+n.id+'\')">＋</button>'
+   +'<button title="이름 변경" onclick="event.stopPropagation();ren(\''+n.id+'\')">✎</button>'
+   +'<button title="위로" onclick="event.stopPropagation();mov(\''+n.id+'\',-1)">▲</button>'
+   +'<button title="아래로" onclick="event.stopPropagation();mov(\''+n.id+'\',1)">▼</button>'
+   +'<button class="d" title="삭제" onclick="event.stopPropagation();del(\''+n.id+'\')">✕</button>'
+   +'</span></div>';
+ if(has&&open)n.ch.forEach(function(c){h+=row(c,depth+1);});
+ return h;
+}
+function clickNode(id,has){
+ if(has&&!EDIT){EXP[id]=!(EXP[id]===true);}
+ if(has&&EDIT){EXP[id]=!(EXP[id]===true);}
+ SEL=id;renderNav();renderMain();
+}
+function pathStr(path){return path.map(function(n){return n.code+" "+n.ko;}).join("  ›  ");}
+
+function renderMain(){
+ var m=document.getElementById("main");var cr=document.getElementById("crumb");
+ if(!SEL){renderHome();return;}
+ var r=findP(SEL);if(!r){SEL=null;renderHome();return;}
+ var n=r.node;var has=n.ch&&n.ch.length;
+ cr.innerHTML="<b>"+n.code+"</b> "+pathStr(r.path);
+ var h='<div class="scr-h"><span class="bigcode">'+n.code+'</span><span class="scr-t">'+n.ko+'</span>'+(n.en?'<span class="scr-en">'+n.en+'</span>':'')+badges(n.flags)+'</div>';
+ h+='<div class="path">'+pathStr(r.path)+'</div>';
+ if(has){
+   h+='<div class="grid">';
+   n.ch.forEach(function(c){
+     var sub=(c.ch&&c.ch.length)?(c.ch.length+"개 하위"):"화면";
+     h+='<div class="tile" onclick="goNode(\''+c.id+'\')"><div class="tc">'+c.code+'</div><div class="tk">'+c.ko+'</div><div class="ts">'+sub+'</div></div>';
+   });
+   h+='</div>';
+   h+='<div class="tip">이 항목은 <b>'+n.ch.length+'개의 하위</b>를 가진 구역입니다. 위 카드를 눌러 하위로 이동하세요. 구조를 바꾸려면 상단 <b>설계 편집</b>을 켜세요.</div>';
+ } else {
+   h+='<div class="card"><h3>화면 설계 메모</h3><div class="muted">이 화면(<b>'+n.code+' '+n.ko+'</b>)에 들어갈 항목·입력칸·규칙을 자유롭게 적어두세요. 실제 입력 화면은 이 메모를 바탕으로 단계별로 제작됩니다.</div>';
+   h+='<textarea id="memo" placeholder="예) 필수 입력: 품번, 수량, LOT / 자동: 일시, 작업자 / 규칙: 검사 미합격 시 저장 차단 …" oninput="saveMemo(\''+n.id+'\',this.value)">'+(getMemo(n.id))+'</textarea></div>';
+   h+='<div class="tip">실제 데이터 입력·저장 기능은 <b>Supabase 연동(2단계)</b> 이후 이 화면에 채워집니다. 지금은 설계를 확정하는 단계예요.</div>';
+ }
+ m.innerHTML=h;
+}
+function renderHome(){
+ var m=document.getElementById("main");document.getElementById("crumb").innerHTML="<b>홈</b> 설계 개요";
+ var c=[0,0,0],tot=0,leaf=0;
+ (function w(a,d){a.forEach(function(n){tot++;if(d<3)c[d]++;if(!(n.ch&&n.ch.length))leaf++;w(n.ch||[],d+1);});})(TREE,0);
+ var h='<div class="scr-h"><span class="scr-t">설계 개요</span></div>';
+ h+='<div class="path">REV25 설계 기준 · 좌측 메뉴에서 항목을 선택하세요</div>';
+ h+='<div class="kpis">';
+ h+='<div class="kpi"><b>'+c[0]+'</b><span>대분류</span></div>';
+ h+='<div class="kpi"><b>'+c[1]+'</b><span>중분류</span></div>';
+ h+='<div class="kpi"><b>'+c[2]+'</b><span>소분류</span></div>';
+ h+='<div class="kpi"><b>'+leaf+'</b><span>실제 화면(말단)</span></div>';
+ h+='<div class="kpi"><b>'+tot+'</b><span>전체 항목</span></div>';
+ h+='</div>';
+ h+='<div class="grid">';
+ TREE.forEach(function(n){var sub=(n.ch&&n.ch.length)?(n.ch.length+"개 하위"):"화면";h+='<div class="tile" onclick="goNode(\''+n.id+'\')"><div class="tc" style="color:'+(n.color||"#2563eb")+'">'+n.code+'</div><div class="tk">'+n.ko+'</div><div class="ts">'+sub+'</div></div>';});
+ h+='</div>';
+ h+='<div class="tip"><b>사용법</b> · 좌측에서 메뉴를 펼쳐 이동합니다. 구조(대분류·중분류·소분류)를 바꾸려면 상단 <b>설계 편집</b>을 켜고 각 항목의 ＋ ✎ ▲▼ ✕ 버튼을 쓰세요. 바꾼 내용은 자동 저장되고, <b>내보내기</b>로 JSON 백업도 됩니다.</div>';
+ m.innerHTML=h;
+}
+function goNode(id){SEL=id;var r=findP(id);if(r){r.path.forEach(function(n){EXP[n.id]=true;});}renderNav();renderMain();}
+
+function toggleEdit(){EDIT=!EDIT;document.getElementById("editBtn").textContent="설계 편집: "+(EDIT?"켬":"끔");document.getElementById("editBtn").classList.toggle("on",EDIT);document.getElementById("side").classList.toggle("editing",EDIT);var a=document.getElementById("addrootbtn");if(a)a.style.display=EDIT?"block":"none";}
+function onSearch(v){QUERY=(v||"").trim().toLowerCase();renderNav();}
+
+/* ===== 편집 ===== */
+function addRoot(){var ko=prompt("새 대분류 이름:");if(!ko||!ko.trim())return;TREE.push({id:uid(),ko:ko.trim(),en:"",flags:"",color:"#5a6b78",ch:[]});save();renderNav();}
+function addC(id){var r=findP(id);if(!r)return;var ko=prompt('"'+r.node.ko+'" 아래에 추가할 항목:');if(!ko||!ko.trim())return;r.node.ch=r.node.ch||[];r.node.ch.push({id:uid(),ko:ko.trim(),en:"",flags:"",ch:[]});EXP[id]=true;save();renderNav();if(SEL===id)renderMain();}
+function ren(id){var r=findP(id);if(!r)return;var ko=prompt("이름 변경:",r.node.ko);if(ko===null||!ko.trim())return;r.node.ko=ko.trim();save();renderNav();if(SEL===id)renderMain();}
+function mov(id,dir){var r=findP(id);if(!r)return;var j=r.i+dir;if(j<0||j>=r.arr.length)return;var t=r.arr[r.i];r.arr[r.i]=r.arr[j];r.arr[j]=t;save();renderNav();if(SEL)renderMain();}
+function del(id){var r=findP(id);if(!r)return;var cnt=cntN(r.node);if(!confirm('"'+r.node.code+' '+r.node.ko+'"'+(cnt>1?(" 및 하위 "+(cnt-1)+"개"):"")+" 삭제할까요?"))return;r.arr.splice(r.i,1);if(SEL===id)SEL=null;save();renderNav();renderMain();}
+function cntN(n){var c=1;(n.ch||[]).forEach(function(x){c+=cntN(x);});return c;}
+
+/* ===== 메모 ===== */
+function mkey(id){return"SJ_ERP_MEMO_"+id;}
+function getMemo(id){return(localStorage.getItem(mkey(id))||"").replace(/</g,"&lt;");}
+function saveMemo(id,v){localStorage.setItem(mkey(id),v);flash();}
+
+/* ===== 가져오기/내보내기/초기화 ===== */
+function doExport(){computeCodes();var b=new Blob([JSON.stringify(TREE,null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="승정ERP_설계_"+new Date().toISOString().slice(0,10)+".json";a.click();}
+function doImport(inp){var f=inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var t=JSON.parse(rd.result);if(Array.isArray(t)&&t.length){TREE=t;SEL=null;EXP={};save();renderNav();renderMain();alert("설계를 불러왔습니다.");}else alert("형식이 올바르지 않습니다.");}catch(e){alert("읽기 오류: "+e.message);}inp.value="";};rd.readAsText(f);}
+function doReset(){if(!confirm("편집 내용을 모두 지우고 기본 설계(REV25)로 되돌릴까요? (메모는 유지)"))return;TREE=clone(SEED);SEL=null;EXP={};save();renderNav();renderMain();}
+
+renderNav();renderMain();
+</script></body></html>
