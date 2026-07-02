@@ -82,6 +82,9 @@ footer{color:#94a3b8;font-family:var(--mono);font-size:11px;text-align:center;ma
  <button class="btn pri" onclick="openReg()">＋ 신규 BOM 등록</button>
  <button class="btn" id="savebtn" onclick="saveAll()">💾 저장</button>
  <button class="btn" onclick="exportCSV()">CSV 내보내기</button>
+ <button class="btn" onclick="backupAll()">⤓ 전체 백업</button>
+ <button class="btn" onclick="document.getElementById('restorefile').click()">⤒ 복원</button>
+ <input type="file" id="restorefile" accept=".json" style="display:none" onchange="restoreAll(this)">
  <button class="btn" onclick="toggleFull()">⛶ 전체화면</button>
  <button class="btn" onclick="openPrint()">🖨 인쇄 설정</button>
  <label class="kpi" style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="onlynew" onchange="render()"> 신규만 보기</label>
@@ -304,6 +307,20 @@ function doPrint(){
 document.getElementById("poverlay").addEventListener("click",function(e){if(e.target===this)closePrint();});
 document.getElementById("regoverlay").addEventListener("click",function(e){if(e.target===this)closeReg();});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.getElementById("overlay").classList.contains("on"))closeModal();});
+function backupAll(){
+ var pkg={v:1,ts:new Date().toISOString(),user:USER,edits:EDITS,del:DEL,commit:COMMIT};
+ var b=new Blob([JSON.stringify(pkg,null,1)],{type:"application/json"});
+ var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="승정_BOM_백업_"+new Date().toISOString().slice(0,10)+".json";a.click();
+ flashSave();
+}
+function flashSave(){var s=document.getElementById("kpi");if(s){var o=s.textContent;s.style.color="#16a34a";setTimeout(function(){s.style.color="";},1200);}}
+function restoreAll(inp){var f=inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var p=JSON.parse(rd.result);
+ if(!confirm("백업을 복원하면 현재 입력 내용이 파일 내용으로 덮어써집니다. 진행할까요?
+
+백업 신규 "+((p.user||[]).length)+" · 수정 "+(Object.keys(p.edits||{}).length)+" · 삭제 "+((p.del||[]).length))){inp.value="";return;}
+ USER=p.user||[];saveU(); EDITS=p.edits||{};saveE(); DEL=p.del||[];saveD(); COMMIT=p.commit||[];saveC();
+ render();alert("복원 완료 ✓  신규 "+USER.length+" · 수정 "+Object.keys(EDITS).length+" · 삭제 "+DEL.length);
+ }catch(e){alert("읽기 오류: "+e.message);}inp.value="";};rd.readAsText(f);}
 document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
 render();
 </script></body></html>
