@@ -78,7 +78,7 @@ footer{color:#94a3b8;font-family:var(--mono);font-size:11px;text-align:center;ma
 </style></head><body><div class="wrap">
 <div class="tt"><h1>BOM LIST <span style="font-size:13px;color:var(--dim);font-weight:600">종합</span></h1><span class="date">2026. 06. 23</span></div>
 <div class="bar">
- <input type="text" id="q" placeholder="품명·품번·재질 검색…" oninput="render()">
+ <input type="text" id="q" placeholder="품명·품번·재질 검색…" oninput="render()"> <select id="ftype" onchange="render()" style="border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px;background:var(--card);cursor:pointer"><option value="">구분: 전체</option><option value="완제품">완제품</option><option value="반제품">반제품</option><option value="부품">부품</option><option value="원자재">원자재</option><option value="저장품">저장품</option><option value="기타">기타</option></select>
  <button class="btn" onclick="expandLv(0)">완제품만(Lv0)</button>
  <button class="btn" onclick="expandLv(9)">전체 펼치기</button>
  <button class="btn pri" onclick="openReg()">＋ 신규 BOM 등록</button>
@@ -168,7 +168,7 @@ function render(){
  var shown=0;
  list.forEach(function(it){
   var r=it.r;if(r.lv>maxLv)return;
-  if(q){var hay=(r.name+" "+r.pno+" "+r.mat+" "+r.spec).toLowerCase();if(hay.indexOf(q)<0)return;}
+  if(q){var hay=(r.name+" "+r.pno+" "+r.mat+" "+r.spec).toLowerCase();if(hay.indexOf(q)<0)return;}  var _ft=document.getElementById("ftype").value;if(_ft&&inferType(r)!==_ft)return;
   var isEd=EDITING&&((EDITING.t==="seed"&&it.u<0&&EDITING.si===it.si)||(EDITING.t==="user"&&it.u===EDITING.ui));
   if(isEd){shown++;h+=editRowHTML();return;}
   shown++;var isnew=it.u>=0;
@@ -184,9 +184,9 @@ function render(){
   h+='<td class="ctr">'+act+'</td></tr>';
  });
  h+="</tbody>";document.getElementById("tbl").innerHTML=h;
- var npend=Object.keys(EDITS).map(Number).filter(function(i){return COMMIT.indexOf(i)<0;}).length;
+ var npend=Object.keys(EDITS).map(Number).filter(function(i){return COMMIT.indexOf(i)<0;}).length;var _tc={};allEff().forEach(function(r){var tp=inferType(r);_tc[tp]=(_tc[tp]||0)+1;});var _tcs=["완제품","반제품","부품","원자재","저장품","기타"].filter(function(x){return _tc[x];}).map(function(x){return x+" "+_tc[x];}).join(" · ");
  var delhtml=DEL.length?' · <span style="color:#dc2626;font-weight:700">삭제 '+DEL.length+'</span> <button class="delbtn" onclick="restoreDel()">전체복원</button>':'';
- document.getElementById("kpi").innerHTML=shown+" 표시 · 원본 "+SEED.length+" (수정 "+Object.keys(EDITS).length+(npend?', <span style="color:#d97706;font-weight:700">미저장 '+npend+'</span>':"")+") + 신규 "+USER.length+delhtml;
+ document.getElementById("kpi").innerHTML=shown+" 표시 · 원본 "+SEED.length+" (수정 "+Object.keys(EDITS).length+(npend?', <span style="color:#d97706;font-weight:700">미저장 '+npend+'</span>':"")+") + 신규 "+USER.length+delhtml+" │ "+_tcs;
  updateSaveBtn(npend);
 }
 function expandLv(v){maxLv=v;render();}
