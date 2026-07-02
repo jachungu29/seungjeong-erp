@@ -20,9 +20,8 @@ table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}
 thead th{position:sticky;top:0;background:var(--head);color:#fff;font-weight:700;padding:7px 9px;border:1px solid #20406a;font-size:11.5px;text-align:center;z-index:2}
 td{border:1px solid var(--line);padding:5px 9px;vertical-align:middle}
 
-thead th:nth-child(1),tbody td:nth-child(1){position:sticky;left:0;width:40px;min-width:40px;max-width:40px;padding-left:4px;padding-right:4px;z-index:1}
-thead th:nth-child(2),tbody td:nth-child(2){position:sticky;left:40px;min-width:240px;z-index:1}
-thead th:nth-child(1),thead th:nth-child(2){z-index:4}
+thead th:nth-child(1),tbody td:nth-child(1){width:40px;min-width:40px;max-width:40px;padding-left:4px;padding-right:4px}
+thead th:nth-child(2),tbody td:nth-child(2){min-width:240px}
 tbody td:nth-child(1),tbody td:nth-child(2){background:#fff}
 .lv0 td:nth-child(1),.lv0 td:nth-child(2){background:#fde9d0}
 .lv1 td:nth-child(1),.lv1 td:nth-child(2){background:#fff7ec}
@@ -170,13 +169,13 @@ function cellEdit(td,kind,idx,key){if(td.querySelector("input,select"))return;va
  else if(key==="type"){el=document.createElement("select");["","완제품","반제품","부품","원자재","저장품","기타"].forEach(function(tp){var o=document.createElement("option");o.value=tp;o.text=tp||"- 구분 -";if((r.type||"")===tp)o.selected=true;el.appendChild(o);});if(!r.type)el.value=inferType(r);}
  else{el=document.createElement("input");el.value=(r[key]==null?"":String(r[key]));}
  el.className="ein";td.innerHTML="";td.appendChild(el);el.focus();if(el.select)el.select();var done=false;
- function commit(){if(done)return;done=true;var val=(key==="lv")?parseInt(el.value,10):el.value;cellSet(kind,idx,key,val);if(key==="lv"){render();return;}var rr=(kind==="seed")?effSeed(idx):USER[idx];if(key==="type"){td.innerHTML=typeBadge(rr.type||inferType(rr));}else if(key==="name"){td.innerHTML='<span class="mark">'+(rr.lv===0?"●":(rr.lv===1?"▸":"·"))+'</span>'+esc(rr.name)+badgeFor(kind,idx);}else{td.innerHTML=esc(val);}if(kind==="seed")markSeedEdited(td.closest("tr"),idx);updateKPI();}
+ function commit(){if(done)return;done=true;var val=(key==="lv")?parseInt(el.value,10):el.value;cellSet(kind,idx,key,val);if(key==="lv"){render();return;}var rr=(kind==="seed")?effSeed(idx):USER[idx];if(key==="type"){td.innerHTML=typeBadge(rr.type||inferType(rr));}else if(key==="name"){td.innerHTML='<span class="mark">'+(rr.lv===0?"●":(rr.lv===1?"▸":"·"))+'</span>'+esc(rr.name)+badgeFor(kind,idx);}else{td.innerHTML=esc(val);}if(kind==="seed")markSeedEdited(td.closest("tr"),idx);updateKPI(key==="type"||key==="lv");}
  el.onblur=commit;el.onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();el.blur();}else if(e.key==="Escape"){done=true;td.innerHTML=orig;}};if(el.tagName==="SELECT")el.onchange=function(){el.blur();};}
 function badgeFor(kind,idx){if(kind==="user")return '<span class="newbadge">신규</span>';if(EDITS[idx])return '<span class="editbadge">수정됨</span>';return '';}
 function markSeedEdited(tr,idx){if(!tr)return;var nm=tr.cells[1];if(nm&&!nm.querySelector(".editbadge")&&!nm.querySelector(".newbadge"))nm.insertAdjacentHTML("beforeend",'<span class="editbadge">수정됨</span>');var act=tr.lastElementChild;if(act&&act.innerHTML.indexOf("원복")<0)act.insertAdjacentHTML("beforeend",' <button class="delbtn" onclick="revertS('+idx+')">원복</button>');}
-function updateKPI(){var _shown=document.querySelectorAll("#tbl tbody tr").length;var npend=Object.keys(EDITS).map(Number).filter(function(i){return COMMIT.indexOf(i)<0;}).length;var _tc={};allEff().forEach(function(r){var tp=inferType(r);_tc[tp]=(_tc[tp]||0)+1;});var _tcs=["완제품","반제품","부품","원자재","저장품","기타"].filter(function(x){return _tc[x];}).map(function(x){return x+" "+_tc[x];}).join(" · ");
+var LASTTCS="";function updateKPI(recount){var _shown=document.querySelectorAll("#tbl tbody tr").length;var npend=Object.keys(EDITS).map(Number).filter(function(i){return COMMIT.indexOf(i)<0;}).length;if(recount!==false){var _tc={};allEff().forEach(function(r){var tp=inferType(r);_tc[tp]=(_tc[tp]||0)+1;});LASTTCS=["완제품","반제품","부품","원자재","저장품","기타"].filter(function(x){return _tc[x];}).map(function(x){return x+" "+_tc[x];}).join(" · ");}
  var delhtml=DEL.length?' · <span style="color:#dc2626;font-weight:700">삭제 '+DEL.length+'</span> <button class="delbtn" onclick="restoreDel()">전체복원</button>':'';
- document.getElementById("kpi").innerHTML=_shown+" 표시 · 원본 "+SEED.length+" (수정 "+Object.keys(EDITS).length+(npend?', <span style="color:#d97706;font-weight:700">미저장 '+npend+'</span>':"")+") + 신규 "+USER.length+delhtml+" │ "+_tcs;}
+ document.getElementById("kpi").innerHTML=_shown+" 표시 · 원본 "+SEED.length+" (수정 "+Object.keys(EDITS).length+(npend?', <span style="color:#d97706;font-weight:700">미저장 '+npend+'</span>':"")+") + 신규 "+USER.length+delhtml+" │ "+LASTTCS;}
 function cellSet(kind,idx,key,val){if(kind==="seed"){var e=EDITS[idx]||{};e[key]=val;EDITS[idx]=e;var ci=COMMIT.indexOf(idx);if(ci>=0){COMMIT.splice(ci,1);saveC();}saveE();}else{USER[idx][key]=val;saveU();}}
 function render(){
  var q=(document.getElementById("q").value||"").trim().toLowerCase();
