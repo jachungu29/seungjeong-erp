@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>승정 MES 설계 구성도 · REV.26 (코드체계 트리)</title>
+<style>
+:root{--bg:#080E1A;--panel:#0D1828;--panel2:#132134;--line:#1E3556;--txt:#DDE8F5;--dim:#8AAAC8;--faint:#4A6882;--ora:#F59332;--grn:#2CA05A;--mono:"IBM Plex Mono",Consolas,monospace;--kr:Pretendard,"Noto Sans KR",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);line-height:1.45;font-size:14px}
+.wrap{max-width:1060px;margin:0 auto;padding:24px 16px 110px}
+h1{font-size:24px;font-weight:900;margin:0 0 4px}.lead{color:var(--dim);font-size:13px}
+.kpis{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-family:var(--mono);font-size:11px;color:var(--dim)}.kpi b{color:var(--ora);font-size:15px}
+.bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.btn{background:var(--ora);border:none;color:#10202e;font-weight:800;border-radius:7px;padding:8px 13px;font:inherit;font-size:12.5px;cursor:pointer}.btn:hover{filter:brightness(1.08)}
+.btn2{background:var(--panel2);border:1px solid var(--line);color:var(--dim);border-radius:7px;padding:7px 11px;font:inherit;font-size:12px;cursor:pointer}.btn2:hover{border-color:var(--ora);color:var(--ora)}
+.tree{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 6px}
+.node{display:flex;align-items:center;gap:7px;padding:4px 8px;border-radius:7px;min-height:34px}
+.node:hover{background:var(--panel2)}
+.tw{width:16px;flex:0 0 16px;text-align:center;color:var(--faint);cursor:pointer;font-size:11px;user-select:none}
+.lv{font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:5px;border:1px solid var(--line);color:var(--faint);flex:0 0 auto;white-space:nowrap}
+.code{font-family:var(--mono);font-weight:800;font-size:12px;min-width:30px;height:24px;padding:0 6px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 auto}
+.ccode{font-family:var(--mono);font-weight:700;font-size:11px;color:var(--ora);background:#10202e;border:1px solid var(--line);border-radius:5px;padding:1px 6px;flex:0 0 auto;white-space:nowrap}
+.ko{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:5px}
+.en{font-size:11px;color:var(--faint);font-family:var(--mono)}
+.dot{font-size:9px;font-family:var(--mono);padding:1px 4px;border-radius:4px}
+.bn{background:#2a1f0a;color:#F0A050;border:1px solid #5c4a1e}.bl{background:#0f1e22;color:#56d4dd;border:1px solid #1e4a52}
+.act{margin-left:auto;display:flex;gap:3px;opacity:.25;transition:.15s}
+.node:hover .act{opacity:1}
+.act button{background:var(--panel2);border:1px solid var(--line);color:var(--dim);width:26px;height:24px;border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0}
+.act button:hover{border-color:var(--ora);color:var(--ora)}
+.act .d:hover{border-color:#D94040;color:#D94040}.act .a:hover{border-color:var(--grn);color:var(--grn)}
+.hint{font-size:11.5px;color:var(--faint);margin-top:10px;line-height:1.6}
+footer{color:var(--faint);font-family:var(--mono);font-size:11px;text-align:center;margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
+@media print{.bar,.act{display:none}}
+</style></head><body><div class="wrap">
+<h1>승정 MES 설계 구성도 · <span style="color:var(--ora)">REV.26</span> <span style="font-size:12px;color:var(--dim)">코드체계 트리 · 통합본</span></h1>
+<div class="lead">통합설계+옛설계구성도 통합 · 22 대분류 · 모든 항목에 코드 자동 부여 — 대분류 <b style="color:var(--ora)">01</b> · 중분류 <b style="color:var(--ora)">01-01</b> · 소분류 <b style="color:var(--ora)">01-01-01</b>. 순번(위치)을 바꾸면 코드가 자동 재계산됩니다.</div>
+<div class="kpis">
+ <div class="kpi"><b id="k1">0</b> 대분류</div><div class="kpi"><b id="k2">0</b> 중분류</div><div class="kpi"><b id="k3">0</b> 소분류</div><div class="kpi"><b id="kt">0</b> 전체 노드</div><div class="kpi"><b id="kd">0</b> 최대 깊이</div>
+</div>
+<div class="bar">
+ <button class="btn" onclick="addRoot()">＋ 대분류 추가</button>
+ <button class="btn2" onclick="expandAll(1)">⊞ 모두 펼치기</button>
+ <button class="btn2" onclick="expandAll(0)">⊟ 모두 접기</button>
+ <button class="btn2" onclick="exportJSON()">⤓ 내보내기(JSON)</button>
+ <button class="btn2" onclick="importJSON()">⤒ 불러오기</button>
+ <button class="btn2" onclick="window.print()">🖨 인쇄</button>
+ <button class="btn2" onclick="reseed()">↺ 기본 설계로 초기화</button>
+</div>
+<div class="tree" id="tree"></div>
+<div class="hint">▸ 각 항목 오른쪽: <b style="color:var(--grn)">＋</b> 하위 추가 · <b>✎</b> 편집(한글·영문·순번) · <b>▲▼</b> 순서 · <b style="color:#D94040">✕</b> 삭제. <b style="color:var(--ora)">코드는 위치에 따라 자동 부여</b> — 추가·삭제·이동·순번지정하면 같은 단계의 코드가 즉시 다시 매겨집니다. 한글 입력 시 영문 자동 생성.</div>
+<footer>승정 MES 설계 구성도 · REV.26 · 코드체계 다단계 트리</footer>
+</div>
+<script>
+var LV=["대분류","중분류","소분류","소분류1","소분류2","소분류3","소분류4","세부"];
+var WORD={"기준정보":"Master Data","작업지시":"Work Order","생산실적":"Production","생산현황":"Production Status","품질관리":"Quality","자재출하":"Material & Shipment","설비보전":"Maintenance","금형수명관리":"Mold Lifecycle","시스템관리":"System Admin","공통유틸":"Utilities","관리":"Management","현황":"Status","조회":"Inquiry","등록":"Registration","입력":"Entry","실적":"Performance","검사":"Inspection","검사기준":"Inspection Standard","생산":"Production","작업":"Work","지시":"Order","불량":"Defect","분석":"Analysis","이력":"History","추적":"Traceability","재고":"Inventory","입고":"Receiving","출하":"Shipment","출고":"Issue","불출":"Issue","설비":"Equipment","금형":"Mold","보전":"Maintenance","계획":"Plan","변경":"Change","코드":"Code","공통코드":"Common Code","사용자":"User","로그":"Log","접속":"Access","백업":"Backup","보고서":"Report","보고":"Report","월간":"Monthly","일일":"Daily","기간별":"Period","자재":"Material","수입":"Incoming","선별":"Sorting","교육훈련":"Training","교육":"Training","도면":"Drawing","계측기":"Gauge","바코드":"Barcode","발행":"Printing","발주":"Purchase Order","외주":"Outsourcing","자동":"Auto","생성":"Generation","수정":"Edit","삭제":"Delete","취소":"Cancel","우선순위":"Priority","품번":"Part","마스터":"Master","거래선":"Customer","납품처":"Delivery Site","공급처":"Supplier","원자재":"Raw Material","공구":"Tooling","엑셀":"Excel","일괄등록":"Bulk Upload","일괄":"Bulk","공장":"Plant","라인":"Line","작업자":"Worker","동적항목":"Dynamic Fields","공정별":"Process","공정":"Process","상세":"Detail","클레임":"Claim","폐기":"Disposal","허용":"Allowance","초기":"Initial","설정":"Setting","인증":"Authentication","세션":"Session","권한":"Permission","역할기반":"Role-Based","접근제어":"Access Control","접근":"Access","제어":"Control","감사":"Audit","로깅":"Logging","다운로드":"Download","종합":"Summary","견적":"Quote","비가동":"Downtime","고장":"Breakdown","가동":"Operation","수명":"Lifecycle","대시보드":"Dashboard","개발":"Development","활동":"Activity","안전":"Safety","소방":"Fire Safety","점검":"Inspection","환경":"Environment","원가":"Cost","근태":"Attendance","휴가":"Leave","잔업":"Overtime","사원":"Employee","전표":"Voucher","매출":"Sales","매입":"Purchase","영업":"Sales","판매":"Distribution","영업/판매":"Sales / Distribution","수주":"Sales Order","납기":"Delivery Date","단가":"Unit Price","수금":"Collection","미수":"Receivables","요구사항":"Requirements","연계":"Linkage","고객":"Customer","견적":"Quotation","납품":"Delivery","기준":"Standard","신청":"Application","승인":"Approval"};
+function tc(s){return s.replace(/\b\w/g,function(m){return m.toUpperCase();});}
+function autoEng(ko){ko=(ko||"").trim();if(!ko)return"";if(WORD[ko])return WORD[ko];
+ var parts=ko.split(/(\s*\/\s*|\s*·\s*|\(|\)|\s+)/);
+ var out=parts.map(function(p){if(p==null)return"";var s=p.trim();
+  if(s===""){if(/\//.test(p))return" / ";if(/·/.test(p))return" · ";if(p==="(")return" (";if(p===")")return")";return" ";}
+  if(WORD[s])return WORD[s];if(/^[A-Za-z0-9]+$/.test(s))return s.length<=4?s.toUpperCase():s;
+  var keys=Object.keys(WORD).sort(function(a,b){return b.length-a.length;});var r=s;
+  for(var k=0;k<keys.length;k++){if(r.indexOf(keys[k])>=0)r=r.replace(keys[k],WORD[keys[k]]+" ");}
+  return r.replace(/[가-힣]+/g,"").trim()||s;});
+ return tc(out.join("").replace(/\s+/g," ").replace(/\s+\)/g,")").replace(/\(\s+/g,"(").trim());}
+var SEED=[{"ko": "대시보드", "en": "Dashboard", "color": "#334155", "ch": [{"ko": "경영 대시보드", "ch": [{"ko": "종합 대시보드(전사 KPI)"}]}, {"ko": "현장 대시보드", "ch": [{"ko": "현장 실시간 화면(외국인 현장 전용)"}]}]}, {"ko": "기준정보", "en": "Master Data", "color": "#1E6BC4", "ch": [{"ko": "제조기준", "ch": [{"ko": "공장/라인"}, {"ko": "설비 관리"}, {"ko": "금형 관리"}, {"ko": "공구(CNC)"}]}, {"ko": "품목/자재", "ch": [{"ko": "품번 마스터"}, {"ko": "원자재/BOM"}, {"ko": "BOM 관리"}]}, {"ko": "거래/인력", "ch": [{"ko": "거래선(납품처)"}, {"ko": "공급처 관리"}, {"ko": "작업자 관리"}]}, {"ko": "데이터 도구", "ch": [{"ko": "엑셀 일괄등록"}]}]}, {"ko": "영업·수주", "en": "Sales & Order", "color": "#0E7490", "ch": [{"ko": "수주 관리", "ch": [{"ko": "수주 등록"}, {"ko": "수주 조회"}, {"ko": "수주 변경/취소"}, {"ko": "납기 관리"}, {"ko": "수주 변경이력"}]}, {"ko": "고객·거래선", "ch": [{"ko": "고객 등록"}, {"ko": "고객 요구사항"}, {"ko": "단가·견적 관리"}]}, {"ko": "판매·매출", "ch": [{"ko": "판매 계획"}, {"ko": "매출 현황"}, {"ko": "수금·미수 관리"}]}, {"ko": "출하 연계", "ch": [{"ko": "출하 지시 연계"}, {"ko": "납품 현황"}]}]}, {"ko": "작업지시", "en": "Work Order", "color": "#155AAB", "ch": [{"ko": "지시 관리", "ch": [{"ko": "작업지시 등록"}, {"ko": "작업지시 조회"}, {"ko": "지시 수정/취소"}, {"ko": "우선순위 관리"}]}]}, {"ko": "생산실적", "en": "Production", "color": "#1A7E3A", "ch": [{"ko": "실적 입력", "ch": [{"ko": "실적 입력(현장)"}, {"ko": "공정별 동적항목"}, {"ko": "불량 상세등록"}]}, {"ko": "LOT/추적", "ch": [{"ko": "LOT 자동생성"}, {"ko": "LOT 바코드 발행"}, {"ko": "자재 자동차감(BOM)", "flags": "n"}]}, {"ko": "실적 관리", "ch": [{"ko": "입력 이력 조회"}, {"ko": "실적 수정/삭제"}]}, {"ko": "생산 기준", "ch": [{"ko": "작업표준서"}, {"ko": "QC공정도(관리계획서)"}, {"ko": "작업지도서(WI)"}]}]}, {"ko": "생산현황조회", "en": "Status Inquiry", "color": "#1B4E8C", "ch": [{"ko": "현황 조회", "ch": [{"ko": "일일 생산현황"}, {"ko": "기간별 조회"}, {"ko": "계획대비 실적", "flags": "n"}, {"ko": "가동/비가동 현황"}]}, {"ko": "분석", "ch": [{"ko": "불량 분석(파레토)"}, {"ko": "OEE 분석"}, {"ko": "4M 변경이력"}]}, {"ko": "보고/출력", "ch": [{"ko": "작업일보", "flags": "n"}, {"ko": "생산보고시스템", "flags": "n"}, {"ko": "월간 보고서 관리", "flags": "nl"}, {"ko": "엑셀 다운로드"}, {"ko": "감사 추적"}]}]}, {"ko": "품질관리", "en": "Quality", "color": "#8E3080", "ch": [{"ko": "검사", "ch": [{"ko": "검사기준서"}, {"ko": "검사실적 입력"}, {"ko": "검사이력/SPC"}, {"ko": "계측기 관리대장"}]}, {"ko": "추적/개선", "ch": [{"ko": "LOT 추적"}, {"ko": "불량관리"}, {"ko": "시정조치(8D)/클레임"}, {"ko": "변경점(4M) 관리"}, {"ko": "선별 이력"}, {"ko": "초기허용불량/폐기", "flags": "nl"}]}, {"ko": "선진 품질", "ch": [{"ko": "APQP·PPAP"}, {"ko": "ISIR(초도품 검사)"}, {"ko": "IMDS(재료데이터)"}, {"ko": "SPC·측정기 연동"}]}, {"ko": "품질 자원", "ch": [{"ko": "계측기 관리", "flags": "nl"}, {"ko": "도면 관리", "flags": "nl"}, {"ko": "교육훈련 관리", "flags": "nl"}]}]}, {"ko": "자재·구매·재고", "en": "Material & Purchase", "color": "#B86A00", "ch": [{"ko": "구매/발주", "ch": [{"ko": "매입처 관리"}, {"ko": "MRP·자동발주"}, {"ko": "발주 관리"}, {"ko": "외주 관리"}]}, {"ko": "입출고/재고", "ch": [{"ko": "입고 관리"}, {"ko": "수입 검사"}, {"ko": "재고 현황"}, {"ko": "출고·불출"}]}, {"ko": "완제품/출하", "ch": [{"ko": "완제품 재고·출고"}, {"ko": "출하 관리"}, {"ko": "출하 검사"}]}, {"ko": "이력", "ch": [{"ko": "입출고 이력"}]}]}, {"ko": "설비보전", "en": "Maintenance", "color": "#2A5A7A", "ch": [{"ko": "설비", "ch": [{"ko": "설비 관리대장"}, {"ko": "설비 현황"}, {"ko": "설비 가동률"}]}, {"ko": "보전", "ch": [{"ko": "예방보전(PM)"}, {"ko": "보전 계획"}, {"ko": "보전 작업"}, {"ko": "고장·수리/비가동"}]}, {"ko": "공정", "ch": [{"ko": "제조공정도"}]}]}, {"ko": "금형관리", "en": "Mold Lifecycle", "color": "#4A6272", "ch": [{"ko": "금형", "ch": [{"ko": "금형 대장"}, {"ko": "금형쇼트수"}, {"ko": "금형 수리이력"}]}, {"ko": "수명/보전", "ch": [{"ko": "수명 현황(Shot)"}, {"ko": "보전 이력"}, {"ko": "설정 변경"}]}]}, {"ko": "원가관리", "en": "Cost Management", "color": "#B45309", "ch": [{"ko": "원가 집계", "ch": [{"ko": "재료비(BOM연동)"}, {"ko": "노무·가공비"}, {"ko": "금형·경비"}, {"ko": "포장·물류비"}]}, {"ko": "품질비용", "ch": [{"ko": "품질비용(COPQ)", "flags": "l"}]}, {"ko": "원가 종합", "ch": [{"ko": "표준원가·단가"}, {"ko": "실제원가 집계"}, {"ko": "원가 종합 보고서"}, {"ko": "원가종합·견적"}]}]}, {"ko": "안전·환경", "en": "Safety & Environment", "color": "#DC2626", "ch": [{"ko": "안전(1순위)", "ch": [{"ko": "안전점검"}, {"ko": "소방점검"}]}, {"ko": "5S·환경", "ch": [{"ko": "3정5S 체크"}, {"ko": "ESG·CFT 활동"}]}]}, {"ko": "인사·근태", "en": "HR & Attendance", "color": "#0891B2", "ch": [{"ko": "인력", "ch": [{"ko": "사원 관리"}, {"ko": "작업자 국적관리(캄보디아·베트남·태국 등)"}]}, {"ko": "근태", "ch": [{"ko": "근태 관리"}, {"ko": "휴가 신청/승인"}, {"ko": "잔업 신청·승인"}]}, {"ko": "교육", "ch": [{"ko": "교육·자격 관리"}]}]}, {"ko": "회계·경리", "en": "Accounting", "color": "#4338CA", "ch": [{"ko": "전표", "ch": [{"ko": "전표 입력"}]}, {"ko": "매입매출", "ch": [{"ko": "매입/매출 관리"}]}, {"ko": "비용/채권", "ch": [{"ko": "비용 5분류"}, {"ko": "채권채무 관리"}]}]}, {"ko": "물류·창고 (WMS)", "en": "Warehouse (WMS)", "color": "#0D9488", "ch": [{"ko": "입출고", "ch": [{"ko": "입고 처리"}, {"ko": "출고 처리"}, {"ko": "입출고 이력"}]}, {"ko": "재고·로케이션", "ch": [{"ko": "창고 재고"}, {"ko": "로케이션 관리"}, {"ko": "재고 실사"}]}, {"ko": "피킹·적치", "ch": [{"ko": "피킹 지시"}, {"ko": "적치 관리"}]}]}, {"ko": "AI 물류 자동화 (AI WCS)", "en": "Logistics Automation", "color": "#2563EB", "ch": [{"ko": "설비 제어", "ch": [{"ko": "AMR/AGF 제어"}, {"ko": "컨베이어 제어"}, {"ko": "경로 최적화"}]}, {"ko": "자동 운반", "ch": [{"ko": "운반 지시"}, {"ko": "자율주행 모니터링"}]}, {"ko": "자동 집계", "ch": [{"ko": "재고 자동 집계"}, {"ko": "입출고 자동 기록"}]}]}, {"ko": "비전 AI 검사", "en": "Vision AI Inspection", "color": "#7C3AED", "ch": [{"ko": "비전 검사", "ch": [{"ko": "외관 검사"}, {"ko": "치수 검사"}, {"ko": "불량 자동판정"}]}, {"ko": "영상 분석", "ch": [{"ko": "CCTV 영상 분석"}, {"ko": "안전 감지"}]}]}, {"ko": "AI 관리", "en": "AI Management", "color": "#6D28D9", "ch": [{"ko": "AI", "ch": [{"ko": "AI 개발이력 대시보드", "flags": "nl"}]}]}, {"ko": "데이터 인프라 (DB·Storage)", "en": "Data Infrastructure", "color": "#475569", "ch": [{"ko": "정형 DB", "ch": [{"ko": "생산·품질 DB"}, {"ko": "설비·자재 DB"}, {"ko": "AI 검증 DB"}]}, {"ko": "비정형 Storage", "ch": [{"ko": "이미지·영상·로그"}, {"ko": "AI 학습데이터"}, {"ko": "백업·AI 모델"}]}, {"ko": "DB·Storage 연계", "ch": [{"ko": "역할 분리"}, {"ko": "경로 참조"}, {"ko": "연계 관리"}]}]}, {"ko": "시스템·기준정보 관리", "en": "System Admin", "color": "#9A1010", "ch": [{"ko": "시스템", "ch": [{"ko": "공통코드 관리", "flags": "n"}, {"ko": "사용자·권한 관리", "flags": "n"}, {"ko": "접속 로그(감사)", "flags": "n"}]}, {"ko": "다국어", "ch": [{"ko": "다국어 관리(베트남·태국·중국·캄보디아 등)"}]}]}, {"ko": "공통 유틸", "en": "Utilities", "color": "#2A3F54", "ch": [{"ko": "보안/접근", "ch": [{"ko": "인증/세션관리"}, {"ko": "역할기반 접근제어"}, {"ko": "감사 로깅"}]}, {"ko": "출력/데이터", "ch": [{"ko": "PDF 보고서"}, {"ko": "바코드 생성"}, {"ko": "DB 백업"}]}]}, {"ko": "옵션·설정", "en": "Options & Settings", "color": "#6B7280", "ch": [{"ko": "환경설정", "ch": [{"ko": "회사정보 설정"}, {"ko": "테마(다크/라이트)"}, {"ko": "언어 기본값"}]}, {"ko": "알림/자동화", "ch": [{"ko": "알림 설정"}, {"ko": "백업 주기"}, {"ko": "자동 로그아웃"}]}, {"ko": "권한 옵션", "ch": [{"ko": "권한 5단계(대표·부서장·반장·사무·작업자)"}, {"ko": "메뉴별 접근옵션"}]}]}];
+var ID=0;function uid(){return "n"+(++ID)+"_"+Math.floor(Math.random()*1e5);}
+function mkNode(o){
+ if(Array.isArray(o)){return {id:uid(),ko:o[0],en:o[1]||autoEng(o[0]),flags:o[2]||"",ch:[]};}
+ var n={id:uid(),ko:o.ko,en:o.en||autoEng(o.ko),flags:o.flags||"",ch:[]};
+ if(o.color)n.color=o.color;
+ (o.ch||[]).forEach(function(c){n.ch.push(mkNode(c));});
+ return n;}
+function seedTree(){return SEED.map(mkNode);}
+function load(){try{var t=JSON.parse(localStorage.getItem("SJ_MES_TREE6")||"null");if(t&&t.length)return t;}catch(e){}return seedTree();}
+function save(){localStorage.setItem("SJ_MES_TREE6",JSON.stringify(TREE));}
+var TREE=load();
+var EXP={};
+function findP(id,arr,parent){arr=arr||TREE;for(var i=0;i<arr.length;i++){if(arr[i].id===id)return {arr:arr,i:i,node:arr[i],parent:parent};var r=findP(id,arr[i].ch,arr[i]);if(r)return r;}return null;}
+/* ===== 코드 자동 부여 (위치 기반) ===== */
+function pad(n){return (n<10?"0":"")+n;}
+function assignCodes(node){(node.ch||[]).forEach(function(c,j){c.code=node.code+"-"+pad(j+1);assignCodes(c);});}
+function computeCodes(){TREE.forEach(function(root,i){root.code=pad(i+1);assignCodes(root);});}
+/* ===== 순번(위치) 지정 → 형제 내 이동 ===== */
+function setPos(id,pos){var r=findP(id);if(!r)return;var node=r.arr[r.i];r.arr.splice(r.i,1);var p=Math.min(Math.max((parseInt(pos,10)||1)-1,0),r.arr.length);r.arr.splice(p,0,node);}
+function badges(f){var t="";if((f||"").indexOf("n")>=0)t+='<span class="dot bn">★</span>';if((f||"").indexOf("l")>=0)t+='<span class="dot bl">🔗</span>';return t;}
+function rowHtml(n,depth){
+ var has=n.ch&&n.ch.length, open=EXP[n.id]!==false;
+ var tw=has?(open?"▾":"▸"):"·";
+ var lab=LV[Math.min(depth,LV.length-1)];
+ var h='<div class="node" style="padding-left:'+(depth*20)+'px">';
+ h+='<span class="tw" onclick="tog(\''+n.id+'\')">'+tw+'</span>';
+ if(depth===0)h+='<span class="code" style="background:'+(n.color||"#5a6b78")+'">'+n.code+'</span>';
+ else h+='<span class="ccode">'+n.code+'</span>';
+ h+='<span class="lv">'+lab+'</span>';
+ h+='<span class="ko">'+n.ko+badges(n.flags)+'</span>';
+ h+='<span class="en">'+(n.en||"")+'</span>';
+ h+='<span class="act">'
+   +'<button class="a" title="하위 추가" onclick="addC(\''+n.id+'\')">＋</button>'
+   +'<button title="편집(순번 포함)" onclick="edit(\''+n.id+'\')">✎</button>'
+   +'<button title="위로" onclick="mov(\''+n.id+'\',-1)">▲</button>'
+   +'<button title="아래로" onclick="mov(\''+n.id+'\',1)">▼</button>'
+   +'<button class="d" title="삭제" onclick="del(\''+n.id+'\')">✕</button>'
+   +'</span></div>';
+ if(has&&open)n.ch.forEach(function(c){h+=rowHtml(c,depth+1);});
+ return h;
+}
+function stat(){var c=[0,0,0],tot=0,mx=0;(function walk(a,d){a.forEach(function(n){tot++;mx=Math.max(mx,d);if(d<3)c[d]++;walk(n.ch||[],d+1);});})(TREE,0);
+ document.getElementById("k1").textContent=c[0];document.getElementById("k2").textContent=c[1];document.getElementById("k3").textContent=c[2];
+ document.getElementById("kt").textContent=tot;document.getElementById("kd").textContent=mx+1;}
+function render(){computeCodes();var h="";TREE.forEach(function(n){h+=rowHtml(n,0);});document.getElementById("tree").innerHTML=h;stat();}
+function tog(id){EXP[id]=(EXP[id]===false);render();}
+function expandAll(v){(function w(a){a.forEach(function(n){EXP[n.id]=!!v;w(n.ch||[]);});})(TREE);render();}
+function askPos(arrLen,label){var pos=prompt("순번(위치) "+label+" — 비우면 맨 끝 ("+(arrLen+1)+"):",String(arrLen+1));if(pos===null)return -1;if(pos.trim()==="")return arrLen;return Math.min(Math.max(parseInt(pos,10)-1,0),arrLen);}
+function addC(id){var r=findP(id);if(!r)return;var ko=prompt("추가할 하위 항목 (한글):");if(!ko)return;ko=ko.trim();if(!ko)return;
+ var en=prompt("영문명 (자동 제안):",autoEng(ko));if(en===null)return;
+ var arr=r.node.ch;var p=askPos(arr.length,"(이 단계에서)");if(p<0)return;
+ arr.splice(p,0,{id:uid(),ko:ko,en:(en.trim()||autoEng(ko)),flags:"",ch:[]});EXP[id]=true;save();render();}
+function addRoot(){var ko=prompt("새 대분류 (한글):");if(!ko)return;ko=ko.trim();if(!ko)return;
+ var en=prompt("영문명 (자동 제안):",autoEng(ko));if(en===null)return;
+ var p=askPos(TREE.length,"(대분류)");if(p<0)return;
+ TREE.splice(p,0,{id:uid(),color:"#5a6b78",ko:ko,en:(en.trim()||autoEng(ko)),flags:"",ch:[]});save();render();}
+function edit(id){var r=findP(id);if(!r)return;var n=r.node;
+ var ko=prompt("한글명:",n.ko);if(ko===null)return;ko=ko.trim();if(!ko)return;
+ var defEn=(ko!==n.ko)?autoEng(ko):(n.en||autoEng(ko));
+ var en=prompt("영문명:",defEn);if(en===null)return;
+ n.ko=ko;n.en=en.trim()||autoEng(ko);
+ var pos=prompt("순번(위치) — 코드 자동 재계산 (현재 "+(r.i+1)+" / 총 "+r.arr.length+"):",String(r.i+1));
+ if(pos!==null&&pos.trim()!=="")setPos(id,pos.trim());
+ save();render();}
+function del(id){var r=findP(id);if(!r)return;var cnt=count(r.node);if(!confirm('"'+r.node.ko+'" ('+r.node.code+')'+(cnt>1?(" 및 하위 "+(cnt-1)+"개"):"")+" 항목을 삭제할까요?"))return;r.arr.splice(r.i,1);save();render();}
+function count(n){var c=1;(n.ch||[]).forEach(function(x){c+=count(x);});return c;}
+function mov(id,dir){var r=findP(id);if(!r)return;var j=r.i+dir;if(j<0||j>=r.arr.length)return;var t=r.arr[r.i];r.arr[r.i]=r.arr[j];r.arr[j]=t;save();render();}
+function exportJSON(){computeCodes();var b=new Blob([JSON.stringify(TREE,null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="승정MES_설계트리_코드.json";a.click();}
+function importJSON(){var inp=document.createElement("input");inp.type="file";inp.accept=".json";inp.onchange=function(){var f=inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var t=JSON.parse(rd.result);if(Array.isArray(t)&&t.length){TREE=t;save();render();alert("불러왔습니다.");}else alert("형식이 올바르지 않습니다.");}catch(e){alert("읽기 오류: "+e.message);}};rd.readAsText(f);};inp.click();}
+function reseed(){if(!confirm("편집한 내용을 모두 지우고 기본 설계(REV.26)로 되돌릴까요?"))return;TREE=seedTree();EXP={};save();render();}
+render();
+</script></body></html>
