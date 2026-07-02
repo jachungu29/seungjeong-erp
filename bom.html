@@ -315,9 +315,7 @@ function backupAll(){
 }
 function flashSave(){var s=document.getElementById("kpi");if(s){var o=s.textContent;s.style.color="#16a34a";setTimeout(function(){s.style.color="";},1200);}}
 function restoreAll(inp){var f=inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var p=JSON.parse(rd.result);
- if(!confirm("백업을 복원하면 현재 입력 내용이 파일 내용으로 덮어써집니다. 진행할까요?
-
-백업 신규 "+((p.user||[]).length)+" · 수정 "+(Object.keys(p.edits||{}).length)+" · 삭제 "+((p.del||[]).length))){inp.value="";return;}
+ if(!confirm("백업을 복원하면 현재 입력 내용이 파일 내용으로 덮어써집니다. 진행할까요? / 백업 신규 "+((p.user||[]).length)+" · 수정 "+(Object.keys(p.edits||{}).length)+" · 삭제 "+((p.del||[]).length))){inp.value="";return;}
  USER=p.user||[];saveU(); EDITS=p.edits||{};saveE(); DEL=p.del||[];saveD(); COMMIT=p.commit||[];saveC();
  render();alert("복원 완료 ✓  신규 "+USER.length+" · 수정 "+Object.keys(EDITS).length+" · 삭제 "+DEL.length);
  }catch(e){alert("읽기 오류: "+e.message);}inp.value="";};rd.readAsText(f);}
