@@ -48,6 +48,12 @@ tbody td:nth-child(1),tbody td:nth-child(2){background:#fff}
 .lvsel.l0{background:#B45309}.lvsel.l1{background:#0e7490}.lvsel.l2{background:#475569}
 .entryrow td{background:#eef6ff;padding:4px 6px;border-color:#bcd2f0}
 .entryrow td:nth-child(1),.entryrow td:nth-child(2){background:#eef6ff}
+.pnoin{color:#1d4ed8;font-family:var(--mono)}.matin{color:#7c3aed}
+#regtbl .ein{border:1px solid transparent;background:rgba(255,255,255,.55)}
+#regtbl .ein:focus{background:#fff;border-color:#2563eb}
+#regtbl tr.rl0 td{background:#fde9d0;font-weight:700}
+#regtbl tr.rl1 td{background:#fff7ec}
+#regtbl tr.rl2 td{background:#fcfdff}
 .delbtn{border:1px solid var(--line);background:#fff;border-radius:5px;cursor:pointer;color:#dc2626;font-size:12px;padding:1px 7px}
 .delbtn:hover{border-color:#dc2626;background:#fef2f2}
 .newrow td{background:#f0fdf4 !important}
@@ -199,18 +205,18 @@ function inpCells(vn,buf,rfn){
   if(k==="type"){var TYP=["완제품","반제품","부품","원자재","저장품","기타"];var o='<option value="">- 구분 -</option>';TYP.forEach(function(tp){o+='<option value="'+tp+'"'+((buf.type===tp)?" selected":"")+'>'+tp+'</option>';});h+='<td class="ctr"><select class="ein" onchange="'+vn+'.type=this.value;'+rfn+'()">'+o+'</select></td>';}
   else if(typ==="select"){var mx=Math.max(6,lv+2);var o="";for(var i=0;i<=mx;i++){o+='<option value="'+i+'"'+((String(buf.lv)===String(i))?" selected":"")+'>Lv'+i+' '+(LVLAB[i]||"세부")+'</option>';}h+='<td class="ctr"><select class="ein lvsel l'+(lv<=2?lv:2)+'" title="BOM 레벨 (0=완제품, 하위로 계속 확장)" onchange="'+vn+'.lv=this.value;'+rfn+'()">'+o+'</select></td>';}
   else if(k==="name"){h+='<td><input class="ein" style="padding-left:'+(6+lv*16)+'px" placeholder="'+(lv===0?"●":"▸")+' 품명 *" value="'+escAttr(buf[k])+'" oninput="'+vn+'[\''+k+'\']=this.value"></td>';}
-  else{h+='<td><input class="ein" value="'+escAttr(buf[k])+'" oninput="'+vn+'[\''+k+'\']=this.value"></td>';}
+  else{var _xc=(k==="pno"?" pnoin":(k==="mat"?" matin":""));h+='<td><input class="ein'+_xc+'" value="'+escAttr(buf[k])+'" oninput="'+vn+'[\''+k+'\']=this.value"></td>';}
  });
  return h;
 }
 function renderReg(){
  var h="<thead><tr>";HEAD.slice(0,-1).forEach(function(x){h+="<th>"+esc(x)+"</th>";});h+="<th>행</th></tr></thead><tbody>";
- REGROWS.forEach(function(r,idx){h+='<tr class="entryrow">'+inpCells("REGROWS["+idx+"]",r,"renderReg")+'<td class="ctr"><button class="delbtn" onclick="delRegRow('+idx+')" title="행 삭제">✕</button></td></tr>';});
+ REGROWS.forEach(function(r,idx){h+='<tr class="entryrow rl'+(parseInt(r.lv||0,10)<=2?parseInt(r.lv||0,10):2)+'">'+inpCells("REGROWS["+idx+"]",r,"renderReg")+'<td class="ctr"><button class="delbtn" onclick="delRegRow('+idx+')" title="행 삭제">✕</button></td></tr>';});
  h+="</tbody>";document.getElementById("regtbl").innerHTML=h;
 }
-function openReg(){REGROWS=[{lv:0}];renderReg();document.getElementById("regoverlay").classList.add("on");setTimeout(function(){var i=document.querySelector("#regtbl input");if(i)i.focus();},30);}
+function openReg(){REGROWS=[{lv:0,type:"완제품"}];renderReg();document.getElementById("regoverlay").classList.add("on");setTimeout(function(){var i=document.querySelector("#regtbl input");if(i)i.focus();},30);}
 function closeReg(){document.getElementById("regoverlay").classList.remove("on");}
-function addRegRow(rel){var last=REGROWS.length?parseInt(REGROWS[REGROWS.length-1].lv||0,10):0;var nl=Math.max(0,last+(rel||0));REGROWS.push({lv:nl});renderReg();setTimeout(function(){var rows=document.querySelectorAll("#regtbl tbody tr");if(rows.length){var inp=rows[rows.length-1].querySelector("input");if(inp)inp.focus();}},20);}
+function addRegRow(rel){var last=REGROWS.length?parseInt(REGROWS[REGROWS.length-1].lv||0,10):0;var nl=Math.max(0,last+(rel||0));REGROWS.push({lv:nl,type:(nl===0?"완제품":"")});renderReg();setTimeout(function(){var rows=document.querySelectorAll("#regtbl tbody tr");if(rows.length){var inp=rows[rows.length-1].querySelector("input");if(inp)inp.focus();}},20);}
 function delRegRow(i){REGROWS.splice(i,1);if(!REGROWS.length)REGROWS.push({lv:0});renderReg();}
 function saveReg(){
  var added=0;REGROWS.forEach(function(rb){if(!rb.name||!String(rb.name).trim())return;var rec={};FIELDS.forEach(function(f){var k=f[0];rec[k]=(k==="lv")?parseInt(rb[k]||0,10):String(rb[k]==null?"":rb[k]).trim();});USER.push(rec);added++;});
