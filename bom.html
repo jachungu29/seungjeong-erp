@@ -165,8 +165,8 @@ function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,
 
 function inferType(r){if(r.type)return r.type;if(r.lv===0)return "완제품";if(r.mat&&String(r.mat).trim())return "원자재";return "부품";}
 function typeBadge(tp){if(!tp)return "";var c={"완제품":"fp","반제품":"sp","부품":"pt","원자재":"rm","저장품":"st"}[tp]||"et";return '<span class="tb tb-'+c+'">'+tp+'</span>';}
-function ec(it,key,inner,cls){var kind=it.u>=0?"user":"seed";var idx=it.u>=0?it.u:it.si;return '<td class="'+(cls||"")+' ec" data-k="'+kind+'" data-i="'+idx+'" data-key="'+key+'" onclick="cellEdit(this)">'+inner+'</td>';}
-function cellEdit(td){if(td.querySelector("input,select"))return;var kind=td.dataset.k,idx=+td.dataset.i,key=td.dataset.key;var orig=td.innerHTML;var r=(kind==="seed")?effSeed(idx):USER[idx];var el;
+function ec(it,key,inner,cls){return '<td class="'+(cls?cls+" ":"")+'ec">'+inner+'</td>';}
+function cellEdit(td,kind,idx,key){if(td.querySelector("input,select"))return;var orig=td.innerHTML;var r=(kind==="seed")?effSeed(idx):USER[idx];var el;
  if(key==="lv"){el=document.createElement("select");for(var i=0;i<=6;i++){var o=document.createElement("option");o.value=i;o.text="Lv"+i;if(String(r.lv)===String(i))o.selected=true;el.appendChild(o);}}
  else if(key==="type"){el=document.createElement("select");["","완제품","반제품","부품","원자재","저장품","기타"].forEach(function(tp){var o=document.createElement("option");o.value=tp;o.text=tp||"- 구분 -";if((r.type||"")===tp)o.selected=true;el.appendChild(o);});if(!r.type)el.value=inferType(r);}
  else{el=document.createElement("input");el.value=(r[key]==null?"":String(r[key]));}
@@ -194,9 +194,9 @@ function render(){
   var isEd=EDITING&&((EDITING.t==="seed"&&it.u<0&&EDITING.si===it.si)||(EDITING.t==="user"&&it.u===EDITING.ui));
   if(isEd){shown++;h+=editRowHTML();return;}
   shown++;var isnew=it.u>=0;
-  h+='<tr class="lv'+(r.lv<=2?r.lv:2)+(isnew?" newrow":"")+'">';
+  h+='<tr class="lv'+(r.lv<=2?r.lv:2)+(isnew?" newrow":"")+'" data-rk="'+(isnew?"user":"seed")+'" data-ri="'+(isnew?it.u:it.si)+'">';
   h+=ec(it,"lv",'<span class="lvtag l'+(r.lv<=2?r.lv:2)+'">'+r.lv+'</span>',"ctr");
-  h+='<td class="nm ec" style="padding-left:'+(9+r.lv*16)+'px" data-k="'+(isnew?"user":"seed")+'" data-i="'+(isnew?it.u:it.si)+'" data-key="name" onclick="cellEdit(this)"><span class="mark">'+(r.lv===0?"●":(r.lv===1?"▸":"·"))+'</span>'+esc(r.name)+(isnew?'<span class="newbadge">신규</span>':(it.ed?'<span class="editbadge">수정됨</span>':''))+'</td>';
+  h+='<td class="nm ec" style="padding-left:'+(9+r.lv*16)+'px"><span class="mark">'+(r.lv===0?"●":(r.lv===1?"▸":"·"))+'</span>'+esc(r.name)+(isnew?'<span class="newbadge">신규</span>':(it.ed?'<span class="editbadge">수정됨</span>':''))+'</td>';
   h+=ec(it,"type",typeBadge(inferType(r)),"ctr")+ec(it,"pno",esc(r.pno),"pno")+ec(it,"spec",esc(r.spec),"")+ec(it,"mat",esc(r.mat),"mat");
   ["price","unit","qty","wp","wr","wt","ct","cvt","uph"].forEach(function(k){h+=ec(it,k,esc(r[k]),(k==="unit"?"ctr":"num"));});
   ["mold","eqp","sup","remark","eqpcode"].forEach(function(k){h+=ec(it,k,esc(r[k]),"");});
@@ -344,6 +344,8 @@ function restoreAll(inp){var f=inp.files[0];if(!f)return;var rd=new FileReader()
  USER=p.user||[];saveU(); EDITS=p.edits||{};saveE(); DEL=p.del||[];saveD(); COMMIT=p.commit||[];saveC();
  render();alert("복원 완료 ✓  신규 "+USER.length+" · 수정 "+Object.keys(EDITS).length+" · 삭제 "+DEL.length);
  }catch(e){alert("읽기 오류: "+e.message);}inp.value="";};rd.readAsText(f);}
+var COLKEYS=["lv","name","type","pno","spec","mat","price","unit","qty","wp","wr","wt","ct","cvt","uph","mold","eqp","sup","remark","eqpcode",""];
+document.getElementById("tbl").addEventListener("click",function(e){var td=e.target.closest("td.ec");if(!td)return;if(td.querySelector("input,select"))return;var tr=td.closest("tr");if(!tr||!tr.dataset.rk)return;var key=COLKEYS[td.cellIndex];if(!key)return;cellEdit(td,tr.dataset.rk,+tr.dataset.ri,key);});
 document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
 render();
 </script></body></html>
