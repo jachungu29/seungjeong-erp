@@ -141,7 +141,7 @@ function renderMain(){
  var r=findP(SEL);if(!r){SEL=null;renderHome();return;}
  var n=r.node;var has=n.ch&&n.ch.length;var rootCode=r.path[0].code;var rootColor=r.path[0].color||"#2563eb";
  cr.innerHTML="<b>"+n.code+"</b> "+pathStr(r.path);
- if(n.id==='bomlist'||n.id==='r014'||n.id==='r015'){var rc=r.path[0].color||'#2563eb';m.innerHTML='<div class="scr-h"><span class="bigcode" style="background:'+rc+'">'+n.code+'</span><span class="scr-t">'+esc(n.ko)+'</span></div><div class="path">'+pathStr(r.path)+'</div><div class="tip" style="margin-bottom:8px">클라우드 실데이터 BOM(전 PC 공유·자동저장)이 이 화면에 표시됩니다.</div><iframe src="bom.html" title="BOM LIST" style="width:100%;height:calc(100vh - 230px);min-height:520px;border:1px solid #e2e8f2;border-radius:10px;display:block;background:#fff"></iframe>';return;}
+ if(n.id==='bomlist'||n.id==='r014'||n.id==='r015'){var rc=r.path[0].color||'#2563eb';m.innerHTML='<iframe src="bom.html" title="BOM LIST" style="width:100%;height:calc(100vh - 82px);min-height:600px;border:1px solid #e2e8f2;border-radius:10px;display:block;background:#fff"></iframe>';return;}
  var h='<div class="scr-h"><span class="bigcode" style="background:'+rootColor+'">'+n.code+'</span><span class="scr-t">'+esc(n.ko)+'</span></div>';
  h+='<div class="path">'+pathStr(r.path)+'</div>';
  if(has){

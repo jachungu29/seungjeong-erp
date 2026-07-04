@@ -73,7 +73,12 @@ footer{color:#94a3b8;font-family:var(--mono);font-size:11px;text-align:center;ma
 #printarea th{background:#e8edf5;text-align:center}
 #printarea .num{text-align:right}
 @media print{.wrap,.overlay{display:none !important}#printarea{display:block !important}}
-</style>
+
+.wrap{padding:8px 10px 10px}
+.tt{margin-bottom:6px}
+.bar{margin-bottom:6px}
+.scroll{max-height:calc(100vh - 86px)}
+footer{display:none}</style>
 </head><body><div class="wrap">
 <div class="tt"><h1>BOM LIST <span style="font-size:13px;color:var(--dim);font-weight:600">종합 · ☁ 클라우드</span></h1><span class="date" id="status" style="color:#64748b">☁ 연결 준비 중…</span></div>
 <div class="bar">
@@ -163,7 +168,7 @@ function render(){
  });
  h+="</tbody>";document.getElementById("tbl").innerHTML=h;
  document.getElementById("kpi").innerHTML=shown+" 표시 · 전체 "+ROWS.length+"행 · ☁ 클라우드";
- var b=document.getElementById("savebtn");if(b){b.textContent="💾 자동저장 켜짐";}
+ var b=document.getElementById("savebtn");if(b){b.textContent="💾 저장";}
 }
 function expandLv(v){maxLv=v;render();}
 
