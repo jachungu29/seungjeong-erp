@@ -75,7 +75,7 @@
 </style></head><body>
 <div id="app">
  <header class="top">
-  <div class="brand">승정 ERP <span>통합설계 v1</span></div>
+  <div class="brand">승정 ERP <span>통합설계 v2 · 스위치개선</span></div>
   <div class="crumb" id="crumb"></div>
   <div class="actions">
    <input id="search" placeholder="메뉴 검색…" oninput="onSearch(this.value)">
@@ -126,6 +126,7 @@ function pathStr(path){return path.map(function(n){return n.code+" "+n.ko;}).joi
 function linksFor(rootKo){var mid=NAME2MID[rootKo];var ins=[],outs=[];if(!mid)return{ins:ins,outs:outs};
  LINKS.forEach(function(l){if(l[1]===mid)ins.push(l);if(l[0]===mid)outs.push(l);});return{ins:ins,outs:outs};}
 function lkRow(l,dir){var other=M[dir==="out"?l[1]:l[0]];var me=M[dir==="out"?l[0]:l[1]];
+ if(!other||!me)return "";
  return '<div class="lk" onclick="goModule(\''+other.id+'\')"><span class="lkdir '+(dir==="out"?"dout":"din")+'">'+(dir==="out"?"보냄":"받음")+'</span>'
   +'<span class="mtag" style="background:'+other.color+'">'+other.code+' '+esc(other.name)+'</span>'
   +'<span class="lktxt">'+esc(l[3])+'</span>'
@@ -135,6 +136,7 @@ function lkRow(l,dir){var other=M[dir==="out"?l[1]:l[0]];var me=M[dir==="out"?l[
 
 function renderMain(){
  var m=document.getElementById("main"),cr=document.getElementById("crumb");
+ try{
  if(!SEL){renderHome();return;}
  var r=findP(SEL);if(!r){SEL=null;renderHome();return;}
  var n=r.node;var has=n.ch&&n.ch.length;var rootCode=r.path[0].code;var rootColor=r.path[0].color||"#2563eb";
@@ -158,6 +160,7 @@ function renderMain(){
   h+='<div class="sec-t"><i></i>연계</div><div class="muted">등록된 연계가 없습니다.</div>';
  }
  m.innerHTML=h;
+ }catch(err){if(m)m.innerHTML='<div class="tip" style="color:#dc2626">화면 표시 오류: '+String(err&&err.message||err)+'</div>';}
 }
 function renderHome(){
  var m=document.getElementById("main");document.getElementById("crumb").innerHTML="<b>홈</b> 통합 설계 개요";
