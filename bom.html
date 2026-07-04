@@ -137,6 +137,7 @@ var FIELDS=[["lv", "레벨(Lv)", "select"], ["name", "Part Name", "text", 1], ["
 var ALLP=[["lv", "Lv"], ["name", "Part Name"], ["pno", "Part Number"], ["spec", "Specifications"], ["mat", "Materials"], ["price", "단가"], ["unit", "단위"], ["qty", "소요량"], ["wp", "제품중량"], ["wr", "런너중량"], ["wt", "총중량"], ["ct", "C/T"], ["cvt", "CVT"], ["uph", "UPH"], ["mold", "금형번호"], ["eqp", "설비명"], ["sup", "공급처"], ["remark", "Remark"], ["eqpcode", "설비코드"]], KEYP=[["lv", "Lv"], ["name", "Part Name"], ["pno", "Part Number"], ["spec", "Specifications"], ["mat", "Materials"], ["qty", "소요량"], ["mold", "금형번호"], ["eqp", "설비명"], ["sup", "공급처"]], NUMK={price:1,qty:1,wp:1,wr:1,wt:1,ct:1,cvt:1,uph:1};
 var LVLAB=["완제품","조립","부품","소부품","세부","세부","세부"];
 var maxLv=9, EDITING=null, EDITBUF={}, REGROWS=[], ROWS=[];
+try{var _q=new URLSearchParams(location.search);if(_q.get("lv0")||_q.get("lv")==="0")maxLv=0;}catch(e){}
 
 function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function escAttr(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
