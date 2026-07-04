@@ -19,6 +19,8 @@ h1{font-size:22px;font-weight:800;margin:0}
 table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}
 thead th{position:sticky;top:0;background:var(--head);color:#fff;font-weight:700;padding:7px 9px;border:1px solid #20406a;font-size:11.5px;text-align:center;z-index:2}
 td{border:1px solid var(--line);padding:5px 9px;vertical-align:middle}
+#tbl{table-layout:fixed;width:auto}
+#tbl td{overflow:hidden;text-overflow:ellipsis}
 
 thead th:nth-child(1),tbody td:nth-child(1){width:40px;min-width:40px;max-width:40px;padding-left:4px;padding-right:4px}
 thead th:nth-child(2),tbody td:nth-child(2){min-width:240px}
@@ -183,7 +185,7 @@ function render(){
  var list=[];
  if(!onlynew)SEED.forEach(function(_,i){if(DEL.indexOf(i)>=0)return;list.push({r:effSeed(i),u:-1,si:i,ed:!!EDITS[i],pend:(!!EDITS[i]&&COMMIT.indexOf(i)<0)});});
  USER.forEach(function(r,ui){list.push({r:r,u:ui});});
- var h="<thead><tr>";HEAD.forEach(function(x){h+="<th>"+esc(x)+"</th>";});h+="</tr></thead><tbody>";
+ var COLW=[40,240,60,120,130,100,70,46,58,84,84,68,52,52,58,88,88,84,120,88,110];var h="<colgroup>";COLW.forEach(function(w){h+='<col style="width:'+w+'px">';});h+="</colgroup>";h+="<thead><tr>";HEAD.forEach(function(x){h+="<th>"+esc(x)+"</th>";});h+="</tr></thead><tbody>";
  if(ENTRYMODE)h+=entryRowHTML();
  var shown=0;
  list.forEach(function(it){
