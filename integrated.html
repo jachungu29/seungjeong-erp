@@ -75,7 +75,7 @@
 </style></head><body>
 <div id="app">
  <header class="top">
-  <div class="brand">승정 ERP <span>통합설계 v2 · 스위치개선</span></div>
+  <div class="brand">승정 ERP <span>통합설계 v3 · 스위치수정</span></div>
   <div class="crumb" id="crumb"></div>
   <div class="actions">
    <input id="search" placeholder="메뉴 검색…" oninput="onSearch(this.value)">
@@ -100,7 +100,7 @@ function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace
 function pad(n){return(n<10?"0":"")+n;}
 function assign(n){(n.ch||[]).forEach(function(c,j){c.code=n.code+"-"+pad(j+1);assign(c);});}
 function computeCodes(){TREE.forEach(function(r,i){r.code=pad(i+1);assign(r);});}
-function findP(id,arr,parent,path){arr=arr||TREE;path=path||[];for(var i=0;i<arr.length;i++){var cp=path.concat(arr[i]);if(arr[i].id===id)return{node:arr[i],parent:parent,path:cp};var r=findP(id,arr[i].ch,arr[i],cp);if(r)return r;}return null;}
+function findP(id,arr,parent,path){arr=arr||TREE;path=path||[];for(var i=0;i<arr.length;i++){var cp=path.concat(arr[i]);if(arr[i].id===id)return{node:arr[i],parent:parent,path:cp};var r=findP(id,arr[i].ch||[],arr[i],cp);if(r)return r;}return null;}
 function matchQ(n){if(!QUERY)return true;if((n.ko||"").toLowerCase().indexOf(QUERY)>=0)return true;return(n.ch||[]).some(matchQ);}
 
 function renderNav(){

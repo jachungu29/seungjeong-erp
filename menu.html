@@ -94,7 +94,7 @@ function flash(){var s=document.getElementById("save");s.textContent="저장됨 
 function pad(n){return(n<10?"0":"")+n;}
 function assign(n){(n.ch||[]).forEach(function(c,j){c.code=n.code+"-"+pad(j+1);assign(c);});}
 function computeCodes(){TREE.forEach(function(r,i){r.code=pad(i+1);assign(r);});}
-function findP(id,arr,parent,path){arr=arr||TREE;path=path||[];for(var i=0;i<arr.length;i++){var cp=path.concat(arr[i]);if(arr[i].id===id)return{arr:arr,i:i,node:arr[i],parent:parent,path:cp};var r=findP(id,arr[i].ch,arr[i],cp);if(r)return r;}return null;}
+function findP(id,arr,parent,path){arr=arr||TREE;path=path||[];for(var i=0;i<arr.length;i++){var cp=path.concat(arr[i]);if(arr[i].id===id)return{arr:arr,i:i,node:arr[i],parent:parent,path:cp};var r=findP(id,arr[i].ch||[],arr[i],cp);if(r)return r;}return null;}
 function uid(){return"n"+Date.now().toString(36)+Math.floor(Math.random()*1e4);}
 function badges(f){var t="";if((f||"").indexOf("n")>=0)t+='<span class="badge bn">신규</span>';if((f||"").indexOf("l")>=0)t+='<span class="badge bl">연계</span>';return t;}
 function matchQ(n){if(!QUERY)return true;if((n.ko||"").toLowerCase().indexOf(QUERY)>=0)return true;return(n.ch||[]).some(matchQ);}
