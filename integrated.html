@@ -76,7 +76,7 @@
 </style></head><body>
 <div id="app">
  <header class="top">
-  <div class="brand">승정 ERP <span>통합설계 v5 · 최신</span></div>
+  <div class="brand">승정 ERP <span>통합설계 v6 · 연계그래프</span></div>
   <div class="crumb" id="crumb"></div>
   <div class="actions">
    <input id="search" placeholder="메뉴 검색…" oninput="onSearch(this.value)">
@@ -227,7 +227,7 @@ function svgHTML(){
  var boxes="";MODS.forEach(function(m){var o=M[m[0]];var pb=o.plan?' stroke="#fff" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.92"':'';boxes+='<g><rect x="'+o.x+'" y="'+o.y+'" width="'+W+'" height="'+H+'" rx="10" fill="'+o.color+'"'+pb+'/><text x="'+(o.x+12)+'" y="'+(o.y+19)+'" font-size="10" fill="#fff" opacity="0.85" font-family="monospace">'+esc(o.code)+'</text>'+(o.plan?'<text x="'+(o.x+W-10)+'" y="'+(o.y+19)+'" font-size="9" fill="#fff" text-anchor="end" font-family="monospace">예정</text>':'')+'<text x="'+(o.x+W/2)+'" y="'+(o.y+36)+'" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">'+esc(o.name)+'</text></g>';});
  return '<div class="legend"><span class="lg"><i style="border-color:#2563eb"></i>흐름</span><span class="lg"><i style="border-color:#16a34a"></i>자동</span><span class="lg"><i style="border-color:#dc2626"></i>차단</span><span class="lg"><i style="border-color:#64748b"></i>기준</span><span class="lg"><i style="border-color:#16a34a"></i>실선=실제(v378)</span><span class="lg"><i class="dash" style="border-color:#d97706"></i>점선=설계예정</span></div><svg viewBox="0 0 '+VW+' '+VH+'" xmlns="http://www.w3.org/2000/svg"><defs>'+defs+'</defs>'+arr+boxes+'</svg>';
 }
-function toggleDiag(){DIAG=!DIAG;document.getElementById("diagBtn").classList.toggle("on",DIAG);if(DIAG){SEL=null;document.getElementById("crumb").innerHTML="<b>전체 연계도</b>";document.getElementById("main").innerHTML='<div class="scr-h"><span class="scr-t">전체 연계도</span></div><div class="path">19개 모듈 · '+LINKS.length+'개 연계 (실선=실제 구현, 점선=설계 예정)</div><div class="diagwrap on">'+svgHTML()+'</div>';renderNav();}else{renderHome();renderNav();}}
+function toggleDiag(){DIAG=!DIAG;document.getElementById("diagBtn").classList.toggle("on",DIAG);if(DIAG){SEL=null;document.getElementById("crumb").innerHTML="<b>전체 연계도</b>";document.getElementById("main").innerHTML='<iframe src="graph.html" title="전체 설계 그래프" style="width:100%;height:calc(100vh - 82px);min-height:600px;border:0;border-radius:10px;display:block;background:#0d1117"></iframe>';renderNav();}else{renderHome();renderNav();}}
 function onSearch(v){QUERY=(v||"").trim().toLowerCase();renderNav();}
 
 renderNav();renderHome();
