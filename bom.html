@@ -34,9 +34,36 @@ async function boot(){
  st("불러오는 중: "+(pick.title||"앱"));
  var d=await sb.from("custom_pages").select("html,title").eq("id",pick.id).single();
  if(d.error||!d.data||!d.data.html){fail("앱 내용을 읽지 못했습니다.");return;}
+ var html=d.data.html;
+ // ── 헤더 제목 덮어쓰기 (앱 파일은 그대로 두고 표시만 변경) ──
+ var TITLE_OVERRIDE="BOM LIST";
+ if(TITLE_OVERRIDE){html=html.replace(/(<div class="tt"><h1>)[\s\S]*?(<\/h1>)/, '$1'+TITLE_OVERRIDE+'$2');}
+ // ── 화면 잘림 방지: 여백·글자·버튼을 촘촘히 줄여 한 화면에 맞춤(텍스트는 안 잘림) ──
+ var FIT_CSS='<style>'
+  +'.wrap{padding:6px 6px 16px !important}'
+  +'table{font-size:11px !important;white-space:nowrap}'
+  +'thead th,tbody td{padding:2px 5px !important}'
+  +'tbody td button,tbody td .btn,tbody td .delbtn{font-size:10px !important;padding:2px 5px !important;margin:0 1px !important}'
+  +'#remarkFilterBar{display:flex;gap:6px;align-items:center;margin:2px 0 8px;flex-wrap:wrap;font-size:12px}'
+  +'#remarkFilterBar .rf-btn{border:1px solid #d8e0ec;border-radius:7px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:700}'
+  +'</style>';
+ html=html.replace(/<\/head>/i, FIT_CSS+'</head>');
+ // ── Remark 필터 버튼 주입 (완제품/반제품/원자재/부자재) ──
+ var FILTER_JS='<scr'+'ipt>(function(){'
+  +'var CATS=["전체","완제품","반제품","원자재","부자재"],active="전체";'
+  +'function remarkIdx(){var t=document.querySelectorAll("thead th");for(var i=0;i<t.length;i++){if(/Remark/i.test(t[i].textContent))return i;}return -1;}'
+  +'function paint(){var bs=document.querySelectorAll("#remarkFilterBar .rf-btn");for(var i=0;i<bs.length;i++){var on=bs[i].textContent===active;bs[i].style.background=on?"#2563eb":"#fff";bs[i].style.color=on?"#fff":"#1c2942";}}'
+  +'function apply(){var idx=remarkIdx();if(idx<0)return;var rows=document.querySelectorAll("tbody tr");for(var i=0;i<rows.length;i++){var c=rows[i].children;if(active==="전체"){rows[i].style.display="";continue;}var tx=(c[idx]?c[idx].textContent:"").trim();rows[i].style.display=(tx.indexOf(active)>=0)?"":"none";}}'
+  +'function bar(){if(document.getElementById("remarkFilterBar"))return;var tbl=document.querySelector("table");if(!tbl)return;var wrap=tbl.parentElement;var b=document.createElement("div");b.id="remarkFilterBar";var hh=\'<b style="color:#64748b">Remark:</b>\';for(var i=0;i<CATS.length;i++){hh+=\'<button class="rf-btn" data-c="\'+CATS[i]+\'">\'+CATS[i]+\'</button>\';}b.innerHTML=hh;wrap.parentNode.insertBefore(b,wrap);var bs=b.querySelectorAll(".rf-btn");for(var j=0;j<bs.length;j++){bs[j].onclick=function(){active=this.getAttribute("data-c");apply();paint();};}paint();}'
+  +'function boot(){bar();apply();}'
+  +'if(document.readyState!=="loading")setTimeout(boot,300);else document.addEventListener("DOMContentLoaded",function(){setTimeout(boot,300);});'
+  +'var tmr;var mo=new MutationObserver(function(){clearTimeout(tmr);tmr=setTimeout(function(){bar();apply();},120);});'
+  +'setTimeout(function(){var w=document.querySelector(".wrap")||document.body;mo.observe(w,{childList:true,subtree:true});},900);'
+  +'})();<\/scr'+'ipt>';
+ html=html.replace(/<\/body>/i, FILTER_JS+'</body>');
  var f=document.getElementById("frame");
  f.onload=function(){document.getElementById("load").style.display="none";f.classList.add("on");document.title=(d.data.title||"BOM")+" · 클라우드";};
- f.srcdoc=d.data.html;
+ f.srcdoc=html;
  setTimeout(function(){if(document.getElementById("load").style.display!=="none"){document.getElementById("load").style.display="none";f.classList.add("on");}},2500);
 }
 boot();
