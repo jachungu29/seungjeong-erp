@@ -58,6 +58,9 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
 <div class="sec">현재 설계 구조 <span style="text-transform:none;color:var(--faint)">· 구조도 편집 자동 반영</span></div>
 <div id="structSummary" style="font-size:13px;color:var(--dim)">불러오는 중…</div>
 
+<div class="sec">BOM 현황 <span style="text-transform:none;color:var(--faint)">· 클라우드 자동 반영(항목 변경 시 실시간)</span></div>
+<div id="bomSummary" style="font-size:13px;color:var(--dim)">불러오는 중…</div>
+
 <footer>승정 ERP · REV-0 간편 시작 · legacy.html 중심</footer>
 <script>
 (function(){
@@ -68,6 +71,17 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
  var h='<div style="margin-bottom:8px;color:var(--txt)"><b>'+d.length+'</b> 대분류 · <b>'+scr+'</b> 화면 · 작동 '+live+' <span style="color:var(--faint)">(구조도 편집 최신 반영)</span></div><div style="display:flex;flex-wrap:wrap;gap:6px">';
  d.forEach(function(c){h+='<span style="border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:12px;background:var(--panel)"><span style="font-family:monospace;color:var(--faint)">'+(c.num||"")+'</span> '+((c.label||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"))+'</span>';});
  h+='</div>';el.innerHTML=h;
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){var el=document.getElementById("bomSummary");if(!el||!window.supabase)return;
+ try{var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
+ sb.from("bom").select("lv").then(function(r){
+  if(r.error){el.innerHTML='BOM 클라우드 미연결 · <a href="bom.html" style="color:var(--blue);text-decoration:none">BOM 열기</a>';return;}
+  var d=r.data||[],lv0=0;d.forEach(function(x){if((parseInt(x.lv,10)||0)===0)lv0++;});
+  el.innerHTML='<div style="color:var(--txt)"><b>'+lv0+'</b> 완제품 · <b>'+d.length+'</b> 총 항목 · <b>'+(d.length-lv0)+'</b> 부품 <span style="color:var(--faint)">(클라우드 실시간 자동반영)</span> — <a href="bom.html" style="color:var(--blue);text-decoration:none">BOM 열기 →</a></div>';
+ });}catch(e){el.textContent="BOM 요약 오류";}
 })();
 </script>
 </div></body></html>
