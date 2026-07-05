@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>앱 파일 삽입 (클라우드)</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#13233a;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;--faint:#6e7681;--blue:#58a6ff;--green:#3fb950;--orange:#e8a13a;--mono:"JetBrains Mono",Consolas,monospace;--kr:Pretendard,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px}
+.wrap{max-width:920px;margin:0 auto;padding:34px 18px 80px}
+h1{font-size:24px;font-weight:800;margin:0 0 3px}
+.lead{color:var(--dim);font-size:13.5px;margin-bottom:8px}
+.st{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-bottom:20px}
+.up{border:1.5px dashed #35507a;border-radius:16px;background:#101c2e;padding:22px;margin-bottom:24px}
+.up h2{font-size:16px;margin:0 0 12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row input[type=text]{flex:1;min-width:200px;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font:inherit;font-size:13.5px;background:#0b1420;color:var(--txt)}
+.fbtn{border:1px solid var(--line);background:var(--panel);color:var(--txt);border-radius:9px;padding:9px 14px;font:inherit;font-size:13px;cursor:pointer}
+.fbtn:hover{border-color:var(--blue)}
+.pri{background:var(--blue);color:#08131f;border:none;border-radius:9px;padding:10px 18px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer}
+.pri:hover{background:#4d97e8}
+.hint{color:var(--faint);font-size:12px;margin-top:10px}
+.sec{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:1px;margin:24px 0 12px;text-transform:uppercase}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:16px 18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.card .ic{font-size:24px}
+.card .info{flex:1;min-width:180px}
+.card .t{font-size:15.5px;font-weight:800}
+.card .m{font-size:11.5px;color:var(--faint);font-family:var(--mono);margin-top:2px}
+.card .acts{display:flex;gap:6px;flex-wrap:wrap}
+.abtn{border:1px solid var(--line);background:#0b1420;color:var(--txt);border-radius:8px;padding:7px 12px;font:inherit;font-size:12.5px;cursor:pointer}
+.abtn:hover{border-color:var(--blue);color:var(--blue)}
+.abtn.open{background:var(--blue);color:#08131f;border:none;font-weight:700}
+.abtn.d:hover{border-color:#f85149;color:#f85149}
+.empty{color:var(--faint);padding:24px;text-align:center;border:1px dashed var(--line);border-radius:12px}
+.warn{background:#2b1416;border:1px solid #5a2327;color:#ffb4ab;border-radius:12px;padding:14px 16px;margin-bottom:16px;display:none;font-size:13px}
+.warn.on{display:block}
+.warn code{display:block;background:#0b1420;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px;font-family:var(--mono);font-size:11.5px;white-space:pre-wrap;color:#c9d5e5}
+#viewer{position:fixed;inset:0;background:#0d1117;z-index:100;display:none;flex-direction:column}
+#viewer.on{display:flex}
+#viewer .vbar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+#viewer .vbar b{flex:1;font-size:14px}
+#viewer iframe{flex:1;width:100%;border:0;background:#fff}
+.back{border:1px solid var(--line);background:#0b1420;color:var(--txt);border-radius:8px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
+</style></head><body><div class="wrap">
+<h1>앱 파일 삽입 <span style="font-size:12px;background:var(--blue);color:#08131f;padding:2px 8px;border-radius:6px;font-family:var(--mono);vertical-align:middle">☁ 클라우드</span></h1>
+<div class="lead">HTML 앱 파일을 업로드하면 클라우드에 저장 → 모든 PC에서 열람·공유됩니다. 파일을 다시 업로드하면 전 PC에 즉시 반영.</div>
+<div class="st" id="st">연결 준비 중…</div>
+<div class="warn" id="warn"></div>
+
+<div class="up">
+ <h2>＋ 앱 파일 업로드</h2>
+ <div class="row">
+  <input type="text" id="title" placeholder="앱 이름 (예: 통합 BOM 앱)">
+  <button class="fbtn" onclick="document.getElementById('file').click()">📄 HTML 파일 선택</button>
+  <span id="fname" style="color:var(--dim);font-size:12.5px"></span>
+  <button class="pri" onclick="upload()">클라우드에 저장</button>
+  <input type="file" id="file" accept=".html,.htm" style="display:none" onchange="onFile(this)">
+ </div>
+ <div class="hint">※ 같은 이름으로 다시 올리면 <b>교체(최신 반영)</b> 됩니다. HTML 파일만 (최대 수 MB 권장).</div>
+</div>
+
+<div class="sec">저장된 앱</div>
+<div id="list"><div class="empty">불러오는 중…</div></div>
+</div>
+
+<div id="viewer"><div class="vbar"><button class="back" onclick="closeView()">← 목록</button><b id="vtitle"></b><button class="abtn" onclick="popOut()">새 창</button></div><iframe id="vframe"></iframe></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
+var PAGES=[], FILEHTML=null, FILENAME="";
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function st(t,c){var s=document.getElementById("st");if(s){s.textContent=t;s.style.color=(c==="g"?"#3fb950":(c==="r"?"#f85149":"#6e7681"));}}
+function onFile(inp){var f=inp.files[0];if(!f)return;FILENAME=f.name;document.getElementById("fname").textContent=f.name;var t=document.getElementById("title");if(!t.value)t.value=f.name.replace(/\.html?$/i,"");var r=new FileReader();r.onload=function(){FILEHTML=r.result;};r.readAsText(f);}
+async function boot(){st("클라우드 연결 중…");var r=await sb.from("custom_pages").select("id,title,updated_at,slug").order("updated_at",{ascending:false});
+ if(r.error){document.getElementById("warn").classList.add("on");document.getElementById("warn").innerHTML='⚠ <b>앱 저장 표(custom_pages)가 아직 없습니다.</b> Supabase SQL Editor에서 실행하세요:<code>create table if not exists custom_pages (id bigserial primary key, slug text, title text, html text, updated_at timestamptz default now());\nalter table custom_pages enable row level security;\ncreate policy "allow all" on custom_pages for all to anon using(true) with check(true);</code>';st("표 없음 — SQL 필요","r");renderList([]);return;}
+ PAGES=r.data||[];st("클라우드 연결됨 ✓ · "+PAGES.length+"개","g");renderList(PAGES);}
+function renderList(list){var el=document.getElementById("list");if(!list.length){el.innerHTML='<div class="empty">아직 업로드된 앱이 없습니다. 위에서 HTML 파일을 올려보세요.</div>';return;}
+ var h="";list.forEach(function(p){h+='<div class="card"><div class="ic">📦</div><div class="info"><div class="t">'+esc(p.title||"(제목없음)")+'</div><div class="m">수정: '+esc((p.updated_at||"").replace("T"," ").slice(0,16))+'</div></div><div class="acts"><button class="abtn open" onclick="openApp('+p.id+')">열기</button><button class="abtn" onclick="document.getElementById(\'title\').value=\''+esc((p.title||"").replace(/'/g,""))+'\';document.getElementById(\'title\').scrollIntoView()">교체(같은 이름)</button><button class="abtn d" onclick="delApp('+p.id+')">삭제</button></div></div>';});el.innerHTML=h;}
+async function upload(){
+ var title=(document.getElementById("title").value||"").trim();
+ if(!FILEHTML){alert("HTML 파일을 먼저 선택하세요.");return;}
+ if(!title){alert("앱 이름을 입력하세요.");return;}
+ st("업로드 중… ("+Math.round(FILEHTML.length/1024)+"KB)");
+ var ex=PAGES.filter(function(p){return (p.title||"")===title;})[0];
+ var res;
+ if(ex){res=await sb.from("custom_pages").update({html:FILEHTML,updated_at:new Date().toISOString()}).eq("id",ex.id);}
+ else{res=await sb.from("custom_pages").insert({title:title,slug:title,html:FILEHTML,updated_at:new Date().toISOString()});}
+ if(res.error){st("저장 실패","r");alert("저장 실패: "+res.error.message);return;}
+ st("저장됨 ✓ (전 PC 반영)","g");FILEHTML=null;FILENAME="";document.getElementById("fname").textContent="";document.getElementById("file").value="";
+ boot();alert("클라우드에 저장했습니다.\n모든 PC에서 이 앱을 열람할 수 있고, 같은 이름으로 다시 올리면 교체됩니다.");
+}
+async function openApp(id){st("여는 중…");var r=await sb.from("custom_pages").select("title,html").eq("id",id).single();if(r.error){alert("열기 실패: "+r.error.message);return;}
+ st("클라우드 연결됨 ✓","g");document.getElementById("vtitle").textContent=r.data.title||"앱";var f=document.getElementById("vframe");f.srcdoc=r.data.html||"<p>내용 없음</p>";document.getElementById("viewer").classList.add("on");}
+function closeView(){document.getElementById("viewer").classList.remove("on");document.getElementById("vframe").srcdoc="";}
+function popOut(){var html=document.getElementById("vframe").srcdoc;var b=new Blob([html],{type:"text/html"});var u=URL.createObjectURL(b);window.open(u,"_blank");}
+async function delApp(id){if(!confirm("이 앱을 삭제할까요? (모든 PC에서 사라짐)"))return;var res=await sb.from("custom_pages").delete().eq("id",id);if(res.error){alert("삭제 실패: "+res.error.message);return;}boot();}
+boot();
+</script>
+</body></html>
