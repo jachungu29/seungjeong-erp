@@ -50,10 +50,24 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
  <a class="card" href="rev0-map.html">
   <div class="ic">🗺️</div>
   <div class="t">구조도 <span class="en">map</span></div>
-  <div class="d">REV-0 전체 구조를 한눈에 (작동/준비중 표시).</div></a>
+  <div class="d">22 대분류 구조를 <b style="color:var(--blue)">편집·저장</b> · 편집 내용이 아래 요약에 자동 반영.</div></a>
 </div>
 
 <div class="note">🔧 <b>고급(클라우드) 도구</b> — 통합설계·클라우드 BOM 등은 <a href="index.html">기존 시작화면(index.html)</a>에 그대로 보존돼 있습니다. 필요할 때만 쓰세요.</div>
 
+<div class="sec">현재 설계 구조 <span style="text-transform:none;color:var(--faint)">· 구조도 편집 자동 반영</span></div>
+<div id="structSummary" style="font-size:13px;color:var(--dim)">불러오는 중…</div>
+
 <footer>승정 ERP · REV-0 간편 시작 · legacy.html 중심</footer>
+<script>
+(function(){
+ var d;try{d=JSON.parse(localStorage.getItem("SJ_MAP_STRUCT"));}catch(e){}
+ var el=document.getElementById("structSummary");if(!el)return;
+ if(!d||!d.length){el.innerHTML='아직 편집 내용이 없습니다 — <a href="rev0-map.html" style="color:var(--blue);text-decoration:none">구조도</a>에서 편집하면 여기에 자동 반영됩니다.';return;}
+ var scr=0,live=0;d.forEach(function(c){(c.mids||[]).forEach(function(m){(m.items||[]).forEach(function(it){scr++;if(it.st!=="todo")live++;});});});
+ var h='<div style="margin-bottom:8px;color:var(--txt)"><b>'+d.length+'</b> 대분류 · <b>'+scr+'</b> 화면 · 작동 '+live+' <span style="color:var(--faint)">(구조도 편집 최신 반영)</span></div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+ d.forEach(function(c){h+='<span style="border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:12px;background:var(--panel)"><span style="font-family:monospace;color:var(--faint)">'+(c.num||"")+'</span> '+((c.label||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"))+'</span>';});
+ h+='</div>';el.innerHTML=h;
+})();
+</script>
 </div></body></html>
