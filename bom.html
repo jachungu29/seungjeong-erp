@@ -30,7 +30,8 @@
 .tbtn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:#475569}
 .tbtn:hover{border-color:var(--blue);color:var(--blue)}
 .status{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
-.bomt{width:100%;border-collapse:collapse;font-size:13px}
+.bwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.bomt{width:100%;min-width:1560px;border-collapse:collapse;font-size:12.5px}
 .bomt th{text-align:left;color:var(--dim);font-weight:700;font-size:12px;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
 .bomt th.rt,.bomt td.rt{text-align:right}.bomt th.ct,.bomt td.ct{text-align:center}
 .bomt td{padding:8px 10px;border-bottom:1px solid #eef1f6;vertical-align:middle}
@@ -85,7 +86,10 @@ h1{font-size:20px;font-weight:800;margin:0}
 <script>
 var SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
 var sb=window.supabase.createClient(SB_URL,SB_KEY);
-var COLS=["name","pno","spec","mat","price","unit","qty","wt","uph"];
+var COLS=["name","pno","spec","mat","price","unit","qty","wp","wr","wt","ct","cvt","uph","mold","eqp","sup","remark","eqpcode"];
+var DCOLS=["pno","spec","mat","price","unit","qty","wp","wr","wt","ct","cvt","uph","mold","eqp","sup","remark","eqpcode"];
+var DHEAD=["품번","규격","재질","단가","단위","소요량","제품중량[g]","런너중량[g]","총중량","C/T","CVT","UPH","금형번호","설비명","공급처","Remark","설비코드"];
+var NUMK={price:1,qty:1,wp:1,wr:1,wt:1,ct:1,cvt:1,uph:1};
 var ALLK=["lv","name","type","pno","spec","mat","price","unit","qty","wp","wr","wt","ct","cvt","uph","mold","eqp","sup","remark","eqpcode"];
 var ROWS=[], EDIT=null, EBUF={}, TAB="bom";
 function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
@@ -119,18 +123,20 @@ function render(){
  var parts=k.tot-k.lv0;
  document.getElementById("cntinfo").innerHTML="완제품 "+k.lv0+" · 부품 "+parts+" · 계층형 BOM";
  var list=filtered();
- var h='<table class="bomt"><thead><tr><th class="lname">품목명 (계층)</th><th>품번</th><th>규격</th><th>재질</th><th class="rt">단가</th><th class="ct">단위</th><th class="ct">수량</th><th class="rt">총중량(G)</th><th class="rt">UPH</th><th class="ct">관리</th></tr></thead><tbody>';
+ var th='<th class="lname">품목명 (계층)</th>';
+ for(var _i=0;_i<DHEAD.length;_i++){var _k=DCOLS[_i];th+='<th class="'+(NUMK[_k]?"rt":(_k==="unit"?"ct":""))+'">'+DHEAD[_i]+'</th>';}
+ th+='<th class="ct">관리</th>';
+ var h='<div class="bwrap"><table class="bomt"><thead><tr>'+th+'</tr></thead><tbody>';
  list.forEach(function(r){
   var lv=parseInt(r.lv,10)||0;
   if(EDIT===r.id){h+=erow(r);return;}
   var conn=lv>0?('<span class="tree">'+(new Array(lv).join("│&nbsp;&nbsp;"))+'└─</span>'):'';
   h+='<tr class="lv'+(lv===0?0:1)+'" data-id="'+r.id+'">';
-  h+='<td class="lname"><span class="ind">'+conn+'</span>'+lvBadge(lv)+' <b'+(lv===0?' style="font-weight:800"':'')+'>'+esc(r.name)+'</b></td>';
-  h+='<td class="pno">'+esc(r.pno)+'</td><td class="spec">'+esc(r.spec)+'</td><td>'+matPill(r.mat)+'</td>';
-  h+='<td class="rt">'+esc(r.price)+'</td><td class="ct">'+(esc(r.unit)||"·")+'</td><td class="ct">'+(esc(r.qty)||"·")+'</td><td class="rt">'+(esc(r.wt)||"·")+'</td><td class="rt">'+(esc(r.uph)||"·")+'</td>';
+  h+='<td class="lname nowrap"><span class="ind">'+conn+'</span>'+lvBadge(lv)+' <b'+(lv===0?' style="font-weight:800"':'')+'>'+esc(r.name)+'</b></td>';
+  DCOLS.forEach(function(kk){var cell;if(kk==="mat")cell=matPill(r[kk]);else if(kk==="pno")cell='<span class="pno">'+esc(r[kk])+'</span>';else cell=(esc(r[kk])||"·");h+='<td class="'+(NUMK[kk]?"rt":(kk==="unit"?"ct":""))+'">'+cell+'</td>';});
   h+='<td class="ct nowrap"><button class="mb" onclick="startEdit('+r.id+')">편집</button><button class="mb d" onclick="delRow('+r.id+')">삭제</button></td></tr>';
  });
- h+='</tbody></table>';
+ h+='</tbody></table></div>';
  if(!list.length)h='<div class="empty">데이터가 없습니다. <b>＋ 항목 추가</b>로 등록하세요.</div>';
  document.getElementById("bomBody").innerHTML=h;
 }
@@ -138,7 +144,10 @@ function erow(r){
  var lv=parseInt(r.lv,10)||0;
  function inp(k,ph){return '<input class="ei" value="'+eatt(EBUF[k])+'" oninput="EBUF[\''+k+'\']=this.value" placeholder="'+(ph||"")+'">';}
  var lvs='<select class="ei" style="width:64px" onchange="EBUF.lv=this.value">';for(var i=0;i<=6;i++)lvs+='<option value="'+i+'"'+((""+lv)===(""+i)?" selected":"")+'>Lv'+i+'</option>';lvs+='</select>';
- return '<tr class="editing"><td class="lname">'+lvs+' '+inp("name","품명 *")+'</td><td>'+inp("pno")+'</td><td>'+inp("spec")+'</td><td>'+inp("mat")+'</td><td>'+inp("price")+'</td><td>'+inp("unit")+'</td><td>'+inp("qty")+'</td><td>'+inp("wt")+'</td><td>'+inp("uph")+'</td><td class="ct nowrap"><button class="mb save" onclick="saveEdit()">저장</button><button class="mb" onclick="cancelEdit()">취소</button></td></tr>';
+ var h='<tr class="editing"><td class="lname nowrap">'+lvs+' '+inp("name","품명 *")+'</td>';
+ DCOLS.forEach(function(kk){h+='<td>'+inp(kk)+'</td>';});
+ h+='<td class="ct nowrap"><button class="mb save" onclick="saveEdit()">저장</button><button class="mb" onclick="cancelEdit()">취소</button></td></tr>';
+ return h;
 }
 function startEdit(id){var r=_f(id);if(!r)return;EDIT=id;EBUF={};ALLK.forEach(function(k){EBUF[k]=r[k];});EBUF.lv=parseInt(r.lv,10)||0;render();}
 function cancelEdit(){EDIT=null;EBUF={};render();}
