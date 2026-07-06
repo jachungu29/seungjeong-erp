@@ -44,3 +44,19 @@ do $$ begin
   begin alter publication supabase_realtime add table sales_order;
   exception when duplicate_object then null; end;
 end $$;
+
+-- [D] 업체 관리 (partners.html) — 고객사·공급사·외주 동일 양식
+create table if not exists partners (
+  id bigserial primary key, code text, gubun text default '고객사',
+  name text, bizno text, ceo text, item text, bizType text, bizItem text,
+  tel text, fax text, addr text, pay text, taxEmail text,
+  mgrName text, mgrRole text, mgrMobile text, mgrEmail text,
+  status text default '거래중', remark text, updated_at timestamptz default now());
+alter table partners enable row level security;
+drop policy if exists "allow all" on partners;
+create policy "allow all" on partners for all to anon using(true) with check(true);
+alter table partners replica identity full;
+do $$ begin
+  begin alter publication supabase_realtime add table partners;
+  exception when duplicate_object then null; end;
+end $$;
