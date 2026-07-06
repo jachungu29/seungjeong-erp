@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>승정 ERP · 수주 관리</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--panel3:#21262d;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;--faint:#6e7681;--blue:#58a6ff;--green:#3fb950;--amber:#d29922;--red:#f85149;--kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px}
+header{display:flex;align-items:center;gap:12px;padding:9px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{margin:0;font-size:15px}header .sub{color:var(--dim);font-size:11.5px}
+header .sp{margin-left:auto;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.btn{font-size:12px;padding:6px 12px;border-radius:7px;border:1px solid var(--line);background:var(--panel3);color:var(--txt);cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--blue)}.btn.pri{background:#1f6feb;border-color:#1f6feb;color:#fff}.btn.pri:hover{border-color:#4b8bff}
+.btn.sm{padding:3px 9px;font-size:11px}.btn.d{color:var(--red);border-color:#5c2326}
+.search{font:inherit;font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel3);color:var(--txt);width:220px}
+.wrap{padding:16px 18px 60px}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.st{font-size:12px;color:var(--dim);font-family:var(--mono);margin-left:auto}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:11px 15px;min-width:96px}
+.kpi b{font-size:21px;font-weight:800}.kpi span{display:block;color:var(--dim);font-size:11.5px;margin-top:2px}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;white-space:nowrap}
+th{background:var(--panel3);font-size:11px;color:var(--dim);position:sticky;top:0}
+tr:hover td{background:var(--panel2)}
+td.r,th.r{text-align:right;font-family:var(--mono)}
+td.c,th.c{text-align:center}
+.ono{font-family:var(--mono);color:var(--faint)}
+.pill{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
+.p-진행{background:rgba(210,153,34,.18);color:var(--amber)}.p-완료{background:rgba(63,185,80,.18);color:var(--green)}.p-취소{background:rgba(248,81,73,.18);color:var(--red)}
+.ei{width:100%;background:var(--panel3);border:1px solid var(--line);border-radius:6px;color:var(--txt);font:inherit;font-size:12.5px;padding:5px 6px}
+.empty{padding:26px;text-align:center;color:var(--faint)}
+.warn{display:none;background:#3a2417;border:1px solid #5c4a15;border-radius:10px;padding:14px 16px;color:#f0c674;font-size:13px;line-height:1.7;margin-bottom:14px}
+.warn.on{display:block}.warn code{display:block;background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:10px;margin-top:8px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;color:var(--txt)}
+</style></head><body>
+<header>
+ <h1>승정 ERP · 수주 관리</h1><span class="sub">등록 · 조회 · 변경/취소 · 온라인 공유</span>
+ <span class="sp">
+  <input class="search" id="q" placeholder="고객사·품번·수주번호 검색…" oninput="render()">
+  <button class="btn" onclick="exportCSV()">CSV</button>
+  <a class="btn" href="index2.html">← 메인</a>
+ </span>
+</header>
+<div class="wrap">
+ <div class="warn" id="warn"></div>
+ <div class="bar">
+  <button class="btn pri" onclick="addRow()">＋ 수주 등록</button>
+  <span class="st" id="stt">…</span>
+ </div>
+ <div class="kpis" id="kpis"></div>
+ <div class="scroll"><div id="body"><div class="empty">불러오는 중…</div></div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
+var COLS=["ono","odate","cust","pno","pname","qty","price","due","status","remark"];
+var LAB={ono:"수주번호",odate:"수주일자",cust:"고객사",pno:"품번",pname:"품명",qty:"수량",price:"단가",due:"납기",status:"상태",remark:"비고"};
+var STS=["진행","완료","취소"];
+var ROWS=[], EDIT=null, EBUF={};
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function eatt(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/"/g,"&quot;");}
+function st(t,c){var s=document.getElementById("stt");if(s){s.textContent=t;s.style.color=(c==="g"?"#3fb950":(c==="r"?"#f85149":"#8b949e"));}}
+function _f(id){for(var i=0;i<ROWS.length;i++)if(ROWS[i].id===id)return ROWS[i];return null;}
+function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
+function nextOno(){var mx=0;ROWS.forEach(function(r){var m=(""+(r.ono||"")).match(/(\d+)/);if(m){var n=+m[1];if(n>mx)mx=n;}});return "SO-"+("000"+(mx+1)).slice(-4);}
+
+async function boot(){ st("연결 중…"); var r=await sb.from("sales_order").select("*").order("id",{ascending:false});
+ if(r.error){ showWarn(); st("표 없음 — SQL 필요","r"); return; }
+ document.getElementById("warn").classList.remove("on");
+ ROWS=r.data||[]; st("클라우드 연결됨 ✓","g"); render();
+ try{ sb.channel("so_rt").on("postgres_changes",{event:"*",schema:"public",table:"sales_order"},function(){ if(EDIT===null) reload(); }).subscribe(); }catch(e){}
+}
+async function reload(){ var r=await sb.from("sales_order").select("*").order("id",{ascending:false}); if(r.error)return; ROWS=r.data||[]; render(); }
+function showWarn(){ var w=document.getElementById("warn"); w.classList.add("on");
+ w.innerHTML='⚠ <b>수주 저장칸(sales_order 표)이 아직 없습니다.</b> Supabase → SQL Editor 에 아래를 붙여넣고 Run 하세요:'+
+ '<code>create table if not exists sales_order (\n  id bigserial primary key,\n  ono text, odate text, cust text, pno text, pname text,\n  qty text, price text, due text, status text default \'진행\', remark text,\n  updated_at timestamptz default now());\nalter table sales_order enable row level security;\ndrop policy if exists "allow all" on sales_order;\ncreate policy "allow all" on sales_order for all to anon using(true) with check(true);\nalter table sales_order replica identity full;\ndo $$ begin begin alter publication supabase_realtime add table sales_order;\n  exception when duplicate_object then null; end; end $$;</code>';
+ document.getElementById("body").innerHTML='<div class="empty">위 안내대로 SQL을 실행한 뒤 새로고침(F5) 하세요.</div>';
+ document.getElementById("kpis").innerHTML="";
+}
+function filtered(){var q=(document.getElementById("q").value||"").trim().toLowerCase();if(!q)return ROWS;return ROWS.filter(function(r){return ((r.ono||"")+" "+(r.cust||"")+" "+(r.pno||"")+" "+(r.pname||"")).toLowerCase().indexOf(q)>=0;});}
+function render(){
+ var run=0,don=0,can=0;ROWS.forEach(function(r){if(r.status==="완료")don++;else if(r.status==="취소")can++;else run++;});
+ document.getElementById("kpis").innerHTML=
+  '<div class="kpi"><b>'+ROWS.length+'</b><span>전체 수주</span></div>'+
+  '<div class="kpi"><b style="color:var(--amber)">'+run+'</b><span>진행</span></div>'+
+  '<div class="kpi"><b style="color:var(--green)">'+don+'</b><span>완료</span></div>'+
+  '<div class="kpi"><b style="color:var(--red)">'+can+'</b><span>취소</span></div>';
+ var list=filtered();
+ var h='<table><thead><tr><th>수주번호</th><th>수주일자</th><th>고객사</th><th>품번</th><th>품명</th><th class="r">수량</th><th class="r">단가</th><th>납기</th><th class="c">상태</th><th>비고</th><th class="c">관리</th></tr></thead><tbody>';
+ if(!list.length){ h+='</tbody></table>'; document.getElementById("body").innerHTML='<div class="empty">수주가 없습니다. <b>＋ 수주 등록</b>으로 추가하세요.</div>'; return; }
+ list.forEach(function(r){
+  if(EDIT===r.id){ h+=erow(r); return; }
+  var stt=r.status||"진행";
+  h+='<tr><td class="ono">'+esc(r.ono)+'</td><td>'+esc(r.odate)+'</td><td><b>'+esc(r.cust)+'</b></td><td>'+esc(r.pno)+'</td><td>'+esc(r.pname)+'</td><td class="r">'+esc(r.qty)+'</td><td class="r">'+esc(r.price)+'</td><td>'+esc(r.due)+'</td><td class="c"><span class="pill p-'+esc(stt)+'">'+esc(stt)+'</span></td><td>'+esc(r.remark)+'</td>'+
+   '<td class="c" style="white-space:nowrap"><button class="btn sm" onclick="startEdit('+r.id+')">편집</button> <button class="btn sm d" onclick="delRow('+r.id+')">삭제</button></td></tr>';
+ });
+ h+='</tbody></table>';
+ document.getElementById("body").innerHTML=h;
+}
+function erow(r){
+ function inp(k,t,ph){return '<input class="ei" type="'+(t||"text")+'" value="'+eatt(EBUF[k])+'" oninput="EBUF[\''+k+'\']=this.value" placeholder="'+(ph||"")+'">';}
+ var ss='<select class="ei" onchange="EBUF.status=this.value">';STS.forEach(function(x){ss+='<option'+((EBUF.status||"진행")===x?" selected":"")+'>'+x+'</option>';});ss+='</select>';
+ return '<tr><td class="ono">'+esc(EBUF.ono)+'</td><td>'+inp("odate","date")+'</td><td>'+inp("cust","text","고객사 *")+'</td><td>'+inp("pno")+'</td><td>'+inp("pname")+'</td><td>'+inp("qty")+'</td><td>'+inp("price")+'</td><td>'+inp("due","date")+'</td><td>'+ss+'</td><td>'+inp("remark")+'</td>'+
+  '<td class="c" style="white-space:nowrap"><button class="btn sm pri" onclick="saveEdit()">저장</button> <button class="btn sm" onclick="cancelEdit()">취소</button></td></tr>';
+}
+function startEdit(id){var r=_f(id);if(!r)return;EDIT=id;EBUF={};COLS.forEach(function(k){EBUF[k]=r[k];});if(!EBUF.status)EBUF.status="진행";render();}
+function cancelEdit(){EDIT=null;EBUF={};render();}
+async function saveEdit(){
+ if(!EBUF.cust||!String(EBUF.cust).trim()){alert("고객사는 필수입니다.");return;}
+ var rec={};COLS.forEach(function(k){rec[k]=(EBUF[k]==null?"":String(EBUF[k]));}); rec.updated_at=new Date().toISOString();
+ st("저장 중…"); var res=await sb.from("sales_order").update(rec).eq("id",EDIT);
+ if(res.error){st("저장 실패","r");alert("저장 실패: "+res.error.message);return;}
+ var r=_f(EDIT);if(r)for(var k in rec)r[k]=rec[k]; EDIT=null;EBUF={}; st("저장됨 ✓","g"); render();
+}
+async function addRow(){
+ st("추가 중…"); var res=await sb.from("sales_order").insert({ono:nextOno(),odate:today(),status:"진행"}).select();
+ if(res.error){st("추가 실패","r");alert("추가 실패: "+res.error.message);return;}
+ ROWS.unshift(res.data[0]); st("추가됨 ✓","g"); startEdit(res.data[0].id);
+}
+async function delRow(id){var r=_f(id);if(!confirm("이 수주를 삭제할까요?"+(r?("\n"+(r.ono||"")+" / "+(r.cust||"")):"")))return;st("삭제 중…");var res=await sb.from("sales_order").delete().eq("id",id);if(res.error){st("삭제 실패","r");return;}ROWS=ROWS.filter(function(x){return x.id!==id;});st("삭제됨 ✓","g");render();}
+function exportCSV(){var head=COLS.map(function(k){return LAB[k];});var lines=[head.join(",")];ROWS.forEach(function(r){lines.push(COLS.map(function(k){var s=String(r[k]==null?"":r[k]);if(/[",\n]/.test(s))s='"'+s.replace(/"/g,'""')+'"';return s;}).join(","));});var b=new Blob(["﻿"+lines.join("\n")],{type:"text/csv"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="승정_수주목록.csv";a.click();}
+boot();
+</script>
+</body></html>

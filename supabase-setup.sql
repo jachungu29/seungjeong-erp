@@ -29,3 +29,18 @@ create table if not exists item_master (
 alter table item_master enable row level security;
 drop policy if exists "allow all" on item_master;
 create policy "allow all" on item_master for all to anon using(true) with check(true);
+
+-- [C] 수주 관리 (sales.html)
+create table if not exists sales_order (
+  id bigserial primary key,
+  ono text, odate text, cust text, pno text, pname text,
+  qty text, price text, due text, status text default '진행', remark text,
+  updated_at timestamptz default now());
+alter table sales_order enable row level security;
+drop policy if exists "allow all" on sales_order;
+create policy "allow all" on sales_order for all to anon using(true) with check(true);
+alter table sales_order replica identity full;
+do $$ begin
+  begin alter publication supabase_realtime add table sales_order;
+  exception when duplicate_object then null; end;
+end $$;
