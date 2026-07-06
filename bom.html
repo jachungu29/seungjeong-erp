@@ -45,6 +45,12 @@ async function boot(){
   +'thead th,tbody td{padding:1px 5px !important;line-height:1.15 !important}'
   +'tbody td button,tbody td .btn,tbody td .delbtn{font-size:10px !important;padding:1px 5px !important;margin:0 1px !important}'
   +'.editbadge{display:none !important}'
+  +'.tt{background:linear-gradient(120deg,#0b1220 0%,#15357e 52%,#2563eb 100%) !important;border-radius:14px !important;padding:15px 22px !important;margin:2px 0 12px !important;box-shadow:0 8px 24px rgba(37,99,235,.30) !important;display:flex !important;align-items:center !important;gap:14px !important;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}'
+  +'.tt::before{content:"\\1F4CB";font-size:27px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}'
+  +'.tt::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}'
+  +'.tt h1{color:#fff !important;font-size:27px !important;font-weight:900 !important;letter-spacing:.6px !important;margin:0 !important;text-shadow:0 2px 4px rgba(0,0,0,.35)}'
+  +'.tt h1 span{color:#dbe6ff !important}'
+  +'.tt .date{color:#0b1220 !important;font-weight:800 !important;font-size:12.5px !important;background:#ffd54a !important;padding:5px 14px !important;border-radius:20px !important;margin-left:auto !important;box-shadow:0 2px 8px rgba(255,213,74,.4)}'
   +'#remarkFilterBar{display:flex;gap:6px;align-items:center;margin:2px 0 8px;flex-wrap:wrap;font-size:12px}'
   +'#remarkFilterBar .rf-btn{border:1px solid #d8e0ec;border-radius:7px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:700}'
   +'</style>';
@@ -56,9 +62,10 @@ async function boot(){
   +'function paint(){var bs=document.querySelectorAll("#remarkFilterBar .rf-btn");for(var i=0;i<bs.length;i++){var on=bs[i].textContent===active;bs[i].style.background=on?"#2563eb":"#fff";bs[i].style.color=on?"#fff":"#1c2942";}}'
   +'function apply(){var idx=remarkIdx();if(idx<0)return;var rows=document.querySelectorAll("tbody tr");for(var i=0;i<rows.length;i++){var c=rows[i].children;if(active==="전체"){rows[i].style.display="";continue;}var tx=(c[idx]?c[idx].textContent:"").trim();rows[i].style.display=(tx.indexOf(active)>=0)?"":"none";}}'
   +'function bar(){if(document.getElementById("remarkFilterBar"))return;var tbl=document.querySelector("table");if(!tbl)return;var wrap=tbl.parentElement;var b=document.createElement("div");b.id="remarkFilterBar";var hh=\'<b style="color:#64748b">Remark:</b>\';for(var i=0;i<CATS.length;i++){hh+=\'<button class="rf-btn" data-c="\'+CATS[i]+\'">\'+CATS[i]+\'</button>\';}b.innerHTML=hh;wrap.parentNode.insertBefore(b,wrap);var bs=b.querySelectorAll(".rf-btn");for(var j=0;j<bs.length;j++){bs[j].onclick=function(){active=this.getAttribute("data-c");apply();paint();};}paint();}'
-  +'function boot(){bar();apply();}'
+  +'function tree(){var cells=document.querySelectorAll("tbody td.nm");for(var i=0;i<cells.length;i++){var c=cells[i];if(c.getAttribute("data-tree")==="1")continue;var pl=parseFloat(getComputedStyle(c).paddingLeft)||9;var lv=Math.round((pl-9)/16);if(lv<0)lv=0;if(lv>0){var im=[],sz=[],ps=[];for(var k=0;k<lv;k++){var x=k*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("2px 100%");ps.push(x+"px 0");}var lx=(lv-1)*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("8px 2px");ps.push(lx+"px 50%");c.style.backgroundImage=im.join(",");c.style.backgroundSize=sz.join(",");c.style.backgroundPosition=ps.join(",");c.style.backgroundRepeat="no-repeat";}c.setAttribute("data-tree","1");}}'
+  +'function boot(){bar();apply();tree();}'
   +'if(document.readyState!=="loading")setTimeout(boot,300);else document.addEventListener("DOMContentLoaded",function(){setTimeout(boot,300);});'
-  +'var tmr;var mo=new MutationObserver(function(){clearTimeout(tmr);tmr=setTimeout(function(){bar();apply();},120);});'
+  +'var tmr;var mo=new MutationObserver(function(){clearTimeout(tmr);tmr=setTimeout(function(){bar();apply();tree();},120);});'
   +'setTimeout(function(){var w=document.querySelector(".wrap")||document.body;mo.observe(w,{childList:true,subtree:true});},900);'
   +'})();<\/scr'+'ipt>';
  html=html.replace(/<\/body>/i, FILTER_JS+'</body>');
