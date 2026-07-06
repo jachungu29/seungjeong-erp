@@ -95,12 +95,12 @@ function render(){
    if(!q)return true; return ((r.name||"")+" "+(r.ceo||"")+" "+(r.mgrName||"")+" "+(r.code||"")).toLowerCase().indexOf(q)>=0; });
  var cnt={고객사:0,공급사:0,외주:0}; ROWS.forEach(function(r){var g=r.gubun||"고객사";if(cnt[g]!=null)cnt[g]++;});
  var h='<div class="bar"><div class="seg">'+["전체","고객사","공급사","외주"].map(function(g){return '<button class="'+(FILT===g?"on":"")+'" onclick="setFilt(\''+g+'\')">'+g+(g!=="전체"?" "+(cnt[g]||0):" "+ROWS.length)+'</button>';}).join('')+'</div>'+
-   '<button class="btn pri" onclick="startNew()">＋ 업체 등록</button><span class="st" id="stt"></span></div>';
+   '<button class="btn pri" onclick="startNew()">＋ '+(FILT!=="전체"?FILT:"업체")+' 등록</button><span class="st" id="stt"></span></div>';
  if(!list.length){ h+='<div class="empty">업체가 없습니다. <b>＋ 업체 등록</b>으로 추가하세요.</div>'; document.getElementById("page").innerHTML=h; return; }
  h+='<div class="scroll"><table class="list"><thead><tr><th>구분</th><th>코드</th><th>업체명</th><th>대표</th><th>담당자</th><th>연락처</th><th>상태</th><th>관리</th></tr></thead><tbody>';
  list.forEach(function(r){ var g=r.gubun||"고객사";
-  h+='<tr><td><span class="pill g-'+esc(g)+'">'+esc(g)+'</span></td><td class="code">'+esc(r.code)+'</td><td><b>'+esc(r.name)+'</b></td><td>'+esc(r.ceo)+'</td><td>'+esc(r.mgrName)+'</td><td>'+esc(r.mgrMobile)+'</td><td>'+esc(r.status||"거래중")+'</td>'+
-   '<td style="white-space:nowrap"><button class="btn sm" onclick="startEdit('+r.id+')">편집</button> <button class="btn sm d" onclick="del('+r.id+')">삭제</button></td></tr>';
+  h+='<tr style="cursor:pointer" title="클릭하면 양식 열림" onclick="startEdit('+r.id+')"><td><span class="pill g-'+esc(g)+'">'+esc(g)+'</span></td><td class="code">'+esc(r.code)+'</td><td><b>'+esc(r.name)+'</b></td><td>'+esc(r.ceo)+'</td><td>'+esc(r.mgrName)+'</td><td>'+esc(r.mgrMobile)+'</td><td>'+esc(r.status||"거래중")+'</td>'+
+   '<td style="white-space:nowrap"><button class="btn sm" onclick="event.stopPropagation();startEdit('+r.id+')">양식</button> <button class="btn sm d" onclick="event.stopPropagation();del('+r.id+')">삭제</button></td></tr>';
  });
  h+='</tbody></table></div>';
  document.getElementById("page").innerHTML=h;
