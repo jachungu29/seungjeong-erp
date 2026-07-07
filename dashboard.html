@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>승정 ERP · 종합 대시보드 (전사 KPI)</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--panel3:#21262d;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;--faint:#6e7681;--blue:#58a6ff;--green:#3fb950;--amber:#d29922;--red:#f85149;--purple:#bc8cff;--cyan:#39c5cf;--kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px}
+header{display:flex;align-items:center;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{margin:0;font-size:16px}header .sub{color:var(--dim);font-size:11.5px}
+header .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{font-size:12px;padding:6px 12px;border-radius:7px;border:1px solid var(--line);background:var(--panel3);color:var(--txt);cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--blue)}
+.st{font-size:11px;color:var(--faint);font-family:var(--mono)}
+.wrap{padding:18px 20px 70px;max-width:1080px;margin:0 auto}
+.sec{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:1px;margin:22px 0 11px;text-transform:uppercase}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 17px;position:relative;overflow:hidden}
+.kpi .lbl{font-size:12px;color:var(--dim)}
+.kpi .val{font-size:27px;font-weight:800;margin-top:5px;line-height:1.1}
+.kpi .sub{font-size:11px;color:var(--faint);margin-top:3px}
+.kpi .bar{position:absolute;left:0;bottom:0;height:3px;width:100%}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px}
+@media(max-width:760px){.row{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 17px}
+.card h3{margin:0 0 12px;font-size:13.5px;display:flex;align-items:center;gap:8px}
+.card h3 .c{font-size:11px;color:var(--faint);font-weight:400;margin-left:auto}
+.brow{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:12.5px}
+.brow .nm{width:64px;color:var(--dim)}
+.brow .track{flex:1;height:14px;background:var(--panel3);border-radius:7px;overflow:hidden}
+.brow .fill{height:100%;border-radius:7px}
+.brow .n{width:52px;text-align:right;font-family:var(--mono);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap}
+th{color:var(--dim);font-size:11px}
+td.r,th.r{text-align:right;font-family:var(--mono)}
+.pill{font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:20px}
+.p-진행{background:rgba(210,153,34,.18);color:var(--amber)}.p-완료{background:rgba(63,185,80,.18);color:var(--green)}.p-취소{background:rgba(248,81,73,.18);color:var(--red)}
+.empty{color:var(--faint);font-size:12.5px;padding:12px 0;text-align:center}
+.note{border:1px dashed var(--line);border-radius:10px;padding:10px 14px;color:var(--dim);font-size:12px;margin-top:16px}
+</style></head><body>
+<header>
+ <h1>📊 종합 대시보드 <span class="sub">전사 KPI · 클라우드 실시간</span></h1>
+ <span class="sp"><span class="st" id="st">…</span><button class="btn" onclick="loadAll()">🔄 새로고침</button><a class="btn" href="index2.html">← 메인</a></span>
+</header>
+<div class="wrap">
+ <div class="sec">핵심 지표</div>
+ <div class="kpis" id="kpis"><div class="kpi"><div class="lbl">불러오는 중…</div></div></div>
+
+ <div class="row" style="margin-top:16px">
+  <div class="card"><h3>🧾 수주 상태 <span class="c" id="soc"></span></h3><div id="sobar"></div></div>
+  <div class="card"><h3>🏢 거래처 구성 <span class="c" id="ptc"></span></h3><div id="ptbar"></div></div>
+ </div>
+
+ <div class="sec">최근 수주</div>
+ <div class="card"><div id="recent"><div class="empty">불러오는 중…</div></div></div>
+
+ <div class="note">이 대시보드는 <b>클라우드(수주·업체·품목·BOM)</b> 데이터를 모아 보여줍니다. 각 화면에서 등록하면 여기 숫자가 자동으로 바뀝니다. 저장칸이 아직 없는 항목은 0으로 표시됩니다.</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
+function num(v){var n=parseFloat(String(v==null?"":v).replace(/[^0-9.\-]/g,""));return isNaN(n)?0:n;}
+function won(n){return "₩"+Math.round(n).toLocaleString("ko-KR");}
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function setSt(t,c){var e=document.getElementById("st");e.textContent=t;e.style.color=(c==="g"?"#3fb950":c==="r"?"#f85149":"#6e7681");}
+async function grab(t){ try{var r=await sb.from(t).select("*"); return r.error?null:(r.data||[]);}catch(e){return null;} }
+
+async function loadAll(){
+ setSt("불러오는 중…");
+ var res=await Promise.all([grab("sales_order"),grab("partners"),grab("item_master"),grab("bom")]);
+ var SO=res[0]||[], PT=res[1]||[], IM=res[2]||[], BM=res[3]||[];
+ var ok=res.some(function(x){return x!==null;});
+ setSt(ok?"클라우드 연결됨 ✓":"연결 확인 필요", ok?"g":"r");
+
+ /* 수주 */
+ var run=0,don=0,can=0,amt=0,tm=0;
+ var ym=(new Date()).toISOString().slice(0,7);
+ SO.forEach(function(o){var s=o.status||"진행"; if(s==="완료")don++;else if(s==="취소")can++;else run++;
+   if(s!=="취소")amt+=num(o.qty)*num(o.price); if((o.odate||"").slice(0,7)===ym)tm++;});
+ /* 거래처 */
+ var cust=0,vend=0,out=0; PT.forEach(function(p){var g=p.gubun||"고객사"; if(g==="공급사")vend++;else if(g==="외주")out++;else cust++;});
+ /* BOM */
+ var lv0=0; BM.forEach(function(b){if((parseInt(b.lv,10)||0)===0)lv0++;});
+
+ /* KPI 카드 */
+ var K=[
+  ["총 수주",SO.length+"건","진행 "+run+" · 완료 "+don,"var(--blue)"],
+  ["수주 금액",won(amt),"취소 제외 합계","var(--green)"],
+  ["이번달 수주",tm+"건",ym,"var(--cyan)"],
+  ["거래처",PT.length+"곳","고객 "+cust+" · 공급 "+vend,"var(--purple)"],
+  ["품목",IM.length+"건","품목 마스터","var(--amber)"],
+  ["BOM 항목",BM.length+"건","완제품 "+lv0,"var(--blue)"]
+ ];
+ document.getElementById("kpis").innerHTML=K.map(function(k){return '<div class="kpi"><div class="lbl">'+k[0]+'</div><div class="val">'+k[1]+'</div><div class="sub">'+k[2]+'</div><div class="bar" style="background:'+k[3]+'"></div></div>';}).join("");
+
+ /* 수주 상태 막대 */
+ document.getElementById("soc").textContent=SO.length+"건";
+ bars("sobar",[["진행",run,"#d29922"],["완료",don,"#3fb950"],["취소",can,"#f85149"]],SO.length);
+ /* 거래처 막대 */
+ document.getElementById("ptc").textContent=PT.length+"곳";
+ bars("ptbar",[["고객사",cust,"#58a6ff"],["공급사",vend,"#d29922"],["외주",out,"#8b949e"]],PT.length);
+
+ /* 최근 수주 */
+ var rec=SO.slice().sort(function(a,b){return (b.id||0)-(a.id||0);}).slice(0,6);
+ var rh=rec.length?('<table><thead><tr><th>수주번호</th><th>고객사</th><th>품번</th><th class="r">수량</th><th>납기</th><th>상태</th></tr></thead><tbody>'+
+   rec.map(function(o){var s=o.status||"진행";return '<tr><td style="font-family:var(--mono);color:var(--faint)">'+esc(o.ono)+'</td><td><b>'+esc(o.cust)+'</b></td><td>'+esc(o.pno)+'</td><td class="r">'+esc(o.qty)+'</td><td>'+esc(o.due)+'</td><td><span class="pill p-'+esc(s)+'">'+esc(s)+'</span></td></tr>';}).join("")+'</tbody></table>')
+   :'<div class="empty">수주 데이터가 없습니다. <a href="sales.html" style="color:var(--blue)">수주 관리</a>에서 등록하세요.</div>';
+ document.getElementById("recent").innerHTML=rh;
+}
+function bars(id,arr,tot){
+ var h=arr.map(function(a){var pct=tot?Math.round(a[1]/tot*100):0;return '<div class="brow"><span class="nm">'+a[0]+'</span><span class="track"><span class="fill" style="width:'+pct+'%;background:'+a[2]+'"></span></span><span class="n">'+a[1]+'</span></div>';}).join("");
+ document.getElementById(id).innerHTML=h||'<div class="empty">데이터 없음</div>';
+}
+loadAll();
+try{ sb.channel("dash_rt").on("postgres_changes",{event:"*",schema:"public",table:"sales_order"},loadAll)
+   .on("postgres_changes",{event:"*",schema:"public",table:"partners"},loadAll).subscribe(); }catch(e){}
+</script>
+</body></html>
