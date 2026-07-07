@@ -53,6 +53,10 @@ async function boot(){
   +'.tt .date{color:#0b1220 !important;font-weight:800 !important;font-size:12.5px !important;background:#ffd54a !important;padding:5px 14px !important;border-radius:20px !important;margin-left:auto !important;box-shadow:0 2px 8px rgba(255,213,74,.4)}'
   +'#remarkFilterBar,#eqpFilterBar{display:inline-flex;gap:6px;align-items:center;margin:2px 14px 6px 0;flex-wrap:wrap;font-size:12px;vertical-align:middle}button[onclick*="toggleFull"]{display:none!important}'
   +'#remarkFilterBar .rf-btn,#eqpFilterBar .rf-btn{border:1px solid #d8e0ec;border-radius:7px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:700}'
+  /* ① 표 머리글(청색띠) 상하폭 크게  ② 검색·완제품만·전체펼치기 숨김  ④ 신규만보기·상태 숨김 */
+  +'thead th{padding:6px 5px !important}'
+  +'#q{display:none !important}button[onclick*="expandLv"]{display:none !important}'
+  +'label.kpi{display:none !important}#kpi{display:none !important}'
   +'</style>';
  html=html.replace(/<\/head>/i, FIT_CSS+'</head>');
  // ── Remark 필터 버튼 주입 (완제품/반제품/원자재/부자재) ──
