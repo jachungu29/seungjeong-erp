@@ -76,6 +76,10 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
 
 <div class="sec">클라우드 업무 (실데이터 · 전 PC 공유)</div>
 <div class="grid">
+ <a class="card cloud" href="exec-dashboard.html">
+  <div class="ic">📈</div>
+  <div class="t">경영자 대시보드 <span class="en">전사·부서 KPI</span></div>
+  <div class="d">전사 핵심지표 + 6개 부서 스코어카드 + 경영분석 · 실데이터.</div></a>
  <a class="card cloud" href="dashboard.html">
   <div class="ic">📊</div>
   <div class="t">종합 대시보드 <span class="en">전사 KPI</span></div>
@@ -147,7 +151,7 @@ function renderStruct(d){
 
 /* 내 바로가기 (클라우드 app_state.user_links 저장) */
 (function(){
- var FILES=[["dashboard.html","📊 종합 대시보드"],["bom.html","📋 BOM LIST"],["itemmaster.html","📦 품목 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["menu.html","🌳 설계 메뉴"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
+ var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","📊 종합 대시보드"],["bom.html","📋 BOM LIST"],["itemmaster.html","📦 품목 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["menu.html","🌳 설계 메뉴"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
  var links=[];
  function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
  var sel=document.getElementById("ulFile");
