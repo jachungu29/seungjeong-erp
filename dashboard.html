@@ -1,117 +1,217 @@
 <!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>승정 ERP · 종합 대시보드 (전사 KPI)</title>
+<title>승정 ERP · 종합대시보드 (현장용)</title>
 <style>
-:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--panel3:#21262d;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;--faint:#6e7681;--blue:#58a6ff;--green:#3fb950;--amber:#d29922;--red:#f85149;--purple:#bc8cff;--cyan:#39c5cf;--kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px}
-header{display:flex;align-items:center;gap:12px;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
-header h1{margin:0;font-size:16px}header .sub{color:var(--dim);font-size:11.5px}
-header .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
-.btn{font-size:12px;padding:6px 12px;border-radius:7px;border:1px solid var(--line);background:var(--panel3);color:var(--txt);cursor:pointer;text-decoration:none}
-.btn:hover{border-color:var(--blue)}
-.st{font-size:11px;color:var(--faint);font-family:var(--mono)}
-.wrap{padding:18px 20px 70px;max-width:1080px;margin:0 auto}
-.sec{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:1px;margin:22px 0 11px;text-transform:uppercase}
-.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 17px;position:relative;overflow:hidden}
-.kpi .lbl{font-size:12px;color:var(--dim)}
-.kpi .val{font-size:27px;font-weight:800;margin-top:5px;line-height:1.1}
-.kpi .sub{font-size:11px;color:var(--faint);margin-top:3px}
-.kpi .bar{position:absolute;left:0;bottom:0;height:3px;width:100%}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px}
-@media(max-width:760px){.row{grid-template-columns:1fr}}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 17px}
-.card h3{margin:0 0 12px;font-size:13.5px;display:flex;align-items:center;gap:8px}
-.card h3 .c{font-size:11px;color:var(--faint);font-weight:400;margin-left:auto}
-.brow{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:12.5px}
-.brow .nm{width:64px;color:var(--dim)}
-.brow .track{flex:1;height:14px;background:var(--panel3);border-radius:7px;overflow:hidden}
-.brow .fill{height:100%;border-radius:7px}
-.brow .n{width:52px;text-align:right;font-family:var(--mono);font-weight:700}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap}
-th{color:var(--dim);font-size:11px}
-td.r,th.r{text-align:right;font-family:var(--mono)}
-.pill{font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:20px}
-.p-진행{background:rgba(210,153,34,.18);color:var(--amber)}.p-완료{background:rgba(63,185,80,.18);color:var(--green)}.p-취소{background:rgba(248,81,73,.18);color:var(--red)}
-.empty{color:var(--faint);font-size:12.5px;padding:12px 0;text-align:center}
-.note{border:1px dashed var(--line);border-radius:10px;padding:10px 14px;color:var(--dim);font-size:12px;margin-top:16px}
+:root{
+ --bg:#f0eee9;--card:#ffffff;--line:#e7e3db;--line2:#efece5;--chip:#f7f5f0;
+ --txt:#1d1f24;--dim:#8b8f96;--faint:#a7abb2;--track:#e6e2da;
+ --blue:#2f6feb;--green:#2f9e44;--amber:#d08700;--red:#d64545;--purple:#7c5cff;--gray:#9aa0a8;
+ --kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px;line-height:1.45}
+.topbar{height:6px;background:#111318}
+.wrap{max-width:1560px;margin:0 auto;padding:18px 22px 80px}
+.btn{font-size:12px;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--txt);cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+/* ===== 헤더 ===== */
+.hd{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.hd .clk{display:flex;align-items:center;gap:14px}
+.hd .ic{font-size:26px}
+.hd .time{font-family:var(--mono);font-size:34px;font-weight:800;letter-spacing:1px;line-height:1}
+.hd .date{font-size:13px;color:var(--dim);margin-top:4px}
+.hd .shift{display:flex;align-items:center;gap:9px;margin-top:8px}
+.hd .shift .lab{font-size:11px;background:#e9f5ec;color:var(--green);border-radius:20px;padding:2px 9px;font-weight:700}
+.hd .shift .tr{width:150px;height:8px;background:var(--track);border-radius:6px;overflow:hidden}
+.hd .shift .fl{height:100%;background:var(--green);border-radius:6px}
+.hd .shift .pc{font-size:11.5px;color:var(--dim);font-family:var(--mono)}
+.hd .chips{margin-left:auto;display:flex;gap:9px;flex-wrap:wrap}
+.chip{background:var(--chip);border:1px solid var(--line);border-radius:11px;padding:9px 14px;text-align:center;min-width:78px}
+.chip .cl{font-size:11px;color:var(--dim)}
+.chip .cv{font-size:20px;font-weight:800;margin-top:2px}
+.chip .cu{font-size:10px;color:var(--faint)}
+.chip.warn{border-color:#f0c9c9;background:#fdf2f2}.chip.warn .cv{color:var(--red)}
+.chip .cv.red{color:var(--red)}
+.hd .act{margin-left:8px;display:flex;gap:7px}
+/* ===== 섹션 ===== */
+.sec{display:flex;align-items:center;gap:10px;margin:24px 0 11px}
+.sec h2{font-size:15px;font-weight:800;margin:0}
+.sec .lg{margin-left:auto;font-size:11.5px;color:var(--dim);display:flex;gap:12px}
+.sec .lg i{font-style:normal}.sec .lg .d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.sec .link{margin-left:auto;font-size:12px;color:var(--blue);text-decoration:none;font-weight:700}
+/* ===== 설비 카드 ===== */
+.eq{display:grid;grid-template-columns:repeat(12,1fr);gap:9px}
+@media(max-width:1300px){.eq{grid-template-columns:repeat(8,1fr)}}
+@media(max-width:900px){.eq{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:560px){.eq{grid-template-columns:repeat(3,1fr)}}
+.ec{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 11px}
+.ec .r1{display:flex;align-items:center;justify-content:space-between}
+.ec .nm{font-size:12.5px;font-weight:800}
+.ec .dt{width:9px;height:9px;border-radius:50%}
+.ec .pc{font-size:21px;font-weight:800;margin:5px 0 1px;line-height:1}
+.ec .ea{font-size:10.5px;color:var(--faint)}
+.ec .stt{font-size:11px;font-weight:700;margin-top:5px}
+.ec.st-고장{background:#fdf2f2;border-color:#f0c9c9}
+.g-가동{color:var(--green)}.g-점검{color:var(--amber)}.g-고장{color:var(--red)}.g-대기{color:var(--gray)}
+.b-가동{background:var(--green)}.b-점검{background:var(--amber)}.b-고장{background:var(--red)}.b-대기{background:var(--gray)}
+/* ===== 라인 카드 ===== */
+.lines{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}
+@media(max-width:1100px){.lines{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.lines{grid-template-columns:1fr}}
+.lc{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:13px;padding:15px 16px}
+.lc .lh{display:flex;align-items:baseline;justify-content:space-between}
+.lc .lt{font-size:15px;font-weight:800}
+.lc .lp{font-size:17px;font-weight:800;color:var(--green)}
+.lc .bar{height:5px;background:var(--track);border-radius:4px;overflow:hidden;margin:9px 0 12px}
+.lc .bar i{display:block;height:100%;background:var(--green);border-radius:4px}
+.lc .lr{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--line2)}
+.lc .lr:last-child{border-bottom:0}
+.lc .lr .k{color:var(--dim)} .lc .lr .v{font-weight:700;font-family:var(--mono)}
+.lc .lr .v.red{color:var(--red)}
+/* ===== 하단 패널 ===== */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.row2{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 17px}
+.panel .ph{display:flex;align-items:baseline;margin-bottom:10px}
+.panel .ph b{font-size:14px} .panel .ph a{margin-left:auto;font-size:11.5px;color:var(--blue);text-decoration:none}
+.emptybox{border:1px solid var(--line2);border-radius:11px;background:#fbfaf7;padding:26px 10px;text-align:center;color:var(--faint)}
+.emptybox .ei{font-size:26px;opacity:.55} .emptybox .et{font-size:12.5px;margin-top:6px}
+.emptybox.ok .ei{opacity:1} .emptybox.ok .et{color:var(--green)}
+.brow{display:flex;align-items:center;gap:11px;margin:11px 0;font-size:12.5px}
+.brow .nm{width:110px;color:var(--txt)}
+.brow .tr{flex:1;height:13px;background:var(--track);border-radius:7px;overflow:hidden}
+.brow .fl{height:100%;border-radius:7px}
+.brow .n{width:40px;text-align:right;font-family:var(--mono);font-weight:800}
 </style></head><body>
-<header>
- <h1>📊 종합 대시보드 <span class="sub">전사 KPI · 클라우드 실시간</span></h1>
- <span class="sp"><span class="st" id="st">…</span><button class="btn" onclick="loadAll()">🔄 새로고침</button><a class="btn" href="index2.html">← 메인</a></span>
-</header>
+<div class="topbar"></div>
 <div class="wrap">
- <div class="sec">핵심 지표</div>
- <div class="kpis" id="kpis"><div class="kpi"><div class="lbl">불러오는 중…</div></div></div>
 
- <div class="row" style="margin-top:16px">
-  <div class="card"><h3>🧾 수주 상태 <span class="c" id="soc"></span></h3><div id="sobar"></div></div>
-  <div class="card"><h3>🏢 거래처 구성 <span class="c" id="ptc"></span></h3><div id="ptbar"></div></div>
+ <div class="hd">
+  <div class="clk">
+   <div class="ic">🖥️</div>
+   <div>
+    <div class="time" id="clk">--:--:--</div>
+    <div class="date" id="today">----</div>
+    <div class="shift"><span class="lab">주간 07:00~19:00</span>
+     <span class="tr"><span class="fl" id="shFl" style="width:0%"></span></span>
+     <span class="pc" id="shPc">0%</span></div>
+   </div>
+  </div>
+  <div class="chips">
+   <div class="chip"><div class="cl">금일 총 생산</div><div class="cv">123,845</div><div class="cu">EA</div></div>
+   <div class="chip"><div class="cl">불량 수량</div><div class="cv red">1,595</div><div class="cu">EA</div></div>
+   <div class="chip"><div class="cl">PPM</div><div class="cv red">12,879</div><div class="cu">&nbsp;</div></div>
+   <div class="chip"><div class="cl">가동 설비</div><div class="cv">20</div><div class="cu">/29</div></div>
+   <div class="chip warn"><div class="cl">고장</div><div class="cv">2</div><div class="cu">&nbsp;</div></div>
+   <div class="chip"><div class="cl">점검</div><div class="cv">4</div><div class="cu">&nbsp;</div></div>
+  </div>
+  <div class="act"><a class="btn" href="index2.html">← 메인</a></div>
  </div>
 
- <div class="sec">최근 수주</div>
- <div class="card"><div id="recent"><div class="empty">불러오는 중…</div></div></div>
+ <div class="sec"><h2>설비 가동현황</h2>
+  <span class="lg"><i><span class="d b-가동"></span>가동 <b id="cGa">20</b></i><i><span class="d b-점검"></span>점검 <b id="cJm">4</b></i><i><span class="d b-고장"></span>고장 <b id="cGj">2</b></i><i><span class="d b-대기"></span>대기 <b id="cDg">3</b></i></span>
+ </div>
+ <div class="eq" id="eq"></div>
 
- <div class="note">이 대시보드는 <b>클라우드(수주·업체·품목·BOM)</b> 데이터를 모아 보여줍니다. 각 화면에서 등록하면 여기 숫자가 자동으로 바뀝니다. 저장칸이 아직 없는 항목은 0으로 표시됩니다.</div>
+ <div class="sec"><h2>라인별 생산현황 <span style="font-weight:400;color:var(--faint);font-size:12px">(금일 목표 대비)</span></h2>
+  <a class="link" href="legacy.html" target="_blank">생산계획 →</a></div>
+ <div class="lines" id="lines"></div>
+
+ <div class="row2">
+  <div class="panel"><div class="ph"><b>LOT 추적 현황</b><a href="legacy.html" target="_blank">전체 →</a></div>
+   <div class="emptybox"><div class="ei">🗇</div><div class="et">등록된 LOT 없음</div></div></div>
+  <div class="panel"><div class="ph"><b>금일 불량 현황</b><a href="legacy.html" target="_blank">상세 →</a></div>
+   <div class="emptybox ok"><div class="ei">🛡️</div><div class="et">금일 불량 없음 (무결점)</div></div></div>
+ </div>
+ <div class="row2">
+  <div class="panel"><div class="ph"><b>설비 이상·BM 알림</b><a href="legacy.html" target="_blank">수리대장 →</a></div>
+   <div class="emptybox"><div class="ei">🔕</div><div class="et">알림 없음</div></div></div>
+  <div class="panel"><div class="ph"><b>비가동 사유 분포 <span style="font-weight:400;color:var(--faint);font-size:11px">(기간 누계)</span></b></div>
+   <div id="downtime"></div></div>
+ </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
-function num(v){var n=parseFloat(String(v==null?"":v).replace(/[^0-9.\-]/g,""));return isNaN(n)?0:n;}
-function won(n){return "₩"+Math.round(n).toLocaleString("ko-KR");}
+/* ============================================================
+   종합대시보드 (현장용) — 첨부2·3 양식.
+   설비/라인 값은 현장(MES) 표시 예시. 시계·교대진행률은 실시간 계산.
+   ============================================================ */
+/* 설비: [이름, 가동률%, 생산EA, 상태(가동/점검/고장/대기)] */
+var EQUIP=[
+ ["V1",85.9,18400,"점검"],["V2",75.0,1501,"가동"],["V3",82.4,16800,"점검"],["V4",77.0,1223,"가동"],
+ ["V5",78.0,2184,"가동"],["V6",79.0,945,"가동"],["V7",80.0,1906,"가동"],["V8",81.0,2867,"점검"],
+ ["H1",86.0,1452,"가동"],["H2",0.0,0,"대기"],["H3",0.0,0,"대기"],["H4",89.0,2135,"가동"],
+ ["H5",90.0,3096,"가동"],["H6",89.4,24800,"가동"],["H7",92.0,2818,"고장"],["H8",93.0,1579,"대기"],
+ ["H9",74.0,2540,"가동"],["D1",78.0,944,"가동"],["D2",79.0,1905,"가동"],["HS단",90.7,12200,"가동"],
+ ["HS양",80.0,2066,"가동"],["HP단",76.0,3022,"가동"],["HP양",77.0,1663,"가동"],["통전",81.0,1927,"점검"],
+ ["볼리크",86.0,1092,"가동"],["BD자",66.2,8800,"고장"],["BD수",88.0,2274,"가동"],["열코킹",75.0,2141,"가동"],
+ ["마킹",79.0,1565,"가동"]
+];
+/* 라인: [이름, 달성%, 생산, 목표, 불량, PPM, 가동설비, 총설비, 상단색] */
+var LINES=[
+ ["수직사출",100.0,45826,4800,925,20185,5,8,"var(--green)"],
+ ["수평사출",100.0,38420,6000,372,9682,5,9,"var(--green)"],
+ ["이중사출",100.0,2849,1800,0,0,2,2,"var(--amber)"],
+ ["호스조립",100.0,18951,3200,122,6438,4,4,"var(--purple)"],
+ ["BODY조립",100.0,15872,2000,176,11089,4,5,"var(--blue)"]
+];
+/* 비가동 사유: [코드+명, %, 색] */
+var DOWN=[
+ ["DT04 설비고장",38,"var(--red)"],["DT01 금형교체",26,"var(--amber)"],
+ ["DT02 자재대기",17,"var(--amber)"],["DT03 품질확인",11,"var(--blue)"],["DT05 계획정지",8,"var(--gray)"]
+];
 function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function setSt(t,c){var e=document.getElementById("st");e.textContent=t;e.style.color=(c==="g"?"#3fb950":c==="r"?"#f85149":"#6e7681");}
-async function grab(t){ try{var r=await sb.from(t).select("*"); return r.error?null:(r.data||[]);}catch(e){return null;} }
+function comma(n){return Number(n).toLocaleString("ko-KR");}
 
-async function loadAll(){
- setSt("불러오는 중…");
- var res=await Promise.all([grab("sales_order"),grab("partners"),grab("item_master"),grab("bom")]);
- var SO=res[0]||[], PT=res[1]||[], IM=res[2]||[], BM=res[3]||[];
- var ok=res.some(function(x){return x!==null;});
- setSt(ok?"클라우드 연결됨 ✓":"연결 확인 필요", ok?"g":"r");
+/* 설비 렌더 + 상태 집계 */
+(function(){
+ var cnt={가동:0,점검:0,고장:0,대기:0};
+ var h=EQUIP.map(function(e){var st=e[3];cnt[st]=(cnt[st]||0)+1;
+  return '<div class="ec st-'+st+'"><div class="r1"><span class="nm">'+esc(e[0])+'</span><span class="dt b-'+st+'"></span></div>'+
+   '<div class="pc g-'+st+'">'+e[1].toFixed(1)+'%</div>'+
+   '<div class="ea">'+comma(e[2])+' EA</div>'+
+   '<div class="stt g-'+st+'">'+st+'</div></div>';
+ }).join("");
+ document.getElementById("eq").innerHTML=h;
+ document.getElementById("cGa").textContent=cnt["가동"];
+ document.getElementById("cJm").textContent=cnt["점검"];
+ document.getElementById("cGj").textContent=cnt["고장"];
+ document.getElementById("cDg").textContent=cnt["대기"];
+})();
 
- /* 수주 */
- var run=0,don=0,can=0,amt=0,tm=0;
- var ym=(new Date()).toISOString().slice(0,7);
- SO.forEach(function(o){var s=o.status||"진행"; if(s==="완료")don++;else if(s==="취소")can++;else run++;
-   if(s!=="취소")amt+=num(o.qty)*num(o.price); if((o.odate||"").slice(0,7)===ym)tm++;});
- /* 거래처 */
- var cust=0,vend=0,out=0; PT.forEach(function(p){var g=p.gubun||"고객사"; if(g==="공급사")vend++;else if(g==="외주")out++;else cust++;});
- /* BOM */
- var lv0=0; BM.forEach(function(b){if((parseInt(b.lv,10)||0)===0)lv0++;});
+/* 라인 렌더 */
+document.getElementById("lines").innerHTML=LINES.map(function(l){
+ return '<div class="lc" style="border-top-color:'+l[8]+'">'+
+  '<div class="lh"><span class="lt">'+esc(l[0])+'</span><span class="lp">'+l[1].toFixed(1)+'%</span></div>'+
+  '<div class="bar"><i style="width:'+Math.min(l[1],100)+'%"></i></div>'+
+  '<div class="lr"><span class="k">생산</span><span class="v">'+comma(l[2])+'</span></div>'+
+  '<div class="lr"><span class="k">목표</span><span class="v">'+comma(l[3])+'</span></div>'+
+  '<div class="lr"><span class="k">불량</span><span class="v red">'+comma(l[4])+'</span></div>'+
+  '<div class="lr"><span class="k">PPM</span><span class="v red">'+comma(l[5])+'</span></div>'+
+  '<div class="lr"><span class="k">가동 설비</span><span class="v">'+l[6]+'/'+l[7]+'</span></div></div>';
+}).join("");
 
- /* KPI 카드 */
- var K=[
-  ["총 수주",SO.length+"건","진행 "+run+" · 완료 "+don,"var(--blue)"],
-  ["수주 금액",won(amt),"취소 제외 합계","var(--green)"],
-  ["이번달 수주",tm+"건",ym,"var(--cyan)"],
-  ["거래처",PT.length+"곳","고객 "+cust+" · 공급 "+vend,"var(--purple)"],
-  ["품목",IM.length+"건","품목 마스터","var(--amber)"],
-  ["BOM 항목",BM.length+"건","완제품 "+lv0,"var(--blue)"]
- ];
- document.getElementById("kpis").innerHTML=K.map(function(k){return '<div class="kpi"><div class="lbl">'+k[0]+'</div><div class="val">'+k[1]+'</div><div class="sub">'+k[2]+'</div><div class="bar" style="background:'+k[3]+'"></div></div>';}).join("");
+/* 비가동 사유 렌더 */
+document.getElementById("downtime").innerHTML=DOWN.map(function(d){
+ return '<div class="brow"><span class="nm">'+esc(d[0])+'</span>'+
+  '<span class="tr"><span class="fl" style="width:'+d[1]+'%;background:'+d[2]+'"></span></span>'+
+  '<span class="n">'+d[1]+'%</span></div>';
+}).join("");
 
- /* 수주 상태 막대 */
- document.getElementById("soc").textContent=SO.length+"건";
- bars("sobar",[["진행",run,"#d29922"],["완료",don,"#3fb950"],["취소",can,"#f85149"]],SO.length);
- /* 거래처 막대 */
- document.getElementById("ptc").textContent=PT.length+"곳";
- bars("ptbar",[["고객사",cust,"#58a6ff"],["공급사",vend,"#d29922"],["외주",out,"#8b949e"]],PT.length);
-
- /* 최근 수주 */
- var rec=SO.slice().sort(function(a,b){return (b.id||0)-(a.id||0);}).slice(0,6);
- var rh=rec.length?('<table><thead><tr><th>수주번호</th><th>고객사</th><th>품번</th><th class="r">수량</th><th>납기</th><th>상태</th></tr></thead><tbody>'+
-   rec.map(function(o){var s=o.status||"진행";return '<tr><td style="font-family:var(--mono);color:var(--faint)">'+esc(o.ono)+'</td><td><b>'+esc(o.cust)+'</b></td><td>'+esc(o.pno)+'</td><td class="r">'+esc(o.qty)+'</td><td>'+esc(o.due)+'</td><td><span class="pill p-'+esc(s)+'">'+esc(s)+'</span></td></tr>';}).join("")+'</tbody></table>')
-   :'<div class="empty">수주 데이터가 없습니다. <a href="sales.html" style="color:var(--blue)">수주 관리</a>에서 등록하세요.</div>';
- document.getElementById("recent").innerHTML=rh;
+/* 실시간 시계 + 교대 진행률(07:00~19:00) */
+var WD=["일","월","화","수","목","금","토"];
+function tick(){
+ var n=new Date();
+ var hh=String(n.getHours()).padStart(2,"0"),mm=String(n.getMinutes()).padStart(2,"0"),ss=String(n.getSeconds()).padStart(2,"0");
+ document.getElementById("clk").textContent=hh+":"+mm+":"+ss;
+ var y=n.getFullYear(),mo=String(n.getMonth()+1).padStart(2,"0"),d=String(n.getDate()).padStart(2,"0");
+ document.getElementById("today").textContent=y+"-"+mo+"-"+d+" ("+WD[n.getDay()]+")";
+ var mins=n.getHours()*60+n.getMinutes(), start=7*60, end=19*60;
+ var pct=Math.max(0,Math.min(100,(mins-start)/(end-start)*100));
+ document.getElementById("shFl").style.width=pct.toFixed(1)+"%";
+ document.getElementById("shPc").textContent=pct.toFixed(1)+"%";
 }
-function bars(id,arr,tot){
- var h=arr.map(function(a){var pct=tot?Math.round(a[1]/tot*100):0;return '<div class="brow"><span class="nm">'+a[0]+'</span><span class="track"><span class="fill" style="width:'+pct+'%;background:'+a[2]+'"></span></span><span class="n">'+a[1]+'</span></div>';}).join("");
- document.getElementById(id).innerHTML=h||'<div class="empty">데이터 없음</div>';
-}
-loadAll();
-try{ sb.channel("dash_rt").on("postgres_changes",{event:"*",schema:"public",table:"sales_order"},loadAll)
-   .on("postgres_changes",{event:"*",schema:"public",table:"partners"},loadAll).subscribe(); }catch(e){}
+tick();setInterval(tick,1000);
 </script>
 </body></html>
