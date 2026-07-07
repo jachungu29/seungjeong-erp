@@ -21,7 +21,7 @@ h1{font-size:25px;font-weight:800;margin:6px 0 4px}
 .btn:hover{border-color:var(--blue);color:var(--blue)}
 .banner{margin:16px 0 4px;border:1px solid #d9e6f7;background:#f2f7fe;border-radius:11px;padding:11px 15px;font-size:12.5px;color:#2c5a9e}
 .banner b{color:#1d4e8f}
-.sec{display:flex;align-items:baseline;gap:10px;margin:26px 0 12px}
+.sec{display:flex;align-items:baseline;gap:10px;margin:26px 0 12px;scroll-margin-top:16px}
 .sec h2{font-size:15px;font-weight:800;margin:0}
 .sec .tag{margin-left:auto;font-size:11px;color:var(--faint)}
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:13px}
@@ -62,18 +62,18 @@ h1{font-size:25px;font-weight:800;margin:6px 0 4px}
 
  <div class="banner">📡 <b>실데이터 연동 모드</b> — 클라우드(Supabase)에 실제 저장된 값만 표시합니다. 저장소가 아직 없는 항목은 <b>“미연동”</b> 으로 나옵니다. 각 화면에서 데이터를 등록하면 여기 숫자가 자동으로 채워집니다.</div>
 
- <div class="sec"><h2>전사 핵심 경영지표</h2><span class="tag" id="tagTop">…</span></div>
+ <div class="sec" id="top"><h2>전사 핵심 경영지표</h2><span class="tag" id="tagTop">…</span></div>
  <div class="kpis" id="kpiTop"></div>
 
- <div class="sec"><h2>경영 요약 · 등록 현황</h2><span class="tag">실데이터 기반</span></div>
+ <div class="sec" id="reg"><h2>경영 요약 · 등록 현황</h2><span class="tag">실데이터 기반</span></div>
  <div class="kpis" id="kpiReg"></div>
 
- <div class="sec"><h2>부서별 KPI 스코어카드</h2><span class="tag">생산·품질·기술·원가·관리·안전</span></div>
+ <div class="sec" id="dept"><h2>부서별 KPI 스코어카드</h2><span class="tag">생산·품질·기술·원가·관리·안전</span></div>
  <div class="panel"><div class="emptybox"><div class="ei">📇</div>
   <div class="et">부서별 KPI 데이터가 아직 없습니다</div>
   <div class="es">부서 실적(생산·품질·설비·원가·인사·안전)을 저장할 클라우드 표가 연결되면 여기에 스코어카드가 자동으로 채워집니다.</div></div></div>
 
- <div class="sec"><h2>경영 분석</h2></div>
+ <div class="sec" id="ana"><h2>경영 분석</h2></div>
  <div class="row2">
   <div class="panel"><b style="font-size:14px">부서별 종합 달성률</b>
    <div class="emptybox" style="margin-top:10px"><div class="ei">📊</div><div class="et">집계할 실적 데이터 없음</div></div></div>
@@ -81,7 +81,7 @@ h1{font-size:25px;font-weight:800;margin:6px 0 4px}
    <div class="emptybox" style="margin-top:10px"><div class="ei">📉</div><div class="et">불량 데이터 없음</div></div></div>
  </div>
 
- <div class="sec"></div>
+ <div class="sec" id="due"></div>
  <div class="panel">
   <b style="font-size:14px">납기 임박 수주 (D-3 이내)</b>
   <table class="dtable" style="margin-top:10px"><thead><tr><th>수주번호</th><th>거래처</th><th>고객 품번</th><th>수량</th><th>납기</th><th>상태</th></tr></thead>
