@@ -66,8 +66,8 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-s
 .fld{display:flex;flex-direction:column;gap:4px}
 .fld.wide{grid-column:span 2}
 .fld label{font-size:11px;color:var(--dim)}
-.fld input{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--txt);font:inherit;font-size:13.5px}
-.fld input:focus{outline:none;border-color:var(--blue)}
+.fld input,.fld select{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--txt);font:inherit;font-size:13.5px}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--blue)}
 .frow{display:flex;gap:9px;margin-top:12px}
 .save{background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:10px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
 .save:hover{background:#1a5fd0}
@@ -87,6 +87,11 @@ td.red{color:var(--red)} .del{background:none;border:1px solid var(--line);color
 .setup pre{background:#1d2230;color:#e6edf3;border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:11.5px;overflow:auto;white-space:pre;max-height:230px}
 .setup .row{display:flex;gap:8px;margin-top:8px}
 .banner{margin:14px 0 0;border:1px solid #d9e6f7;background:#f2f7fe;border-radius:11px;padding:10px 14px;font-size:12.5px;color:#2c5a9e}
+.rfilter{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px}
+.rfilter .rlab{font-size:12px;color:var(--dim);min-width:46px;font-weight:700}
+.rbtn{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;font-weight:600}
+.rbtn:hover{border-color:var(--blue);color:var(--blue)}
+.rbtn.on{background:#1f6feb;color:#fff;border-color:#1f6feb}
 </style></head><body>
 <div class="topbar"></div>
 <div class="wrap">
@@ -98,6 +103,15 @@ td.red{color:var(--red)} .del{background:none;border:1px solid var(--line);color
  </div>
 
  <div class="banner">📡 <b>실데이터</b> — 여기 입력한 값은 클라우드(Supabase)에 저장되어, 집·사무실 어디서든 같은 내용이 보이고 <b>경영자 대시보드에도 자동 반영</b>됩니다.</div>
+
+ 
+
+ <div class="kpis" id="kpis">
+  <div class="kpi"><div class="l">생산실적</div><div class="v" id="kProd">–</div><div class="s" id="sProd">선택 기간</div></div>
+  <div class="kpi g"><div class="l">생산계획 달성률</div><div class="v" id="kAch">–</div><div class="s">생산÷목표</div></div>
+  <div class="kpi r"><div class="l">불량 PPM</div><div class="v" id="kPpm">–</div><div class="s">선택 기간</div></div>
+  <div class="kpi a"><div class="l">등록 건수</div><div class="v" id="kCnt">–</div><div class="s" id="sCnt">선택 기간</div></div>
+ </div>
 
  <div class="filter">
   <label>년도</label><select id="fYear" onchange="applyFilter()"></select>
@@ -112,20 +126,30 @@ td.red{color:var(--red)} .del{background:none;border:1px solid var(--line);color
   <button class="qbtn" id="qAll" onclick="setAllYear()">올해 전체</button>
   <span class="period" id="periodLbl"></span>
  </div>
-
- <div class="kpis" id="kpis">
-  <div class="kpi"><div class="l">생산실적</div><div class="v" id="kProd">–</div><div class="s" id="sProd">선택 기간</div></div>
-  <div class="kpi g"><div class="l">생산계획 달성률</div><div class="v" id="kAch">–</div><div class="s">생산÷목표</div></div>
-  <div class="kpi r"><div class="l">불량 PPM</div><div class="v" id="kPpm">–</div><div class="s">선택 기간</div></div>
-  <div class="kpi a"><div class="l">등록 건수</div><div class="v" id="kCnt">–</div><div class="s" id="sCnt">선택 기간</div></div>
+ <div class="rfilter" id="catRf">
+  <span class="rlab">구분</span>
+  <button class="rbtn on" data-c="전체" onclick="setCat('전체')">전체</button>
+  <button class="rbtn" data-c="완제품" onclick="setCat('완제품')">완제품</button>
+  <button class="rbtn" data-c="반제품" onclick="setCat('반제품')">반제품</button>
+  <button class="rbtn" data-c="원자재" onclick="setCat('원자재')">원자재</button>
+  <button class="rbtn" data-c="부자재" onclick="setCat('부자재')">부자재</button>
+  <button class="rbtn" data-c="원소재" onclick="setCat('원소재')">원소재</button>
  </div>
-
+ <div class="rfilter" id="lineRf">
+  <span class="rlab">설비별</span>
+  <button class="rbtn on" data-l="전체" onclick="setLine('전체')">전체</button>
+  <button class="rbtn" data-l="수직사출" onclick="setLine('수직사출')">수직사출</button>
+  <button class="rbtn" data-l="수평사출" onclick="setLine('수평사출')">수평사출</button>
+  <button class="rbtn" data-l="이중사출" onclick="setLine('이중사출')">이중사출</button>
+  <button class="rbtn" data-l="조립" onclick="setLine('조립')">조립</button>
+  <button class="rbtn" data-l="검사" onclick="setLine('검사')">검사</button>
+ </div>
  <div class="panel" id="formPanel">
   <h3>＋ 생산실적 입력</h3>
   <div class="form">
    <div class="fld"><label>생산일</label><input type="date" id="fDate"></div>
-   <div class="fld"><label>공정 / 라인</label><input id="fLine" placeholder="예: 수직사출"></div>
-   <div class="fld"><label>품번 / 품명</label><input id="fItem" placeholder="예: SJ-1024"></div>
+   <div class="fld"><label>공정 / 라인</label><select id="fLine"><option value="">선택</option><option>수직사출기</option><option>수평사출기</option><option>이중사출기</option><option>호스조립기</option><option>BODY조립기</option><option>조립기</option><option>검사기</option><option>후공정</option></select></div>
+   <div class="fld"><label>품번 / 품명</label><input id="fItem" list="itemList" placeholder="목록에서 선택 또는 직접 입력"><datalist id="itemList"></datalist></div>
    <div class="fld"><label>목표수량</label><input type="number" id="fPlan" placeholder="0" min="0"></div>
    <div class="fld"><label>생산수량</label><input type="number" id="fProd" placeholder="0" min="0"></div>
    <div class="fld"><label>불량수량</label><input type="number" id="fDef" placeholder="0" min="0"></div>
@@ -209,6 +233,14 @@ function buildYears(){
  if(!SELY) SELY=now;
  sel.innerHTML=ys.map(function(y){return '<option value="'+y+'"'+(y===SELY?' selected':'')+'>'+y+'년</option>';}).join("");
 }
+function buildItems(){var dl=document.getElementById("itemList");if(!dl)return;var set={};ROWS.forEach(function(o){var it=((o.item||"")+"").trim();if(it)set[it]=1;});dl.innerHTML=Object.keys(set).sort().map(function(it){return '<option value="'+it.replace(/"/g,"&quot;")+'"></option>';}).join("");}
+var SELCAT="전체", SELLINE="전체";
+var CATS=["완제품","반제품","원자재","부자재","원소재"];
+var PROD_CAT={"A/PUMP ASSY(NX4a) · QC-LK-02":"완제품","A/PUMP ASSY(GL3) · QC-LK-01":"완제품","A/PUMP ASSY(AX) · QC-LK-03":"완제품","ARMATURE ASSY-INSULATION(HFP1.2) · IN02-VM-02":"반제품","ARMATURE ASSY-INSULATION(HFP2) · IN04-VM-02":"반제품","MQ4 BODY · IN04-HM-02":"반제품","Assist Pump Assy · BALL-ASSY-SA-01":"반제품","SPACER(Gde) · SJ-19006":"반제품","POM(F25-03 NAT) · SJ-20001":"원소재","PA66 G30 · SJ-19010":"원소재","CORE STEEL · SJ-19040":"원자재","BALL STEEL · SJ-19030":"원자재","O-RING · SJ-19020":"부자재","CLIP · SJ-19050":"부자재"};
+function catOf(o){var nt=((o.note||"")+"").trim();if(CATS.indexOf(nt)>=0)return nt;var it=((o.item||"")+"").trim();if(PROD_CAT[it])return PROD_CAT[it];if(/PUMP ASSY/i.test(it))return"완제품";if(/ASSY|BODY|SPACER/i.test(it))return"반제품";if(/POM|PA66|수지|resin/i.test(it))return"원소재";if(/STEEL|CORE/i.test(it))return"원자재";if(/RING|CLIP|SPRING/i.test(it))return"부자재";return"반제품";}
+function setCat(c){SELCAT=c;paintRf();render();}
+function setLine(l){SELLINE=l;paintRf();render();}
+function paintRf(){var a=document.querySelectorAll("#catRf .rbtn");for(var i=0;i<a.length;i++)a[i].classList.toggle("on",a[i].getAttribute("data-c")===SELCAT);var b=document.querySelectorAll("#lineRf .rbtn");for(var j=0;j<b.length;j++)b[j].classList.toggle("on",b[j].getAttribute("data-l")===SELLINE);}
 function curMonth(){return String(new Date().getMonth()+1).padStart(2,"0");}
 function inPeriod(pd){ if(!pd)return false;
  if(SELY && pd.slice(0,4)!==SELY) return false;
@@ -268,12 +300,12 @@ async function load(){
   render(); return; }
  TABLE_OK=true; ROWS=r.data||[];
  if(!window.__initFilter){ SELY=String(new Date().getFullYear()); SELM=curMonth(); window.__initFilter=true; }
- setSt("클라우드 연결됨 ✓","g"); showSetup(false); buildYears(); syncSelects(); render();
+ setSt("클라우드 연결됨 ✓","g"); showSetup(false); buildYears(); buildItems(); syncSelects(); render();
 }
 function render(){
  var box=document.getElementById("list");
  /* 선택 기간 필터 */
- var FR=TABLE_OK?ROWS.filter(function(o){return inPeriod(o.pdate);}):[];
+ var FR=TABLE_OK?ROWS.filter(function(o){return inPeriod(o.pdate)&&(SELCAT==="전체"||catOf(o)===SELCAT)&&(SELLINE==="전체"||((o.line||"")+"").indexOf(SELLINE)>=0);}):[];
  var pl=document.getElementById("periodLbl");
  if(pl) pl.textContent=TABLE_OK?(SELY+"년 "+(SELM?parseInt(SELM,10)+"월":"전체")+" · "+FR.length+"건"):"";
  /* KPI (선택 기간) */

@@ -51,23 +51,27 @@ async function boot(){
   +'.tt h1{color:#fff !important;font-size:27px !important;font-weight:900 !important;letter-spacing:.6px !important;margin:0 !important;text-shadow:0 2px 4px rgba(0,0,0,.35)}'
   +'.tt h1 span{color:#dbe6ff !important}'
   +'.tt .date{color:#0b1220 !important;font-weight:800 !important;font-size:12.5px !important;background:#ffd54a !important;padding:5px 14px !important;border-radius:20px !important;margin-left:auto !important;box-shadow:0 2px 8px rgba(255,213,74,.4)}'
-  +'#remarkFilterBar{display:flex;gap:6px;align-items:center;margin:2px 0 8px;flex-wrap:wrap;font-size:12px}'
-  +'#remarkFilterBar .rf-btn{border:1px solid #d8e0ec;border-radius:7px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:700}'
+  +'#remarkFilterBar,#eqpFilterBar{display:flex;gap:6px;align-items:center;margin:2px 0 8px;flex-wrap:wrap;font-size:12px}'
+  +'#remarkFilterBar .rf-btn,#eqpFilterBar .rf-btn{border:1px solid #d8e0ec;border-radius:7px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:700}'
   +'</style>';
  html=html.replace(/<\/head>/i, FIT_CSS+'</head>');
  // ── Remark 필터 버튼 주입 (완제품/반제품/원자재/부자재) ──
- var FILTER_JS='<scr'+'ipt>(function(){'
-  +'var CATS=["전체","완제품","반제품","원자재","부자재"],active="전체";'
-  +'function remarkIdx(){var t=document.querySelectorAll("thead th");for(var i=0;i<t.length;i++){if(/Remark/i.test(t[i].textContent))return i;}return -1;}'
-  +'function paint(){var bs=document.querySelectorAll("#remarkFilterBar .rf-btn");for(var i=0;i<bs.length;i++){var on=bs[i].textContent===active;bs[i].style.background=on?"#2563eb":"#fff";bs[i].style.color=on?"#fff":"#1c2942";}}'
-  +'function apply(){var idx=remarkIdx();if(idx<0)return;var rows=document.querySelectorAll("tbody tr");for(var i=0;i<rows.length;i++){var c=rows[i].children;if(active==="전체"){rows[i].style.display="";continue;}var tx=(c[idx]?c[idx].textContent:"").trim();rows[i].style.display=(tx.indexOf(active)>=0)?"":"none";}}'
-  +'function bar(){if(document.getElementById("remarkFilterBar"))return;var tbl=document.querySelector("table");if(!tbl)return;var wrap=tbl.parentElement;var b=document.createElement("div");b.id="remarkFilterBar";var hh=\'<b style="color:#64748b">Remark:</b>\';for(var i=0;i<CATS.length;i++){hh+=\'<button class="rf-btn" data-c="\'+CATS[i]+\'">\'+CATS[i]+\'</button>\';}b.innerHTML=hh;wrap.parentNode.insertBefore(b,wrap);var bs=b.querySelectorAll(".rf-btn");for(var j=0;j<bs.length;j++){bs[j].onclick=function(){active=this.getAttribute("data-c");apply();paint();};}paint();}'
-  +'function tree(){var cells=document.querySelectorAll("tbody td.nm");for(var i=0;i<cells.length;i++){var c=cells[i];if(c.getAttribute("data-tree")==="1")continue;var pl=parseFloat(getComputedStyle(c).paddingLeft)||9;var lv=Math.round((pl-9)/16);if(lv<0)lv=0;if(lv>0){var im=[],sz=[],ps=[];for(var k=0;k<lv;k++){var x=k*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("2px 100%");ps.push(x+"px 0");}var lx=(lv-1)*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("8px 2px");ps.push(lx+"px 50%");c.style.backgroundImage=im.join(",");c.style.backgroundSize=sz.join(",");c.style.backgroundPosition=ps.join(",");c.style.backgroundRepeat="no-repeat";}c.setAttribute("data-tree","1");}}'
-  +'function boot(){bar();apply();tree();}'
-  +'if(document.readyState!=="loading")setTimeout(boot,300);else document.addEventListener("DOMContentLoaded",function(){setTimeout(boot,300);});'
-  +'var tmr;var mo=new MutationObserver(function(){clearTimeout(tmr);tmr=setTimeout(function(){bar();apply();tree();},120);});'
-  +'setTimeout(function(){var w=document.querySelector(".wrap")||document.body;mo.observe(w,{childList:true,subtree:true});},900);'
-  +'})();<\/scr'+'ipt>';
+ function __bomFilterFn(){
+  var CATS=["전체","완제품","반제품","원자재","부자재","원소재"],active="전체";
+  var EQPS=["전체","수직사출BOM","수평사출BOM","조립BOM","검사BOM"],activeE="전체";
+  var EQMAP={"수직사출BOM":["수직"],"수평사출BOM":["수평"],"조립BOM":["조립","압입","코킹","마킹"],"검사BOM":["검사","리크","통전"]};
+  function colIdx(re){var t=document.querySelectorAll("thead th");for(var i=0;i<t.length;i++){if(re.test(t[i].textContent))return i;}return -1;}
+  function paint(){var bs=document.querySelectorAll("#remarkFilterBar .rf-btn");for(var i=0;i<bs.length;i++){var on=bs[i].textContent===active;bs[i].style.background=on?"#2563eb":"#fff";bs[i].style.color=on?"#fff":"#1c2942";}var es=document.querySelectorAll("#eqpFilterBar .rf-btn");for(var k=0;k<es.length;k++){var oe=es[k].textContent===activeE;es[k].style.background=oe?"#0e7490":"#fff";es[k].style.color=oe?"#fff":"#1c2942";}}
+  function apply(){var ri=colIdx(/Remark/i),ei=colIdx(/설비명/);var rows=document.querySelectorAll("tbody tr");for(var i=0;i<rows.length;i++){var c=rows[i].children;var okR=true,okE=true;if(active!=="전체"){var t1=(ri>=0&&c[ri])?c[ri].textContent.trim():"";okR=t1.indexOf(active)>=0;}if(activeE!=="전체"){var t2=(ei>=0&&c[ei])?c[ei].textContent:"";var ks=EQMAP[activeE]||[];okE=false;for(var m=0;m<ks.length;m++){if(t2.indexOf(ks[m])>=0){okE=true;break;}}}rows[i].style.display=(okR&&okE)?"":"none";}}
+  function mkbar(id,lab,arr,cb){if(document.getElementById(id))return;var tbl=document.querySelector("table");if(!tbl)return;var wrap=tbl.parentElement;var b=document.createElement("div");b.id=id;var hh='<b style="color:#64748b;min-width:52px;display:inline-block">'+lab+'</b>';for(var i=0;i<arr.length;i++){hh+='<button class="rf-btn" data-c="'+arr[i]+'">'+arr[i]+'</button>';}b.innerHTML=hh;wrap.parentNode.insertBefore(b,wrap);var bs=b.querySelectorAll(".rf-btn");for(var j=0;j<bs.length;j++){bs[j].onclick=function(){cb(this.getAttribute("data-c"));apply();paint();};}}
+  function bar(){mkbar("remarkFilterBar","Remark:",CATS,function(v){active=v;});mkbar("eqpFilterBar","설비별:",EQPS,function(v){activeE=v;});paint();}
+  function tree(){var cells=document.querySelectorAll("tbody td.nm");for(var i=0;i<cells.length;i++){var c=cells[i];if(c.getAttribute("data-tree")==="1")continue;var pl=parseFloat(getComputedStyle(c).paddingLeft)||9;var lv=Math.round((pl-9)/16);if(lv<0)lv=0;if(lv>0){var im=[],sz=[],ps=[];for(var k=0;k<lv;k++){var x=k*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("2px 100%");ps.push(x+"px 0");}var lx=(lv-1)*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("8px 2px");ps.push(lx+"px 50%");c.style.backgroundImage=im.join(",");c.style.backgroundSize=sz.join(",");c.style.backgroundPosition=ps.join(",");c.style.backgroundRepeat="no-repeat";}c.setAttribute("data-tree","1");}}
+  function boot(){bar();apply();tree();}
+  if(document.readyState!=="loading")setTimeout(boot,300);else document.addEventListener("DOMContentLoaded",function(){setTimeout(boot,300);});
+  var tmr;var mo=new MutationObserver(function(){clearTimeout(tmr);tmr=setTimeout(function(){bar();apply();tree();},120);});
+  setTimeout(function(){var w=document.querySelector(".wrap")||document.body;mo.observe(w,{childList:true,subtree:true});},900);
+}
+ var FILTER_JS='<scr'+'ipt>('+__bomFilterFn.toString()+')();<\/scr'+'ipt>';
  html=html.replace(/<\/body>/i, FILTER_JS+'</body>');
  var f=document.getElementById("frame");
  f.onload=function(){document.getElementById("load").style.display="none";f.classList.add("on");document.title=(d.data.title||"BOM")+" · 클라우드";};
