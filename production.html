@@ -21,6 +21,14 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-s
 .btn{font-size:12px;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--txt);cursor:pointer;text-decoration:none;display:inline-block}
 .btn:hover{border-color:var(--blue);color:var(--blue)}
 .st{font-size:11.5px;font-family:var(--mono)}
+/* 기간 필터 */
+.filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.filter label{font-size:12px;color:var(--dim)}
+.filter select{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px;color:var(--txt);font:inherit;font-size:13px}
+.filter .qbtn{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 13px;font:inherit;font-size:12.5px;cursor:pointer}
+.filter .qbtn:hover{border-color:var(--blue);color:var(--blue)}
+.filter .qbtn.on{background:#1f6feb;color:#fff;border-color:#1f6feb}
+.filter .period{margin-left:auto;font-size:12.5px;color:var(--dim);font-weight:700}
 /* KPI */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
 @media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
@@ -69,11 +77,25 @@ td.red{color:var(--red)} .del{background:none;border:1px solid var(--line);color
 
  <div class="banner">📡 <b>실데이터</b> — 여기 입력한 값은 클라우드(Supabase)에 저장되어, 집·사무실 어디서든 같은 내용이 보이고 <b>경영자 대시보드에도 자동 반영</b>됩니다.</div>
 
+ <div class="filter">
+  <label>년도</label><select id="fYear" onchange="applyFilter()"></select>
+  <label>월</label><select id="fMonth" onchange="applyFilter()">
+   <option value="">전체</option>
+   <option value="01">1월</option><option value="02">2월</option><option value="03">3월</option>
+   <option value="04">4월</option><option value="05">5월</option><option value="06">6월</option>
+   <option value="07">7월</option><option value="08">8월</option><option value="09">9월</option>
+   <option value="10">10월</option><option value="11">11월</option><option value="12">12월</option>
+  </select>
+  <button class="qbtn" id="qThis" onclick="setThisMonth()">이번 달</button>
+  <button class="qbtn" id="qAll" onclick="setAllYear()">올해 전체</button>
+  <span class="period" id="periodLbl"></span>
+ </div>
+
  <div class="kpis" id="kpis">
-  <div class="kpi"><div class="l">오늘 생산실적</div><div class="v" id="kProd">–</div><div class="s">EA · 오늘</div></div>
-  <div class="kpi g"><div class="l">생산계획 달성률</div><div class="v" id="kAch">–</div><div class="s">오늘 생산÷목표</div></div>
-  <div class="kpi r"><div class="l">불량 PPM</div><div class="v" id="kPpm">–</div><div class="s">오늘 기준</div></div>
-  <div class="kpi a"><div class="l">등록 건수</div><div class="v" id="kCnt">–</div><div class="s">전체 기록</div></div>
+  <div class="kpi"><div class="l">생산실적</div><div class="v" id="kProd">–</div><div class="s" id="sProd">선택 기간</div></div>
+  <div class="kpi g"><div class="l">생산계획 달성률</div><div class="v" id="kAch">–</div><div class="s">생산÷목표</div></div>
+  <div class="kpi r"><div class="l">불량 PPM</div><div class="v" id="kPpm">–</div><div class="s">선택 기간</div></div>
+  <div class="kpi a"><div class="l">등록 건수</div><div class="v" id="kCnt">–</div><div class="s" id="sCnt">선택 기간</div></div>
  </div>
 
  <div class="panel" id="formPanel">
@@ -146,6 +168,33 @@ function setSt(t,c){var e=document.getElementById("st");e.textContent=t;e.style.
 document.getElementById("fDate").value=today();
 
 var ROWS=[], TABLE_OK=false;
+var SELY="", SELM="";  /* 선택 년/월 (월 ""=전체) */
+
+/* 데이터에 있는 년도 + 올해로 드롭다운 채우기 */
+function buildYears(){
+ var sel=document.getElementById("fYear"), now=String(new Date().getFullYear());
+ var set={}; set[now]=1;
+ ROWS.forEach(function(o){var y=(o.pdate||"").slice(0,4); if(y)set[y]=1;});
+ var ys=Object.keys(set).sort().reverse();
+ if(!SELY) SELY=now;
+ sel.innerHTML=ys.map(function(y){return '<option value="'+y+'"'+(y===SELY?' selected':'')+'>'+y+'년</option>';}).join("");
+}
+function curMonth(){return String(new Date().getMonth()+1).padStart(2,"0");}
+function inPeriod(pd){ if(!pd)return false;
+ if(SELY && pd.slice(0,4)!==SELY) return false;
+ if(SELM && pd.slice(5,7)!==SELM) return false;
+ return true;
+}
+function applyFilter(){ SELY=document.getElementById("fYear").value; SELM=document.getElementById("fMonth").value; syncQBtn(); render(); }
+function setThisMonth(){ SELY=String(new Date().getFullYear()); SELM=curMonth(); syncSelects(); render(); }
+function setAllYear(){ SELM=""; syncSelects(); render(); }
+function syncSelects(){ document.getElementById("fYear").value=SELY; document.getElementById("fMonth").value=SELM; syncQBtn(); }
+function syncQBtn(){
+ var isThis=(SELY===String(new Date().getFullYear())&&SELM===curMonth());
+ document.getElementById("qThis").classList.toggle("on",isThis);
+ document.getElementById("qAll").classList.toggle("on",SELM===""&&!isThis);
+}
+
 function showSetup(on){
  document.getElementById("setup").style.display=on?"block":"none";
  document.getElementById("formPanel").style.display=on?"none":"block";
@@ -159,23 +208,32 @@ async function load(){
  if(r.error){ TABLE_OK=false; setSt("표 없음 — 아래 SQL 실행 필요","r"); showSetup(true);
   document.getElementById("list").innerHTML='<div class="empty">아직 표가 없어요. 위 안내대로 SQL을 한 번 실행하세요.</div>';
   render(); return; }
- TABLE_OK=true; ROWS=r.data||[]; setSt("클라우드 연결됨 ✓","g"); showSetup(false); render();
+ TABLE_OK=true; ROWS=r.data||[];
+ if(!window.__initFilter){ SELY=String(new Date().getFullYear()); SELM=curMonth(); window.__initFilter=true; }
+ setSt("클라우드 연결됨 ✓","g"); showSetup(false); buildYears(); syncSelects(); render();
 }
 function render(){
- /* KPI (오늘) */
- var t=today(), tp=0,tg=0,td=0;
- ROWS.forEach(function(o){ if((o.pdate||"")===t){tp+=n(o.prod_qty);tg+=n(o.plan_qty);td+=n(o.defect_qty);} });
+ var box=document.getElementById("list");
+ /* 선택 기간 필터 */
+ var FR=TABLE_OK?ROWS.filter(function(o){return inPeriod(o.pdate);}):[];
+ var pl=document.getElementById("periodLbl");
+ if(pl) pl.textContent=TABLE_OK?(SELY+"년 "+(SELM?parseInt(SELM,10)+"월":"전체")+" · "+FR.length+"건"):"";
+ /* KPI (선택 기간) */
+ var tp=0,tg=0,td=0;
+ FR.forEach(function(o){ tp+=n(o.prod_qty);tg+=n(o.plan_qty);td+=n(o.defect_qty); });
  document.getElementById("kProd").textContent=TABLE_OK?comma(tp):"–";
  document.getElementById("kAch").textContent=TABLE_OK?(tg?Math.round(tp/tg*100)+"%":"–"):"–";
  document.getElementById("kPpm").textContent=TABLE_OK?(tp?comma(Math.round(td/tp*1e6)):"0"):"–";
- document.getElementById("kCnt").textContent=TABLE_OK?comma(ROWS.length):"–";
- document.getElementById("listInfo").textContent=TABLE_OK?("· 총 "+ROWS.length+"건"):"";
+ document.getElementById("kCnt").textContent=TABLE_OK?comma(FR.length):"–";
+ var ptxt=SELY+"년 "+(SELM?parseInt(SELM,10)+"월":"전체");
+ var sp=document.getElementById("sProd"); if(sp)sp.textContent=ptxt;
+ var sc=document.getElementById("sCnt"); if(sc)sc.textContent=ptxt;
+ document.getElementById("listInfo").textContent=TABLE_OK?("· "+ptxt+" "+FR.length+"건 (전체 "+ROWS.length+")"):"";
  /* 표 */
- var box=document.getElementById("list");
  if(!TABLE_OK){box.innerHTML='';return;}
- if(!ROWS.length){box.innerHTML='<div class="empty">아직 기록이 없습니다. 위에서 입력해 보세요.</div>';return;}
+ if(!FR.length){box.innerHTML='<div class="empty">'+ptxt+' 기록이 없습니다. 다른 기간을 고르거나 위에서 입력해 보세요.</div>';return;}
  var h='<table><thead><tr><th>생산일</th><th>공정/라인</th><th>품번</th><th class="r">목표</th><th class="r">생산</th><th class="r">불량</th><th class="r">달성률</th><th class="r">PPM</th><th>비고</th><th></th></tr></thead><tbody>';
- ROWS.forEach(function(o){
+ FR.forEach(function(o){
   var pl=n(o.plan_qty),pr=n(o.prod_qty),df=n(o.defect_qty);
   var ach=pl?Math.round(pr/pl*100)+"%":"–", ppm=pr?comma(Math.round(df/pr*1e6)):"0";
   h+='<tr><td>'+esc(o.pdate)+'</td><td>'+esc(o.line)+'</td><td>'+esc(o.item)+'</td>'+
