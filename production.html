@@ -29,6 +29,28 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-s
 .filter .qbtn:hover{border-color:var(--blue);color:var(--blue)}
 .filter .qbtn.on{background:#1f6feb;color:#fff;border-color:#1f6feb}
 .filter .period{margin-left:auto;font-size:12.5px;color:var(--dim);font-weight:700}
+/* 년도별 이력 (스위치 펼침) */
+.histacc{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-top:16px;overflow:hidden}
+.histh{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none}
+.histh:hover{background:#faf8f4}
+.histh b{font-size:14px}.histh .hint{font-size:11.5px;color:var(--faint);margin-left:6px}
+.histh .sw{margin-left:auto;display:flex;align-items:center;gap:9px;color:var(--faint);font-size:12px}
+.histh .track{width:44px;height:24px;border-radius:20px;background:#d9d5cc;position:relative;transition:.18s}
+.histh .track::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.18s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.histacc.open .histh .track{background:#1f6feb}
+.histacc.open .histh .track::after{left:23px}
+.histbody{display:none;padding:6px 16px 16px;border-top:1px solid var(--line2)}
+.histacc.open .histbody{display:block}
+.yr{border:1px solid var(--line);border-radius:11px;margin-top:10px;overflow:hidden}
+.yrh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;background:#faf8f4}
+.yrh:hover{background:#f3efe8}
+.yrh .y{font-size:15px;font-weight:800}.yrh .sum{font-size:12px;color:var(--dim)}
+.yrh .ov{margin-left:auto;font-size:12px;color:var(--blue);font-weight:700}
+.months{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:10px 12px}
+@media(max-width:640px){.months{grid-template-columns:repeat(4,1fr)}}
+.mchip{border:1px solid var(--line);border-radius:8px;padding:7px 4px;text-align:center;font-size:12px;cursor:pointer;background:#fff;line-height:1.3}
+.mchip.has{border-color:#bcd3f5;background:#f2f7fe;color:#1d4e8f;font-weight:700}
+.mchip.none{color:var(--faint)}.mchip:hover{border-color:var(--blue)}
 /* KPI */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
 @media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
@@ -129,6 +151,14 @@ td.red{color:var(--red)} .del{background:none;border:1px solid var(--line);color
   </div>
  </div>
 
+ <div class="histacc" id="histAcc">
+  <div class="histh" onclick="toggleHist()">
+   <span>📅 <b>년도별 이력 조회</b><span class="hint">과거 생산실적을 년도별로 펼쳐 봅니다</span></span>
+   <span class="sw"><span id="histTxt">펼치기</span><span class="track"></span></span>
+  </div>
+  <div class="histbody" id="histBody"></div>
+ </div>
+
  <div class="panel">
   <h3>📒 생산실적 기록 <span id="listInfo" style="font-weight:400;color:var(--faint);font-size:12px"></span></h3>
   <div id="list"><div class="empty">불러오는 중…</div></div>
@@ -200,6 +230,34 @@ function showSetup(on){
  document.getElementById("formPanel").style.display=on?"none":"block";
 }
 
+/* ===== 년도별 이력 (스위치 펼침) ===== */
+function toggleHist(){
+ var e=document.getElementById("histAcc"); e.classList.toggle("open");
+ document.getElementById("histTxt").textContent=e.classList.contains("open")?"접기":"펼치기";
+ if(e.classList.contains("open")) renderHist();
+}
+function renderHist(){
+ var box=document.getElementById("histBody");
+ if(!TABLE_OK){box.innerHTML='<div class="empty">클라우드 표를 먼저 만들어 주세요.</div>';return;}
+ if(!ROWS.length){box.innerHTML='<div class="empty">아직 기록이 없습니다.</div>';return;}
+ var Y={};
+ ROWS.forEach(function(o){var y=(o.pdate||"").slice(0,4),m=(o.pdate||"").slice(5,7);if(!y)return;
+  if(!Y[y])Y[y]={prod:0,cnt:0,mon:{}};
+  Y[y].prod+=n(o.prod_qty);Y[y].cnt++;
+  Y[y].mon[m]=(Y[y].mon[m]||0)+n(o.prod_qty);});
+ var years=Object.keys(Y).sort().reverse();
+ box.innerHTML=years.map(function(y){var d=Y[y],months="";
+  for(var mi=1;mi<=12;mi++){var mm=String(mi).padStart(2,"0"),has=d.mon[mm];
+   months+='<div class="mchip '+(has?"has":"none")+'" onclick="pickMonth(\''+y+'\',\''+mm+'\')">'+mi+'월'+(has?'<br><span style="font-size:10px">'+comma(has)+'</span>':'')+'</div>';}
+  return '<div class="yr"><div class="yrh" onclick="pickYear(\''+y+'\')"><span class="y">'+y+'년</span>'+
+   '<span class="sum">생산 '+comma(d.prod)+' · '+d.cnt+'건</span><span class="ov">이 해 전체 보기 ›</span></div>'+
+   '<div class="months">'+months+'</div></div>';
+ }).join("");
+}
+function pickYear(y){SELY=y;SELM="";syncSelects();render();scrollTop();}
+function pickMonth(y,m){SELY=y;SELM=m;syncSelects();render();scrollTop();}
+function scrollTop(){try{window.scrollTo({top:0,behavior:"smooth"});}catch(e){window.scrollTo(0,0);}}
+
 async function load(){
  if(!window.SB){setSt("로컬 모드 — 클라우드 미연결","r");showSetup(false);
   document.getElementById("list").innerHTML='<div class="empty">Supabase 라이브러리를 불러오지 못했습니다.</div>';return;}
@@ -232,6 +290,7 @@ function render(){
  /* 표 */
  if(!TABLE_OK){box.innerHTML='';return;}
  if(!FR.length){box.innerHTML='<div class="empty">'+ptxt+' 기록이 없습니다. 다른 기간을 고르거나 위에서 입력해 보세요.</div>';return;}
+ var ha=document.getElementById("histAcc"); if(ha&&ha.classList.contains("open")) renderHist();
  var h='<table><thead><tr><th>생산일</th><th>공정/라인</th><th>품번</th><th class="r">목표</th><th class="r">생산</th><th class="r">불량</th><th class="r">달성률</th><th class="r">PPM</th><th>비고</th><th></th></tr></thead><tbody>';
  FR.forEach(function(o){
   var pl=n(o.plan_qty),pr=n(o.prod_qty),df=n(o.defect_qty);
