@@ -85,6 +85,14 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
   <div class="d">품번 등록·관리.</div></a>
 </div>
 
+<div class="sec">내 바로가기 <span style="text-transform:none;color:var(--faint)">· 원하는 화면을 직접 추가·저장(전 PC 공유)</span></div>
+<div class="grid" id="myLinks"></div>
+<div style="margin-top:11px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+ <input id="ulName" placeholder="이름 (비우면 아래 선택 이름 사용)" style="flex:1;min-width:150px;background:var(--panel3);border:1px solid var(--line);border-radius:9px;padding:9px 12px;color:var(--txt);font:inherit;font-size:13px">
+ <select id="ulFile" style="background:var(--panel3);border:1px solid var(--line);border-radius:9px;padding:9px 12px;color:var(--txt);font:inherit;font-size:13px"></select>
+ <button onclick="ulAdd()" style="background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:9px 18px;font:inherit;font-size:13px;font-weight:700;cursor:pointer">＋ 추가</button>
+</div>
+
 <div class="note">🔧 <b>고급(클라우드) 도구</b> — 통합설계·클라우드 BOM 등은 <a href="index.html">기존 시작화면(index.html)</a>에 그대로 보존돼 있습니다. 필요할 때만 쓰세요.</div>
 
 <div class="sec">현재 설계 구조 <span style="text-transform:none;color:var(--faint)">· 구조도 편집 자동 반영</span></div>
@@ -114,6 +122,33 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
   var d=r.data||[],lv0=0;d.forEach(function(x){if((parseInt(x.lv,10)||0)===0)lv0++;});
   el.innerHTML='<div style="color:var(--txt)"><b>'+lv0+'</b> 완제품 · <b>'+d.length+'</b> 총 항목 · <b>'+(d.length-lv0)+'</b> 부품 <span style="color:var(--faint)">(클라우드 실시간 자동반영)</span> — <a href="bom.html" style="color:var(--blue);text-decoration:none">BOM 열기 →</a></div>';
  });}catch(e){el.textContent="BOM 요약 오류";}
+})();
+</script>
+<script>
+/* 내 바로가기: 직접 항목 추가 → 클라우드(app_state.user_links) 저장 · 전 PC 공유 */
+(function(){
+ var sb=window.supabase?window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF"):null;
+ var FILES=[["dashboard.html","📊 종합 대시보드"],["sales.html","🧾 수주 관리"],["partners.html","🏢 업체 관리"],["bom.html","📋 BOM LIST"],["itemmaster.html","📦 품목 마스터"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["menu.html","🌳 설계 메뉴"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["app.html","🖥️ REV-0 본체"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
+ var links=[];
+ function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+ var selEl=document.getElementById("ulFile");
+ if(selEl)selEl.innerHTML=FILES.map(function(f){return '<option value="'+f[0]+'">'+f[1]+'</option>';}).join("");
+ function render(){
+  var box=document.getElementById("myLinks");if(!box)return;
+  if(!links.length){box.innerHTML='<div style="color:var(--faint);font-size:12.5px;padding:6px 2px">아직 없음 — 아래에서 이름·화면을 골라 <b>＋ 추가</b> 하세요.</div>';return;}
+  box.innerHTML=links.map(function(l,i){return '<div class="card" style="position:relative;cursor:pointer" onclick="location.href=&quot;'+esc(l.url)+'&quot;"><div class="ic">🔗</div><div class="t">'+esc(l.name)+'</div><div class="d">'+esc(l.url)+'</div><button title="삭제" onclick="event.stopPropagation();ulDel('+i+')" style="position:absolute;top:8px;right:8px;background:none;border:1px solid var(--line);color:var(--faint);border-radius:6px;width:22px;height:22px;cursor:pointer;font-size:12px">✕</button></div>';}).join("");
+ }
+ function save(){ try{localStorage.setItem("SJ_USER_LINKS",JSON.stringify(links));}catch(e){} if(sb){try{sb.from("app_state").upsert({key:"user_links",value:links,src:"idx2"});}catch(e){}} }
+ window.ulAdd=function(){
+  var sel=document.getElementById("ulFile"),url=sel.value,nm=(document.getElementById("ulName").value||"").trim();
+  if(url==="__custom__"){ url=prompt("주소나 파일명을 입력하세요 (예: quality.html 또는 https://…)"); if(!url)return; if(!nm)nm=url; }
+  else if(!nm){ nm=sel.options[sel.selectedIndex].text.replace(/^\S+\s/,""); }
+  links.push({name:nm,url:url}); save(); document.getElementById("ulName").value=""; render();
+ };
+ window.ulDel=function(i){ if(!confirm("이 바로가기를 삭제할까요?"))return; links.splice(i,1); save(); render(); };
+ try{ var r=localStorage.getItem("SJ_USER_LINKS"); if(r)links=JSON.parse(r)||[]; }catch(e){}
+ render();
+ if(sb){ try{ sb.from("app_state").select("value").eq("key","user_links").maybeSingle().then(function(r){ if(r&&r.data&&r.data.value){ links=r.data.value; render(); } }); }catch(e){} }
 })();
 </script>
 </div></body></html>
