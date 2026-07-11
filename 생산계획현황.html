@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>㈜승정 · 7월 생산계획현황</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#003D54;--teal:#006E8A;--teal2:#00A8C8;--cyan-light:#E0F7FC;--cyan-bg:#B2EBF2;--gold:#F5A623;--gray1:#F5F9FA;--gray2:#E8EDEF;--gray3:#B0BEC5;--text:#1A2A30;--text2:#4A6572;--red:#C62828;--green:#2E7D32;--shadow:0 2px 8px rgba(0,61,84,.12);--shadow-lg:0 8px 24px rgba(0,61,84,.18);--radius:8px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--gray1);color:var(--text);min-height:100vh}
+.app-header{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-lg)}
+.app-logo{display:flex;align-items:center;gap:12px}
+.app-logo-icon{width:38px;height:38px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:var(--navy)}
+.app-title{font-size:16px;font-weight:900;letter-spacing:-.3px}
+.app-title .rev{font-size:11px;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:5px;margin-left:8px;font-weight:600;vertical-align:middle}
+.app-subtitle{font-size:11px;opacity:.75;margin-top:1px}
+.header-date{font-size:12px;opacity:.85}
+.main-nav{background:#fff;border-bottom:2px solid var(--cyan-bg);display:flex;padding:0 20px;position:sticky;top:58px;z-index:99;box-shadow:0 2px 4px rgba(0,0,0,.06);overflow-x:auto}
+.nav-tab{padding:13px 20px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.nav-tab:hover{color:var(--teal);background:var(--cyan-light)}
+.nav-tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:700}
+.wrap{max-width:1280px;margin:0 auto;padding:18px}
+.view{display:none}.view.active{display:block}
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.stat-card{background:#fff;border-radius:8px;padding:13px 16px;border-left:4px solid var(--teal2);box-shadow:var(--shadow);display:flex;flex-direction:column}
+.stat-card.gold{border-color:var(--gold)}.stat-card.navy{border-color:var(--navy)}.stat-card.green{border-color:var(--green)}
+.stat-label{font-size:10.5px;font-weight:600;color:var(--text2);letter-spacing:.3px}
+.stat-value{font-size:24px;font-weight:900;color:var(--navy);margin-top:3px;line-height:1.1}
+.stat-value.sm{font-size:19px}
+.stat-unit{font-size:10.5px;color:var(--text2);margin-top:1px}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-header{background:linear-gradient(90deg,var(--navy),var(--teal));color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.card-sub{font-size:11px;opacity:.75}
+.card-body{padding:14px 16px}
+.tbl-wrap{overflow-x:auto}
+table.pt{width:100%;border-collapse:collapse;font-size:12px}
+.pt th{background:var(--teal);color:#fff;padding:9px 8px;font-weight:600;font-size:11.5px;text-align:center;white-space:nowrap;position:sticky;top:0}
+.pt td{padding:6px 9px;border:1px solid var(--gray2);text-align:center;white-space:nowrap}
+.pt td.l{text-align:left}.pt td.r{text-align:right;font-variant-numeric:tabular-nums}
+.pt tr:hover td{background:rgba(0,168,200,.05)}
+.pt td.ho{background:var(--cyan-bg);font-weight:700;color:var(--navy);text-align:left}
+.pt tr.sub td{background:#E8F9FD;font-weight:700;border-top:2px solid var(--teal2)}
+.pt tr.grand td{background:var(--navy);color:#fff;font-weight:800;font-size:12.5px}
+.pt td.qty{font-weight:700;color:var(--navy)}
+.pt td.amt{font-weight:600;color:var(--teal)}
+.bar{height:9px;border-radius:5px;background:var(--gray2);overflow:hidden;min-width:70px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--teal2),var(--teal))}
+.bar.hi>i{background:linear-gradient(90deg,#66BB6A,var(--green))}
+.bar.lo>i{background:linear-gradient(90deg,#FFB74D,var(--gold))}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.split{grid-template-columns:1fr}}
+.note{font-size:11px;color:var(--text2);background:var(--cyan-light);border:1px solid var(--cyan-bg);border-radius:7px;padding:8px 12px;margin-bottom:14px}
+footer{color:var(--gray3);font-size:11px;text-align:center;margin:26px 0 12px}
+</style></head><body>
+<header class="app-header">
+ <div class="app-logo"><div class="app-logo-icon">承</div>
+  <div><div class="app-title">7월 생산계획현황 <span class="rev">REV.1</span></div>
+  <div class="app-subtitle">㈜승정 · 사출·조립 생산계획 · 종합현황·월계획·설비CAPA</div></div></div>
+ <div class="header-date" id="hdrDate"></div>
+</header>
+<nav class="main-nav">
+ <div class="nav-tab active" data-v="ov" onclick="tab('ov')"><span>📊</span> 종합현황</div>
+ <div class="nav-tab" data-v="inj" onclick="tab('inj')"><span>🔩</span> 사출 월계획</div>
+ <div class="nav-tab" data-v="asy" onclick="tab('asy')"><span>🔧</span> 조립 월계획</div>
+ <div class="nav-tab" data-v="capa" onclick="tab('capa')"><span>⚙️</span> 설비 CAPA</div>
+</nav>
+<div class="wrap">
+ <div class="view active" id="v-ov"></div>
+ <div class="view" id="v-inj"></div>
+ <div class="view" id="v-asy"></div>
+ <div class="view" id="v-capa"></div>
+ <footer>㈜승정 ERP · 7월 생산계획현황 REV.1 · 원본: 7월_생산계획현황_REV.1.xlsx</footer>
+</div>
+<script>
+const D={"overview": {"prod": [{"gu": "사출", "qty": 1381572, "amt": 598278476}, {"gu": "조립", "qty": 408683, "amt": 198737325}, {"gu": "합계", "qty": 1790255, "amt": 797015801}], "mat": [{"gu": "사출", "kind": "원자재 (KG)", "qty": 11500.616337000001, "amt": 40634397.546456, "ratio": 0.06791886918301236}, {"gu": "", "kind": "부자재 (EA, 인써트 등)", "qty": 1620704, "amt": 350677984, "ratio": 0.5861450780321905}, {"gu": "", "kind": "소 계", "qty": 1632204.616337, "amt": 391312381.546456, "ratio": 0.6540639472152028}, {"gu": "조립", "kind": "부자재 (EA)", "qty": 1188515, "amt": 92447231, "ratio": 0.46517296637659783}, {"gu": "합계", "kind": "", "qty": 2820719.616337, "amt": 483759612.546456, "ratio": 0.6069636410463787}]}, "inj": [{"ho": "수직 1호기", "cust": "티에스모스트", "nm": "SUB MOLD-JK1", "pno": "A3204-JK101", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 7388, "amt": 24092268, "uph": 160, "capa": 0.1032}, {"ho": "수직 1호기", "cust": "", "nm": "SUB MOLD-KA4", "pno": "A3204-KA401", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 7500, "amt": 24457500, "uph": 160, "capa": 0.1048}, {"ho": "수직 8호기", "cust": "티에스모스트", "nm": "SUB MOLD-AC3", "pno": "A3204-AC301", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 0, "amt": 0, "uph": 160, "capa": 0}, {"ho": "수직 8호기", "cust": "", "nm": "SUB MOLD-BC3", "pno": "A3204-BC301", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 0, "amt": 0, "uph": 160, "capa": 0}, {"ho": "수직 8호기", "cust": "", "nm": "SUB MOLD-BI3", "pno": "A3204-BI300", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 0, "amt": 0, "uph": 160, "capa": 0}, {"ho": "수직 8호기", "cust": "", "nm": "SUB MOLD-BI3_PE", "pno": "A3204-BI301", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 0, "amt": 0, "uph": 160, "capa": 0}, {"ho": "수직 8호기", "cust": "", "nm": "SUB MOLD-KA4_HEV", "pno": "A3204-KAH00", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 17500, "amt": 57067500, "uph": 160, "capa": 0.2444}, {"ho": "수직 8호기", "cust": "", "nm": "SUB MOLD-MQ4", "pno": "A3204-MQ401", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 0, "amt": 0, "uph": 160, "capa": 0}, {"ho": "수직 8호기", "cust": "", "nm": "SUB MOLD-MQ4 HEV", "pno": "A3204-MQ412", "mat": "PBT+GF30%", "grade": "1500G30", "price": 3261, "ct": 45, "qty": 17500, "amt": 57067500, "uph": 160, "capa": 0.2444}, {"ho": "수직 2호기", "cust": "현담 아산", "nm": "ARMATURE ASSY-INSULATION(HFP1用)", "pno": "2134-710170-10", "mat": "PA66", "grade": "KN3311BL", "price": 809, "ct": 34.3, "qty": 0, "amt": 0, "uph": 420.1, "capa": 0}, {"ho": "수직 2호기", "cust": "", "nm": "ARMATURE ASSY-INSULATION(HFP1.2)", "pno": "2134-840240-10", "mat": "PA66", "grade": "KN3311BL", "price": 944, "ct": 34.3, "qty": 91400, "amt": 86281600, "uph": 420.1, "capa": 0.4862}, {"ho": "수직 2호기", "cust": "", "nm": "ARMATURE ASSY-INSULATION(HFP1.2)", "pno": "2134-840240-11", "mat": "PA66", "grade": "KN3311BL", "price": 944, "ct": 34.3, "qty": 48000, "amt": 45312000, "uph": 420.1, "capa": 0.2554}, {"ho": "수직 3호기", "cust": "현담 아산", "nm": "ARMATURE ASSY-INSULATION(HFP1.2)", "pno": "2134-840240-10", "mat": "PA66", "grade": "KN3311BL", "price": 944, "ct": 34.3, "qty": 94680, "amt": 89377920, "uph": 420.1, "capa": 0.5037}, {"ho": "수직 3호기", "cust": "", "nm": "ARMATURE ASSY-INSULATION(HFP1.2)", "pno": "2134-840240-11", "mat": "PA66", "grade": "KN3311BL", "price": 944, "ct": 34.3, "qty": 48000, "amt": 45312000, "uph": 420.1, "capa": 0.2554}, {"ho": "수직 4호기", "cust": "현담 아산", "nm": "ARMATURE ASSY-INSULATION(HFP2用)", "pno": "2134-330200-10", "mat": "PA66", "grade": "KN3311BL", "price": 910, "ct": 34.3, "qty": 21000, "amt": 19110000, "uph": 420.1, "capa": 0.1117}, {"ho": "수직 4호기", "cust": "", "nm": "ARMATURE ASSY-INSULATION(HFP2.1 L200)", "pno": "2134-350250-10", "mat": "PA66", "grade": "KN3311BL", "price": 935, "ct": 34.3, "qty": 0, "amt": 0, "uph": 420.1, "capa": 0}, {"ho": "수직 4호기", "cust": "쌍신전자", "nm": "AMB SENSOR", "pno": "연3D-TB-160427C", "mat": "POM", "grade": "F25-03BBK", "price": 141, "ct": 37.2, "qty": 81000, "amt": 11421000, "uph": 387.1, "capa": 0.4676}, {"ho": "수직 5호기", "cust": "티에스모스트", "nm": "MQ4 PHEV CURRENT  SENSOR HOUSING", "pno": "A0908-MQ402", "mat": "PBT+GF30%", "grade": "GP2300", "price": 475, "ct": 39, "qty": 0, "amt": 0, "uph": 184.6, "capa": 0}, {"ho": "수직 5호기", "cust": "", "nm": "NX4 HEV SENSOR HOUSING", "pno": "A0908-NX407", "mat": "PBT+GF30%", "grade": "GP2300", "price": 450, "ct": 39, "qty": 54501, "amt": 24525450, "uph": 184.6, "capa": 0.6597}, {"ho": "수직 6호기", "cust": "티에스모스트", "nm": "SG2 EV 1000A CORRENT  SENSOR T/MOLD", "pno": "A3052-AAB04", "mat": "PA66+GF30%", "grade": "KN333H30BL", "price": 240, "ct": 25, "qty": 10000, "amt": 2400000, "uph": 288, "capa": 0.0776}, {"ho": "수직 6호기", "cust": "티에스모스트", "nm": "NQ5PE T/MOLD", "pno": "A3052-AAN00", "mat": "PA66+GF30%", "grade": "KN333H30BL", "price": 8, "ct": 25, "qty": 157200, "amt": 1257600, "uph": 576, "capa": 0.6099}, {"ho": "수직 7호기", "cust": "티에스모스트", "nm": "NQ5PE HOUSING_POSITION SENSOR", "pno": "A3001-AAN03", "mat": "PBT+PET+GF30%", "grade": "SG5300H", "price": 412, "ct": 30, "qty": 159000, "amt": 65508000, "uph": 480, "capa": 0.7403}, {"ho": "수평 1호기", "cust": "현담 아산", "nm": "NX4 BODY GSL 2차", "pno": "1211-K47560-2", "mat": "POM", "grade": "F25-03NAT", "price": 12, "ct": 35, "qty": 80532, "amt": 966384, "uph": 205.7, "capa": 0.7414}, {"ho": "수평 1호기", "cust": "현담테크", "nm": "BODY MQ4", "pno": "1211-M38020", "mat": "POM", "grade": "F25-03NAT", "price": 15, "ct": 35, "qty": 0, "amt": 0, "uph": 205.7, "capa": 0}, {"ho": "수평 2호기", "cust": "현담 아산/경주", "nm": "CAP VALVE BLUE 1차", "pno": "1242-K40690-1", "mat": "POM", "grade": "F10-03H NAT", "price": 8, "ct": 32, "qty": 0, "amt": 0, "uph": 450, "capa": 0}, {"ho": "수평 2호기", "cust": "현담 아산/경주", "nm": "MQ4 CLIP (PIPE)", "pno": "1241-K40100-11", "mat": "POM", "grade": "F10-03H NAT", "price": 20, "ct": 30.4, "qty": 0, "amt": 0, "uph": 1894.7, "capa": 0}, {"ho": "수평 2호기", "cust": "현담테크", "nm": "MQ4 SPACER(Gde_승정)", "pno": "1210-A50060-11", "mat": "POM", "grade": "F25-03 NAT", "price": 31, "ct": 30.4, "qty": 53400, "amt": 1655400, "uph": 1894.7, "capa": 0.0534}, {"ho": "수평 3호기", "cust": "현담 아산/경주", "nm": "CAP YP", "pno": "1242-D00550", "mat": "POM", "grade": "F10-03H NAT", "price": 7, "ct": 34, "qty": 0, "amt": 0, "uph": 423.5, "capa": 0}, {"ho": "수평 3호기", "cust": "현담테크", "nm": "CAP(NX4 DSL) 1차", "pno": "1242-K40710-1", "mat": "POM", "grade": "F10-03H NAT", "price": 88, "ct": 34, "qty": 116882, "amt": 10285660, "uph": 423.5, "capa": 0.5227}, {"ho": "수평 3호기", "cust": "현담 아산/경주", "nm": "CAP VALVE BLUE 2차", "pno": "1242-K40690-2", "mat": "POM", "grade": "F10-03H NAT", "price": 8, "ct": 32, "qty": 0, "amt": 0, "uph": 450, "capa": 0}, {"ho": "수평 3호기", "cust": "현담 경주", "nm": "BODY(UM DSL)", "pno": "1211-B81710-10", "mat": "POM", "grade": "F25-03NAT", "price": 299, "ct": 35, "qty": 0, "amt": 0, "uph": 205.7, "capa": 0}, {"ho": "수평 4호기", "cust": "현담", "nm": "NX4 BODY GSL 1차", "pno": "1211-K47560-1", "mat": "POM", "grade": "F25-03NAT", "price": 12, "ct": 35, "qty": 13428, "amt": 158988, "uph": 205.7, "capa": 0.1236}, {"ho": "수평 4호기", "cust": "현담", "nm": "GSL BODY KA4", "pno": "1211-K48070", "mat": "POM", "grade": "F25-03NAT", "price": 12, "ct": 36, "qty": 0, "amt": 0, "uph": 200, "capa": 0}, {"ho": "수평 4호기", "cust": "현담", "nm": "BODY AX", "pno": "1211-N98160", "mat": "POM", "grade": "F25-03NAT", "price": 11, "ct": 35, "qty": 0, "amt": 0, "uph": 205.7, "capa": 0}, {"ho": "수평 4호기", "cust": "현담", "nm": "BODY(RG3)", "pno": "1211-K98180", "mat": "POM", "grade": "F25-03NAT", "price": 274, "ct": 30.5, "qty": 0, "amt": 0, "uph": 236.1, "capa": 0}, {"ho": "수평 4호기", "cust": "현담테크", "nm": "CAP(NX4 DSL) 2차", "pno": "1242-K40710-2", "mat": "POM", "grade": "F10-03HNAT", "price": 7, "ct": 34, "qty": 0, "amt": 0, "uph": 423.5, "capa": 0}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-RR ULTRASONIC NO.1", "pno": "86681-N1000", "mat": "TPO BLACK", "grade": "MR71N", "price": 153, "ct": 13, "qty": 4800, "amt": 734400, "uph": 276.9, "capa": 0.0328}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-RR ULTRASONIC NO.4", "pno": "86684-N1000", "mat": "TPO BLACK", "grade": "MR71N", "price": 153, "ct": 13, "qty": 7000, "amt": 1071000, "uph": 276.9, "capa": 0.0479}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-RR ULTRASONIC NO.2", "pno": "86682-N1000", "mat": "TPO BLACK", "grade": "MR71N", "price": 152, "ct": 13, "qty": 6600, "amt": 1003200, "uph": 276.9, "capa": 0.0451}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-RR ULTRASONIC NO.3", "pno": "86683-N1000", "mat": "TPO BLACK", "grade": "MR71N", "price": 152, "ct": 13, "qty": 5400, "amt": 820800, "uph": 276.9, "capa": 0.0369}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-RR ULTRASONIC P.A NO.5", "pno": "86685-N1000", "mat": "TPO BLACK", "grade": "MR71N", "price": 160, "ct": 13, "qty": 4400, "amt": 704000, "uph": 276.9, "capa": 0.0301}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-RR ULTRASONIC P.A NO.6", "pno": "86686-N1000", "mat": "TPO BLACK", "grade": "MR71N", "price": 160, "ct": 13, "qty": 3400, "amt": 544000, "uph": 276.9, "capa": 0.0233}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-P.D.W-F NO.1 (PAINT)_FR", "pno": "86581-L1550", "mat": "", "grade": "SRX373-1405G", "price": 140, "ct": 14, "qty": 8400, "amt": 1176000, "uph": 257.1, "capa": 0.0619}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-P.D.W-F NO.4 (PAINT)_FR", "pno": "86584-L1550", "mat": "", "grade": "SRX373-1405G", "price": 140, "ct": 14, "qty": 8400, "amt": 1176000, "uph": 257.1, "capa": 0.0619}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-P.D.W-F NO.1 (EMBO)_FRT", "pno": "86581-L1500", "mat": "TPO BLACK", "grade": "MR71S", "price": 140, "ct": 14, "qty": 1000, "amt": 140000, "uph": 257.1, "capa": 0.0074}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "HOLDER-P.D.W-F NO.4 (EMBO)_FRT", "pno": "86584-L1500", "mat": "TPO BLACK", "grade": "MR71S", "price": 140, "ct": 14, "qty": 1000, "amt": 140000, "uph": 257.1, "capa": 0.0074}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "REINF-FR BPR SIDE NO.1 LH", "pno": "86555-L1500", "mat": "PP+GF20%", "grade": "HG42BK", "price": 240, "ct": 18, "qty": 13800, "amt": 3312000, "uph": 200, "capa": 0.1307}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "REINF-FR BPR SIDE NO.1 RH", "pno": "86556-L1500", "mat": "PP+GF20%", "grade": "HG42BK", "price": 240, "ct": 18, "qty": 13800, "amt": 3312000, "uph": 200, "capa": 0.1307}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "REINF-FR BPR SIDE NO.1 LH", "pno": "86555-L1700", "mat": "PP+GF20%", "grade": "HG42BK", "price": 240, "ct": 18, "qty": 840, "amt": 201600, "uph": 200, "capa": 0.008}, {"ho": "수평 6호기", "cust": "금문산업", "nm": "REINF-FR BPR SIDE NO.1 RH", "pno": "86556-L1700", "mat": "PP+GF20%", "grade": "HG42BK", "price": 240, "ct": 18, "qty": 840, "amt": 201600, "uph": 200, "capa": 0.0094}, {"ho": "수평 6호기", "cust": "쌍신전자", "nm": "SU2i BRACKET", "pno": "SD-DC-2312110B", "mat": "PBT+GF15%", "grade": "GP2156FL", "price": 494, "ct": 31, "qty": 0, "amt": 0, "uph": 232.3, "capa": 0}, {"ho": "수평 6호기", "cust": "쌍신전자", "nm": "QU2 BRACKET", "pno": "SD-DC-2405160A", "mat": "PBT+GF15%", "grade": "GP2156FL", "price": 497, "ct": 31, "qty": 5000, "amt": 2485000, "uph": 232.3, "capa": 0.0481}, {"ho": "수평 7호기", "cust": "티에스모스트", "nm": "SG2 EV 1000A CORRENT  SENSOR HOUSING", "pno": "A3001-AAB03", "mat": "PBT+GF30%", "grade": "GP2300", "price": 421, "ct": 44, "qty": 8348, "amt": 3514508, "uph": 163.6, "capa": 0.114}, {"ho": "수평 7호기", "cust": "티에스모스트", "nm": "NE EV 500A CURRENT  SENSOR HOUSING", "pno": "A0908-NE106", "mat": "PBT+GF30%", "grade": "GP2300", "price": 362, "ct": 44, "qty": 11110, "amt": 4021820, "uph": 163.6, "capa": 0.1517}, {"ho": "수평 9호기", "cust": "티에스모스트", "nm": "SG2 EV 1000A CORRENT  SENSOR CORE COVER", "pno": "A3012-AAB01", "mat": "PBT+GF30%", "grade": "GP2300", "price": 193, "ct": 25, "qty": 0, "amt": 0, "uph": 288, "capa": 0}, {"ho": "수평 9호기", "cust": "티에스모스트", "nm": "NE EV 500A INV CURRENT  SENSOR CORE COVER", "pno": "A0908-NE200", "mat": "PBT+GF30%", "grade": "GP2300", "price": 208, "ct": 25, "qty": 0, "amt": 0, "uph": 288, "capa": 0}, {"ho": "수평 9호기", "cust": "티에스모스트", "nm": "NE EV 500A INV CURRENT  SENSOR PCB COVER", "pno": "A0908-NE300", "mat": "PBT+GF30%", "grade": "GP2300", "price": 150, "ct": 25, "qty": 0, "amt": 0, "uph": 288, "capa": 0}, {"ho": "수평 9호기", "cust": "티에스모스트", "nm": "NX4 HEV SENSOR COVER", "pno": "A0908-NX410", "mat": "PBT+GF30%", "grade": "GP2300", "price": 120, "ct": 26, "qty": 39600, "amt": 4752000, "uph": 276.9, "capa": 0.2708}, {"ho": "수평 9호기", "cust": "티에스모스트", "nm": "SG2 EV 1000A CORRENT  SENSOR PCB COVER", "pno": "A3013-AAB01", "mat": "PBT+GF30%", "grade": "GP2300", "price": 144, "ct": 25, "qty": 0, "amt": 0, "uph": 288, "capa": 0}], "asy": [{"ho": "볼압입 리크검사", "cust": "현담", "nm": "ASSIST PUMP ASSY-SUB(NX4e)", "pno": "1058-K40220-10", "mat": "현담", "grade": "현담", "price": 386, "ct": 7.2, "qty": 139800, "amt": 53962800, "uph": 500, "capa": 0.6248}, {"ho": "볼압입 리크검사", "cust": "", "nm": "A/PUMP ASSY(NX4a 수출용)", "pno": "1058-K40210-10", "mat": "", "grade": "", "price": 375, "ct": 7.2, "qty": 8300, "amt": 3112500, "uph": 500, "capa": 0.0371}, {"ho": "볼압입 리크검사", "cust": "", "nm": "A/PUMP ASSY SUB(MQ4 DSL)", "pno": "1117-M31020", "mat": "", "grade": "", "price": 319, "ct": 13.9, "qty": 2600, "amt": 829400, "uph": 259.0, "capa": 0.0224}, {"ho": "볼압입 리크검사", "cust": "", "nm": "A/PUMP ASSY(AX)", "pno": "1058-N90260", "mat": "", "grade": "", "price": 421, "ct": 13.9, "qty": 10000, "amt": 4210000, "uph": 259.0, "capa": 0.0863}, {"ho": "양방향 호스조립", "cust": "현담", "nm": "HOSE ASSY(DN8 VALVE) 150mm", "pno": "1107-K41600-11", "mat": "현담", "grade": "현담", "price": 920, "ct": 23, "qty": 19800, "amt": 18216000, "uph": 156.5, "capa": 0.2827}, {"ho": "양방향 호스조립", "cust": "", "nm": "HOSE ASSY(DN8 HEV) 170mm", "pno": "1107-K41620-11", "mat": "", "grade": "", "price": 638, "ct": 17.5, "qty": 0, "amt": 0, "uph": 205.7, "capa": 0}, {"ho": "양방향 호스조립", "cust": "", "nm": "HOSE ASSY (FEED) 150mm", "pno": "1107-K41610-11", "mat": "", "grade": "", "price": 626, "ct": 17.5, "qty": 1600, "amt": 1001600, "uph": 205.7, "capa": 0.0174}, {"ho": "양방향 호스조립", "cust": "", "nm": "HOSE ASSY(GN7 HEV) 170mm", "pno": "1107-P61990-10", "mat": "", "grade": "", "price": 652, "ct": 17.5, "qty": 0, "amt": 0, "uph": 205.7, "capa": 0}, {"ho": "단방향  호스조립", "cust": "현담", "nm": "HOSE ASSY(X100) 125mm", "pno": "1107-D30820-11", "mat": "현담", "grade": "현담", "price": 474, "ct": 11, "qty": 0, "amt": 0, "uph": 327.3, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY (KA4 DSL) 190mm", "pno": "1107-L71560-11", "mat": "", "grade": "", "price": 819, "ct": 11, "qty": 0, "amt": 0, "uph": 327.3, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY (MQ4 FEED) 170mm", "pno": "1107-M31650-10", "mat": "", "grade": "", "price": 498, "ct": 7, "qty": 116875, "amt": 58203750, "uph": 514.3, "capa": 0.5079}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY (KA4 FEED VALVE) 170mm", "pno": "1107-M31660-10", "mat": "", "grade": "", "price": 775, "ct": 8.3, "qty": 31240, "amt": 24211000, "uph": 433.7, "capa": 0.161}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY(MQ4 DSL) 145mm", "pno": "1107-M31750-10", "mat": "", "grade": "", "price": 587, "ct": 11, "qty": 0, "amt": 0, "uph": 327.3, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY(NX4 PHEV) 200mm", "pno": "1107-M51780-10", "mat": "", "grade": "", "price": 593, "ct": 11, "qty": 0, "amt": 0, "uph": 327.3, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY(JK1 GSL) 185mm", "pno": "1107-L71540-11", "mat": "", "grade": "", "price": 816, "ct": 16.5, "qty": 1600, "amt": 1305600, "uph": 218.2, "capa": 0.0164}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY (FEED) 250mm", "pno": "1107-M41670-10", "mat": "", "grade": "", "price": 887, "ct": 11, "qty": 0, "amt": 0, "uph": 327.3, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY (FEED) 투명190mm", "pno": "1107-M61950-10", "mat": "", "grade": "", "price": 878, "ct": 11, "qty": 0, "amt": 0, "uph": 327.3, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "TM PE BD30 HOSE 166mm", "pno": "1107-M31960-10", "mat": "", "grade": "", "price": 878, "ct": 11, "qty": 0, "amt": 0, "uph": 327.3, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY(BR178) 110mm", "pno": "1107-P90110", "mat": "", "grade": "", "price": 0, "ct": 11, "qty": 5200, "amt": 0, "uph": 327.3, "capa": 0.0355}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE 듀얼1차 투명132mm", "pno": "1106-M51820", "mat": "", "grade": "", "price": 0, "ct": 0, "qty": 0, "amt": 0, "uph": 0, "capa": 0}, {"ho": "단방향  호스조립", "cust": "", "nm": "HOSE ASSY(NX4 DSL) 투명125mm", "pno": "1107-M51820-10", "mat": "", "grade": "", "price": 1271, "ct": 29.9, "qty": 0, "amt": 0, "uph": 120.4, "capa": 0}], "capa": [{"ho": "수직 1호기", "days": 4.6, "man": 0.51, "rate": 0.2095}, {"ho": "수직 8호기", "days": 10.8, "man": 1.19, "rate": 0.4888}, {"ho": "수직 2호기", "days": 14.4, "man": 1.6, "rate": 0.6558}, {"ho": "수직 3호기", "days": 15.1, "man": 1.67, "rate": 0.6851}, {"ho": "수직 4호기", "days": 14.2, "man": 1.58, "rate": 0.6471}, {"ho": "수직 5호기", "days": 20.1, "man": 2.23, "rate": 0.9115}, {"ho": "수직 6호기", "days": 20.7, "man": 2.3, "rate": 0.9413}, {"ho": "수직 7호기", "days": 24.6, "man": 2.73, "rate": 1.1161}, {"ho": "수평 1호기", "days": 16.2, "man": 0.3, "rate": 0.7365}, {"ho": "수평 2호기", "days": 5.8, "man": 0.3, "rate": 0.263}, {"ho": "수평 3호기", "days": 13.7, "man": 0.3, "rate": 0.622}, {"ho": "수평 4호기", "days": 13.6, "man": 0.3, "rate": 0.619}, {"ho": "수평 6호기", "days": 6.9, "man": 0.6, "rate": 0.3143}, {"ho": "수평 7호기", "days": 5.7, "man": 0.63, "rate": 0.2592}, {"ho": "수평 9호기", "days": 8.8, "man": 0.45, "rate": 0.4014}], "meta": {"title": "7월 생산계획", "rev": "REV.1"}};
+const cm=n=>Math.round(n).toLocaleString();
+const eok=n=>n>=1e8?(n/1e8).toFixed(2)+'억':n>=1e4?cm(Math.round(n/1e4))+'만':cm(n);
+const pct=n=>(n*100).toFixed(1)+'%';
+function el(id){return document.getElementById(id);}
+
+function renderOV(){
+ const p=D.overview.prod, m=D.overview.mat;
+ const inj=p.find(x=>x.gu.includes('사출'))||{qty:0,amt:0};
+ const asy=p.find(x=>x.gu.includes('조립'))||{qty:0,amt:0};
+ const tot=p.find(x=>x.gu.includes('합계'))||{qty:0,amt:0};
+ const matTot=m.find(x=>x.gu.includes('합계'))||{amt:0};
+ let h=`<div class="note">📌 <b>종합현황</b>은 회사 공식 7월 목표입니다. 아래 <b>사출·조립 월계획</b> 탭은 품목별 상세 계획(rev.1)입니다.</div>`;
+ h+=`<div class="stats-strip">
+  <div class="stat-card navy"><div class="stat-label">총 생산목표</div><div class="stat-value">${cm(tot.qty)}</div><div class="stat-unit">EA</div></div>
+  <div class="stat-card gold"><div class="stat-label">총 목표금액</div><div class="stat-value">${eok(tot.amt)}</div><div class="stat-unit">원</div></div>
+  <div class="stat-card"><div class="stat-label">사출</div><div class="stat-value sm">${cm(inj.qty)}</div><div class="stat-unit">EA · ${eok(inj.amt)}원</div></div>
+  <div class="stat-card"><div class="stat-label">조립</div><div class="stat-value sm">${cm(asy.qty)}</div><div class="stat-unit">EA · ${eok(asy.amt)}원</div></div>
+  <div class="stat-card green"><div class="stat-label">자재 목표금액</div><div class="stat-value sm">${eok(matTot.amt)}</div><div class="stat-unit">원</div></div>
+ </div>`;
+ const qmax=tot.qty||1;
+ h+=`<div class="split">`;
+ h+=`<div class="card"><div class="card-header"><div class="card-title">📦 생산목표 (사출·조립)</div></div><div class="card-body">
+   <table class="pt"><tr><th>구분</th><th>목표수량(EA)</th><th>목표금액(원)</th><th style="width:120px">수량 비중</th></tr>`;
+ p.forEach(x=>{const g=x.gu.includes('합계');h+=`<tr${g?' class="grand"':''}><td class="l"><b>${x.gu}</b></td><td class="r qty">${cm(x.qty)}</td><td class="r amt">${cm(x.amt)}</td><td>${g?'100%':`<div class="bar"><i style="width:${(x.qty/qmax*100).toFixed(1)}%"></i></div>`}</td></tr>`;});
+ h+=`</table></div></div>`;
+ h+=`<div class="card"><div class="card-header"><div class="card-title">🧱 자재목표</div></div><div class="card-body">
+   <table class="pt"><tr><th>구분</th><th>자재</th><th>목표수량</th><th>목표금액(원)</th></tr>`;
+ m.forEach(x=>{const g=x.gu.includes('합계');h+=`<tr${g?' class="grand"':''}><td class="l">${x.gu||''}</td><td class="l">${x.kind||''}</td><td class="r">${cm(x.qty)}</td><td class="r amt">${cm(x.amt)}</td></tr>`;});
+ h+=`</table></div></div></div>`;
+ el('v-ov').innerHTML=h;
+}
+
+function renderPlan(view,rows,groupKey,groupLabel,cols){
+ const groups=[];const map={};
+ rows.forEach(r=>{const k=r[groupKey]||'-';if(!map[k]){map[k]={key:k,items:[]};groups.push(map[k]);}map[k].items.push(r);});
+ let TQ=0,TA=0;
+ h=`<div class="stats-strip">
+   <div class="stat-card navy"><div class="stat-label">${groupLabel} 수</div><div class="stat-value">${groups.length}</div><div class="stat-unit">개</div></div>
+   <div class="stat-card"><div class="stat-label">품목 수</div><div class="stat-value">${rows.length}</div><div class="stat-unit">품목</div></div>
+   <div class="stat-card gold"><div class="stat-label">계획수량 합</div><div class="stat-value sm">${cm(rows.reduce((s,r)=>s+r.qty,0))}</div><div class="stat-unit">EA</div></div>
+   <div class="stat-card green"><div class="stat-label">목표금액 합</div><div class="stat-value sm">${eok(rows.reduce((s,r)=>s+r.amt,0))}</div><div class="stat-unit">원</div></div>
+ </div>`;
+ h+=`<div class="card"><div class="card-header"><div class="card-title">${view==='inj'?'🔩 사출':'🔧 조립'} 월생산계획 (호기·라인별)</div><div class="card-sub">품목별 계획수량·목표금액</div></div>
+  <div class="tbl-wrap"><table class="pt"><tr>${cols.map(c=>`<th>${c.t}</th>`).join('')}</tr>`;
+ groups.forEach(g=>{
+  let gq=0,ga=0;
+  g.items.forEach((r,i)=>{
+   gq+=r.qty;ga+=r.amt;
+   h+='<tr>';
+   cols.forEach((c,ci)=>{
+    if(ci===0){ if(i===0) h+=`<td class="ho" rowspan="${g.items.length}">${g.key}</td>`; return;}
+    let v=r[c.k], cls=c.cls||'';
+    if(c.f==='cm')v=cm(v); else if(c.f==='pct')v=pct(v); else if(c.f==='bar'){v=`<div class="bar ${r.capa>=0.7?'hi':r.capa<0.35?'lo':''}"><i style="width:${Math.min(100,r.capa*100).toFixed(0)}%"></i></div>`;}
+    h+=`<td class="${cls}">${v}</td>`;
+   });
+   h+='</tr>';
+  });
+  h+=`<tr class="sub"><td class="l" colspan="${cols.length-3}">▸ ${g.key} 소계</td><td class="r qty">${cm(gq)}</td><td class="r amt">${cm(ga)}</td><td></td></tr>`;
+  TQ+=gq;TA+=ga;
+ });
+ h+=`<tr class="grand"><td colspan="${cols.length-3}">합계</td><td class="r">${cm(TQ)}</td><td class="r">${cm(TA)}</td><td></td></tr>`;
+ h+=`</table></div></div>`;
+ el('v-'+view).innerHTML=h;
+}
+
+function renderCAPA(){
+ const c=D.capa;
+ const avg=c.reduce((s,x)=>s+x.rate,0)/(c.length||1);
+ let h=`<div class="stats-strip">
+   <div class="stat-card navy"><div class="stat-label">설비(호기) 수</div><div class="stat-value">${c.length}</div><div class="stat-unit">호기</div></div>
+   <div class="stat-card gold"><div class="stat-label">평균 가동율(CAPA)</div><div class="stat-value sm">${pct(avg)}</div><div class="stat-unit">전 호기 평균</div></div>
+   <div class="stat-card green"><div class="stat-label">총 소요인원</div><div class="stat-value sm">${c.reduce((s,x)=>s+x.man,0).toFixed(1)}</div><div class="stat-unit">명</div></div>
+ </div>`;
+ h+=`<div class="card"><div class="card-header"><div class="card-title">⚙️ 사출 설비별 CAPA 현황</div><div class="card-sub">호기별 가동율·소요일수·소요인원</div></div>
+  <div class="tbl-wrap"><table class="pt"><tr><th>설비(호기)</th><th>생산소요일수</th><th>소요인원</th><th>가동율(CAPA율)</th><th style="width:180px">가동율</th></tr>`;
+ c.forEach(x=>{h+=`<tr><td class="l ho">${x.ho}</td><td class="r">${x.days}</td><td class="r">${x.man}</td><td class="r qty">${pct(x.rate)}</td>
+   <td><div class="bar ${x.rate>=0.7?'hi':x.rate<0.35?'lo':''}"><i style="width:${Math.min(100,x.rate*100).toFixed(0)}%"></i></div></td></tr>`;});
+ h+=`</table></div></div>`;
+ el('v-capa').innerHTML=h;
+}
+
+function tab(v){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.v===v));
+ document.querySelectorAll('.view').forEach(p=>p.classList.toggle('active',p.id==='v-'+v));window.scrollTo(0,0);}
+
+const INJ_COLS=[{t:'호기',k:'ho'},{t:'고객',k:'cust',cls:'l'},{t:'품명',k:'nm',cls:'l'},{t:'품번',k:'pno',cls:'l'},{t:'재질',k:'mat'},{t:'단가',k:'price',f:'cm',cls:'r'},{t:'계획수량',k:'qty',f:'cm',cls:'r qty'},{t:'목표금액',k:'amt',f:'cm',cls:'r amt'},{t:'가동율',k:'capa',f:'bar'}];
+const ASY_COLS=[{t:'라인',k:'ho'},{t:'고객',k:'cust',cls:'l'},{t:'구분',k:'mat'},{t:'품명',k:'nm',cls:'l'},{t:'품번',k:'pno',cls:'l'},{t:'단가',k:'price',f:'cm',cls:'r'},{t:'계획수량',k:'qty',f:'cm',cls:'r qty'},{t:'목표금액',k:'amt',f:'cm',cls:'r amt'},{t:'가동율',k:'capa',f:'bar'}];
+var h;
+renderOV();
+renderPlan('inj',D.inj,'ho','호기',INJ_COLS);
+renderPlan('asy',D.asy,'ho','라인',ASY_COLS);
+renderCAPA();
+el('hdrDate').textContent='기준: 2026-07';
+</script>
+</body></html>
