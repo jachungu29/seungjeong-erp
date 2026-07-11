@@ -135,6 +135,10 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
   <div class="ic">⚙️</div>
   <div class="t">생산관리 <span class="en">생산실적 입력·이력</span></div>
   <div class="d">일자별 생산·목표·불량 입력 → 클라우드 저장 · 년도·월별 이력 조회.</div></a>
+ <a class="card cloud" href="prod-report.html">
+  <div class="ic">📅</div>
+  <div class="t">월간 생산보고 <span class="en">v4 · 클라우드</span></div>
+  <div class="d">월간 생산보고서·OEE·잔업·CAPA · 저장을 클라우드로 연동(전 PC 공유).</div></a>
  <a class="card cloud" href="bom.html">
   <div class="ic">📋</div>
   <div class="t">BOM LIST <span class="en">bom</span></div>
@@ -210,7 +214,7 @@ function renderStruct(d){
 
 /* 내 바로가기 (클라우드 app_state.user_links 저장) */
 (function(){
- var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","🖥️ 종합대시보드(현장용)"],["bom.html","📋 BOM LIST"],["production.html","⚙️ 생산부(생산실적)"],["itemmaster.html","📦 품목 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["menu.html","🌳 설계 메뉴"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
+ var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","🖥️ 종합대시보드(현장용)"],["bom.html","📋 BOM LIST"],["production.html","⚙️ 생산부(생산실적)"],["prod-report.html","📅 월간 생산보고"],["itemmaster.html","📦 품목 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["menu.html","🌳 설계 메뉴"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
  var links=[];
  function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
  var sel=document.getElementById("ulFile");
