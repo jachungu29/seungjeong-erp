@@ -1,0 +1,394 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>수요예측(포캐스트) · 승정 ERP</title>
+<style>
+:root{--navy:#003D54;--teal:#006E8A;--gold:#F5A623;--bg:#eef1f6;--card:#fff;--text:#1c2430;--line:#e2e8f0;--mut:#64748b}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(90deg,var(--navy),var(--teal));color:#fff;padding:12px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+header h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+.spacer{flex:1}
+.cloud{font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.18);font-weight:600}
+.cloud.on{background:#1e8e4e}.cloud.off{background:#7a8699}
+.status{font-size:12px;opacity:.95;min-width:90px;text-align:right}
+.savebtn{background:var(--gold);color:#3a2a00;border:0;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.savebtn:hover{filter:brightness(1.06)}.savebtn:active{transform:translateY(1px)}
+.prnbtn{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-right:8px}
+.prnbtn:hover{background:#eef4f8}
+.wrap{padding:10px 20px 40px}
+.usage{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:9px;padding:9px 15px;margin-bottom:10px}
+.usage h3{margin:0 0 5px;font-size:12.5px;color:var(--navy);font-weight:800;display:flex;align-items:center;gap:6px}
+.usage ol{margin:0;padding-left:19px}
+.usage li{font-size:11.5px;color:var(--text);line-height:1.55}
+.usage b{color:var(--teal)}
+.usage .mline{font-size:11px;color:#555;margin-top:6px;border-top:1px dashed #dbe2ea;padding-top:6px}
+.usage .mline b{color:var(--navy)}
+.usage code{background:#f1f5f9;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#0b3d57}
+.ctrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 14px;margin-bottom:10px}
+.ctrl label{font-size:11.5px;color:var(--mut);font-weight:700}
+.ctrl input[type=month]{padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:12.5px;font-family:inherit}
+.ctrl .note{font-size:11px;color:var(--mut)}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:9px;padding:7px 12px}
+.kpi .l{font-size:11px;color:var(--mut);font-weight:600}
+.kpi .v{font-size:18px;font-weight:800;color:var(--navy);margin-top:1px}
+.kpi .u{font-size:10.5px;color:var(--mut)}
+.kpi.gold{border-left-color:var(--gold)}.kpi.gold .v{color:#b8860b}
+.acctsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-bottom:10px}
+.ac{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:9px;padding:6px 12px;cursor:pointer;transition:.12s}
+.ac:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}.ac.on{box-shadow:0 0 0 2px var(--teal) inset}
+.ac .an{font-size:12.5px;font-weight:800;color:var(--navy)}
+.ac .av{font-size:11px;color:var(--mut);margin-top:1px}
+.ac .am{font-size:14px;font-weight:800;color:#b8860b;margin-top:1px}
+.ac-수직사출{border-top-color:#006E8A}.ac-수평사출{border-top-color:#1565C0}.ac-이중사출{border-top-color:#7C3AED}.ac-조립{border-top-color:#F5A623}
+.segtog{display:inline-flex;gap:6px;flex-wrap:wrap}
+.segbtn{border:1.5px solid #b8cdd8;background:#fff;color:var(--mut);font-family:inherit;font-size:12px;font-weight:700;padding:6px 11px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.12s}
+.segbtn:hover{color:var(--navy);border-color:var(--teal)}
+.segbtn.on{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.segbtn .sgc{font-size:10.5px;font-weight:800;background:rgba(0,0,0,.12);color:inherit;border-radius:10px;padding:0 6px;min-width:16px;text-align:center}
+.segbtn.on .sgc{background:rgba(255,255,255,.25)}
+.chartcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:stretch}
+.chartcard .cbox{flex:1 1 460px;min-width:320px}
+.chartcard .ctitle{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.chartcard .csub{font-size:11px;color:var(--mut);margin-bottom:6px}
+.chartcard svg{width:100%;height:auto;display:block}
+.chartlgd{display:flex;gap:14px;font-size:11px;color:var(--mut);margin-top:4px;flex-wrap:wrap}
+.chartlgd b{font-weight:700}
+.chartlgd .sw{display:inline-block;width:16px;height:0;border-top:3px solid var(--teal);vertical-align:middle;margin-right:4px}
+.chartlgd .sw.f{border-top:3px dashed #b8860b}
+.accbox{flex:0 0 220px;min-width:200px;background:linear-gradient(160deg,#f3f9fb,#eaf3f7);border:1px solid #d7e6ec;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;justify-content:center}
+.accbox .al{font-size:11.5px;color:var(--mut);font-weight:700}
+.accbox .av{font-size:34px;font-weight:800;color:var(--teal);line-height:1.1;margin:2px 0}
+.accbox .av.warn{color:#C2185B}.accbox .av.mid{color:#B8860B}
+.accbox .ad{font-size:11px;color:#555;line-height:1.5;margin-top:4px}
+.accbox .ad b{color:var(--navy)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.phead{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.ptitle{font-size:15px;font-weight:800;color:var(--navy)}
+.addbtn{background:var(--teal);color:#fff;border:0;border-radius:8px;padding:8px 15px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.addbtn:hover{background:var(--navy)}
+.ghostbtn{background:#fff;color:var(--teal);border:1px solid var(--teal);border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.ghostbtn:hover{background:#eef7fb}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:1240px;table-layout:fixed}
+th{background:var(--navy);color:#fff;font-size:10px;font-weight:700;padding:6px 3px;white-space:nowrap;position:sticky;top:0;border-right:1px solid #1c5568}
+th.grp-a{background:#0b5b74}th.grp-f{background:#0e6a54}
+td{border-bottom:1px solid var(--line);border-right:1px solid #eef1f5;padding:3px 2px;text-align:center;vertical-align:middle}
+th:last-child,td:last-child{border-right:0}
+tr:nth-child(even) td{background:#f8fafc}tr:hover td{background:#eef7fb}
+td.idx{color:var(--mut);font-weight:700}
+input.f,select.f{width:100%;box-sizing:border-box;padding:4px 3px;border:1px solid #cbd5e1;border-radius:5px;font-size:10.5px;font-family:inherit;background:#fff;color:var(--text)}
+input.f:focus,select.f:focus{outline:none;border-color:var(--teal);background:#f5fbfd}
+input.f.r{text-align:right;font-variant-numeric:tabular-nums}
+td.acell input{background:#fbfdff}
+td.fcell input{background:#f2fbf6;font-weight:700;color:var(--navy)}
+td.avg{background:#f4f8fa;font-weight:700;color:var(--teal);font-size:10.5px}
+td.amt{font-weight:800;color:var(--navy);white-space:nowrap;font-size:10.5px}
+textarea.f.nm{width:100%;box-sizing:border-box;resize:none;line-height:1.2;font-size:10px;height:32px;text-align:left;white-space:normal;word-break:break-word;overflow:hidden;padding:3px 5px;border:1px solid #cbd5e1;border-radius:5px;font-family:inherit;background:#fff;color:var(--text)}
+.delbtn{background:#fff;color:#C62828;border:1px solid #E0A0A0;border-radius:6px;width:24px;height:24px;font-size:12px;cursor:pointer;font-weight:700}
+.delbtn:hover{background:#FDECEC}
+.empty{text-align:center;color:#94a3b8;padding:24px !important;font-size:13px}
+tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);border-top:2px solid #b8d4e0}
+.hint{font-size:11px;color:var(--mut);margin-top:8px}
+.printhead{display:none}
+.rpt-foot{display:none}
+@media print{
+ @page{size:A4 landscape;margin:10mm}
+ body{background:#fff}
+ header,.usage,.ctrl,.strip,.acctsum,.chartcard,.savebtn,.prnbtn,.addbtn,.ghostbtn,.segtog,.cloud,.status,.hint,.phead{display:none!important}
+ .wrap{padding:0}
+ .printhead{display:block;position:relative;margin-bottom:10px}
+ .gyeolja{position:absolute;top:0;right:0;border-collapse:collapse;width:auto!important;min-width:0!important}
+ .gyeolja th,.gyeolja td{border:1px solid #333;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .gyeolja th{background:#eef2f5!important;color:#111!important;font-size:9px;font-weight:700;padding:2px 6px}
+ .gyeolja td.gl{width:15px;background:#eef2f5!important;color:#111!important;font-size:9px;font-weight:700;line-height:1.1}
+ .gyeolja td.sg{width:58px;height:46px}
+ .rpt-title{text-align:center;font-size:21px;font-weight:800;letter-spacing:9px;color:#111;padding-top:6px}
+ .rpt-sub{text-align:center;font-size:10.5px;color:#444;margin:4px 0 9px}
+ .rpt-sum,.rpt-acct{width:100%;border-collapse:collapse;margin-bottom:7px;clear:both}
+ .rpt-sum th,.rpt-sum td,.rpt-acct th,.rpt-acct td{border:1px solid #7a8b98;font-size:10px;padding:3px 6px;text-align:center}
+ .rpt-sum th,.rpt-acct th{background:#003D54!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-weight:700}
+ .rpt-sum td.r,.rpt-acct td.r{text-align:right}
+ .rpt-sum td.amt,.rpt-acct td.amt{font-weight:800;color:#111}
+ .rpt-acct td:first-child{text-align:left;font-weight:700}
+ .rpt-acct tr.total td{background:#eef4f8!important;font-weight:800}
+ .rpt-secttl{font-size:11px;font-weight:800;color:#003D54;margin:2px 0 3px;border-left:3px solid #003D54;padding-left:6px}
+ .card{border:0;padding:0;box-shadow:none}
+ .tbl-wrap{overflow:visible!important;border:1px solid #7a8b98;border-radius:0}
+ #tbl{min-width:0!important;width:100%!important}
+ th{background:#003D54!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:8.5px;padding:4px 2px}
+ td{padding:2px 2px;border-right:1px solid #dfe5ea}
+ tr.total td{background:#e8eef2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ input.f,select.f,textarea.f.nm{border:0!important;background:transparent!important;padding:1px 2px!important;font-size:8.5px!important;color:#111!important;-webkit-appearance:none;appearance:none;box-shadow:none!important}
+ .rpt-foot{display:block;text-align:right;font-size:9px;color:#666;margin-top:8px}
+}
+</style></head><body>
+<header>
+ <h1>📈 수요예측(포캐스트)</h1>
+ <span class="cloud" id="cloud">● 연결 확인 중</span>
+ <span class="spacer"></span>
+ <span class="status" id="status">불러오는 중…</span>
+ <button class="prnbtn" onclick="doPrint()">🖨️ 인쇄</button>
+ <button class="savebtn" onclick="save()">💾 저장</button>
+</header>
+<div class="wrap">
+ <div class="printhead" id="printhead"></div>
+ <div class="usage">
+  <h3>📘 사용설명 · 수요예측(포캐스트) 하는 법</h3>
+  <ol>
+   <li><b>기준월 설정</b> — 위 <b>기준월</b>을 정하면, 왼쪽 <b>최근 3개월 실적</b>(직전 3개월)과 오른쪽 <b>예측 3개월</b>(기준월·+1·+2)의 월 이름이 자동으로 맞춰집니다.</li>
+   <li><b>최근 실적 입력</b> — 각 품번의 <b>직전 3개월 수주(또는 납품) 수량</b>을 입력합니다. (수량이 예측의 근거가 됩니다)</li>
+   <li><b>예측방법 선택</b> — 품목 특성에 맞게 고르면 <b>예측값이 자동 계산</b>됩니다. (아래 방법 설명 참고)</li>
+   <li><b>고객 내시 반영</b> — 고객사가 준 발주예정(내시)이 있으면 방법을 <b>「고객내시」</b>로 두고 예측칸에 <b>직접 입력</b>하세요. (자동차 부품은 이게 1순위 기준)</li>
+   <li><b>저장·인쇄</b> — <b>💾 저장</b> 시 전 PC 공유, <b>🖨️ 인쇄</b>로 대표이사 보고서 출력. 예측금액 = <b>기준월 예측수량 × 단가</b> 자동계산.</li>
+  </ol>
+  <div class="mline">
+   <b>▶ 예측방법(자동계산 공식)</b> &nbsp;
+   <code>가중평균</code> = (전월×3 + 2개월전×2 + 3개월전×1) ÷ 6 <b>(최근 실적 비중↑, 기본 권장)</b> &nbsp;·&nbsp;
+   <code>단순평균</code> = 3개월 합 ÷ 3 &nbsp;·&nbsp;
+   <code>성장추세</code> = 전월 + 월별 증감폭 반영(상승/하락 추세) &nbsp;·&nbsp;
+   <code>고객내시</code> = 고객이 준 예정수량 직접 입력
+   <br><b>▶ 자동차 부품 수요예측 순서</b> : ①고객 내시 확인(1순위) → ②최근 3~6개월 실적 이동평균으로 기준선 → ③신차 양산·단종/계절성으로 보정 → ④결품 방지 여유율 고려 → ⑤매월 <b>예측 vs 실적</b> 비교로 정확도 점검·방법 조정
+  </div>
+ </div>
+ <div class="ctrl">
+  <label>기준월</label>
+  <input type="month" id="basemonth" onchange="setBase(this.value)">
+  <span class="note" id="rangeNote"></span>
+  <span class="spacer"></span>
+  <button class="ghostbtn" onclick="seedAllAsk()">↻ BOM 완제품 전체 불러오기</button>
+ </div>
+ <div class="strip">
+  <div class="kpi"><div class="l">예측 품목 수</div><div class="v" id="k-cnt">0</div><div class="u">품목</div></div>
+  <div class="kpi"><div class="l" id="k-qty-l">기준월 예측수량</div><div class="v" id="k-qty">0</div><div class="u">EA</div></div>
+  <div class="kpi gold"><div class="l" id="k-amt-l">기준월 예측금액</div><div class="v" id="k-amt">0</div><div class="u">원</div></div>
+  <div class="kpi"><div class="l">3개월 예측수량 합</div><div class="v" id="k-3m">0</div><div class="u">EA</div></div>
+ </div>
+ <div class="acctsum" id="acctsum"></div>
+ <div class="chartcard">
+  <div class="cbox">
+   <div class="ctitle">📉 예측 추세선 <span id="chartScope" style="font-size:11px;color:#64748b;font-weight:600"></span></div>
+   <div class="csub" id="chartSub">최근 3개월 실적(실선) → 예측 3개월(점선) 흐름으로 추세를 확인합니다.</div>
+   <div id="chartSvg"></div>
+   <div class="chartlgd"><span><span class="sw"></span><b>실적</b></span><span><span class="sw f"></span><b>예측</b></span><span>세로점선 = 예측 시작</span></div>
+  </div>
+  <div class="accbox">
+   <div class="al">🎯 예측 적중도</div>
+   <div class="av" id="accVal">–</div>
+   <div class="ad" id="accNote">직전월(실적) 대비 예측모형의 정확도입니다. 실적을 입력하면 자동 계산됩니다.</div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="phead"><span class="ptitle">수요예측 목록</span><span class="segtog" id="segtog"></span><span class="spacer"></span><button class="addbtn" onclick="addRow()">＋ 신규 품목</button></div>
+  <div class="tbl-wrap"><table id="tbl"></table></div>
+  <div class="hint">예측값(초록칸)은 <b>예측방법</b>과 <b>최근 3개월 실적</b>으로 자동 계산됩니다. 직접 수정하려면 방법을 <b>고객내시</b> 또는 <b>수동</b>으로 두고 입력하세요. 저장 시 전 PC 공유됩니다.</div>
+  <div class="rpt-foot" id="rptfoot"></div>
+ </div>
+</div>
+<datalist id="custdl"></datalist>
+<datalist id="pnodl"></datalist>
+<datalist id="eqdl2"></datalist>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const ACCTS=["수직사출","수평사출","이중사출","조립"];
+const METHODS=["가중평균","단순평균","성장추세","고객내시","수동"];
+const FG=[{"pno":"A3204-JK101","name":"SUB MOLD-JK1","acct":"수직사출","price":3261},{"pno":"A3204-KA401","name":"SUB MOLD-KA4","acct":"수직사출","price":3261},{"pno":"A3204-AC301","name":"SUB MOLD-AC3","acct":"수직사출","price":3261},{"pno":"A3204-BC301","name":"SUB MOLD-BC3","acct":"수직사출","price":3261},{"pno":"A3204-BI300","name":"SUB MOLD-BI3","acct":"수직사출","price":3261},{"pno":"A3204-BI301","name":"SUB MOLD-BI3_PE","acct":"수직사출","price":3261},{"pno":"A3204-KAH00","name":"SUB MOLD-KA4_HEV","acct":"수직사출","price":3261},{"pno":"A3204-MQ401","name":"SUB MOLD-MQ4","acct":"수직사출","price":3261},{"pno":"A3204-MQ412","name":"SUB MOLD-MQ4 HEV","acct":"수직사출","price":3261},{"pno":"2134-710170-10","name":"ARMATURE ASSY-INSULATION(HFP1用)","acct":"수직사출","price":809},{"pno":"2134-840240-10","name":"ARMATURE ASSY-INSULATION(HFP1.2)","acct":"수직사출","price":944},{"pno":"2134-840240-11","name":"ARMATURE ASSY-INSULATION(HFP1.2)","acct":"수직사출","price":944},{"pno":"2134-330200-10","name":"ARMATURE ASSY-INSULATION(HFP2用)","acct":"수직사출","price":910},{"pno":"2134-350250-10","name":"ARMATURE ASSY-INSULATION(HFP2.1 L200)","acct":"수직사출","price":935},{"pno":"연3D-TB-160427C","name":"AMB SENSOR","acct":"수직사출","price":141},{"pno":"A0908-MQ402","name":"MQ4 PHEV CURRENT  SENSOR HOUSING","acct":"수직사출","price":475},{"pno":"A0908-NX407","name":"NX4 HEV SENSOR HOUSING","acct":"수직사출","price":450},{"pno":"A3052-AAB04","name":"SG2 EV 1000A CORRENT  SENSOR T/MOLD","acct":"수직사출","price":240},{"pno":"A3052-AAN00","name":"NQ5PE T/MOLD","acct":"수직사출","price":8},{"pno":"A3001-AAN03","name":"NQ5PE HOUSING_POSITION SENSOR","acct":"수직사출","price":412},{"pno":"1211-K47560-2","name":"NX4 BODY GSL 2차","acct":"수평사출","price":12},{"pno":"1211-M38020","name":"BODY MQ4","acct":"수평사출","price":15},{"pno":"1242-K40690-1","name":"CAP VALVE BLUE 1차","acct":"수평사출","price":8},{"pno":"1241-K40100-11","name":"MQ4 CLIP (PIPE)","acct":"수평사출","price":20},{"pno":"1210-A50060-11","name":"MQ4 SPACER(Gde_승정)","acct":"수평사출","price":31},{"pno":"1242-D00550","name":"CAP YP","acct":"수평사출","price":7},{"pno":"1242-K40710-1","name":"CAP(NX4 DSL) 1차","acct":"수평사출","price":88},{"pno":"1242-K40690-2","name":"CAP VALVE BLUE 2차","acct":"수평사출","price":8},{"pno":"1211-B81710-10","name":"BODY(UM DSL)","acct":"수평사출","price":299},{"pno":"1211-K47560-1","name":"NX4 BODY GSL 1차","acct":"수평사출","price":12},{"pno":"1211-K48070","name":"GSL BODY KA4","acct":"수평사출","price":12},{"pno":"1211-N98160","name":"BODY AX","acct":"수평사출","price":11},{"pno":"1211-K98180","name":"BODY(RG3)","acct":"수평사출","price":274},{"pno":"1242-K40710-2","name":"CAP(NX4 DSL) 2차","acct":"수평사출","price":7},{"pno":"86681-N1000","name":"HOLDER-RR ULTRASONIC NO.1","acct":"수평사출","price":153},{"pno":"86684-N1000","name":"HOLDER-RR ULTRASONIC NO.4","acct":"수평사출","price":153},{"pno":"86682-N1000","name":"HOLDER-RR ULTRASONIC NO.2","acct":"수평사출","price":152},{"pno":"86683-N1000","name":"HOLDER-RR ULTRASONIC NO.3","acct":"수평사출","price":152},{"pno":"86685-N1000","name":"HOLDER-RR ULTRASONIC P.A NO.5","acct":"수평사출","price":160},{"pno":"86686-N1000","name":"HOLDER-RR ULTRASONIC P.A NO.6","acct":"수평사출","price":160},{"pno":"86581-L1550","name":"HOLDER-P.D.W-F NO.1 (PAINT)_FR","acct":"수평사출","price":140},{"pno":"86584-L1550","name":"HOLDER-P.D.W-F NO.4 (PAINT)_FR","acct":"수평사출","price":140},{"pno":"86581-L1500","name":"HOLDER-P.D.W-F NO.1 (EMBO)_FRT","acct":"수평사출","price":140},{"pno":"86584-L1500","name":"HOLDER-P.D.W-F NO.4 (EMBO)_FRT","acct":"수평사출","price":140},{"pno":"86555-L1500","name":"REINF-FR BPR SIDE NO.1 LH","acct":"수평사출","price":240},{"pno":"86556-L1500","name":"REINF-FR BPR SIDE NO.1 RH","acct":"수평사출","price":240},{"pno":"86555-L1700","name":"REINF-FR BPR SIDE NO.1 LH","acct":"수평사출","price":240},{"pno":"86556-L1700","name":"REINF-FR BPR SIDE NO.1 RH","acct":"수평사출","price":240},{"pno":"SD-DC-2312110B","name":"SU2i BRACKET","acct":"수평사출","price":494},{"pno":"SD-DC-2405160A","name":"QU2 BRACKET","acct":"수평사출","price":497},{"pno":"A3001-AAB03","name":"SG2 EV 1000A CORRENT  SENSOR HOUSING","acct":"수평사출","price":421},{"pno":"A0908-NE106","name":"NE EV 500A CURRENT  SENSOR HOUSING","acct":"수평사출","price":362},{"pno":"A3012-AAB01","name":"SG2 EV 1000A CORRENT  SENSOR CORE COVER","acct":"수평사출","price":193},{"pno":"A0908-NE200","name":"NE EV 500A INV CURRENT  SENSOR CORE COVER","acct":"수평사출","price":208},{"pno":"A0908-NE300","name":"NE EV 500A INV CURRENT  SENSOR PCB COVER","acct":"수평사출","price":150},{"pno":"A0908-NX410","name":"NX4 HEV SENSOR COVER","acct":"수평사출","price":120},{"pno":"A3013-AAB01","name":"SG2 EV 1000A CORRENT  SENSOR PCB COVER","acct":"수평사출","price":144},{"pno":"1058-K40220-10","name":"ASSIST PUMP ASSY-SUB(NX4e)","acct":"조립","price":386},{"pno":"1058-K40210-10","name":"A/PUMP ASSY(NX4a 수출용)","acct":"조립","price":375},{"pno":"1117-M31020","name":"A/PUMP ASSY SUB(MQ4 DSL)","acct":"조립","price":319},{"pno":"1058-N90260","name":"A/PUMP ASSY(AX)","acct":"조립","price":421},{"pno":"1107-K41600-11","name":"HOSE ASSY(DN8 VALVE) 150mm","acct":"조립","price":920},{"pno":"1107-K41620-11","name":"HOSE ASSY(DN8 HEV) 170mm","acct":"조립","price":638},{"pno":"1107-K41610-11","name":"HOSE ASSY (FEED) 150mm","acct":"조립","price":626},{"pno":"1107-P61990-10","name":"HOSE ASSY(GN7 HEV) 170mm","acct":"조립","price":652},{"pno":"1107-D30820-11","name":"HOSE ASSY(X100) 125mm","acct":"조립","price":474},{"pno":"1107-L71560-11","name":"HOSE ASSY (KA4 DSL) 190mm","acct":"조립","price":819},{"pno":"1107-M31650-10","name":"HOSE ASSY (MQ4 FEED) 170mm","acct":"조립","price":498},{"pno":"1107-M31660-10","name":"HOSE ASSY (KA4 FEED VALVE) 170mm","acct":"조립","price":775},{"pno":"1107-M31750-10","name":"HOSE ASSY(MQ4 DSL) 145mm","acct":"조립","price":587},{"pno":"1107-M51780-10","name":"HOSE ASSY(NX4 PHEV) 200mm","acct":"조립","price":593},{"pno":"1107-L71540-11","name":"HOSE ASSY(JK1 GSL) 185mm","acct":"조립","price":816},{"pno":"1107-M41670-10","name":"HOSE ASSY (FEED) 250mm","acct":"조립","price":887},{"pno":"1107-M61950-10","name":"HOSE ASSY (FEED) 투명190mm","acct":"조립","price":878},{"pno":"1107-M31960-10","name":"TM PE BD30 HOSE 166mm","acct":"조립","price":878},{"pno":"1107-P90110","name":"HOSE ASSY(BR178) 110mm","acct":"조립","price":0},{"pno":"1106-M51820","name":"HOSE 듀얼1차 투명132mm","acct":"조립","price":0},{"pno":"1107-M51820-10","name":"HOSE ASSY(NX4 DSL) 투명125mm","acct":"조립","price":1271}];
+const FGMAP={};FG.forEach(x=>FGMAP[x.pno]=x);
+const EQLIST=["수직 1호기","수직 2호기","수직 3호기","수직 4호기","수직 5호기","수직 6호기","수직 7호기","수직 8호기","수평 1호기","수평 2호기","수평 3호기","수평 4호기","수평 6호기","수평 7호기","수평 9호기","볼압입 리크검사","양방향 호스조립","단방향 호스조립"];
+const FGEQ={"A3204-JK101":"수직 1호기","A3204-KA401":"수직 1호기","A3204-AC301":"수직 8호기","A3204-BC301":"수직 8호기","A3204-BI300":"수직 8호기","A3204-BI301":"수직 8호기","A3204-KAH00":"수직 8호기","A3204-MQ401":"수직 8호기","A3204-MQ412":"수직 8호기","2134-710170-10":"수직 2호기","2134-840240-10":"수직 2호기","2134-840240-11":"수직 2호기","2134-330200-10":"수직 4호기","2134-350250-10":"수직 4호기","연3D-TB-160427C":"수직 4호기","A0908-MQ402":"수직 5호기","A0908-NX407":"수직 5호기","A3052-AAB04":"수직 6호기","A3052-AAN00":"수직 6호기","A3001-AAN03":"수직 7호기","1211-K47560-2":"수평 1호기","1211-M38020":"수평 1호기","1242-K40690-1":"수평 2호기","1241-K40100-11":"수평 2호기","1210-A50060-11":"수평 2호기","1242-D00550":"수평 3호기","1242-K40710-1":"수평 3호기","1242-K40690-2":"수평 3호기","1211-B81710-10":"수평 3호기","1211-K47560-1":"수평 4호기","1211-K48070":"수평 4호기","1211-N98160":"수평 4호기","1211-K98180":"수평 4호기","1242-K40710-2":"수평 4호기","86681-N1000":"수평 6호기","86684-N1000":"수평 6호기","86682-N1000":"수평 6호기","86683-N1000":"수평 6호기","86685-N1000":"수평 6호기","86686-N1000":"수평 6호기","86581-L1550":"수평 6호기","86584-L1550":"수평 6호기","86581-L1500":"수평 6호기","86584-L1500":"수평 6호기","86555-L1500":"수평 6호기","86556-L1500":"수평 6호기","86555-L1700":"수평 6호기","86556-L1700":"수평 6호기","SD-DC-2312110B":"수평 6호기","SD-DC-2405160A":"수평 6호기","A3001-AAB03":"수평 7호기","A0908-NE106":"수평 7호기","A3012-AAB01":"수평 9호기","A0908-NE200":"수평 9호기","A0908-NE300":"수평 9호기","A0908-NX410":"수평 9호기","A3013-AAB01":"수평 9호기","1058-K40220-10":"볼압입 리크검사","1058-K40210-10":"볼압입 리크검사","1117-M31020":"볼압입 리크검사","1058-N90260":"볼압입 리크검사","1107-K41600-11":"양방향 호스조립","1107-K41620-11":"양방향 호스조립","1107-K41610-11":"양방향 호스조립","1107-P61990-10":"양방향 호스조립","1107-D30820-11":"단방향 호스조립","1107-L71560-11":"단방향 호스조립","1107-M31650-10":"단방향 호스조립","1107-M31660-10":"단방향 호스조립","1107-M31750-10":"단방향 호스조립","1107-M51780-10":"단방향 호스조립","1107-L71540-11":"단방향 호스조립","1107-M41670-10":"단방향 호스조립","1107-M61950-10":"단방향 호스조립","1107-M31960-10":"단방향 호스조립","1107-P90110":"단방향 호스조립","1106-M51820":"단방향 호스조립","1107-M51820-10":"단방향 호스조립"};
+const FGC={"A3204-JK101":"티에스모스트","A3204-AC301":"티에스모스트","2134-710170-10":"현담 아산","2134-330200-10":"현담 아산","연3D-TB-160427C":"쌍신전자","A0908-MQ402":"티에스모스트","A3052-AAB04":"티에스모스트","A3052-AAN00":"티에스모스트","A3001-AAN03":"티에스모스트","1211-K47560-2":"현담 아산","1211-M38020":"현담테크","1242-K40690-1":"현담 아산/경주","1241-K40100-11":"현담 아산/경주","1210-A50060-11":"현담테크","1242-D00550":"현담 아산/경주","1242-K40710-1":"현담테크","1242-K40690-2":"현담 아산/경주","1211-B81710-10":"현담 경주","1211-K47560-1":"현담","1211-K48070":"현담","1211-N98160":"현담","1211-K98180":"현담","1242-K40710-2":"현담테크","86681-N1000":"금문산업","86684-N1000":"금문산업","86682-N1000":"금문산업","86683-N1000":"금문산업","86685-N1000":"금문산업","86686-N1000":"금문산업","86581-L1550":"금문산업","86584-L1550":"금문산업","86581-L1500":"금문산업","86584-L1500":"금문산업","86555-L1500":"금문산업","86556-L1500":"금문산업","86555-L1700":"금문산업","86556-L1700":"금문산업","SD-DC-2312110B":"쌍신전자","SD-DC-2405160A":"쌍신전자","A3001-AAB03":"티에스모스트","A0908-NE106":"티에스모스트","A3012-AAB01":"티에스모스트","A0908-NE200":"티에스모스트","A0908-NE300":"티에스모스트","A0908-NX410":"티에스모스트","A3013-AAB01":"티에스모스트","1058-K40220-10":"현담","1107-K41600-11":"현담","1107-D30820-11":"현담"};
+const LSKEY="demand_forecast_v1", CKEY="demand_forecast_v1";
+const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
+let ROWS=[], dirty=false, FILTER='전체', BASE='';
+const el=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const cm=n=>{n=Math.round(+n||0);return n.toLocaleString('en-US');};
+const num=v=>parseFloat(v)||0;
+function status(m){el('status').textContent=m;}
+function markDirty(){dirty=true;status('✏️ 수정됨 · 저장 필요');}
+function ymNow(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function monLabel(off){var p=(BASE||ymNow()).split('-');var d=new Date(+p[0],(+p[1]-1)+off,1);return (d.getMonth()+1)+'월';}
+function fcOf(r){return num(r.f1)*num(r.price);}
+function avgOf(r){return Math.round((num(r.a1)+num(r.a2)+num(r.a3))/3);}
+
+/* ===== 예측 자동계산 ===== */
+function recompute(r){
+ var m=r.method||'가중평균';
+ if(m==='고객내시'||m==='수동')return;
+ var a1=num(r.a1),a2=num(r.a2),a3=num(r.a3),f1,f2,f3;
+ if(m==='단순평균'){f1=f2=f3=Math.round((a1+a2+a3)/3);}
+ else if(m==='성장추세'){var step=Math.round((a3-a1)/2);f1=Math.max(0,a3+step);f2=Math.max(0,a3+2*step);f3=Math.max(0,a3+3*step);}
+ else{f1=f2=f3=Math.round((a3*3+a2*2+a1*1)/6);} /* 가중평균(기본) */
+ r.f1=String(f1);r.f2=String(f2);r.f3=String(f3);
+}
+
+function setBase(v){BASE=v||ymNow();markDirty();render();}
+function setFilter(f){FILTER=f;render();}
+function seedAll(){ROWS=FG.map(function(x){return {cust:FGC[x.pno]||'',acct:x.acct,eq:FGEQ[x.pno]||'',pno:x.pno,name:x.name,price:String(x.price==null?'':x.price),a1:'',a2:'',a3:'',method:'가중평균',f1:'',f2:'',f3:'',memo:''};});}
+function seedAllAsk(){if(ROWS.length&&!confirm('BOM 완제품 전체('+FG.length+'개)로 목록을 다시 채웁니다. 현재 입력값은 지워집니다. 진행할까요?'))return;seedAll();markDirty();render();status('BOM 완제품 '+FG.length+'개 불러옴 · 실적 입력 후 저장');}
+function addRow(){ROWS.push({cust:'',acct:'수직사출',eq:'',pno:'',name:'',price:'',a1:'',a2:'',a3:'',method:'가중평균',f1:'',f2:'',f3:'',memo:''});markDirty();render();}
+function del(i){if(!confirm('이 품목을 목록에서 삭제할까요?'))return;ROWS.splice(i,1);markDirty();render();}
+
+function render(){
+ if(!BASE)BASE=ymNow();
+ el('basemonth').value=BASE;
+ el('rangeNote').textContent='실적: '+monLabel(-3)+'·'+monLabel(-2)+'·'+monLabel(-1)+'  →  예측: '+monLabel(0)+'·'+monLabel(1)+'·'+monLabel(2);
+ el('k-qty-l').textContent=monLabel(0)+' 예측수량';
+ el('k-amt-l').textContent=monLabel(0)+' 예측금액';
+ const cnt={'전체':ROWS.length}; ACCTS.forEach(a=>cnt[a]=ROWS.filter(r=>(r.acct||'')===a).length);
+ el('segtog').innerHTML=['전체'].concat(ACCTS).map(f=>`<button class="segbtn${FILTER===f?' on':''}" onclick="setFilter('${f}')">${f}<span class="sgc">${cnt[f]||0}</span></button>`).join('');
+ let h=`<tr><th style="width:26px">#</th><th style="width:90px">거래처</th><th style="width:82px">공정</th><th style="width:104px">품번(BOM)</th><th style="width:170px">품명</th>`+
+  `<th class="grp-a" style="width:60px">${monLabel(-3)}실적</th><th class="grp-a" style="width:60px">${monLabel(-2)}실적</th><th class="grp-a" style="width:60px">${monLabel(-1)}실적</th><th style="width:60px">3M평균</th>`+
+  `<th style="width:82px">예측방법</th>`+
+  `<th class="grp-f" style="width:66px">${monLabel(0)}예측</th><th class="grp-f" style="width:60px">${monLabel(1)}</th><th class="grp-f" style="width:60px">${monLabel(2)}</th>`+
+  `<th style="width:54px">단가</th><th style="width:90px">${monLabel(0)}예측금액</th><th style="width:84px">비고</th><th style="width:30px">삭제</th></tr>`;
+ const vis=[]; ROWS.forEach((r,i)=>{if(FILTER==='전체'||(r.acct||'')===FILTER)vis.push({r:r,i:i});});
+ if(!vis.length)h+=`<tr><td colspan="17" class="empty">${ROWS.length?('“'+FILTER+'” 구분의 품목이 없습니다.'):'품목이 없습니다. ↻ BOM 완제품 전체 불러오기 또는 ＋신규 품목을 눌러 시작하세요.'}</td></tr>`;
+ vis.forEach(function(o){var r=o.r,i=o.i,dc=vis.indexOf(o)+1;
+  h+=`<tr><td class="idx">${dc}</td>`+
+   `<td><input class="f" list="custdl" value="${esc(r.cust)}" oninput="ed(${i},'cust',this.value)" placeholder="거래처"></td>`+
+   `<td><input class="f" list="eqdl2" value="${esc(r.eq)}" oninput="ed(${i},'eq',this.value)" placeholder="공정/설비"></td>`+
+   `<td><input class="f" list="pnodl" value="${esc(r.pno)}" onchange="pickPno(${i},this.value)" placeholder="완제품 품번"></td>`+
+   `<td><textarea class="f nm" rows="2" oninput="ed(${i},'name',this.value)" placeholder="품명(자동)" title="${esc(r.name)}">${esc(r.name)}</textarea></td>`+
+   `<td class="acell"><input class="f r" data-i="${i}" data-f="a1" value="${esc(r.a1)}" oninput="edNum(${i},'a1',this.value)" onkeydown="cellKey(event,${i},'a1')" inputmode="numeric"></td>`+
+   `<td class="acell"><input class="f r" data-i="${i}" data-f="a2" value="${esc(r.a2)}" oninput="edNum(${i},'a2',this.value)" onkeydown="cellKey(event,${i},'a2')" inputmode="numeric"></td>`+
+   `<td class="acell"><input class="f r" data-i="${i}" data-f="a3" value="${esc(r.a3)}" oninput="edNum(${i},'a3',this.value)" onkeydown="cellKey(event,${i},'a3')" inputmode="numeric"></td>`+
+   `<td class="avg" id="avg-${i}">${cm(avgOf(r))}</td>`+
+   `<td><select class="f" onchange="edMethod(${i},this.value)">${METHODS.map(m=>`<option${r.method===m?' selected':''}>${m}</option>`).join('')}</select></td>`+
+   `<td class="fcell"><input class="f r" id="f1-${i}" data-i="${i}" data-f="f1" value="${esc(r.f1)}" oninput="edNum(${i},'f1',this.value)" onkeydown="cellKey(event,${i},'f1')" inputmode="numeric"></td>`+
+   `<td class="fcell"><input class="f r" id="f2-${i}" data-i="${i}" data-f="f2" value="${esc(r.f2)}" oninput="edNum(${i},'f2',this.value)" onkeydown="cellKey(event,${i},'f2')" inputmode="numeric"></td>`+
+   `<td class="fcell"><input class="f r" id="f3-${i}" data-i="${i}" data-f="f3" value="${esc(r.f3)}" oninput="edNum(${i},'f3',this.value)" onkeydown="cellKey(event,${i},'f3')" inputmode="numeric"></td>`+
+   `<td><input class="f r" value="${esc(r.price)}" oninput="edNum(${i},'price',this.value)" inputmode="numeric"></td>`+
+   `<td class="amt" id="amt-${i}">${cm(fcOf(r))}</td>`+
+   `<td><input class="f" value="${esc(r.memo)}" oninput="ed(${i},'memo',this.value)"></td>`+
+   `<td><button class="delbtn" onclick="del(${i})">✕</button></td></tr>`;});
+ el('tbl').innerHTML=h;
+ patchSummary();
+}
+
+function pickPno(i,v){var r=ROWS[i];if(!r)return;r.pno=v;var f=FGMAP[v];if(f){r.name=f.name;r.acct=f.acct;if(f.price!=null)r.price=String(f.price);if(FGC[v])r.cust=FGC[v];if(FGEQ[v])r.eq=FGEQ[v];}markDirty();render();}
+function ed(i,f,v){var r=ROWS[i];if(!r)return;r[f]=v;markDirty();if(f==='acct')render();}
+function edMethod(i,v){var r=ROWS[i];if(!r)return;r.method=v;recompute(r);markDirty();render();}
+function edNum(i,f,v){var r=ROWS[i];if(!r)return;r[f]=v;markDirty();
+ if(f==='a1'||f==='a2'||f==='a3'){recompute(r);var ae=el('avg-'+i);if(ae)ae.textContent=cm(avgOf(r));['f1','f2','f3'].forEach(function(k){var e=el(k+'-'+i);if(e&&document.activeElement!==e)e.value=r[k];});}
+ var me=el('amt-'+i);if(me)me.textContent=cm(fcOf(r));
+ patchSummary();
+}
+function patchSummary(){
+ var cnt=ROWS.length,q1=0,a1=0,q3=0,bya={};
+ ROWS.forEach(function(r){var f1=num(r.f1);q1+=f1;a1+=f1*num(r.price);q3+=f1+num(r.f2)+num(r.f3);var ac=r.acct||'(미분류)';bya[ac]=bya[ac]||{c:0,q:0,a:0};bya[ac].c++;bya[ac].q+=f1;bya[ac].a+=f1*num(r.price);});
+ el('k-cnt').textContent=cm(cnt);el('k-qty').textContent=cm(q1);el('k-amt').textContent=cm(a1);el('k-3m').textContent=cm(q3);
+ var sh='';ACCTS.forEach(function(a){var b=bya[a]||{c:0,q:0,a:0};sh+=`<div class="ac ac-${a}${FILTER===a?' on':''}" onclick="setFilter('${a}')" title="이 구분만 보기"><div class="an">${a}</div><div class="av">${cm(b.c)}품목 · ${cm(b.q)} EA</div><div class="am">${cm(b.a)}원</div></div>`;});
+ el('acctsum').innerHTML=sh;
+ renderChart();
+}
+/* ===== 적중도 백테스트: 직전월(M-1)을 그 앞 2개월로 예측→실적과 비교 ===== */
+function backcast(r){
+ var a1=num(r.a1),a2=num(r.a2),m=r.method||'가중평균';
+ if(m==='고객내시'||m==='수동')return null;
+ if(a1<=0&&a2<=0)return null;
+ if(m==='단순평균')return (a1+a2)/2;
+ if(m==='성장추세')return Math.max(0,a2+(a2-a1));
+ return (a2*2+a1*1)/3; /* 가중평균 */
+}
+function renderChart(){
+ var rows=ROWS.filter(function(r){return FILTER==='전체'||(r.acct||'')===FILTER;});
+ el('chartScope').textContent='· '+(FILTER==='전체'?'전체 합계':FILTER);
+ var mo=[0,0,0,0,0,0];
+ rows.forEach(function(r){mo[0]+=num(r.a1);mo[1]+=num(r.a2);mo[2]+=num(r.a3);mo[3]+=num(r.f1);mo[4]+=num(r.f2);mo[5]+=num(r.f3);});
+ var labels=[monLabel(-3),monLabel(-2),monLabel(-1),monLabel(0),monLabel(1),monLabel(2)];
+ el('chartSvg').innerHTML=buildChart(mo,labels);
+ /* 적중도 */
+ var errs=[];
+ rows.forEach(function(r){var a3=num(r.a3),p=backcast(r);if(p!=null&&a3>0)errs.push(Math.abs(p-a3)/a3);});
+ var av=el('accVal'),an=el('accNote');
+ if(!errs.length){av.textContent='–';av.className='av';an.innerHTML='직전월(<b>'+monLabel(-1)+'</b>) 실적을 입력하면, 예측모형이 그 달을 얼마나 맞혔는지 자동 계산됩니다.';return;}
+ var mape=errs.reduce(function(s,x){return s+x;},0)/errs.length*100;
+ var acc=Math.max(0,100-mape);
+ av.textContent=acc.toFixed(1)+'%';
+ av.className='av'+(acc>=90?'':(acc>=75?' mid':' warn'));
+ an.innerHTML='<b>'+monLabel(-1)+'</b> 백테스트 · 평가 <b>'+errs.length+'품목</b> · 평균오차(MAPE) <b>'+mape.toFixed(1)+'%</b><br>'+(acc>=90?'매우 정확 — 현재 방법 유지 권장':(acc>=75?'양호 — 오차 큰 품목은 방법 변경 검토':'낮음 — 예측방법을 바꾸거나 고객내시 반영 권장'));
+}
+function buildChart(mo,labels){
+ var W=660,H=210,pL=44,pR=14,pT=12,pB=26,pw=W-pL-pR,ph=H-pT-pB;
+ var mx=Math.max.apply(null,mo.concat([1]));var top=mx*1.15||1;
+ var X=function(i){return pL+i*(pw/5);};var Y=function(v){return pT+ph-(v/top)*ph;};
+ var g='';
+ /* y 그리드 3줄 */
+ for(var k=0;k<=2;k++){var gv=top*k/2,gy=Y(gv);g+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e6edf2" stroke-width="1"/><text x="'+(pL-5)+'" y="'+(gy+3)+'" font-size="9" fill="#94a3b8" text-anchor="end">'+cm(gv)+'</text>';}
+ /* 예측 시작 세로 점선 (6월과 7월 사이) */
+ var dv=(X(2)+X(3))/2;g+='<line x1="'+dv+'" y1="'+pT+'" x2="'+dv+'" y2="'+(pT+ph)+'" stroke="#c9b48a" stroke-width="1" stroke-dasharray="3 3"/>';
+ /* 실적 실선 0-1-2 */
+ var pa=[0,1,2].map(function(i){return X(i)+','+Y(mo[i]);}).join(' ');
+ g+='<polyline points="'+pa+'" fill="none" stroke="#006E8A" stroke-width="2.4"/>';
+ /* 예측 점선 2-3-4-5 */
+ var pf=[2,3,4,5].map(function(i){return X(i)+','+Y(mo[i]);}).join(' ');
+ g+='<polyline points="'+pf+'" fill="none" stroke="#b8860b" stroke-width="2.4" stroke-dasharray="6 4"/>';
+ /* 점 + 값 + x라벨 */
+ for(var i=0;i<6;i++){var isF=i>=3;var col=isF?'#b8860b':'#006E8A';
+  g+='<circle cx="'+X(i)+'" cy="'+Y(mo[i])+'" r="3.4" fill="'+col+'"/>';
+  g+='<text x="'+X(i)+'" y="'+(Y(mo[i])-7)+'" font-size="9.5" fill="'+col+'" font-weight="700" text-anchor="middle">'+cm(mo[i])+'</text>';
+  g+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="10" fill="#475569" text-anchor="middle">'+labels[i]+(isF?'(예측)':'')+'</text>';}
+ return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+g+'</svg>';
+}
+function focusCell(f,i){setTimeout(function(){var e=document.querySelector('#tbl [data-f="'+f+'"][data-i="'+i+'"]');if(e){e.focus();if(e.select)e.select();}},0);}
+function cellKey(ev,i,f){if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();if(i>=ROWS.length-1)addRow();focusCell(f,i+1);}else if(ev.key==='ArrowUp'){ev.preventDefault();if(i>0)focusCell(f,i-1);}}
+
+function doPrint(){
+ var d=new Date();var pad=function(n){return String(n).padStart(2,'0');};
+ var dateStr=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+ var f=FILTER==='전체'?'전체':FILTER;
+ var cnt=ROWS.length,q1=0,a1=0,q3=0,bya={};
+ ROWS.forEach(function(r){var f1=num(r.f1);q1+=f1;a1+=f1*num(r.price);q3+=f1+num(r.f2)+num(r.f3);var ac=r.acct||'(미분류)';bya[ac]=bya[ac]||{c:0,q:0,a:0};bya[ac].c++;bya[ac].q+=f1;bya[ac].a+=f1*num(r.price);});
+ var acctRows=ACCTS.map(function(a){var b=bya[a]||{c:0,q:0,a:0};return '<tr><td>'+a+'</td><td class="r">'+cm(b.c)+'</td><td class="r">'+cm(b.q)+'</td><td class="r amt">'+cm(b.a)+'</td></tr>';}).join('');
+ var html=''
+  +'<table class="gyeolja"><tr><td class="gl" rowspan="2">결<br>재</td><th>작성</th><th>검토</th><th>검토</th><th>승인</th></tr>'
+  +'<tr><td class="sg"></td><td class="sg"></td><td class="sg"></td><td class="sg"></td></tr></table>'
+  +'<div class="rpt-title">수 요 예 측 보 고</div>'
+  +'<div class="rpt-sub">㈜ 승 정 &nbsp;·&nbsp; 기준월 '+(BASE||ymNow())+' ('+monLabel(0)+') &nbsp;·&nbsp; 작성일 '+dateStr+' &nbsp;·&nbsp; 구분: '+f+'</div>'
+  +'<div class="rpt-secttl">■ 예측 총괄 ('+monLabel(0)+' 기준)</div>'
+  +'<table class="rpt-sum"><tr><th>예측 품목 수</th><th>'+monLabel(0)+' 예측수량(EA)</th><th>'+monLabel(0)+' 예측금액(원)</th><th>3개월 예측수량(EA)</th></tr>'
+  +'<tr><td class="r">'+cm(cnt)+' 품목</td><td class="r">'+cm(q1)+'</td><td class="r amt">'+cm(a1)+'</td><td class="r">'+cm(q3)+'</td></tr></table>'
+  +'<div class="rpt-secttl">■ 계정(공정)별 예측 ('+monLabel(0)+')</div>'
+  +'<table class="rpt-acct"><tr><th>구분</th><th>품목수</th><th>'+monLabel(0)+' 수량(EA)</th><th>'+monLabel(0)+' 금액(원)</th></tr>'+acctRows
+  +'<tr class="total"><td>합계</td><td class="r">'+cm(cnt)+'</td><td class="r">'+cm(q1)+'</td><td class="r amt">'+cm(a1)+'</td></tr></table>'
+  +'<div class="rpt-secttl">■ 품목별 수요예측 상세'+(f!=='전체'?' ('+f+')':'')+'</div>';
+ el('printhead').innerHTML=html;
+ var rf=el('rptfoot');if(rf)rf.textContent='㈜승정 ERP · 수요예측(포캐스트) · 출력 '+dateStr;
+ window.print();
+}
+
+function normalize(d){var a=Array.isArray(d)?d:(d&&Array.isArray(d.rows)?d.rows:[]);return a;}
+async function save(){
+ status('저장 중…');
+ try{localStorage.setItem(LSKEY,JSON.stringify({base:BASE,rows:ROWS}));}catch(e){}
+ var ok=false;
+ if(sb){try{var r=await sb.from('app_state').upsert({key:CKEY,value:{base:BASE,rows:ROWS},updated_at:new Date().toISOString()});ok=!(r&&r.error);if(r&&r.error)console.warn(r.error.message);}catch(e){console.warn(e);}}
+ dirty=false;status(ok?'✅ 저장됨 (전 PC 공유)':'💾 저장됨 (이 PC)');
+}
+function load(v){if(v&&v.base)BASE=v.base;ROWS=normalize(v&&v.rows?v.rows:v);}
+async function boot(){
+ el('pnodl').innerHTML=FG.map(x=>'<option value="'+esc(x.pno)+'">'+esc(x.name)+' · '+x.acct+(FGC[x.pno]?(' · '+FGC[x.pno]):'')+'</option>').join('');
+ el('custdl').innerHTML=Array.from(new Set(Object.values(FGC))).map(c=>'<option value="'+esc(c)+'"></option>').join('');
+ el('eqdl2').innerHTML=EQLIST.map(e=>'<option value="'+esc(e)+'"></option>').join('');
+ BASE=ymNow();
+ try{var s=JSON.parse(localStorage.getItem(LSKEY));if(s)load(s);}catch(e){}
+ if(!ROWS.length)seedAll();
+ render();
+ if(!sb){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';status('준비됨 (이 PC 저장)');return;}
+ try{
+  var probe=await sb.from('app_state').select('key').limit(1);
+  if(probe&&probe.error){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';status('준비됨 (이 PC 저장)');return;}
+  el('cloud').textContent='● 클라우드 공유';el('cloud').className='cloud on';
+  var r=await sb.from('app_state').select('value').eq('key',CKEY).maybeSingle();
+  if(r&&r.data&&r.data.value&&!dirty){load(r.data.value);if(!ROWS.length)seedAll();render();status('☁️ 클라우드에서 불러옴');}
+  else status('준비됨');
+  try{ sb.channel('dfc').on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+CKEY},p=>{if(dirty)return;var v=p&&p.new&&p.new.value;if(v){load(v);render();status('☁️ 다른 PC 변경 반영됨');}}).subscribe(); }catch(e){}
+ }catch(e){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';status('준비됨 (이 PC 저장)');}
+}
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+boot();
+</script>
+</body></html>
