@@ -75,9 +75,9 @@ tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);bord
  .printhead{display:block;position:relative;margin-bottom:10px}
  .gyeolja{position:absolute;top:0;right:0;border-collapse:collapse}
  .gyeolja th,.gyeolja td{border:1px solid #333;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
- .gyeolja th{background:#eef2f5!important;font-size:9px;font-weight:700;padding:2px 10px}
+ .gyeolja th{background:#eef2f5!important;font-size:9px;font-weight:700;padding:2px 6px}
  .gyeolja td.gl{width:15px;background:#eef2f5!important;font-size:9px;font-weight:700;line-height:1.1}
- .gyeolja td.sg{width:70px;height:48px}
+ .gyeolja td.sg{width:58px;height:46px}
  .rpt-title{text-align:center;font-size:21px;font-weight:800;letter-spacing:9px;color:#111;padding-top:6px}
  .rpt-sub{text-align:center;font-size:10.5px;color:#444;margin:4px 0 9px}
  .rpt-sum,.rpt-acct{width:100%;border-collapse:collapse;margin-bottom:7px;clear:both}
@@ -218,8 +218,8 @@ function doPrint(){
  ROWS.forEach(function(r){var a=amtOf(r);TQ+=(parseFloat(r.qty)||0);TA+=a;var ac=r.acct||'(미분류)';bya[ac]=bya[ac]||{c:0,q:0,a:0};bya[ac].c++;bya[ac].q+=(parseFloat(r.qty)||0);bya[ac].a+=a;if(r.status==='납품완료')done++;else prog++;});
  var acctRows=ACCTS.map(function(a){var b=bya[a]||{c:0,q:0,a:0};return '<tr><td>'+a+'</td><td class="r">'+cm(b.c)+'</td><td class="r">'+cm(b.q)+'</td><td class="r amt">'+cm(b.a)+'</td></tr>';}).join('');
  var html=''
-  +'<table class="gyeolja"><tr><td class="gl" rowspan="2">결<br>재</td><th>담당</th><th>부서장</th><th>대표이사</th></tr>'
-  +'<tr><td class="sg"></td><td class="sg"></td><td class="sg"></td></tr></table>'
+  +'<table class="gyeolja"><tr><td class="gl" rowspan="2">결<br>재</td><th>작성</th><th>검토</th><th>검토</th><th>승인</th></tr>'
+  +'<tr><td class="sg"></td><td class="sg"></td><td class="sg"></td><td class="sg"></td></tr></table>'
   +'<div class="rpt-title">수 주 현 황 보 고</div>'
   +'<div class="rpt-sub">㈜ 승 정 &nbsp;·&nbsp; 작성일 '+dateStr+' &nbsp;·&nbsp; 구분: '+f+'</div>'
   +'<div class="rpt-secttl">■ 수주 총괄</div>'
