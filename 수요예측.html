@@ -101,6 +101,7 @@ tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);bord
  .gyeolja{position:absolute;top:0;right:0;border-collapse:collapse;width:auto!important;min-width:0!important}
  .gyeolja th,.gyeolja td{border:1px solid #333;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  .gyeolja th{background:#eef2f5!important;color:#111!important;font-size:9px;font-weight:700;padding:2px 6px}
+ .gyeolja td.gh{background:#eef2f5!important;color:#111!important;font-size:9px;font-weight:700;padding:2px 6px}
  .gyeolja td.gl{width:15px;background:#eef2f5!important;color:#111!important;font-size:9px;font-weight:700;line-height:1.1}
  .gyeolja td.sg{width:58px;height:46px}
  .rpt-title{text-align:center;font-size:21px;font-weight:800;letter-spacing:9px;color:#111;padding-top:6px}
@@ -344,7 +345,7 @@ function doPrint(){
  ROWS.forEach(function(r){var f1=num(r.f1);q1+=f1;a1+=f1*num(r.price);q3+=f1+num(r.f2)+num(r.f3);var ac=r.acct||'(미분류)';bya[ac]=bya[ac]||{c:0,q:0,a:0};bya[ac].c++;bya[ac].q+=f1;bya[ac].a+=f1*num(r.price);});
  var acctRows=ACCTS.map(function(a){var b=bya[a]||{c:0,q:0,a:0};return '<tr><td>'+a+'</td><td class="r">'+cm(b.c)+'</td><td class="r">'+cm(b.q)+'</td><td class="r amt">'+cm(b.a)+'</td></tr>';}).join('');
  var html=''
-  +'<table class="gyeolja"><tr><td class="gl" rowspan="2">결<br>재</td><th>작성</th><th>검토</th><th>검토</th><th>승인</th></tr>'
+  +'<table class="gyeolja"><tr><td class="gl" rowspan="2">결<br>재</td><td class="gh" style="color:#111">작성</td><td class="gh" style="color:#111">검토</td><td class="gh" style="color:#111">검토</td><td class="gh" style="color:#111">승인</td></tr>'
   +'<tr><td class="sg"></td><td class="sg"></td><td class="sg"></td><td class="sg"></td></tr></table>'
   +'<div class="rpt-title">수 요 예 측 보 고</div>'
   +'<div class="rpt-sub">㈜ 승 정 &nbsp;·&nbsp; 기준월 '+(BASE||ymNow())+' ('+monLabel(0)+') &nbsp;·&nbsp; 작성일 '+dateStr+' &nbsp;·&nbsp; 구분: '+f+'</div>'
