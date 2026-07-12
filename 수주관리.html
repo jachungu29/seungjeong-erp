@@ -13,24 +13,24 @@ header h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.3px;display:f
 .status{font-size:12px;opacity:.95;min-width:90px;text-align:right}
 .savebtn{background:var(--gold);color:#3a2a00;border:0;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
 .savebtn:hover{filter:brightness(1.06)}.savebtn:active{transform:translateY(1px)}
-.wrap{padding:16px 20px 60px}
-.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:12px 14px}
-.kpi .l{font-size:11.5px;color:var(--mut);font-weight:600}
-.kpi .v{font-size:21px;font-weight:800;color:var(--navy);margin-top:2px}
-.kpi .u{font-size:11px;color:var(--mut)}
+.wrap{padding:10px 20px 40px}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:9px;padding:7px 12px}
+.kpi .l{font-size:11px;color:var(--mut);font-weight:600}
+.kpi .v{font-size:18px;font-weight:800;color:var(--navy);margin-top:1px}
+.kpi .u{font-size:10.5px;color:var(--mut)}
 .kpi.gold{border-left-color:var(--gold)}.kpi.gold .v{color:#b8860b}
-.acctsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
-.ac{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:10px;padding:10px 12px}
-.ac .an{font-size:13px;font-weight:800;color:var(--navy)}
-.ac .av{font-size:12px;color:var(--mut);margin-top:3px}
-.ac .am{font-size:15px;font-weight:800;color:#b8860b;margin-top:2px}
+.acctsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-bottom:10px}
+.ac{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:9px;padding:6px 12px}
+.ac .an{font-size:12.5px;font-weight:800;color:var(--navy)}
+.ac .av{font-size:11px;color:var(--mut);margin-top:1px}
+.ac .am{font-size:14px;font-weight:800;color:#b8860b;margin-top:1px}
 .ac-수직사출{border-top-color:#006E8A}.ac-수평사출{border-top-color:#1565C0}.ac-이중사출{border-top-color:#7C3AED}.ac-조립{border-top-color:#F5A623}
 .ac{cursor:pointer;transition:.12s}.ac:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}.ac.on{box-shadow:0 0 0 2px var(--teal) inset}
-.segtog{display:inline-flex;gap:3px;background:#e8eef4;border-radius:9px;padding:3px;flex-wrap:wrap}
-.segbtn{border:0;background:transparent;color:var(--mut);font-family:inherit;font-size:12px;font-weight:700;padding:6px 11px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-.segbtn:hover{color:var(--navy)}
-.segbtn.on{background:var(--teal);color:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.segtog{display:inline-flex;gap:6px;background:transparent;border-radius:9px;padding:0;flex-wrap:wrap}
+.segbtn{border:1.5px solid #b8cdd8;background:#fff;color:var(--mut);font-family:inherit;font-size:12px;font-weight:700;padding:6px 11px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.12s}
+.segbtn:hover{color:var(--navy);border-color:var(--teal)}
+.segbtn.on{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .segbtn .sgc{font-size:10.5px;font-weight:800;background:rgba(0,0,0,.12);color:inherit;border-radius:10px;padding:0 6px;min-width:16px;text-align:center}
 .segbtn.on .sgc{background:rgba(255,255,255,.25)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
@@ -40,30 +40,89 @@ header h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.3px;display:f
 .addbtn{background:var(--teal);color:#fff;border:0;border-radius:8px;padding:8px 15px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
 .addbtn:hover{background:var(--navy)}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;min-width:1080px}
-th{background:var(--navy);color:#fff;font-size:11.5px;font-weight:700;padding:9px 8px;white-space:nowrap;position:sticky;top:0}
-td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:center;vertical-align:middle}
+table{border-collapse:collapse;width:100%;min-width:940px;table-layout:fixed}
+th{background:var(--navy);color:#fff;font-size:10px;font-weight:700;padding:6px 3px;white-space:nowrap;position:sticky;top:0;border-right:1px solid #1c5568}
+td{border-bottom:1px solid var(--line);border-right:1px solid #eef1f5;padding:3px 2px;text-align:center;vertical-align:middle}
+th:last-child,td:last-child{border-right:0}
 tr:nth-child(even) td{background:#f8fafc}tr:hover td{background:#eef7fb}
 td.idx{color:var(--mut);font-weight:700;width:32px}
-input.f,select.f{width:100%;box-sizing:border-box;padding:6px 7px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:var(--text)}
+input.f,select.f{width:100%;box-sizing:border-box;padding:4px 3px;border:1px solid #cbd5e1;border-radius:5px;font-size:10.5px;font-family:inherit;background:#fff;color:var(--text)}
 input.f:focus,select.f:focus{outline:none;border-color:var(--teal);background:#f5fbfd}
 input.f.r{text-align:right}
-td.amt{font-weight:800;color:var(--navy);white-space:nowrap}
+input.f[type=date]{padding:4px 1px;font-size:9.5px;letter-spacing:-.3px}
+textarea.f.nm{width:100%;box-sizing:border-box;resize:none;line-height:1.2;font-size:10px;height:32px;text-align:left;white-space:normal;word-break:break-word;overflow:hidden;padding:3px 5px}
+td.amt{font-weight:800;color:var(--navy);white-space:nowrap;font-size:10.5px}
 .st-접수{color:#0369a1;font-weight:700}.st-생산중{color:#b8860b;font-weight:700}.st-납품완료{color:#0d7a52;font-weight:700}.st-변경{color:#9333ea;font-weight:700}.st-취소{color:#C62828;font-weight:700}
 .delbtn{background:#fff;color:#C62828;border:1px solid #E0A0A0;border-radius:6px;width:28px;height:28px;font-size:13px;cursor:pointer;font-weight:700}
 .delbtn:hover{background:#FDECEC}
 .empty{text-align:center;color:#94a3b8;padding:26px !important;font-size:13px}
 tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);border-top:2px solid #b8d4e0}
 .hint{font-size:11px;color:var(--mut);margin-top:8px}
+.usage{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:9px;padding:8px 14px;margin-bottom:10px}
+.usage h3{margin:0 0 4px;font-size:12.5px;color:var(--navy);font-weight:800;display:flex;align-items:center;gap:6px}
+.usage ol{margin:0;padding-left:19px}
+.usage li{font-size:11.5px;color:var(--text);line-height:1.5}
+.usage b{color:var(--teal)}
+.prnbtn{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-right:8px}
+.prnbtn:hover{background:#eef4f8}
+.printhead{display:none}
+@media print{
+ @page{size:A4 landscape;margin:10mm}
+ body{background:#fff}
+ header,.usage,.strip,.acctsum,.savebtn,.prnbtn,.addbtn,.segtog,.cloud,.status,.hint,.psub{display:none!important}
+ .wrap{padding:0}
+ /* ===== 대표이사 보고서 머리 ===== */
+ .printhead{display:block;position:relative;margin-bottom:10px}
+ .gyeolja{position:absolute;top:0;right:0;border-collapse:collapse}
+ .gyeolja th,.gyeolja td{border:1px solid #333;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .gyeolja th{background:#eef2f5!important;font-size:9px;font-weight:700;padding:2px 10px}
+ .gyeolja td.gl{width:15px;background:#eef2f5!important;font-size:9px;font-weight:700;line-height:1.1}
+ .gyeolja td.sg{width:70px;height:48px}
+ .rpt-title{text-align:center;font-size:21px;font-weight:800;letter-spacing:9px;color:#111;padding-top:6px}
+ .rpt-sub{text-align:center;font-size:10.5px;color:#444;margin:4px 0 9px}
+ .rpt-sum,.rpt-acct{width:100%;border-collapse:collapse;margin-bottom:7px;clear:both}
+ .rpt-sum th,.rpt-sum td,.rpt-acct th,.rpt-acct td{border:1px solid #7a8b98;font-size:10px;padding:3px 6px;text-align:center}
+ .rpt-sum th,.rpt-acct th{background:#003D54!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-weight:700}
+ .rpt-sum td.r,.rpt-acct td.r{text-align:right;font-variant-numeric:tabular-nums}
+ .rpt-sum td.amt,.rpt-acct td.amt{font-weight:800;color:#111}
+ .rpt-acct td:first-child{text-align:left;font-weight:700}
+ .rpt-secttl{font-size:11px;font-weight:800;color:#003D54;margin:2px 0 3px;border-left:3px solid #003D54;padding-left:6px}
+ /* ===== 수주 목록 표 ===== */
+ .card{border:0;padding:0;box-shadow:none}
+ .phead{margin-bottom:4px}.ptitle{font-size:12px}
+ .tbl-wrap{overflow:visible!important;border:1px solid #7a8b98;border-radius:0}
+ table{min-width:0!important;width:100%!important}
+ th{background:#003D54!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:9px;padding:4px 2px}
+ td{padding:2px 2px;border-right:1px solid #dfe5ea}
+ tr.total td{background:#e8eef2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ input.f,select.f,textarea.f.nm{border:0!important;background:transparent!important;padding:1px 2px!important;font-size:9px!important;color:#111!important;-webkit-appearance:none;appearance:none;box-shadow:none!important}
+ input.f[type=date]{font-size:8.5px!important}
+ select.f{padding-right:0!important}
+ tr{break-inside:avoid}
+ .rpt-foot{display:block;text-align:right;font-size:9px;color:#666;margin-top:8px}
+}
+.rpt-foot{display:none}
 </style></head><body>
 <header>
  <h1>📋 수주(PO) 등록·변경관리</h1>
  <span class="cloud" id="cloud">● 연결 확인 중</span>
  <span class="spacer"></span>
  <span class="status" id="status">불러오는 중…</span>
+ <button class="prnbtn" onclick="doPrint()">🖨️ 인쇄</button>
  <button class="savebtn" onclick="save()">💾 저장</button>
 </header>
 <div class="wrap">
+ <div class="printhead" id="printhead"></div>
+ <div class="usage">
+  <h3>📘 사용설명 · 수주(PO) 등록·변경관리</h3>
+  <ol>
+   <li><b>신규 수주 등록</b> — 우측 <b>＋ 신규 수주</b> 클릭 → <b>품번(BOM)</b> 칸에서 품번을 고르면 <b>거래처·설비명·품명·단가</b>가 자동으로 채워집니다. (수주번호는 <b>001</b>부터 자동)</li>
+   <li><b>직접 수정</b> — 표의 각 칸을 <b>클릭해서 바로 입력·수정</b>할 수 있습니다. 수량만 넣으면 <b>금액 = 수량 × 단가</b>로 자동 계산됩니다.</li>
+   <li><b>진행상태 관리</b> — <b>접수 → 생산중 → 납품완료</b> 등 상태를 각 행에서 직접 선택합니다.</li>
+   <li><b>구분별 보기</b> — 아래 토글(<b>전체·수직사출·수평사출·이중사출·조립</b>)을 눌러 계정별 수주만 골라 볼 수 있습니다.</li>
+   <li><b>저장·인쇄</b> — <b>💾 저장</b> 시 <b>전 PC 공유 + 생산계획현황 자동 반영</b>, <b>🖨️ 인쇄</b>로 현재 목록을 출력할 수 있습니다.</li>
+  </ol>
+ </div>
  <div class="strip">
   <div class="kpi"><div class="l">총 수주 건수</div><div class="v" id="k-cnt">0</div><div class="u">건</div></div>
   <div class="kpi"><div class="l">총 수주 수량</div><div class="v" id="k-qty">0</div><div class="u">EA</div></div>
@@ -74,7 +133,8 @@ tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);bord
  <div class="card">
   <div class="phead"><span class="ptitle">수주 목록</span><span class="segtog" id="segtog"></span><span class="spacer"></span><button class="addbtn" onclick="addRow()">＋ 신규 수주</button></div>
   <div class="tbl-wrap"><table id="tbl"></table></div>
-  <div class="hint">금액은 <b>수량 × 단가</b>로 자동 계산됩니다. 변경 시 <b>진행상태=변경</b>으로 두고 <b>변경사유</b>를 적으면 이력 관리가 됩니다. 입력 후 우측 상단 <b>💾 저장</b>을 누르면 전 PC에 공유됩니다.</div>
+  <div class="hint">금액은 <b>수량 × 단가</b>로 자동 계산됩니다. 각 칸을 클릭해 직접 수정하고, <b>💾 저장</b>을 누르면 전 PC에 공유·생산계획현황에 자동 반영됩니다. <b>🖨️ 인쇄</b>는 대표이사 보고서 양식으로 출력됩니다.</div>
+  <div class="rpt-foot" id="rptfoot"></div>
  </div>
 </div>
 <datalist id="custdl"><option>티에스모스트</option><option>현대모비스</option><option>경신</option><option>유라</option><option>세방전지</option></datalist>
@@ -106,7 +166,7 @@ function amtOf(r){return (parseFloat(r.qty)||0)*(parseFloat(r.price)||0);}
 
 function nextNo(){
  let mx=0; ROWS.forEach(r=>{const m=/(\d+)\s*$/.exec(r.no||'');if(m){const n=+m[1];if(n>mx)mx=n;}});
- return 'PO-2026-'+String(mx+1).padStart(3,'0');
+ return String(mx+1).padStart(3,'0');
 }
 function acctOptions(v){return ACCTS.map(a=>`<option${v===a?' selected':''}>${a}</option>`).join('');}
 function setFilter(f){FILTER=f;render();}
@@ -115,9 +175,9 @@ function render(){
  ROWS.forEach(r=>{const a=amtOf(r);TQ+=(parseFloat(r.qty)||0);TA+=a;const ac=r.acct||'(미분류)';bya[ac]=bya[ac]||{c:0,q:0,a:0};bya[ac].c++;bya[ac].q+=(parseFloat(r.qty)||0);bya[ac].a+=a;});
  const cnt={'전체':ROWS.length}; ACCTS.forEach(a=>cnt[a]=ROWS.filter(r=>(r.acct||'')===a).length);
  el('segtog').innerHTML=['전체'].concat(ACCTS).map(f=>`<button class="segbtn${FILTER===f?' on':''}" onclick="setFilter('${f}')">${f}<span class="sgc">${cnt[f]||0}</span></button>`).join('');
- let h=`<tr><th style="width:30px">#</th><th style="width:116px">수주번호</th><th style="width:118px">수주일자</th><th style="width:116px">거래처</th><th style="width:112px">설비명</th><th style="width:132px">품번(BOM)</th><th>품명</th><th style="width:84px">수량</th><th style="width:80px">단가</th><th style="width:108px">금액</th><th style="width:118px">납기일</th><th style="width:94px">진행상태</th><th>변경사유</th><th>비고</th><th style="width:42px">삭제</th></tr>`;
+ let h=`<tr><th style="width:26px">#</th><th style="width:56px">수주번호</th><th style="width:84px">수주일자</th><th style="width:100px">거래처</th><th style="width:106px">설비명</th><th style="width:108px">품번(BOM)</th><th style="width:240px">품명</th><th style="width:64px">수량</th><th style="width:58px">단가</th><th style="width:96px">금액</th><th style="width:84px">납기일</th><th style="width:76px">진행상태</th></tr>`;
  const vis=[]; ROWS.forEach((r,i)=>{if(FILTER==='전체'||(r.acct||'')===FILTER)vis.push({r:r,i:i});});
- if(!vis.length)h+=`<tr><td colspan="15" class="empty">${ROWS.length?('“'+FILTER+'” 구분의 수주가 없습니다.'):'등록된 수주가 없습니다. ＋신규 수주를 눌러 입력하세요.'}</td></tr>`;
+ if(!vis.length)h+=`<tr><td colspan="12" class="empty">${ROWS.length?('“'+FILTER+'” 구분의 수주가 없습니다.'):'등록된 수주가 없습니다. ＋신규 수주를 눌러 입력하세요.'}</td></tr>`;
  let tq=0,ta=0,dc=0;
  vis.forEach(function(o){var r=o.r,i=o.i,a=amtOf(r);tq+=(parseFloat(r.qty)||0);ta+=a;dc++;
   h+=`<tr><td class="idx">${dc}</td>`+
@@ -126,16 +186,14 @@ function render(){
    `<td><input class="f" list="custdl" value="${esc(r.cust)}" oninput="ed(${i},'cust',this.value)" placeholder="거래처"></td>`+
    `<td><input class="f" list="eqdl2" value="${esc(r.eq)}" oninput="ed(${i},'eq',this.value)" placeholder="설비명(호기)"></td>`+
    `<td><input class="f" list="pnodl" value="${esc(r.pno)}" onchange="pickPno(${i},this.value)" placeholder="완제품 품번"></td>`+
-   `<td><input class="f" value="${esc(r.name)}" oninput="ed(${i},'name',this.value)" placeholder="품명(자동)"></td>`+
+   `<td><textarea class="f nm" rows="2" oninput="ed(${i},'name',this.value)" placeholder="품명(자동)" title="${esc(r.name)}">${esc(r.name)}</textarea></td>`+
    `<td><input class="f r cell-qty" data-i="${i}" value="${esc(r.qty)}" oninput="ed(${i},'qty',this.value)" onkeydown="cellKey(event,${i},'qty')" inputmode="numeric" title="Enter/↓ 다음행 · ↑ 윗행"></td>`+
    `<td><input class="f r cell-price" data-i="${i}" value="${esc(r.price)}" oninput="ed(${i},'price',this.value)" onkeydown="cellKey(event,${i},'price')" inputmode="numeric" title="Enter/↓ 다음행 · ↑ 윗행"></td>`+
    `<td class="amt" id="amt-${i}">${cm(a)}</td>`+
    `<td><input class="f" type="date" value="${esc(r.due)}" onchange="ed(${i},'due',this.value)"></td>`+
    `<td><select class="f st-${esc(r.status||'접수')}" onchange="ed(${i},'status',this.value)">${STATUSES.map(s=>`<option${r.status===s?' selected':''}>${s}</option>`).join('')}</select></td>`+
-   `<td><input class="f" value="${esc(r.reason)}" oninput="ed(${i},'reason',this.value)" placeholder="변경 시 사유"></td>`+
-   `<td><input class="f" value="${esc(r.memo)}" oninput="ed(${i},'memo',this.value)"></td>`+
-   `<td><button class="delbtn" onclick="del(${i})">✕</button></td></tr>`;});
- if(vis.length)h+=`<tr class="total"><td colspan="7">${FILTER==='전체'?'합계':FILTER} ${vis.length}건</td><td class="idx" id="total-q" style="text-align:right;color:var(--navy)">${cm(tq)}</td><td></td><td class="amt" id="total-a">${cm(ta)}</td><td colspan="5"></td></tr>`;
+   `</tr>`;});
+ if(vis.length)h+=`<tr class="total"><td colspan="7">${FILTER==='전체'?'합계':FILTER} ${vis.length}건</td><td class="idx" id="total-q" style="text-align:right;color:var(--navy)">${cm(tq)}</td><td></td><td class="amt" id="total-a">${cm(ta)}</td><td colspan="2"></td></tr>`;
  el('tbl').innerHTML=h;
  el('k-cnt').textContent=cm(ROWS.length);el('k-qty').textContent=cm(TQ);el('k-amt').textContent=cm(TA);
  const prog=ROWS.filter(r=>r.status==='접수'||r.status==='생산중'||r.status==='변경').length;
@@ -152,6 +210,29 @@ function cellKey(ev,i,field){
 }
 function addRow(){ROWS.push({no:nextNo(),date:'',cust:'',pno:'',name:'',qty:'',price:'',due:'',status:'접수',reason:'',memo:''});markDirty();render();}
 function del(i){if(!confirm('이 수주를 삭제할까요?'))return;ROWS.splice(i,1);markDirty();render();}
+function doPrint(){
+ var d=new Date();var pad=function(n){return String(n).padStart(2,'0');};
+ var dateStr=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+ var f=FILTER==='전체'?'전체':FILTER;
+ var TQ=0,TA=0,prog=0,done=0,bya={};
+ ROWS.forEach(function(r){var a=amtOf(r);TQ+=(parseFloat(r.qty)||0);TA+=a;var ac=r.acct||'(미분류)';bya[ac]=bya[ac]||{c:0,q:0,a:0};bya[ac].c++;bya[ac].q+=(parseFloat(r.qty)||0);bya[ac].a+=a;if(r.status==='납품완료')done++;else prog++;});
+ var acctRows=ACCTS.map(function(a){var b=bya[a]||{c:0,q:0,a:0};return '<tr><td>'+a+'</td><td class="r">'+cm(b.c)+'</td><td class="r">'+cm(b.q)+'</td><td class="r amt">'+cm(b.a)+'</td></tr>';}).join('');
+ var html=''
+  +'<table class="gyeolja"><tr><td class="gl" rowspan="2">결<br>재</td><th>담당</th><th>부서장</th><th>대표이사</th></tr>'
+  +'<tr><td class="sg"></td><td class="sg"></td><td class="sg"></td></tr></table>'
+  +'<div class="rpt-title">수 주 현 황 보 고</div>'
+  +'<div class="rpt-sub">㈜ 승 정 &nbsp;·&nbsp; 작성일 '+dateStr+' &nbsp;·&nbsp; 구분: '+f+'</div>'
+  +'<div class="rpt-secttl">■ 수주 총괄</div>'
+  +'<table class="rpt-sum"><tr><th>총 수주 건수</th><th>총 수주 수량(EA)</th><th>총 수주 금액(원)</th><th>진행 / 완료</th></tr>'
+  +'<tr><td class="r">'+cm(ROWS.length)+' 건</td><td class="r">'+cm(TQ)+'</td><td class="r amt">'+cm(TA)+'</td><td class="r">'+cm(prog)+' / '+cm(done)+' 건</td></tr></table>'
+  +'<div class="rpt-secttl">■ 계정(공정)별 요약</div>'
+  +'<table class="rpt-acct"><tr><th>구분</th><th>건수</th><th>수량(EA)</th><th>금액(원)</th></tr>'+acctRows
+  +'<tr class="total"><td>합계</td><td class="r">'+cm(ROWS.length)+'</td><td class="r">'+cm(TQ)+'</td><td class="r amt">'+cm(TA)+'</td></tr></table>'
+  +'<div class="rpt-secttl">■ 수주 상세 목록'+(f!=='전체'?' ('+f+')':'')+'</div>';
+ el('printhead').innerHTML=html;
+ var rf=el('rptfoot');if(rf)rf.textContent='㈜승정 ERP · 수주(PO) 등록·변경관리 · 출력 '+dateStr;
+ window.print();
+}
 function ed(i,f,v){if(!ROWS[i])return;ROWS[i][f]=v;markDirty();if(f==='qty'||f==='price')recalc();else if(f==='status'||f==='acct')render();}
 /* 표를 다시 그리지 않고 금액·합계·요약만 갱신 (입력 중 커서 유지) */
 function recalc(){
@@ -165,7 +246,7 @@ function recalc(){
  el('acctsum').innerHTML=sh;
 }
 
-function normalize(d){return Array.isArray(d)?d:(d&&Array.isArray(d.rows)?d.rows:[]);}
+function normalize(d){var a=Array.isArray(d)?d:(d&&Array.isArray(d.rows)?d.rows:[]);a.forEach(function(r){if(r&&r.no){var m=/(\d+)\s*$/.exec(String(r.no));if(m)r.no=String(parseInt(m[1],10)).padStart(3,'0');}});return a;}
 async function save(){
  status('저장 중…');
  try{localStorage.setItem(LSKEY,JSON.stringify(ROWS));}catch(e){}
