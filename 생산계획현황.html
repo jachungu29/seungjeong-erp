@@ -745,5 +745,9 @@ cloudGet(CKEY).then(cd=>{if(!cd||DIRTY)return;let ch=false;const w=cd.w||cd,t=cd
  if(Array.isArray(cd.meq)&&cd.meq.length){MST_EQ=cd.meq;ch=true;}
  if(ch){rerender('inj');rerender('asy');renderMST();status('☁️ 저장본 불러옴');}
 });
+/* 탭 딥링크: ?tab= / #tab / 부모창 postMessage({sjtab}) 로 특정 탭 열기 (메뉴에서 사출월계획·조립월계획·자재소요·설비CAPA 바로 열기) */
+function _openTab(v){if(v&&document.getElementById('v-'+v)){tab(v);}}
+try{_openTab((new URLSearchParams(location.search).get('tab'))||(location.hash||'').replace(/^#/,''));}catch(e){}
+window.addEventListener('message',function(e){try{var d=e.data;if(d&&d.sjtab)_openTab(String(d.sjtab));}catch(_){}});
 </script>
 </body></html>

@@ -36,7 +36,9 @@ async function boot(){
  var d=await sb.from("custom_pages").select("html,title").eq("id",pick.id).single();
  if(d.error||!d.data||!d.data.html){fail("내용을 읽지 못했습니다.");return;}
  var f=document.getElementById("frame");
- f.onload=function(){document.getElementById("load").style.display="none";f.classList.add("on");document.title=(d.data.title||"생산계획")+" · 클라우드";};
+ var _TAB=null;try{_TAB=new URLSearchParams(location.search).get("tab");}catch(e){}
+ function _sendTab(){if(_TAB){try{f.contentWindow.postMessage({sjtab:_TAB},"*");}catch(e){}}}
+ f.onload=function(){document.getElementById("load").style.display="none";f.classList.add("on");document.title=(d.data.title||"생산계획")+" · 클라우드";_sendTab();setTimeout(_sendTab,500);};
  f.srcdoc=d.data.html;
  setTimeout(function(){if(document.getElementById("load").style.display!=="none"){document.getElementById("load").style.display="none";f.classList.add("on");}},2500);
 }
