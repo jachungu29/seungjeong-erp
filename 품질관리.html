@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>품질관리 · 승정 ERP</title>
+<style>
+:root{--navy:#003D54;--teal:#006E8A;--gold:#F5A623;--bg:#eef1f6;--card:#fff;--text:#1c2430;--line:#e2e8f0;--mut:#64748b;--mag:#8E3080}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(90deg,#5a1e63,var(--mag));color:#fff;padding:12px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+header h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+.spacer{flex:1}
+.cloud{font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.18);font-weight:600}
+.cloud.on{background:#1e8e4e}.cloud.off{background:#7a8699}
+.status{font-size:12px;opacity:.95;min-width:90px;text-align:right}
+.savebtn{background:var(--gold);color:#3a2a00;border:0;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.savebtn:hover{filter:brightness(1.06)}.savebtn:active{transform:translateY(1px)}
+.prnbtn{background:#fff;color:var(--mag);border:0;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-right:8px}
+.prnbtn:hover{background:#f7eef8}
+.wrap{padding:10px 20px 40px}
+.tabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tabbtn{border:1.5px solid #d9b8dd;background:#fff;color:#7a5a80;font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.12s}
+.tabbtn:hover{border-color:var(--mag);color:var(--mag)}
+.tabbtn.on{background:var(--mag);color:#fff;border-color:var(--mag);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.usage{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:9px;padding:9px 15px;margin-bottom:10px}
+.usage h3{margin:0 0 5px;font-size:12.5px;color:var(--navy);font-weight:800;display:flex;align-items:center;gap:6px}
+.usage ol{margin:0;padding-left:19px}.usage li{font-size:11.5px;color:var(--text);line-height:1.55}.usage b{color:var(--mag)}
+.usage .mline{font-size:11px;color:#555;margin-top:6px;border-top:1px dashed #dbe2ea;padding-top:6px}.usage .mline b{color:var(--navy)}
+.usage code{background:#f6eef7;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6d1f74}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--mag);border-radius:9px;padding:7px 12px}
+.kpi .l{font-size:11px;color:var(--mut);font-weight:600}.kpi .v{font-size:18px;font-weight:800;color:var(--navy);margin-top:1px}.kpi .u{font-size:10.5px;color:var(--mut)}
+.kpi.g{border-left-color:#1e8e4e}.kpi.g .v{color:#1e8e4e}.kpi.o{border-left-color:var(--gold)}.kpi.o .v{color:#b8860b}.kpi.r{border-left-color:#C62828}.kpi.r .v{color:#C62828}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.phead{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}.ptitle{font-size:15px;font-weight:800;color:var(--navy)}
+.addbtn{background:var(--mag);color:#fff;border:0;border-radius:8px;padding:8px 15px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}.addbtn:hover{background:#6d1f74}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;table-layout:fixed}
+th{background:var(--navy);color:#fff;font-size:10px;font-weight:700;padding:6px 3px;white-space:nowrap;position:sticky;top:0;border-right:1px solid #1c5568}
+td{border-bottom:1px solid var(--line);border-right:1px solid #eef1f5;padding:3px 2px;text-align:center;vertical-align:middle}
+th:last-child,td:last-child{border-right:0}
+tr:nth-child(even) td{background:#f8fafc}tr:hover td{background:#faf5fb}
+input.f,select.f{width:100%;box-sizing:border-box;padding:4px 3px;border:1px solid #cbd5e1;border-radius:5px;font-size:10.5px;font-family:inherit;background:#fff;color:var(--text)}
+input.f:focus,select.f:focus{outline:none;border-color:var(--mag);background:#fdf5fe}
+input.f.r{text-align:right;font-variant-numeric:tabular-nums}
+td.calc{background:#f5f2f7;font-weight:700;color:var(--mag);font-size:10.5px}
+td.calc.bad{color:#C62828;background:#fdeeee}td.calc.warn{color:#B8860B}td.calc.good{color:#1e8e4e}
+textarea.f.nm{width:100%;box-sizing:border-box;resize:none;line-height:1.2;font-size:10px;height:32px;text-align:left;white-space:normal;word-break:break-word;overflow:hidden;padding:3px 5px;border:1px solid #cbd5e1;border-radius:5px;font-family:inherit;background:#fff;color:var(--text)}
+.delbtn{background:#fff;color:#C62828;border:1px solid #E0A0A0;border-radius:6px;width:24px;height:24px;font-size:12px;cursor:pointer;font-weight:700}.delbtn:hover{background:#FDECEC}
+.empty{text-align:center;color:#94a3b8;padding:24px !important;font-size:13px}
+.hint{font-size:11px;color:var(--mut);margin-top:8px}
+.printhead{display:none}.rpt-foot{display:none}
+@media print{
+ @page{size:A4 landscape;margin:10mm}
+ body{background:#fff}
+ header,.tabbar,.usage,.strip,.savebtn,.prnbtn,.addbtn,.cloud,.status,.hint,.phead{display:none!important}
+ .wrap{padding:0}
+ .printhead{display:block;position:relative;margin-bottom:10px}
+ .gyeolja{position:absolute;top:0;right:0;border-collapse:collapse;width:auto!important;min-width:0!important}
+ .gyeolja td{border:1px solid #333;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .gyeolja td.gh{background:#eef2f5!important;color:#111!important;font-size:9px;font-weight:700;padding:2px 6px}
+ .gyeolja td.gl{width:15px;background:#eef2f5!important;color:#111!important;font-size:9px;font-weight:700;line-height:1.1}
+ .gyeolja td.sg{width:58px;height:46px}
+ .rpt-title{text-align:center;font-size:20px;font-weight:800;letter-spacing:6px;color:#111;padding-top:6px}
+ .rpt-sub{text-align:center;font-size:10.5px;color:#444;margin:4px 0 9px}
+ .rpt-sum{width:100%;border-collapse:collapse;margin-bottom:7px;clear:both}
+ .rpt-sum td,.rpt-sum th{border:1px solid #7a8b98;font-size:10px;padding:3px 6px;text-align:center}
+ .rpt-sum th{background:#003D54!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-weight:700}
+ .rpt-secttl{font-size:11px;font-weight:800;color:#003D54;margin:2px 0 3px;border-left:3px solid #003D54;padding-left:6px}
+ .card{border:0;padding:0;box-shadow:none}
+ .tbl-wrap{overflow:visible!important;border:1px solid #7a8b98;border-radius:0}
+ #tbl{min-width:0!important;width:100%!important}
+ th{background:#003D54!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:8.5px;padding:4px 2px}
+ td{padding:2px 2px;border-right:1px solid #dfe5ea}
+ input.f,select.f,textarea.f.nm{border:0!important;background:transparent!important;padding:1px 2px!important;font-size:8.5px!important;color:#111!important;-webkit-appearance:none;appearance:none;box-shadow:none!important}
+ .rpt-foot{display:block;text-align:right;font-size:9px;color:#666;margin-top:8px}
+}
+</style></head><body>
+<header>
+ <h1>🔬 품질관리</h1>
+ <span class="cloud" id="cloud">● 연결 확인 중</span>
+ <span class="spacer"></span>
+ <span class="status" id="status">불러오는 중…</span>
+ <button class="prnbtn" onclick="doPrint()">🖨️ 인쇄</button>
+ <button class="savebtn" onclick="save()">💾 저장</button>
+</header>
+<div class="wrap">
+ <div class="printhead" id="printhead"></div>
+ <div class="tabbar" id="tabbar"></div>
+ <div class="usage"><h3 id="usageTitle">📘 사용설명</h3><div id="usageBody"></div></div>
+ <div class="strip" id="strip"></div>
+ <div class="card">
+  <div class="phead"><span class="ptitle" id="tblTitle">목록</span><span class="spacer"></span><button class="addbtn" onclick="addRow()">＋ 신규</button></div>
+  <div class="tbl-wrap"><table id="tbl"></table></div>
+  <div class="hint">회색 칸은 <b>자동 계산</b>됩니다. 💾 저장 시 전 PC 공유, 🖨️ 인쇄는 현재 탭을 대표이사 보고서로 출력합니다.</div>
+  <div class="rpt-foot" id="rptfoot"></div>
+ </div>
+</div>
+<datalist id="custdl"></datalist><datalist id="pnodl"></datalist><datalist id="eqdl2"></datalist>
+<datalist id="dtypedl"><option>치수불량</option><option>외관불량(스크래치)</option><option>미성형(쇼트)</option><option>버(Burr)</option><option>이물혼입</option><option>변형/휨</option><option>웰드라인</option><option>기포</option><option>조립불량</option></datalist>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const FG=[{"pno":"A3204-JK101","name":"SUB MOLD-JK1","acct":"수직사출","price":3261},{"pno":"A3204-KA401","name":"SUB MOLD-KA4","acct":"수직사출","price":3261},{"pno":"A3204-AC301","name":"SUB MOLD-AC3","acct":"수직사출","price":3261},{"pno":"A3204-BC301","name":"SUB MOLD-BC3","acct":"수직사출","price":3261},{"pno":"A3204-BI300","name":"SUB MOLD-BI3","acct":"수직사출","price":3261},{"pno":"A3204-BI301","name":"SUB MOLD-BI3_PE","acct":"수직사출","price":3261},{"pno":"A3204-KAH00","name":"SUB MOLD-KA4_HEV","acct":"수직사출","price":3261},{"pno":"A3204-MQ401","name":"SUB MOLD-MQ4","acct":"수직사출","price":3261},{"pno":"A3204-MQ412","name":"SUB MOLD-MQ4 HEV","acct":"수직사출","price":3261},{"pno":"2134-710170-10","name":"ARMATURE ASSY-INSULATION(HFP1用)","acct":"수직사출","price":809},{"pno":"2134-840240-10","name":"ARMATURE ASSY-INSULATION(HFP1.2)","acct":"수직사출","price":944},{"pno":"2134-840240-11","name":"ARMATURE ASSY-INSULATION(HFP1.2)","acct":"수직사출","price":944},{"pno":"2134-330200-10","name":"ARMATURE ASSY-INSULATION(HFP2用)","acct":"수직사출","price":910},{"pno":"2134-350250-10","name":"ARMATURE ASSY-INSULATION(HFP2.1 L200)","acct":"수직사출","price":935},{"pno":"연3D-TB-160427C","name":"AMB SENSOR","acct":"수직사출","price":141},{"pno":"A0908-MQ402","name":"MQ4 PHEV CURRENT  SENSOR HOUSING","acct":"수직사출","price":475},{"pno":"A0908-NX407","name":"NX4 HEV SENSOR HOUSING","acct":"수직사출","price":450},{"pno":"A3052-AAB04","name":"SG2 EV 1000A CORRENT  SENSOR T/MOLD","acct":"수직사출","price":240},{"pno":"A3052-AAN00","name":"NQ5PE T/MOLD","acct":"수직사출","price":8},{"pno":"A3001-AAN03","name":"NQ5PE HOUSING_POSITION SENSOR","acct":"수직사출","price":412},{"pno":"1211-K47560-2","name":"NX4 BODY GSL 2차","acct":"수평사출","price":12},{"pno":"1211-M38020","name":"BODY MQ4","acct":"수평사출","price":15},{"pno":"1242-K40690-1","name":"CAP VALVE BLUE 1차","acct":"수평사출","price":8},{"pno":"1241-K40100-11","name":"MQ4 CLIP (PIPE)","acct":"수평사출","price":20},{"pno":"1210-A50060-11","name":"MQ4 SPACER(Gde_승정)","acct":"수평사출","price":31},{"pno":"1242-D00550","name":"CAP YP","acct":"수평사출","price":7},{"pno":"1242-K40710-1","name":"CAP(NX4 DSL) 1차","acct":"수평사출","price":88},{"pno":"1242-K40690-2","name":"CAP VALVE BLUE 2차","acct":"수평사출","price":8},{"pno":"1211-B81710-10","name":"BODY(UM DSL)","acct":"수평사출","price":299},{"pno":"1211-K47560-1","name":"NX4 BODY GSL 1차","acct":"수평사출","price":12},{"pno":"1211-K48070","name":"GSL BODY KA4","acct":"수평사출","price":12},{"pno":"1211-N98160","name":"BODY AX","acct":"수평사출","price":11},{"pno":"1211-K98180","name":"BODY(RG3)","acct":"수평사출","price":274},{"pno":"1242-K40710-2","name":"CAP(NX4 DSL) 2차","acct":"수평사출","price":7},{"pno":"86681-N1000","name":"HOLDER-RR ULTRASONIC NO.1","acct":"수평사출","price":153},{"pno":"86684-N1000","name":"HOLDER-RR ULTRASONIC NO.4","acct":"수평사출","price":153},{"pno":"1058-K40220-10","name":"ASSIST PUMP ASSY-SUB(NX4e)","acct":"조립","price":386},{"pno":"1058-K40210-10","name":"A/PUMP ASSY(NX4a 수출용)","acct":"조립","price":375},{"pno":"1117-M31020","name":"A/PUMP ASSY SUB(MQ4 DSL)","acct":"조립","price":319},{"pno":"1058-N90260","name":"A/PUMP ASSY(AX)","acct":"조립","price":421},{"pno":"1107-K41600-11","name":"HOSE ASSY(DN8 VALVE) 150mm","acct":"조립","price":920},{"pno":"1107-K41620-11","name":"HOSE ASSY(DN8 HEV) 170mm","acct":"조립","price":638},{"pno":"1107-L71560-11","name":"HOSE ASSY (KA4 DSL) 190mm","acct":"조립","price":819},{"pno":"1107-M51820-10","name":"HOSE ASSY(NX4 DSL) 투명125mm","acct":"조립","price":1271}];
+const FGMAP={};FG.forEach(x=>FGMAP[x.pno]=x);
+const FGC={"A3204-JK101":"티에스모스트","A3204-AC301":"티에스모스트","2134-710170-10":"현담 아산","A0908-MQ402":"티에스모스트","1211-K47560-2":"현담 아산","1211-M38020":"현담테크","1058-K40220-10":"현담","1107-K41600-11":"현담"};
+const EQLIST=["수직 1호기","수직 2호기","수직 4호기","수직 5호기","수직 6호기","수직 7호기","수직 8호기","수평 1호기","수평 2호기","수평 3호기","수평 4호기","수평 6호기","수평 7호기","수평 9호기","볼압입 리크검사","양방향 호스조립","단방향 호스조립"];
+const LSKEY="quality_v1", CKEY="quality_v1";
+const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
+const el=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const cm=n=>{n=Math.round(+n||0);return n.toLocaleString('en-US');};
+const num=v=>parseFloat(v)||0;
+const pad=n=>String(n).padStart(2,'0');
+function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function ddays(dstr){var t=new Date();t.setHours(0,0,0,0);var d=new Date(dstr);if(isNaN(d))return null;d.setHours(0,0,0,0);return Math.round((d-t)/86400000);}
+function addMonths(dstr,m){var d=new Date(dstr);if(isNaN(d))return '';d.setMonth(d.getMonth()+(+m||0));return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function rateCalc(r){var q=num(r.qty);return {v:q?(num(r.pass)/q*100).toFixed(1)+'%':'-',cls:(q&&num(r.pass)/q<0.97)?'bad':(q?'good':'')};}
+function ppmCalc(r){var q=num(r.iqty);var p=q?num(r.dqty)/q*1e6:0;return {v:q?cm(p)+' PPM':'-',cls:(p>1000)?'bad':(q?'good':'')};}
+function nextCalc(r){return {v:(r.last&&r.cycle)?addMonths(r.last,r.cycle):'-',cls:''};}
+function gStatCalc(r){var nx=(r.last&&r.cycle)?addMonths(r.last,r.cycle):'';if(!nx)return{v:'-',cls:''};var dd=ddays(nx);if(dd<0)return{v:'교정초과',cls:'bad'};if(dd<=30)return{v:'임박',cls:'warn'};return{v:'정상',cls:'good'};}
+
+const TABS={
+ insp:{label:'🔬 검사실적', title:'검사실적 (수입·공정·출하)', rpt:'검 사 실 적 보 고',
+  usage:'<ol><li><b>검사 등록</b> — ＋신규 → 품번 선택(품명·자동), 검사수량·합격·불합격 입력.</li><li><b>합격률 자동</b> — <code>합격률 = 합격 ÷ 검사수량 × 100</code> (97% 미만 빨강 경고).</li><li><b>구분</b> — 수입/공정/출하/초중종물/개발샘플 검사를 한 곳에서 관리합니다.</li><li>판정·검사자 기록 후 <b>💾 저장</b>·<b>🖨️ 인쇄</b>.</li></ol><div class="mline"><b>▶ 검사실적</b> = 입고·공정·출하 단계의 검사 결과 기록. 합격률은 품질 수준의 기본 지표입니다.</div>',
+  cols:[{k:'date',t:'검사일',w:92,ty:'date'},{k:'kind',t:'구분',w:82,ty:'sel',o:['수입검사','공정검사','출하검사','초중종물','개발샘플']},{k:'pno',t:'품번',w:100,ty:'pno'},{k:'name',t:'품명',w:150,ty:'name'},{k:'qty',t:'검사수량',w:66,ty:'num'},{k:'pass',t:'합격',w:58,ty:'num'},{k:'fail',t:'불합격',w:58,ty:'num'},{k:'rate',t:'합격률',w:62,ty:'calc',fn:rateCalc},{k:'verdict',t:'판정',w:64,ty:'sel',o:['합격','조건부','불합격']},{k:'insp',t:'검사자',w:70,ty:'text'},{k:'memo',t:'비고',w:88,ty:'text'}],
+  kpi:function(R){var q=0,p=0,ng=0;R.forEach(function(r){q+=num(r.qty);p+=num(r.pass);if(r.verdict==='불합격'||num(r.fail)>0)ng++;});return [{l:'검사 건수',v:cm(R.length),u:'건'},{l:'총 검사수량',v:cm(q),u:'EA'},{l:'평균 합격률',v:q?(p/q*100).toFixed(1)+'%':'-',u:'',c:'g'},{l:'불합격 건',v:cm(ng),u:'건',c:'r'}];}},
+ defect:{label:'⚠️ 불량관리', title:'불량 관리 (불량률 PPM)', rpt:'불 량 현 황 보 고',
+  usage:'<ol><li><b>불량 등록</b> — ＋신규 → 발생일·공정·품번·불량유형·불량수량·검사수량 입력.</li><li><b>불량률 자동</b> — <code>불량률(PPM) = 불량수량 ÷ 검사수량 × 1,000,000</code> (1,000 PPM 초과 빨강).</li><li><b>원인·조치</b> 기록 → 반복 불량은 시정조치(8D) 탭으로 연계합니다.</li></ol><div class="mline"><b>▶ PPM</b> = 백만개당 불량수. 자동차 부품 품질의 핵심 관리 지표입니다.</div>',
+  cols:[{k:'date',t:'발생일',w:92,ty:'date'},{k:'proc',t:'공정',w:80,ty:'text',dl:'eqdl2'},{k:'pno',t:'품번',w:100,ty:'pno'},{k:'name',t:'품명',w:140,ty:'name'},{k:'dtype',t:'불량유형',w:96,ty:'text',dl:'dtypedl'},{k:'dqty',t:'불량수량',w:66,ty:'num'},{k:'iqty',t:'검사수량',w:66,ty:'num'},{k:'ppm',t:'불량률(PPM)',w:84,ty:'calc',fn:ppmCalc},{k:'cause',t:'원인',w:110,ty:'text'},{k:'action',t:'조치',w:110,ty:'text'}],
+  kpi:function(R){var d=0,q=0;R.forEach(function(r){d+=num(r.dqty);q+=num(r.iqty);});return [{l:'불량 건수',v:cm(R.length),u:'건'},{l:'총 불량수량',v:cm(d),u:'EA',c:'r'},{l:'총 검사수량',v:cm(q),u:'EA'},{l:'평균 불량률',v:q?cm(d/q*1e6)+' PPM':'-',u:'',c:'r'}];}},
+ capa:{label:'🛠️ 시정조치(8D)', title:'시정조치(8D)·클레임', rpt:'시 정 조 치 보 고',
+  usage:'<ol><li><b>클레임 접수</b> — ＋신규 → 접수일·거래처·품번·클레임내용 입력.</li><li><b>8D 단계</b> — D1(팀구성)~D8(완료)로 진행 단계를 관리합니다.</li><li><b>담당·완료예정</b> 지정 → 상태(접수/진행/완료)로 마감 관리.</li></ol><div class="mline"><b>▶ 8D</b> = 8단계 문제해결 프로세스. 고객 클레임의 근본원인·재발방지 관리 표준입니다.</div>',
+  cols:[{k:'date',t:'접수일',w:92,ty:'date'},{k:'cust',t:'거래처',w:90,ty:'text',dl:'custdl'},{k:'pno',t:'품번',w:100,ty:'pno'},{k:'claim',t:'클레임내용',w:170,ty:'name'},{k:'stage',t:'8D단계',w:72,ty:'sel',o:['D1','D2','D3','D4','D5','D6','D7','D8','완료']},{k:'owner',t:'담당',w:66,ty:'text'},{k:'status',t:'상태',w:66,ty:'sel',o:['접수','진행','완료']},{k:'due',t:'완료예정',w:92,ty:'date'},{k:'memo',t:'비고',w:80,ty:'text'}],
+  kpi:function(R){var ing=0,done=0;R.forEach(function(r){if(r.status==='완료')done++;else ing++;});return [{l:'접수 건수',v:cm(R.length),u:'건'},{l:'진행중',v:cm(ing),u:'건',c:'o'},{l:'완료',v:cm(done),u:'건',c:'g'},{l:'완료율',v:R.length?Math.round(done/R.length*100)+'%':'-',u:''}];}},
+ m4:{label:'🔧 변경점(4M)', title:'변경점(4M) 관리', rpt:'4M 변 경 관 리',
+  usage:'<ol><li><b>변경 등록</b> — ＋신규 → 변경일·4M구분·품번·변경내용 입력.</li><li><b>4M</b> — Man(사람)·Machine(설비)·Material(자재)·Method(방법) 중 선택.</li><li><b>승인</b> — 대기/승인/반려로 관리, 변경 후 초물검사와 연계합니다.</li></ol><div class="mline"><b>▶ 4M 변경관리</b> = 생산 4요소 변경 시 품질 영향 검토·승인·기록. IATF16949 필수 항목입니다.</div>',
+  cols:[{k:'date',t:'변경일',w:92,ty:'date'},{k:'cat',t:'4M구분',w:104,ty:'sel',o:['Man(사람)','Machine(설비)','Material(자재)','Method(방법)']},{k:'pno',t:'품번',w:100,ty:'pno'},{k:'content',t:'변경내용',w:190,ty:'name'},{k:'approve',t:'승인',w:70,ty:'sel',o:['대기','승인','반려']},{k:'status',t:'상태',w:66,ty:'sel',o:['진행','완료']},{k:'owner',t:'담당',w:66,ty:'text'},{k:'memo',t:'비고',w:100,ty:'text'}],
+  kpi:function(R){var ap=0,wa=0;R.forEach(function(r){if(r.approve==='승인')ap++;else if(r.approve==='대기')wa++;});return [{l:'변경 건수',v:cm(R.length),u:'건'},{l:'승인',v:cm(ap),u:'건',c:'g'},{l:'대기',v:cm(wa),u:'건',c:'o'},{l:'완료',v:cm(R.filter(function(r){return r.status==='완료';}).length),u:'건'}];}},
+ gauge:{label:'📏 계측기 관리', title:'계측기 관리대장', rpt:'계 측 기 관 리 대 장',
+  usage:'<ol><li><b>계측기 등록</b> — ＋신규 → 계측기명·관리번호·교정주기(월)·최근교정일 입력.</li><li><b>차기교정일 자동</b> — <code>차기교정일 = 최근교정일 + 교정주기(월)</code>.</li><li><b>상태 자동</b> — 교정초과(빨강)/임박(30일 이내)/정상. 초과 계측기는 즉시 교정 의뢰.</li></ol><div class="mline"><b>▶ 계측기 관리</b> = 측정 신뢰성 확보. 교정주기 초과 계측기 사용은 부적합입니다.</div>',
+  cols:[{k:'name',t:'계측기명',w:120,ty:'text'},{k:'no',t:'관리번호',w:90,ty:'text'},{k:'cycle',t:'교정주기(월)',w:80,ty:'num'},{k:'last',t:'최근교정일',w:100,ty:'date'},{k:'next',t:'차기교정일',w:100,ty:'calc',fn:nextCalc},{k:'gstat',t:'상태',w:70,ty:'calc',fn:gStatCalc},{k:'owner',t:'담당',w:70,ty:'text'},{k:'memo',t:'비고',w:90,ty:'text'}],
+  kpi:function(R){var ok=0,soon=0,over=0;R.forEach(function(r){var s=gStatCalc(r).v;if(s==='정상')ok++;else if(s==='임박')soon++;else if(s==='교정초과')over++;});return [{l:'계측기 수',v:cm(R.length),u:'대'},{l:'정상',v:cm(ok),u:'대',c:'g'},{l:'교정임박',v:cm(soon),u:'대',c:'o'},{l:'교정초과',v:cm(over),u:'대',c:'r'}];}},
+ edu:{label:'🎓 교육훈련', title:'교육훈련 관리', rpt:'교 육 훈 련 관 리',
+  usage:'<ol><li><b>교육 등록</b> — ＋신규 → 교육일·대상자·교육명·시간 입력.</li><li><b>이수 관리</b> — 이수/미이수로 관리, 이수율 자동 집계.</li><li>품질·안전·직무 교육 이력을 관리해 자격·역량을 확보합니다.</li></ol><div class="mline"><b>▶ 교육훈련</b> = 작업자 역량 확보. 자동차 부품업은 교육 이력 관리가 심사 필수입니다.</div>',
+  cols:[{k:'date',t:'교육일',w:92,ty:'date'},{k:'target',t:'대상자',w:130,ty:'text'},{k:'title',t:'교육명',w:170,ty:'text'},{k:'hours',t:'시간(h)',w:60,ty:'num'},{k:'done',t:'이수여부',w:72,ty:'sel',o:['이수','미이수']},{k:'memo',t:'비고',w:120,ty:'text'}],
+  kpi:function(R){var d=0;R.forEach(function(r){if(r.done==='이수')d++;});return [{l:'교육 건수',v:cm(R.length),u:'건'},{l:'이수',v:cm(d),u:'건',c:'g'},{l:'미이수',v:cm(R.length-d),u:'건',c:'o'},{l:'이수율',v:R.length?Math.round(d/R.length*100)+'%':'-',u:''}];}}
+};
+const TABORDER=['insp','defect','capa','m4','gauge','edu'];
+let DATA={insp:[],defect:[],capa:[],m4:[],gauge:[],edu:[]}, TAB='insp', dirty=false;
+function status(m){el('status').textContent=m;}
+function markDirty(){dirty=true;status('✏️ 수정됨 · 저장 필요');}
+function selTab(t){TAB=t;render();window.scrollTo(0,0);}
+function addRow(){DATA[TAB].push({});markDirty();render();}
+function del(i){if(!confirm('삭제할까요?'))return;DATA[TAB].splice(i,1);markDirty();render();}
+function pickPno(tab,i,v){var r=DATA[tab][i];if(!r)return;r.pno=v;var f=FGMAP[v];if(f){r.name=f.name;r.acct=f.acct;if(tab==='capa'&&FGC[v])r.cust=FGC[v];}markDirty();render();}
+function ed(tab,i,k,v){var r=DATA[tab][i];if(!r)return;r[k]=v;markDirty();}
+function edP(tab,i,k,v){var r=DATA[tab][i];if(!r)return;r[k]=v;markDirty();patchRow(i);}
+function cellHTML(tab,i,r,c){
+ if(c.ty==='calc'){var o=c.fn(r);return '<td class="calc'+(o.cls?' '+o.cls:'')+'" id="cc_'+i+'_'+c.k+'">'+esc(o.v)+'</td>';}
+ if(c.ty==='name')return '<td><textarea class="f nm" rows="2" oninput="ed(\''+tab+'\','+i+',\''+c.k+'\',this.value)" title="'+esc(r[c.k]||'')+'">'+esc(r[c.k]||'')+'</textarea></td>';
+ if(c.ty==='pno')return '<td><input class="f" list="pnodl" value="'+esc(r[c.k]||'')+'" onchange="pickPno(\''+tab+'\','+i+',this.value)" placeholder="품번"></td>';
+ if(c.ty==='date')return '<td><input class="f" type="date" value="'+esc(r[c.k]||'')+'" onchange="edP(\''+tab+'\','+i+',\''+c.k+'\',this.value)"></td>';
+ if(c.ty==='num')return '<td><input class="f r" value="'+esc(r[c.k]||'')+'" oninput="edP(\''+tab+'\','+i+',\''+c.k+'\',this.value)" inputmode="numeric"></td>';
+ if(c.ty==='sel'){var op=c.o.map(function(o){return '<option'+(r[c.k]===o?' selected':'')+'>'+o+'</option>';}).join('');return '<td><select class="f" onchange="edP(\''+tab+'\','+i+',\''+c.k+'\',this.value)"><option value=""></option>'+op+'</select></td>';}
+ var dl=c.dl?(' list="'+c.dl+'"'):'';
+ return '<td><input class="f"'+dl+' value="'+esc(r[c.k]||'')+'" oninput="ed(\''+tab+'\','+i+',\''+c.k+'\',this.value)"></td>';
+}
+function patchRow(i){var cfg=TABS[TAB],r=DATA[TAB][i];if(!r)return;cfg.cols.forEach(function(c){if(c.ty==='calc'){var e=el('cc_'+i+'_'+c.k);if(e){var o=c.fn(r);e.textContent=o.v;e.className='calc'+(o.cls?' '+o.cls:'');}}});patchKPI();}
+function patchKPI(){var cfg=TABS[TAB];var k=cfg.kpi(DATA[TAB]);el('strip').innerHTML=k.map(function(x){return '<div class="kpi'+(x.c?' '+x.c:'')+'"><div class="l">'+x.l+'</div><div class="v">'+x.v+'</div><div class="u">'+(x.u||'')+'</div></div>';}).join('');}
+function render(){
+ el('tabbar').innerHTML=TABORDER.map(function(t){return '<button class="tabbtn'+(t===TAB?' on':'')+'" onclick="selTab(\''+t+'\')">'+TABS[t].label+'</button>';}).join('');
+ var cfg=TABS[TAB];
+ el('usageTitle').innerHTML='📘 사용설명 · '+cfg.title;
+ el('usageBody').innerHTML=cfg.usage;
+ el('tblTitle').textContent=cfg.title+' 목록';
+ var rows=DATA[TAB];
+ var h='<tr>'+cfg.cols.map(function(c){return '<th style="width:'+c.w+'px">'+c.t+'</th>';}).join('')+'<th style="width:30px">삭제</th></tr>';
+ if(!rows.length)h+='<tr><td colspan="'+(cfg.cols.length+1)+'" class="empty">항목이 없습니다. ＋신규를 눌러 입력하세요.</td></tr>';
+ rows.forEach(function(r,i){h+='<tr>'+cfg.cols.map(function(c){return cellHTML(TAB,i,r,c);}).join('')+'<td><button class="delbtn" onclick="del('+i+')">✕</button></td></tr>';});
+ var tb=el('tbl');tb.innerHTML=h;tb.style.minWidth=(cfg.cols.reduce(function(s,c){return s+c.w;},60))+'px';
+ patchKPI();
+}
+function doPrint(){
+ var cfg=TABS[TAB],rows=DATA[TAB];
+ var k=cfg.kpi(rows);
+ var sumHead=k.map(function(x){return '<th>'+x.l+'</th>';}).join('');
+ var sumBody=k.map(function(x){return '<td'+(x.c==='r'?' style="color:#C62828;font-weight:800"':(x.c==='g'?' style="color:#1e8e4e;font-weight:800"':''))+'>'+x.v+' '+(x.u||'')+'</td>';}).join('');
+ var html='<table class="gyeolja"><tr><td class="gl" rowspan="2">결<br>재</td><td class="gh">작성</td><td class="gh">검토</td><td class="gh">검토</td><td class="gh">승인</td></tr><tr><td class="sg"></td><td class="sg"></td><td class="sg"></td><td class="sg"></td></tr></table>'
+  +'<div class="rpt-title">'+cfg.rpt+'</div><div class="rpt-sub">㈜ 승 정 &nbsp;·&nbsp; 품질관리 &nbsp;·&nbsp; 작성일 '+today()+'</div>'
+  +'<div class="rpt-secttl">■ 총괄</div><table class="rpt-sum"><tr>'+sumHead+'</tr><tr>'+sumBody+'</tr></table>'
+  +'<div class="rpt-secttl">■ '+cfg.title+' 상세</div>';
+ el('printhead').innerHTML=html;
+ var rf=el('rptfoot');if(rf)rf.textContent='㈜승정 ERP · 품질관리('+cfg.title+') · 출력 '+today();
+ window.print();
+}
+function normalize(v){var base={insp:[],defect:[],capa:[],m4:[],gauge:[],edu:[]};if(v&&typeof v==='object'){TABORDER.forEach(function(t){if(Array.isArray(v[t]))base[t]=v[t];});}return base;}
+async function save(){status('저장 중…');try{localStorage.setItem(LSKEY,JSON.stringify(DATA));}catch(e){}var ok=false;if(sb){try{var r=await sb.from('app_state').upsert({key:CKEY,value:DATA,updated_at:new Date().toISOString()});ok=!(r&&r.error);}catch(e){}}dirty=false;status(ok?'✅ 저장됨 (전 PC 공유)':'💾 저장됨 (이 PC)');}
+function initTabFromQuery(){try{var p=new URLSearchParams(location.search).get('tab');if(p&&TABS[p])TAB=p;}catch(e){}}
+async function boot(){
+ el('pnodl').innerHTML=FG.map(x=>'<option value="'+esc(x.pno)+'">'+esc(x.name)+' · '+x.acct+'</option>').join('');
+ el('custdl').innerHTML=Array.from(new Set(Object.values(FGC))).map(c=>'<option value="'+esc(c)+'"></option>').join('');
+ el('eqdl2').innerHTML=EQLIST.map(e=>'<option value="'+esc(e)+'"></option>').join('');
+ initTabFromQuery();
+ try{var s=JSON.parse(localStorage.getItem(LSKEY));if(s)DATA=normalize(s);}catch(e){}
+ render();
+ if(!sb){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';status('준비됨 (이 PC 저장)');return;}
+ try{var probe=await sb.from('app_state').select('key').limit(1);if(probe&&probe.error){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';status('준비됨 (이 PC 저장)');return;}
+  el('cloud').textContent='● 클라우드 공유';el('cloud').className='cloud on';
+  var r=await sb.from('app_state').select('value').eq('key',CKEY).maybeSingle();
+  if(r&&r.data&&r.data.value&&!dirty){DATA=normalize(r.data.value);render();status('☁️ 클라우드에서 불러옴');}else status('준비됨');
+  try{ sb.channel('qual').on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+CKEY},p=>{if(dirty)return;var v=p&&p.new&&p.new.value;if(v){DATA=normalize(v);render();status('☁️ 다른 PC 변경 반영됨');}}).subscribe(); }catch(e){}
+ }catch(e){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';status('준비됨 (이 PC 저장)');}
+}
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+boot();
+</script>
+</body></html>
