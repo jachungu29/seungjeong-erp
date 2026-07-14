@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISIR 초도품 검사성적서 (클라우드)</title>
+<style>
+:root{--bg:#f0eee9;--card:#fff;--line:#e7e3db;--line2:#efece5;--txt:#1d1f24;--dim:#8b8f96;--faint:#a7abb2;--blue:#2f6feb;--green:#2f9e44;--amber:#d08700;--red:#d64545;--kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace;}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px;line-height:1.45}
+.topbar{height:6px;background:#111318}.wrap{max-width:1150px;margin:0 auto;padding:18px 20px 90px}
+.hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.hd .ic{font-size:24px}.hd h1{font-size:20px;font-weight:800;margin:0}.hd .sub{font-size:12px;color:var(--dim)}
+.hd .r{margin-left:auto;display:flex;gap:7px;align-items:center}.btn{font-size:12px;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--txt);cursor:pointer;text-decoration:none}.btn:hover{border-color:var(--blue);color:var(--blue)}.st{font-size:11.5px;font-family:var(--mono)}
+.banner{margin:14px 0 0;border:1px solid #d9e6f7;background:#f2f7fe;border-radius:11px;padding:10px 14px;font-size:12.5px;color:#2c5a9e}
+.filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.filter input,.filter select{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px;font:inherit;font-size:13px}.filter input.search{flex:1;min-width:160px}.filter .cnt{margin-left:auto;font-size:12.5px;color:var(--dim);font-weight:700}
+.addbtn{background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:9px 15px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.editcard{background:#fffdf7;border:1px solid #f0d9a8;border-radius:13px;padding:15px 17px;margin-top:14px;display:none}.editcard.on{display:block}.editcard h3{margin:0 0 11px;font-size:14px;font-weight:800;color:#8a5a00}
+.form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:820px){.form{grid-template-columns:repeat(2,1fr)}}
+.fld{display:flex;flex-direction:column;gap:4px}.fld.wide{grid-column:span 2}.fld label{font-size:11px;color:var(--dim)}.fld input,.fld select{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font:inherit;font-size:13.5px}
+.meas{margin-top:13px;border-top:1px dashed var(--line);padding-top:11px}.meas .mh{display:flex;align-items:center;margin-bottom:8px}.meas .mh b{font-size:12px;color:#8a5a00}.meas .mh button{margin-left:auto;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer}
+.mtbl{width:100%;border-collapse:collapse;font-size:12px}.mtbl th{color:var(--dim);font-size:10.5px;text-align:left;padding:4px 5px}.mtbl td{padding:2px 4px}.mtbl input{width:100%;border:1px solid var(--line);border-radius:7px;padding:6px 7px;font:inherit;font-size:12.5px}
+.mtbl .jg{font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 7px;white-space:nowrap}.j-ok{background:rgba(47,158,68,.14);color:var(--green)}.j-ng{background:rgba(214,69,69,.14);color:var(--red)}.j-na{color:var(--faint)}
+.mtbl .x{background:none;border:1px solid var(--line);border-radius:6px;color:var(--faint);cursor:pointer;padding:3px 7px}
+.frow{display:flex;gap:9px;margin-top:12px}.save{background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:10px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}.clr{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 16px;font:inherit;font-size:13px;cursor:pointer}
+.tblwrap{background:var(--card);border:1px solid var(--line);border-radius:13px;margin-top:14px;overflow:auto}table.list{width:100%;border-collapse:collapse;font-size:12.5px}table.list th,table.list td{padding:8px 9px;border-bottom:1px solid var(--line2);text-align:left;white-space:nowrap}table.list th{color:var(--dim);font-size:11px;background:#faf8f4}table.list tbody tr:hover{background:#f7fbff}
+.code{font-family:var(--mono);font-size:11.5px;color:var(--faint)}.pill{font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px}.p-합격{background:rgba(47,158,68,.14);color:var(--green)}.p-불합격{background:rgba(214,69,69,.14);color:var(--red)}.p-조건부{background:rgba(208,135,0,.16);color:var(--amber)}
+.act button{background:none;border:1px solid var(--line);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px;color:var(--faint);margin-left:3px}.act button:hover{border-color:var(--blue);color:var(--blue)}.act button.del:hover{border-color:var(--red);color:var(--red)}.empty{color:var(--faint);text-align:center;padding:24px}
+</style></head><body>
+<div class="topbar"></div>
+<div class="wrap">
+ <div class="hd"><span class="ic">🔬</span>
+  <div><h1>ISIR · 초도품 검사성적서</h1><div class="sub">Initial Sample Inspection Report — 품번별 치수·사양 측정/판정 · 클라우드 저장(전 PC 공유)</div></div>
+  <div class="r"><span class="st" id="st">클라우드 …</span><a class="btn" href="index2.html">← 메인</a></div>
+ </div>
+ <div class="banner">📡 <b>실데이터</b> — 초도품 검사성적서(리포트)별로 헤더 정보와 측정 항목(공칭·상하한·실측)을 입력하면 <b>합격/불합격 자동 판정</b>됩니다. 클라우드에 저장되어 전 PC 공유됩니다.</div>
+
+ <div class="filter">
+  <input class="search" id="fSearch" placeholder="🔍 품번·품명·고객·성적서No 검색" oninput="render()">
+  <select id="fJudge" onchange="render()"><option value="">판정 전체</option><option>합격</option><option>조건부</option><option>불합격</option></select>
+  <button class="addbtn" onclick="newRow()">＋ 신규 성적서</button><span class="cnt" id="cnt"></span>
+ </div>
+
+ <div class="editcard" id="editCard">
+  <h3 id="editTitle">＋ 초도품 검사성적서</h3>
+  <div class="form">
+   <div class="fld"><label>성적서 No</label><input id="e_no" placeholder="예: ISIR-2026-001"></div>
+   <div class="fld"><label>품번</label><input id="e_part" placeholder="예: 1211-K48070"></div>
+   <div class="fld wide"><label>품명</label><input id="e_name" placeholder="예: BODY KA4"></div>
+   <div class="fld"><label>고객</label><input id="e_cust"></div>
+   <div class="fld"><label>도면 No / REV</label><input id="e_dwg" placeholder="예: DWG-1023 / A2"></div>
+   <div class="fld"><label>LOT / 수량</label><input id="e_lot" placeholder="예: L2605 / 5"></div>
+   <div class="fld"><label>검사일</label><input type="date" id="e_date"></div>
+   <div class="fld"><label>검사자</label><input id="e_insp"></div>
+   <div class="fld"><label>종합 판정</label><select id="e_judge"><option>합격</option><option>조건부</option><option>불합격</option></select></div>
+   <div class="fld wide"><label>비고</label><input id="e_note"></div>
+  </div>
+  <div class="meas"><div class="mh"><b>측정 항목 (치수·특성)</b><button type="button" onclick="addMeas()">＋ 측정 항목 추가</button></div>
+   <table class="mtbl"><thead><tr><th>No</th><th>특성/치수</th><th>공칭</th><th>하한(LSL)</th><th>상한(USL)</th><th>실측</th><th>판정</th><th></th></tr></thead><tbody id="measBody"></tbody></table>
+  </div>
+  <div class="frow"><button class="save" onclick="saveForm()">저장</button><button class="clr" onclick="closeForm()">취소</button></div>
+ </div>
+
+ <div class="tblwrap"><table class="list"><thead><tr><th>성적서 No</th><th>품번</th><th>품명</th><th>고객</th><th>도면REV</th><th>검사일</th><th>검사자</th><th>항목</th><th>판정</th><th></th></tr></thead>
+ <tbody id="rows"><tr><td colspan="10" class="empty">불러오는 중…</td></tr></tbody></table></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="cloud.js"></script>
+<script>
+var ROWS=[], KEY='isir_reports', EDIT=-1, MEAS=[];
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function setSt(t,c){var e=document.getElementById("st");e.textContent=t;e.style.color=(c==="g"?"#2f9e44":c==="r"?"#d64545":"#8b8f96");}
+function num(v){var n=parseFloat(v);return isNaN(n)?null:n;}
+function judge(m){var a=num(m.act),l=num(m.lsl),u=num(m.usl);if(a==null||(l==null&&u==null))return"";if(l!=null&&a<l)return"ng";if(u!=null&&a>u)return"ng";return"ok";}
+
+function filtered(){var q=(document.getElementById("fSearch").value||"").toLowerCase(),jg=document.getElementById("fJudge").value;
+ return ROWS.map(function(r,i){return{r:r,i:i};}).filter(function(o){var r=o.r;if(jg&&r.judge!==jg)return false;
+  if(q){var h=(r.no+" "+r.part+" "+r.name+" "+r.cust).toLowerCase();if(h.indexOf(q)<0)return false;}return true;});}
+function render(){var box=document.getElementById("rows"),list=filtered();
+ document.getElementById("cnt").textContent="총 "+ROWS.length+"건 · 표시 "+list.length;
+ if(!list.length){box.innerHTML='<tr><td colspan="10" class="empty">성적서가 없습니다.</td></tr>';return;}
+ box.innerHTML=list.map(function(o){var r=o.r,i=o.i;
+  return '<tr><td><span class="code">'+esc(r.no)+'</span></td><td><span class="code">'+esc(r.part)+'</span></td><td>'+esc(r.name)+'</td><td>'+esc(r.cust)+'</td><td>'+esc(r.dwg)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.insp)+'</td><td>'+((r.meas||[]).length)+'항목</td><td><span class="pill p-'+esc(r.judge)+'">'+esc(r.judge)+'</span></td>'+
+   '<td class="act" style="text-align:right;white-space:nowrap"><button onclick="editRow('+i+')">편집</button><button class="del" onclick="delRow('+i+')">✕</button></td></tr>';
+ }).join("");}
+
+function renderMeas(){var b=document.getElementById("measBody");
+ if(!MEAS.length){b.innerHTML='<tr><td colspan="8" style="color:var(--faint);padding:8px">측정 항목을 추가하세요.</td></tr>';return;}
+ b.innerHTML=MEAS.map(function(m,i){var j=judge(m);
+  return '<tr><td>'+(i+1)+'</td>'+
+   '<td><input value="'+esc(m.name)+'" oninput="mSet('+i+',\'name\',this.value)"></td>'+
+   '<td><input value="'+esc(m.nom)+'" oninput="mSet('+i+',\'nom\',this.value)"></td>'+
+   '<td><input value="'+esc(m.lsl)+'" oninput="mSet('+i+',\'lsl\',this.value)"></td>'+
+   '<td><input value="'+esc(m.usl)+'" oninput="mSet('+i+',\'usl\',this.value)"></td>'+
+   '<td><input value="'+esc(m.act)+'" oninput="mSet('+i+',\'act\',this.value)"></td>'+
+   '<td><span class="jg '+(j==="ok"?"j-ok":j==="ng"?"j-ng":"j-na")+'">'+(j==="ok"?"합격":j==="ng"?"불합격":"-")+'</span></td>'+
+   '<td><button class="x" onclick="delMeas('+i+')">✕</button></td></tr>';
+ }).join("");}
+function mSet(i,k,v){MEAS[i][k]=v;if(k!=="name"&&k!=="nom"){var b=document.getElementById("measBody");var jg=b.rows[i].cells[6].querySelector(".jg");var j=judge(MEAS[i]);jg.className="jg "+(j==="ok"?"j-ok":j==="ng"?"j-ng":"j-na");jg.textContent=(j==="ok"?"합격":j==="ng"?"불합격":"-");}}
+function addMeas(){MEAS.push({name:"",nom:"",lsl:"",usl:"",act:""});renderMeas();}
+function delMeas(i){MEAS.splice(i,1);renderMeas();}
+
+function openForm(t){document.getElementById("editTitle").textContent=t;document.getElementById("editCard").classList.add("on");window.scrollTo({top:0,behavior:"smooth"});}
+function closeForm(){document.getElementById("editCard").classList.remove("on");EDIT=-1;}
+function setF(id,v){var e=document.getElementById(id);if(e)e.value=v==null?"":v;}
+function getF(id){var e=document.getElementById(id);return e?(e.value||"").trim():"";}
+function newRow(){EDIT=-1;["e_no","e_part","e_name","e_cust","e_dwg","e_lot","e_date","e_insp","e_note"].forEach(function(id){setF(id,"");});setF("e_judge","합격");MEAS=[];renderMeas();openForm("＋ 초도품 검사성적서");}
+function editRow(i){var r=ROWS[i];if(!r)return;EDIT=i;setF("e_no",r.no);setF("e_part",r.part);setF("e_name",r.name);setF("e_cust",r.cust);setF("e_dwg",r.dwg);setF("e_lot",r.lot);setF("e_date",r.date);setF("e_insp",r.insp);setF("e_judge",r.judge);setF("e_note",r.note);MEAS=(r.meas||[]).map(function(m){return Object.assign({},m);});renderMeas();openForm("✏️ 검사성적서 편집");}
+function saveForm(){var rec={no:getF("e_no"),part:getF("e_part"),name:getF("e_name"),cust:getF("e_cust"),dwg:getF("e_dwg"),lot:getF("e_lot"),date:getF("e_date"),insp:getF("e_insp"),judge:getF("e_judge"),note:getF("e_note"),meas:MEAS.map(function(m){return Object.assign({},m);})};
+ if(!rec.no&&!rec.part){alert("성적서 No 또는 품번을 입력하세요.");return;}
+ if(EDIT>=0)ROWS[EDIT]=rec;else ROWS.unshift(rec);closeForm();saveCloud();render();}
+function delRow(i){if(!confirm("이 성적서를 삭제할까요?"))return;ROWS.splice(i,1);saveCloud();render();}
+var _t=null;function saveCloud(){if(!window.SB)return;clearTimeout(_t);_t=setTimeout(function(){window.SB.from("app_state").upsert({key:KEY,value:ROWS,src:(window.__CID||""),updated_at:new Date().toISOString()}).then(function(r){setSt(r&&r.error?"저장 실패":"클라우드 저장됨 ✓",r&&r.error?"r":"g");}).catch(function(){setSt("저장 실패","r");});},400);}
+async function load(){if(!window.SB){setSt("로컬 모드","r");render();return;}setSt("불러오는 중…");
+ try{var r=await window.SB.from("app_state").select("value").eq("key",KEY).maybeSingle();if(r.error){setSt("연결 확인 필요","r");render();return;}
+  if(r.data&&r.data.value){ROWS=r.data.value;}setSt("클라우드 연결됨 ✓","g");render();}catch(e){setSt("연결 확인 필요","r");render();}}
+load();
+try{if(window.SB)window.SB.channel("isir_rt").on("postgres_changes",{event:"*",schema:"public",table:"app_state",filter:"key=eq."+KEY},function(p){var row=(p&&p.new)||{};if(row.src===window.__CID)return;if(row.value){ROWS=row.value;render();}}).subscribe();}catch(e){}
+</script>
+</body></html>

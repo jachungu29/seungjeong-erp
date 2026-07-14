@@ -235,6 +235,18 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
   <div class="ic">✎</div>
   <div class="t">문서 관리대장 <span class="en">편집·클라우드</span></div>
   <div class="d">QMS 문서 283건 직접 편집·추가·삭제 + 개정/담당/상태 · 전 PC 공유.</div></a>
+ <a class="card cloud" href="apqp.html">
+  <div class="ic">📋</div>
+  <div class="t">APQP·PPAP <span class="en">apqp</span></div>
+  <div class="d">사전품질기획 단계 + PPAP 18요소 제출 관리 · 전 PC 공유.</div></a>
+ <a class="card cloud" href="isir.html">
+  <div class="ic">🔬</div>
+  <div class="t">ISIR 초도품 검사 <span class="en">isir</span></div>
+  <div class="d">초도품 검사성적서 · 치수/사양 측정·합격판정 · 전 PC 공유.</div></a>
+ <a class="card cloud" href="imds.html">
+  <div class="ic">🧪</div>
+  <div class="t">IMDS 재료데이터 <span class="en">imds</span></div>
+  <div class="d">부품별 재료/물질 구성·함량·유해물질 관리 · 전 PC 공유.</div></a>
 </div>
 
 <div class="sec">인사 (실데이터 · 전 PC 공유)</div>
@@ -310,7 +322,7 @@ function renderStruct(d){
 
 /* 내 바로가기 (클라우드 app_state.user_links 저장) */
 (function(){
- var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","🖥️ 종합대시보드(현장용)"],["prod-report.html","📅 월간 생산보고"],["생산계획현황.html","📊 생산계획현황"],["prod-plan.html","🗓️ 생산계획·실적"],["production.html","⚙️ 생산관리(생산실적)"],["bom.html","📋 BOM LIST"],["itemmaster.html","📦 품목 마스터"],["완제품재고.html","🏷️ 완제품 재고·출고"],["수주관리.html","📝 수주관리"],["수주잔량.html","📦 수주잔량"],["긴급수주.html","🚨 긴급수주"],["수요예측.html","🔮 수요예측"],["판매관리.html","🛒 판매관리"],["매출관리.html","💰 매출관리"],["납품관리.html","🚚 납품관리"],["납품현황.html","📋 납품현황"],["출하지시.html","📤 출하지시"],["품질관리.html","✅ 품질관리"],["수입검사.html","🔍 수입검사"],["수입검사절차서.html","📑 수입검사 절차서"],["IATF16949_requirements_요구사항-2.html","📗 IATF 16949 요구사항"],["문서관리대장.html","✎ 문서 관리대장"],["SPC측정관리.html","📈 SPC/CPK 측정"],["사원마스터.html","🧑‍💼 사원 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["home.html","📘 집·사무실 안내"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
+ var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","🖥️ 종합대시보드(현장용)"],["prod-report.html","📅 월간 생산보고"],["생산계획현황.html","📊 생산계획현황"],["prod-plan.html","🗓️ 생산계획·실적"],["production.html","⚙️ 생산관리(생산실적)"],["bom.html","📋 BOM LIST"],["itemmaster.html","📦 품목 마스터"],["완제품재고.html","🏷️ 완제품 재고·출고"],["수주관리.html","📝 수주관리"],["수주잔량.html","📦 수주잔량"],["긴급수주.html","🚨 긴급수주"],["수요예측.html","🔮 수요예측"],["판매관리.html","🛒 판매관리"],["매출관리.html","💰 매출관리"],["납품관리.html","🚚 납품관리"],["납품현황.html","📋 납품현황"],["출하지시.html","📤 출하지시"],["품질관리.html","✅ 품질관리"],["수입검사.html","🔍 수입검사"],["수입검사절차서.html","📑 수입검사 절차서"],["IATF16949_requirements_요구사항-2.html","📗 IATF 16949 요구사항"],["문서관리대장.html","✎ 문서 관리대장"],["apqp.html","📋 APQP·PPAP"],["isir.html","🔬 ISIR 초도품검사"],["imds.html","🧪 IMDS 재료데이터"],["SPC측정관리.html","📈 SPC/CPK 측정"],["사원마스터.html","🧑‍💼 사원 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["home.html","📘 집·사무실 안내"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
  var links=[];
  function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
  var sel=document.getElementById("ulFile");
