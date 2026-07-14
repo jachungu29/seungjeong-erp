@@ -28,7 +28,11 @@
   - app_state 키: `monthreport_v4` (전체 `sj*` localStorage 스냅샷 저장).
   - 첫 로드 시 클라우드→localStorage 후 1회 새로고침, 편집 시 자동 저장(좌하단 배지), 다른 PC 변경 시 새로고침.
   - 4MB 초과(사진 등)면 클라우드 저장 생략(로컬만).
-- **prod-plan.html** (생산계획·실적 v3) = 저장소에 반입만 함(아직 index2 링크 안 함, 클라우드 미연동).
+- **prod-plan.html** (생산계획·실적 v3) = ✅ **클라우드 연동 완료**. `/api/*` 서버 저장을 Supabase `app_state` 로 교체.
+  - 핵심 데이터(일일계획·생산일보·불량·품목마스터) → app_state 키 `prodplan_v3` 1건.
+  - BOM 탭 → app_state 키 `prodplan_bom`. 5초 폴링으로 전 PC 동기화.
+  - index2 "클라우드 업무"에 카드 추가. **남은 것**: 파일함/네트워크 저장(`/api/files`,`/api/upload`,`/api/info`)은 서버 전용이라 GitHub Pages에선 비활성(그레이스풀). 필요 시 Supabase Storage로 전환 검토.
+  - 다른 화면들(수주/판매/품질/인사 등)도 모두 app_state 사용 → 전 PC 공유 OK. (`SPC측정관리.html`만 로컬 저장 — 추후 연동)
 
 ## ▶ 다음 작업 (B단계 계속): prod-plan.html 클라우드 연동
 목표: 핵심 탭 데이터를 **Supabase로 저장/전 PC 공유**.

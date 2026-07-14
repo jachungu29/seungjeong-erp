@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>㈜승정 생산계획 관리시스템</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="cloud.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#003D54;--teal:#006E8A;--teal2:#00A8C8;--cyan-light:#E0F7FC;--cyan-bg:#B2EBF2;--gold:#F5A623;--yellow-hl:#FFFF88;--cyan-hl:#CCFFFF;--blue-stop:#1565C0;--white:#FFFFFF;--gray1:#F5F9FA;--gray2:#E8EDEF;--gray3:#B0BEC5;--text:#1A2A30;--text2:#4A6572;--red:#C62828;--green:#2E7D32;--shadow:0 2px 8px rgba(0,61,84,.12);--shadow-lg:0 8px 24px rgba(0,61,84,.18);--radius:8px;--radius-sm:4px}
@@ -1331,20 +1333,26 @@ async function apiPost(path, body) {
   return r.json();
 }
 
+// ── 클라우드(Supabase app_state) 연동 ── 전 PC 공유 ──
+const PP_KEY = 'prodplan_v3';   // app_state 키 (전체 데이터 1건 저장)
 async function loadFromServer() {
   try {
-    const data = await apiGet('/api/data');
+    if (!window.SB) throw new Error('Supabase 미로딩');
+    const r = await window.SB.from('app_state').select('value,updated_at').eq('key', PP_KEY).maybeSingle();
+    if (r.error) throw r.error;
+    const data = (r.data && r.data.value) ? r.data.value : { plans: {}, productMaster: {}, defectTypeList: null };
     _serverData = data;
     _serverDataLoaded = true;
-    _lastUpdated = data.lastUpdated || '';
+    _lastUpdated = (r.data && r.data.updated_at) || '';
     updateConnectionStatus(true);
     updateUserBadge();
     return data;
   } catch (err) {
-    console.error('서버 연결 실패', err);
+    console.error('클라우드 연결 실패', err);
+    if (!_serverData) _serverData = { plans: {}, productMaster: {}, defectTypeList: null };
+    _serverDataLoaded = true;   // 로컬로라도 계속 동작
     updateConnectionStatus(false);
-    showToast('⚠️ 서버 연결 실패 — 새로고침해주세요', 'error');
-    return { plans: {}, productMaster: {}, defectTypeList: null };
+    return _serverData;
   }
 }
 
@@ -1353,8 +1361,13 @@ async function saveToServer() {
   clearTimeout(_saveDebounce);
   _saveDebounce = setTimeout(async () => {
     try {
-      const r = await apiPost('/api/data', _serverData);
-      _lastUpdated = r.lastUpdated;
+      if (!window.SB) throw new Error('Supabase 미로딩');
+      const now = new Date().toISOString();
+      const r = await window.SB.from('app_state').upsert({ key: PP_KEY, value: _serverData, src: (window.__CID || ''), updated_at: now });
+      if (r.error) throw r.error;
+      // 저장 직후 DB 형식의 updated_at 을 다시 읽어 폴링 오탐 방지
+      const up = await window.SB.from('app_state').select('updated_at').eq('key', PP_KEY).maybeSingle();
+      _lastUpdated = (up && up.data && up.data.updated_at) || now;
       updateConnectionStatus(true);
     } catch (err) {
       updateConnectionStatus(false);
@@ -1363,23 +1376,24 @@ async function saveToServer() {
   }, 500);
 }
 
-// 5초마다 다른 사람이 변경했는지 폴링
+// 5초마다 다른 PC에서 변경했는지 폴링
 async function pollUpdates() {
   try {
-    const r = await apiGet('/api/last-updated');
-    if (r.lastUpdated && r.lastUpdated !== _lastUpdated && _lastUpdated) {
-      // 다른 사용자가 변경함 → 자동 새로고침
-      const otherUser = r.lastUpdatedBy && r.lastUpdatedBy !== _userName ? r.lastUpdatedBy : '';
-      _lastUpdated = r.lastUpdated;
+    if (!window.SB) { updateConnectionStatus(false); return; }
+    const r = await window.SB.from('app_state').select('updated_at,src').eq('key', PP_KEY).maybeSingle();
+    if (r.error) throw r.error;
+    const upd = (r.data && r.data.updated_at) || '';
+    if (upd && upd !== _lastUpdated) {
+      _lastUpdated = upd;
+      if (r.data && r.data.src && r.data.src === window.__CID) { updateConnectionStatus(true); return; } // 내 저장이면 무시
       await loadFromServer();
-      // 현재 화면 갱신
       const activeTab = document.querySelector('.nav-tab.active')?.dataset.tab;
       if (activeTab === 'daily') renderTable();
       else if (activeTab === 'report') renderReport();
       else if (activeTab === 'defect') renderDefectDash();
       else if (activeTab === 'master') renderMasterTable();
       renderDateList();
-      if (otherUser) showToast(`🔄 ${otherUser}님이 데이터를 업데이트했습니다`, 'info');
+      showToast('🔄 다른 PC에서 변경되어 새로고침했습니다', 'info');
     }
     updateConnectionStatus(true);
   } catch {
@@ -3501,38 +3515,43 @@ function exportMonthlyExcel() {
 let _bomData = { items: {}, revisions: [] };
 let _editingBomKey = null;
 
+const PPBOM_KEY = 'prodplan_bom';   // app_state 키 (BOM 전 PC 공유)
 async function loadBomFromServer() {
   try {
-    const r = await fetch(API_BASE + '/api/bom');
-    _bomData = await r.json();
+    if (!window.SB) throw new Error('Supabase 미로딩');
+    const r = await window.SB.from('app_state').select('value').eq('key', PPBOM_KEY).maybeSingle();
+    if (r.error) throw r.error;
+    _bomData = (r.data && r.data.value) ? r.data.value : { items: {}, revisions: [] };
+    if (!_bomData.items) _bomData.items = {};
+    if (!_bomData.revisions) _bomData.revisions = [];
     return _bomData;
   } catch (err) {
     console.error('BOM 로드 실패', err);
-    _bomData = { items: {}, revisions: [] };
+    if (!_bomData || !_bomData.items) _bomData = { items: {}, revisions: [] };
     return _bomData;
   }
 }
 
 async function saveBomToServer() {
   try {
-    await fetch(API_BASE + '/api/bom', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-User-Name': _userName },
-      body: JSON.stringify(_bomData)
-    });
+    if (!window.SB) throw new Error('Supabase 미로딩');
+    const r = await window.SB.from('app_state').upsert({ key: PPBOM_KEY, value: _bomData, src: (window.__CID || ''), updated_at: new Date().toISOString() });
+    if (r.error) throw r.error;
     return true;
   } catch (err) { console.error(err); return false; }
 }
 
 async function saveBomItemToServer(partNo, item) {
   try {
-    const r = await fetch(API_BASE + '/api/bom/' + encodeURIComponent(partNo), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-User-Name': _userName },
-      body: JSON.stringify(item)
-    });
-    const result = await r.json();
-    return result;
+    // 기존 항목의 REV가 바뀌면 이력 보관
+    const prev = _bomData.items[partNo];
+    if (prev && prev.rev && prev.rev !== item.rev) {
+      _bomData.revisions = _bomData.revisions || [];
+      _bomData.revisions.push(Object.assign({}, prev, { archivedAt: new Date().toISOString() }));
+    }
+    _bomData.items[partNo] = item;
+    const ok = await saveBomToServer();
+    return { success: ok };
   } catch (err) { console.error(err); return null; }
 }
 
@@ -3634,11 +3653,10 @@ async function deleteBomItem() {
   if (!partNo) return;
   if (!confirm(`"${partNo}" 의 BOM을 삭제하시겠습니까?\n(REV 이력은 그대로 보관됩니다)`)) return;
   try {
-    await fetch(API_BASE + '/api/bom/' + encodeURIComponent(partNo), {
-      method: 'DELETE',
-      headers: { 'X-User-Name': _userName }
-    });
-    await loadBomFromServer();
+    const prev = _bomData.items[partNo];
+    if (prev) { _bomData.revisions = _bomData.revisions || []; _bomData.revisions.push(Object.assign({}, prev, { archivedAt: new Date().toISOString(), deleted: true })); }
+    delete _bomData.items[partNo];
+    await saveBomToServer();
     renderBomTable();
     closeBomModal();
     showToast('🗑️ 삭제됨', 'info');
