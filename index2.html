@@ -155,6 +155,82 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
   <div class="ic">📦</div>
   <div class="t">품목 마스터 <span class="en">item</span></div>
   <div class="d">품번 등록·관리.</div></a>
+ <a class="card cloud" href="완제품재고.html">
+  <div class="ic">🏷️</div>
+  <div class="t">완제품 재고·출고 <span class="en">stock</span></div>
+  <div class="d">완제품 입·출고·재고 (전 PC 공유).</div></a>
+</div>
+
+<div class="sec">영업 · 수주 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="수주관리.html">
+  <div class="ic">📝</div>
+  <div class="t">수주관리 <span class="en">PO 등록·변경</span></div>
+  <div class="d">수주(PO) 등록·변경·취소 관리.</div></a>
+ <a class="card cloud" href="수주잔량.html">
+  <div class="ic">📦</div>
+  <div class="t">수주잔량 <span class="en">backlog</span></div>
+  <div class="d">미납 수주잔량(Backlog) 관리.</div></a>
+ <a class="card cloud" href="긴급수주.html">
+  <div class="ic">🚨</div>
+  <div class="t">긴급수주 <span class="en">urgent</span></div>
+  <div class="d">긴급수주 수용 여부 판단.</div></a>
+ <a class="card cloud" href="수요예측.html">
+  <div class="ic">🔮</div>
+  <div class="t">수요예측 <span class="en">forecast</span></div>
+  <div class="d">수요예측(포캐스트) 관리.</div></a>
+</div>
+
+<div class="sec">판매 · 출하 · 매출 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="판매관리.html">
+  <div class="ic">🛒</div>
+  <div class="t">판매관리 <span class="en">sales</span></div>
+  <div class="d">판매 등록·관리.</div></a>
+ <a class="card cloud" href="매출관리.html">
+  <div class="ic">💰</div>
+  <div class="t">매출관리 <span class="en">revenue</span></div>
+  <div class="d">매출 집계·관리.</div></a>
+ <a class="card cloud" href="납품관리.html">
+  <div class="ic">🚚</div>
+  <div class="t">납품관리 <span class="en">delivery</span></div>
+  <div class="d">납품 등록·관리.</div></a>
+ <a class="card cloud" href="납품현황.html">
+  <div class="ic">📋</div>
+  <div class="t">납품현황 <span class="en">delivery view</span></div>
+  <div class="d">납품 현황 조회.</div></a>
+ <a class="card cloud" href="출하지시.html">
+  <div class="ic">📤</div>
+  <div class="t">출하지시 <span class="en">shipping</span></div>
+  <div class="d">출하 지시 연계.</div></a>
+</div>
+
+<div class="sec">품질 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="품질관리.html">
+  <div class="ic">✅</div>
+  <div class="t">품질관리 <span class="en">quality</span></div>
+  <div class="d">품질 관리 종합.</div></a>
+ <a class="card cloud" href="수입검사.html">
+  <div class="ic">🔍</div>
+  <div class="t">수입검사 <span class="en">incoming</span></div>
+  <div class="d">수입검사 관리.</div></a>
+ <a class="card cloud" href="수입검사절차서.html">
+  <div class="ic">📑</div>
+  <div class="t">수입검사 절차서 <span class="en">procedure</span></div>
+  <div class="d">수입검사 업무 절차서(편집형).</div></a>
+ <a class="card" href="SPC측정관리.html">
+  <div class="ic">📈</div>
+  <div class="t">SPC / CPK 측정 <span class="en">spc · 로컬</span></div>
+  <div class="d">SPC/CPK 측정·차트 (※ 현재 로컬 저장).</div></a>
+</div>
+
+<div class="sec">인사 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="사원마스터.html">
+  <div class="ic">🧑‍💼</div>
+  <div class="t">사원 마스터 <span class="en">employee</span></div>
+  <div class="d">사원 등록·관리.</div></a>
 </div>
 
 <div class="sec">참고 · 옛 화면</div>
@@ -191,7 +267,7 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
 <div class="sec">BOM 현황 <span style="text-transform:none;color:var(--faint)">· 클라우드 실시간</span></div>
 <div id="bomSummary" style="font-size:13px;color:var(--dim)">불러오는 중…</div>
 
-<footer>승정 ERP · REV-0 간편 시작 · 14개 화면 · 클라우드 실데이터</footer>
+<footer>승정 ERP · REV-0 간편 시작 · 클라우드 실데이터(전 PC 공유)</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="cloud.js"></script>
@@ -222,7 +298,7 @@ function renderStruct(d){
 
 /* 내 바로가기 (클라우드 app_state.user_links 저장) */
 (function(){
- var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","🖥️ 종합대시보드(현장용)"],["bom.html","📋 BOM LIST"],["production.html","⚙️ 생산부(생산실적)"],["prod-report.html","📅 월간 생산보고"],["생산계획현황.html","📊 생산계획현황"],["itemmaster.html","📦 품목 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["menu.html","🌳 설계 메뉴"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
+ var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","🖥️ 종합대시보드(현장용)"],["prod-report.html","📅 월간 생산보고"],["생산계획현황.html","📊 생산계획현황"],["production.html","⚙️ 생산관리(생산실적)"],["bom.html","📋 BOM LIST"],["itemmaster.html","📦 품목 마스터"],["완제품재고.html","🏷️ 완제품 재고·출고"],["수주관리.html","📝 수주관리"],["수주잔량.html","📦 수주잔량"],["긴급수주.html","🚨 긴급수주"],["수요예측.html","🔮 수요예측"],["판매관리.html","🛒 판매관리"],["매출관리.html","💰 매출관리"],["납품관리.html","🚚 납품관리"],["납품현황.html","📋 납품현황"],["출하지시.html","📤 출하지시"],["품질관리.html","✅ 품질관리"],["수입검사.html","🔍 수입검사"],["수입검사절차서.html","📑 수입검사 절차서"],["SPC측정관리.html","📈 SPC/CPK 측정"],["사원마스터.html","🧑‍💼 사원 마스터"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["home.html","📘 집·사무실 안내"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
  var links=[];
  function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
  var sel=document.getElementById("ulFile");
