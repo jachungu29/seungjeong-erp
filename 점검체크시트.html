@@ -131,7 +131,7 @@ const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 const el=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-let TAB="설비", EDIT=false, PINMODE=false, dirty=false;
+let TAB="dash", EDIT=false, PINMODE=false, dirty=false;
 let DATA={date:'',cycle:'일일',insp:'',conf:'',items:{},res:{},layout:{img:'',pins:[]}};
 function stat(m){el('st').textContent=m;}
 function markDirty(){dirty=true;stat('✏️ 수정됨 · 저장 필요');}
