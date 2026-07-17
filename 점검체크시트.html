@@ -44,6 +44,18 @@ td.std{color:#555;font-size:11.5px}
 select.rsel{padding:5px 4px;border:1px solid #cbd5e1;border-radius:6px;font-size:12.5px;font-family:inherit;font-weight:800;width:100%}
 select.rsel.r-양호{color:#1e8e4e}select.rsel.r-주의{color:#B8860B}select.rsel.r-불량{color:#C62828}select.rsel.r-해당없음{color:#94a3b8}
 tr.bad td{background:#fdeeee}
+th.filt{cursor:pointer;user-select:none;white-space:nowrap}
+th.filt .fic{margin-left:4px;font-size:10px;opacity:.75}
+th.filt.act{background:#e6f2ff;color:#0b4a8f}
+th.filt.act .fic{opacity:1}
+.fpop{position:fixed;z-index:200;min-width:170px;max-height:280px;overflow:auto;background:#fff;border:1px solid #c7d2dd;border-radius:9px;box-shadow:0 8px 26px rgba(0,0,0,.2);padding:5px;text-align:left}
+.fpop button{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 10px;border-radius:6px;font:inherit;font-size:12.5px;cursor:pointer;color:#1c2430}
+.fpop button:hover{background:#eef4fb}
+.fpop button.on{background:#1565c0;color:#fff;font-weight:700}
+.fpop .sep{border-top:1px solid #eef1f6;margin:4px 2px}
+.fpop .lbl{padding:5px 10px 3px;font-size:10.5px;color:#94a3b8;font-weight:700}
+.filtbar{display:inline-flex;align-items:center;gap:8px;background:#e6f2ff;color:#0b4a8f;border-radius:7px;padding:3px 10px;font-weight:700;margin-right:8px}
+.filtbar button{border:0;background:#0b4a8f;color:#fff;border-radius:6px;padding:3px 9px;font:inherit;font-size:11px;font-weight:700;cursor:pointer}
 input.f{width:100%;box-sizing:border-box;padding:5px 6px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;font-family:inherit}
 .delx{background:#fff;color:#C62828;border:1px solid #E0A0A0;border-radius:6px;width:24px;height:24px;font-size:12px;cursor:pointer;font-weight:700}
 .hint{font-size:11.5px;color:var(--mut);margin-top:8px}
@@ -125,6 +137,7 @@ const DEF_ITEMS={
 const CATS=["설비","안전","소방"];
 const TABS=[["설비","🔧 설비 점검"],["안전","🦺 안전 점검"],["소방","🔥 소방 점검"],["layout","🏭 공장 LAY-OUT"],["dash","📊 대시보드"]];
 const RES=["양호","주의","불량","해당없음"];
+var FILT={설비:null,안전:null,소방:null};var _FL=[];
 const EQLIST=["수직 1호기","수직 2호기","수직 3호기","수직 4호기","수직 5호기","수직 6호기","수직 7호기","수직 8호기","수평 1호기","수평 2호기","수평 3호기","수평 4호기","수평 6호기","수평 7호기","수평 9호기","볼압입 리크검사","양방향 호스조립","단방향 호스조립","유틸리티","공용"];
 const LSKEY="safety_inspect_v2", CKEY="safety_inspect_v2";
 const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
@@ -166,19 +179,23 @@ function renderCheck(cat){
   '<div class="kpi r"><div class="l">불량</div><div class="v">'+b+'</div></div>';
  var dl=cat==='설비'?'eqdl':'locdl';
  var h='<div class="card"><div class="phead"><span class="ptitle">'+(TABS.find(function(t){return t[0]===cat;})[1])+' 항목</span>'+(EDIT?'<button class="addbtn" onclick="addItem(\''+cat+'\')">＋ 항목 추가</button>':'')+'<span class="spacer"></span></div>';
- h+='<div class="tbl-wrap"><table><tr><th class="no">No</th><th>점검 항목</th><th>점검 기준</th><th style="width:124px">'+locHdr(cat)+'</th><th style="width:96px">결과</th><th style="width:150px">조치사항</th><th style="width:88px">조치자</th><th style="width:120px">조치일자</th>'+(EDIT?'<th style="width:34px">삭제</th>':'')+'</tr>';
+ h+='<div class="tbl-wrap"><table><tr><th class="no">No</th><th>점검 항목</th><th>점검 기준</th><th class="filt'+(FILT[cat]?' act':'')+'" style="width:124px" onclick="openFilt(event,\''+cat+'\')" title="클릭하여 위치별로 걸러보기">'+locHdr(cat)+'<span class="fic">▼</span></th><th style="width:96px">결과</th><th style="width:150px">조치사항</th><th style="width:88px">조치자</th><th style="width:120px">조치일자</th>'+(EDIT?'<th style="width:34px">삭제</th>':'')+'</tr>';
+ var shown=0,colspan=EDIT?9:8;
  items.forEach(function(it,i){var r=res[i]||{r:'양호',a:'',loc:'',actBy:'',actDate:''};
-  h+='<tr class="'+(r.r==='불량'?'bad':'')+'"><td class="no">'+(i+1)+'</td>'+
+  if(!passFilt(cat,r))return;shown++;
+  h+='<tr><td class="no">'+(i+1)+'</td>'+
    '<td class="item"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'t\',this.innerText)"':'')+'>'+esc(it.t)+'</td>'+
    '<td class="std"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'b\',this.innerText)"':'')+'>'+esc(it.b)+'</td>'+
    '<td><input class="f" list="'+dl+'" value="'+esc(r.loc)+'" oninput="setLoc(\''+cat+'\','+i+',this.value)" placeholder="'+(cat==='설비'?'호기/설비':'위치')+'"></td>'+
-   '<td><select class="rsel r-'+r.r+'" onchange="setRes(\''+cat+'\','+i+',this.value)">'+RES.map(function(o){return '<option'+(r.r===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
+   '<td><select class="rsel" onchange="setRes(\''+cat+'\','+i+',this.value)">'+RES.map(function(o){return '<option'+(r.r===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
    '<td><input class="f" value="'+esc(r.a)+'" oninput="setAct(\''+cat+'\','+i+',this.value)" placeholder="조치·비고"></td>'+
    '<td><input class="f" value="'+esc(r.actBy)+'" oninput="setActBy(\''+cat+'\','+i+',this.value)" placeholder="조치자"></td>'+
    '<td><input class="f" type="date" value="'+esc(r.actDate)+'" onchange="setActDate(\''+cat+'\','+i+',this.value)"></td>'+
    (EDIT?'<td style="text-align:center"><button class="delx" onclick="delItem(\''+cat+'\','+i+')">✕</button></td>':'')+'</tr>';
  });
- h+='</table></div><div class="hint">결과 <b>불량/주의</b> 항목은 <b>'+locHdr(cat)+'</b>과 <b>조치사항</b>을 입력하세요. 위치는 🏭 LAY-OUT 탭에서 도면에 핀으로 표시할 수 있습니다.</div></div>';
+ if(!shown)h+='<tr><td colspan="'+colspan+'" style="text-align:center;color:#94a3b8;padding:18px">필터 결과에 해당하는 항목이 없습니다.</td></tr>';
+ var fbar=FILT[cat]?'<span class="filtbar">🔍 필터: '+esc(filtLabel(cat))+' · '+shown+'/'+items.length+'건 <button onclick="setFilt(\''+cat+'\',null)">필터 해제</button></span>':'';
+ h+='</table></div><div class="hint">'+fbar+'결과 <b>불량/주의</b> 항목은 <b>'+locHdr(cat)+'</b>과 <b>조치사항</b>을 입력하세요. 위치는 🏭 LAY-OUT 탭에서 도면에 핀으로 표시할 수 있습니다.</div></div>';
  el('body').innerHTML=h;
 }
 function setRes(c,i,v){DATA.res[c][i].r=v;markDirty();renderCheck(c);}
@@ -186,6 +203,21 @@ function setAct(c,i,v){DATA.res[c][i].a=v;markDirty();}
 function setActBy(c,i,v){DATA.res[c][i].actBy=v;markDirty();}
 function setActDate(c,i,v){DATA.res[c][i].actDate=v;markDirty();}
 function setLoc(c,i,v){DATA.res[c][i].loc=v;markDirty();}
+function passFilt(cat,r){var f=FILT[cat];if(!f)return true;if(f.mode==='issue')return r.r==='불량'||r.r==='주의';if(f.mode==='loc'){var v=(r.loc||'').trim();return f.val===''?v==='':v===f.val;}return true;}
+function filtLabel(cat){var f=FILT[cat];if(!f)return'';if(f.mode==='issue')return'이상항목만(불량·주의)';if(f.mode==='loc')return f.val===''?'(위치 미입력)':f.val;return'';}
+function distinctLocs(cat){var s=[],seen={},blank=false;DATA.res[cat].forEach(function(x){var v=(x.loc||'').trim();if(!v){blank=true;return;}if(!seen[v]){seen[v]=1;s.push(v);}});s.sort();return{list:s,blank:blank};}
+function openFilt(e,cat){e.stopPropagation();closeFilt();var th=e.currentTarget;var rect=th.getBoundingClientRect();var d=distinctLocs(cat);var f=FILT[cat];_FL=[];
+ var h='<div class="lbl">'+esc(locHdr(cat))+' 필터</div>';
+ h+='<button class="'+(!f?'on':'')+'" onclick="setFilt(\''+cat+'\',null)">전체 보기</button>';
+ h+='<button class="'+(f&&f.mode==='issue'?'on':'')+'" onclick="setFilt(\''+cat+'\',\'issue\')">⚠ 이상항목만 (불량·주의)</button>';
+ if(d.list.length||d.blank)h+='<div class="sep"></div><div class="lbl">위치·설비별</div>';
+ d.list.forEach(function(v){var idx=_FL.length;_FL.push(v);var on=f&&f.mode==='loc'&&f.val===v;h+='<button class="'+(on?'on':'')+'" onclick="setFilt(\''+cat+'\',\'loc\','+idx+')">'+esc(v)+'</button>';});
+ if(d.blank){var idx=_FL.length;_FL.push('');var on=f&&f.mode==='loc'&&f.val==='';h+='<button class="'+(on?'on':'')+'" onclick="setFilt(\''+cat+'\',\'loc\','+idx+')">(위치 미입력)</button>';}
+ var pop=document.createElement('div');pop.className='fpop';pop.id='fpop';pop.innerHTML=h;
+ var left=Math.min(rect.left,window.innerWidth-190);pop.style.left=Math.max(6,left)+'px';pop.style.top=(rect.bottom+2)+'px';
+ document.body.appendChild(pop);setTimeout(function(){document.addEventListener('click',closeFilt);},0);}
+function closeFilt(){var p=el('fpop');if(p&&p.parentNode)p.parentNode.removeChild(p);document.removeEventListener('click',closeFilt);}
+function setFilt(cat,mode,idx){if(mode==null)FILT[cat]=null;else if(mode==='issue')FILT[cat]={mode:'issue'};else if(mode==='loc')FILT[cat]={mode:'loc',val:_FL[idx]};closeFilt();renderCheck(cat);}
 function edItem(c,i,f,v){DATA.items[c][i][f]=v;markDirty();}
 function addItem(c){DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력'});DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});markDirty();renderCheck(c);}
 function delItem(c,i){if(!confirm('이 점검항목을 삭제할까요?'))return;DATA.items[c].splice(i,1);DATA.res[c].splice(i,1);markDirty();renderCheck(c);}
