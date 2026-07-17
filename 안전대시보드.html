@@ -11,8 +11,8 @@ header h1{margin:0;font-size:17px;font-weight:800;display:flex;align-items:cente
 .spacer{flex:1}
 .cloud{font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.18);font-weight:600}
 .cloud.on{background:#1e8e4e}.cloud.off{background:#7a8699}
-.rf{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
-.prn{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:8px;padding:8px 12px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+.rf,.prn{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+.prn{background:rgba(255,255,255,.15);color:#fff}
 .wrap{padding:16px 20px 40px;max-width:1400px;margin:0 auto}
 .sect{font-size:13px;font-weight:800;color:var(--navy);margin:4px 0 9px;display:flex;align-items:center;gap:8px}
 .sect::before{content:"";width:4px;height:15px;background:var(--teal);border-radius:2px}
@@ -22,29 +22,36 @@ header h1{margin:0;font-size:17px;font-weight:800;display:flex;align-items:cente
 .kpi .t{font-size:12px;color:var(--mut);font-weight:700;display:flex;align-items:center;gap:6px}
 .kpi .v{font-size:30px;font-weight:800;color:var(--navy);margin:4px 0 2px;line-height:1}
 .kpi .v small{font-size:14px;font-weight:700;color:var(--mut)}
-.kpi .d{font-size:11.5px;font-weight:700}
+.kpi .d{font-size:11.5px;font-weight:700;color:#94a3b8}
 .kpi.green{border-top-color:#1e8e4e}.kpi.green .v{color:#1e8e4e}
 .kpi.red{border-top-color:var(--fr)}.kpi.red .v{color:var(--fr)}
 .kpi.gold{border-top-color:var(--gold)}.kpi.gold .v{color:#b8860b}
 .kpi.blue{border-top-color:var(--eq)}.kpi.blue .v{color:var(--eq)}
-.catcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:18px}
-.catcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;border-left:5px solid #ccc}
-.catcard.설비이상{border-left-color:var(--eq)}.catcard.안전{border-left-color:var(--sf)}.catcard.소방{border-left-color:var(--fr)}
-.catcard .cn{font-size:15px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:6px}
-.catcard .row{display:flex;justify-content:space-between;margin-top:8px;font-size:12.5px}
-.catcard .row b{font-size:16px}
-.catcard .lab{color:var(--mut)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-@media(max-width:800px){.grid2{grid-template-columns:1fr}}
-.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
-.panel h3{margin:0 0 10px;font-size:14px;color:var(--navy)}
-.bar{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.bar .nm{width:88px;font-weight:800;font-size:13px}
-.bar .track{flex:1;height:26px;background:#eef1f5;border-radius:7px;overflow:hidden;display:flex}
-.bar .seg{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11.5px;font-weight:800;min-width:2px}
-.seg.a{background:#1e8e4e}.seg.b{background:var(--gold)}.seg.c{background:var(--fr)}
-.seg.접수{background:#64748b}.seg.조치중{background:var(--gold)}.seg.완료{background:#1e8e4e}
-.legend{font-size:11.5px;color:var(--mut);margin-top:2px}
+/* 항목별 구분 카드(클릭 필터) */
+.catcards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:760px){.catcards{grid-template-columns:1fr}}
+.catcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;border-top:5px solid #ccc;cursor:pointer;transition:.12s}
+.catcard:hover{box-shadow:0 3px 12px rgba(0,0,0,.09)}
+.catcard.on{outline:3px solid rgba(13,110,140,.4)}
+.catcard.설비이상{border-top-color:var(--eq)}.catcard.안전{border-top-color:var(--sf)}.catcard.소방{border-top-color:var(--fr)}
+.catcard .cn{font-size:16px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:6px}
+.catcard .big{font-size:28px;font-weight:800;margin:6px 0 2px}
+.catcard.설비이상 .big{color:var(--eq)}.catcard.안전 .big{color:var(--sf)}.catcard.소방 .big{color:var(--fr)}
+.catcard .row{display:flex;justify-content:space-between;margin-top:6px;font-size:12.5px}
+.catcard .row b{font-size:15px}.catcard .lab{color:var(--mut)}
+.catcard .flt{font-size:10.5px;color:var(--teal);font-weight:800;margin-top:6px}
+/* 차트 */
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px;position:relative}
+.panel h3{margin:0 0 4px;font-size:14px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 8px}
+.lchip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px;border:1.5px solid #dfe5ec;cursor:pointer;user-select:none}
+.lchip .sw{width:12px;height:12px;border-radius:3px}
+.lchip.off{opacity:.4;text-decoration:line-through}
+svg.chart{width:100%;height:auto;display:block}
+.gline{stroke:#eef1f5;stroke-width:1}
+.axlbl{font-size:11px;fill:#94a3b8}
+.dot{cursor:pointer}
+#tip{position:absolute;pointer-events:none;background:#0e2a3d;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700;display:none;z-index:20;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
 table{border-collapse:collapse;width:100%;min-width:560px}
 th{background:var(--navy);color:#fff;font-size:11.5px;font-weight:700;padding:7px 6px;white-space:nowrap}
@@ -55,8 +62,7 @@ tr:nth-child(even) td{background:#f8fafc}
 .pill.불량{background:var(--fr)}.pill.주의{background:var(--gold)}
 .pill.설비이상{background:var(--eq)}.pill.안전{background:var(--sf)}.pill.소방{background:var(--fr)}
 .empty{text-align:center;color:#1e8e4e;padding:18px;font-weight:800}
-.noacc{cursor:pointer}
-@media print{.rf,.prn,.cloud{display:none!important}header{position:static}}
+@media print{.rf,.prn,.cloud{display:none!important}header{position:static}#tip{display:none!important}}
 </style></head><body>
 <header>
  <h1>🛡️ 설비·안전·소방 종합 대시보드</h1>
@@ -69,14 +75,19 @@ tr:nth-child(even) td{background:#f8fafc}
 <div class="wrap">
  <div class="sect">전사 안전 핵심지표 <span class="r">신고·점검 실시간 집계</span></div>
  <div class="kpis" id="kpis"></div>
- <div class="sect">분류별 현황 (설비이상 · 안전 · 소방)</div>
+
+ <div class="sect">항목별 현황 <span class="r">카드 클릭 → 아래 목록·차트 필터</span></div>
  <div class="catcards" id="catcards"></div>
- <div class="grid2">
-  <div class="panel"><h3>📊 신고 상태 분포</h3><div id="statusChart"></div><div class="legend">■ <span style="color:#64748b">접수</span> ■ <span style="color:#b8860b">조치중</span> ■ <span style="color:#1e8e4e">완료</span></div></div>
-  <div class="panel"><h3>🔍 정기점검 결과 분포</h3><div id="inspChart"></div><div class="legend">■ <span style="color:#1e8e4e">양호</span> ■ <span style="color:#b8860b">주의</span> ■ <span style="color:#C62828">불량</span></div></div>
+
+ <div class="panel" id="chartPanel">
+  <h3>📈 월별 신고 발생 추이 <span style="font-size:11px;color:#94a3b8;font-weight:600">· 점(●) 위에 마우스 · 범례 클릭으로 선 켜기/끄기</span></h3>
+  <div class="legend" id="legend"></div>
+  <div id="chart"></div>
+  <div id="tip"></div>
  </div>
+
  <div class="sect">🚨 미조치 · 진행중 신고 <span class="r" id="rptCnt"></span></div>
- <div class="panel" style="margin-bottom:18px"><div class="tbl-wrap"><table id="rptTbl"></table></div></div>
+ <div class="panel"><div class="tbl-wrap"><table id="rptTbl"></table></div></div>
  <div class="sect">🛠️ 정기점검 조치 필요 내역 <span class="r" id="inspCnt"></span></div>
  <div class="panel"><div class="tbl-wrap"><table id="inspTbl"></table></div></div>
 </div>
@@ -89,81 +100,97 @@ const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 const cm=n=>{n=Math.round(+n||0);return n.toLocaleString('en-US');};
 const CATS=["설비이상","안전","소방"];
 const CICON={설비이상:"🔧",안전:"🦺",소방:"🔥"};
+const CCOLOR={설비이상:"#1565c0",안전:"#e08a00",소방:"#C62828"};
+const INSMAP={설비이상:"설비",안전:"안전",소방:"소방"};
 let REPORTS=[], INSPECT=null, CFG={noAccSince:""};
+let HIDE={설비이상:false,안전:false,소방:false}, FILTER=null;
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function daysSince(dstr){if(!dstr)return null;var a=new Date(),b=new Date(dstr);if(isNaN(b))return null;return Math.max(0,Math.floor((a-b)/86400000));}
+function last6(){var arr=[],d=new Date();for(var i=5;i>=0;i--){var m=new Date(d.getFullYear(),d.getMonth()-i,1);arr.push(m.getFullYear()+'-'+String(m.getMonth()+1).padStart(2,'0'));}return arr;}
 async function getKey(k){if(!sb)return null;try{var r=await sb.from('app_state').select('value').eq('key',k).maybeSingle();return r&&r.data?r.data.value:null;}catch(e){return null;}}
 function normRep(v){return Array.isArray(v)?v:(v&&Array.isArray(v.rows)?v.rows:[]);}
+function inspBad(cat){if(!INSPECT||!INSPECT.res)return 0;var res=INSPECT.res[INSMAP[cat]]||[];return res.filter(function(x){return x.r==='불량'||x.r==='주의';}).length;}
+function kpi(cls,t,v,u,d,extra){return '<div class="kpi '+cls+'" '+extra+'><div class="t">'+t+'</div><div class="v">'+(typeof v==='number'?cm(v):v)+' <small>'+u+'</small></div><div class="d">'+d+'</div></div>';}
+
 function render(){
- el('asof').textContent='기준 '+today()+' · '+REPORTS.length+'건 신고';
- // ===== 집계 =====
+ el('asof').textContent='기준 '+today()+' · 신고 '+REPORTS.length+'건'+(FILTER?(' · 필터: '+FILTER):'');
  var byCat={},byStat={접수:0,조치중:0,완료:0};
  CATS.forEach(function(c){byCat[c]={tot:0,open:0,done:0};});
  REPORTS.forEach(function(r){var c=CATS.indexOf(r.cat)>=0?r.cat:'설비이상';byCat[c].tot++;var s=r.status||'접수';if(byStat[s]==null)byStat[s]=0;byStat[s]++;if(s==='완료')byCat[c].done++;else byCat[c].open++;});
  var totRep=REPORTS.length, openRep=byStat['접수']+byStat['조치중'], doneRep=byStat['완료'];
  var doneRate=totRep?Math.round(doneRep/totRep*100):100;
- // 점검
- var ig=0,iw=0,ib=0,itot=0,acts=[];
- if(INSPECT&&INSPECT.res){CATS_INS.forEach(function(c){var res=INSPECT.res[c]||[];var items=(INSPECT.items&&INSPECT.items[c])||[];res.forEach(function(x,i){itot++;if(x.r==='양호')ig++;else if(x.r==='주의')iw++;else if(x.r==='불량')ib++;if(x.r==='불량'||x.r==='주의')acts.push({c:c,item:(items[i]&&items[i].t)||'',loc:x.loc,r:x.r,a:x.a});});});}
+ var ib=0,iw=0,ig=0,itot=0;
+ if(INSPECT&&INSPECT.res){CATS.forEach(function(c){var res=INSPECT.res[INSMAP[c]]||[];res.forEach(function(x){itot++;if(x.r==='양호')ig++;else if(x.r==='주의')iw++;else if(x.r==='불량')ib++;});});}
  var inspRate=itot?Math.round(ig/itot*100):0;
  var noAcc=daysSince(CFG.noAccSince);
- // ===== KPI =====
- el('kpis').innerHTML=''+
-  kpi('green','🛡️ 무재해 일수',(noAcc!=null?noAcc:'-'),'일',(CFG.noAccSince?('기준 '+CFG.noAccSince):'클릭해 기준일 설정'),'noacc" onclick="setNoAcc()')+
+ el('kpis').innerHTML=
+  kpi('green','🛡️ 무재해 일수',(noAcc!=null?noAcc:'-'),'일',(CFG.noAccSince?('기준 '+CFG.noAccSince):'클릭해 기준일 설정'),'onclick="setNoAcc()" style="cursor:pointer"')+
   kpi('red','🚨 미조치 신고',openRep,'건','접수 '+byStat['접수']+' · 조치중 '+byStat['조치중'],'')+
   kpi('blue','📋 누적 신고',totRep,'건','완료 '+doneRep+'건','')+
   kpi('green','✅ 조치완료율',doneRate,'%','신고 처리율','')+
   kpi('red','🔍 점검 불량',ib,'건','주의 '+iw+'건','')+
   kpi('green','📊 점검 양호율',(itot?inspRate:'-'),'%','점검 '+itot+'항목','');
- // ===== 분류 카드 =====
  el('catcards').innerHTML=CATS.map(function(c){var b=byCat[c];var ic=inspBad(c);
-  return '<div class="catcard '+c+'"><div class="cn">'+CICON[c]+' '+c+'</div>'+
-   '<div class="row"><span class="lab">신고 누적</span><b>'+b.tot+' 건</b></div>'+
+  return '<div class="catcard '+c+(FILTER===c?' on':'')+'" onclick="setFilter(\''+c+'\')"><div class="cn">'+CICON[c]+' '+c+'</div>'+
+   '<div class="big">'+b.tot+' <span style="font-size:14px;color:#94a3b8">신고</span></div>'+
    '<div class="row"><span class="lab">미조치</span><b style="color:'+(b.open?'#C62828':'#1e8e4e')+'">'+b.open+' 건</b></div>'+
-   '<div class="row"><span class="lab">점검 불량/주의</span><b style="color:'+(ic?'#C62828':'#1e8e4e')+'">'+ic+' 건</b></div></div>';}).join('');
- // ===== 상태 차트 =====
- var st=byStat,stTot=Math.max(1,st['접수']+st['조치중']+st['완료']);
- el('statusChart').innerHTML='<div class="bar"><div class="nm">신고 상태</div><div class="track">'+
-   seg('접수',st['접수'],stTot)+seg('조치중',st['조치중'],stTot)+seg('완료',st['완료'],stTot)+'</div></div>'+
-   (totRep?'':'<div style="color:#94a3b8;padding:8px 0">아직 신고 데이터가 없습니다 (휴대폰 신고 시 집계).</div>');
- // 점검 차트
- var it=Math.max(1,ig+iw+ib);
- el('inspChart').innerHTML='<div class="bar"><div class="nm">점검 결과</div><div class="track">'+
-   segc('a',ig,it)+segc('b',iw,it)+segc('c',ib,it)+'</div></div>'+
-   (itot?'':'<div style="color:#94a3b8;padding:8px 0">점검 데이터가 없습니다 (정기점검 체크시트에서 저장 시 집계).</div>');
- // ===== 미조치 신고 목록 =====
- var open=REPORTS.filter(function(r){return (r.status||'접수')!=='완료';}).sort(function(a,b){return String(b.createdAt||'').localeCompare(String(a.createdAt||''));});
- el('rptCnt').textContent=open.length+'건';
- var h='<tr><th style="width:80px">분류</th><th>내용</th><th style="width:120px">위치</th><th style="width:74px">상태</th><th style="width:90px">담당</th><th style="width:100px">일시</th></tr>';
- if(!open.length)h+='<tr><td colspan="6" class="empty">✅ 미조치 신고 없음</td></tr>';
- open.forEach(function(r){h+='<tr><td><span class="pill '+(r.cat||'설비이상')+'">'+esc(r.cat||'-')+'</span></td><td>'+esc(r.content||r.sub||'-')+'</td><td>'+esc(r.loc||'-')+'</td><td><span class="pill '+(r.status||'접수')+'">'+esc(r.status||'접수')+'</span></td><td>'+esc(r.mgr||'-')+'</td><td>'+esc((r.at||r.createdAt||'').slice(0,10))+'</td></tr>';});
+   '<div class="row"><span class="lab">점검 불량/주의</span><b style="color:'+(ic?'#C62828':'#1e8e4e')+'">'+ic+' 건</b></div>'+
+   '<div class="flt">'+(FILTER===c?'● 필터 적용중 (클릭 해제)':'○ 클릭해 이 항목만 보기')+'</div></div>';}).join('');
+ buildChart();
+ renderLists();
+}
+/* ===== 꺾은선 차트 (상호작용) ===== */
+function buildChart(){
+ var months=last6();
+ var ser={};CATS.forEach(function(c){ser[c]=months.map(function(){return 0;});});
+ REPORTS.forEach(function(r){var mo=String(r.at||r.createdAt||'').slice(0,7);var c=CATS.indexOf(r.cat)>=0?r.cat:'설비이상';var i=months.indexOf(mo);if(i>=0)ser[c][i]++;});
+ var maxV=1;CATS.forEach(function(c){if(!HIDE[c])ser[c].forEach(function(v){if(v>maxV)maxV=v;});});
+ var top=Math.ceil(maxV*1.25)||1;
+ var W=900,H=300,pL=42,pR=18,pT=14,pB=38,pw=W-pL-pR,ph=H-pT-pB;
+ var X=function(i){return pL+(months.length>1?i*(pw/(months.length-1)):pw/2);};
+ var Y=function(v){return pT+ph-(v/top)*ph;};
+ var g='';
+ for(var k=0;k<=4;k++){var gy=pT+ph-k/4*ph,gv=Math.round(top*k/4);g+='<line class="gline" x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'"/><text class="axlbl" x="'+(pL-6)+'" y="'+(gy+4)+'" text-anchor="end">'+gv+'</text>';}
+ months.forEach(function(mo,i){g+='<text class="axlbl" x="'+X(i)+'" y="'+(H-14)+'" text-anchor="middle">'+mo.slice(2)+'</text>';});
+ CATS.forEach(function(c){if(HIDE[c])return;var col=CCOLOR[c];
+  var pts=ser[c].map(function(v,i){return X(i)+','+Y(v);}).join(' ');
+  g+='<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2.6" stroke-linejoin="round"/>';
+  ser[c].forEach(function(v,i){g+='<circle class="dot" cx="'+X(i)+'" cy="'+Y(v)+'" r="5" fill="'+col+'" stroke="#fff" stroke-width="1.5" onmouseover="showTip(event,\''+c+'\',\''+months[i]+'\','+v+')" onmouseout="hideTip()"/>';});
+ });
+ el('chart').innerHTML='<svg class="chart" viewBox="0 0 '+W+' '+H+'">'+g+'</svg>';
+ el('legend').innerHTML=CATS.map(function(c){return '<span class="lchip'+(HIDE[c]?' off':'')+'" onclick="toggleSer(\''+c+'\')"><span class="sw" style="background:'+CCOLOR[c]+'"></span>'+CICON[c]+' '+c+'</span>';}).join('')+
+  '<span style="font-size:11px;color:#94a3b8;align-self:center">'+(REPORTS.length?'':'· 신고가 쌓이면 월별 추이가 그려집니다')+'</span>';
+}
+function toggleSer(c){HIDE[c]=!HIDE[c];buildChart();}
+function showTip(ev,c,mo,v){var t=el('tip');var p=el('chartPanel').getBoundingClientRect();t.innerHTML='<span style="color:'+CCOLOR[c]+'">●</span> '+c+' · '+mo+' · <b>'+v+'건</b>';t.style.display='block';t.style.left=(ev.clientX-p.left+12)+'px';t.style.top=(ev.clientY-p.top-10)+'px';}
+function hideTip(){el('tip').style.display='none';}
+function setFilter(c){FILTER=(FILTER===c)?null:c;render();}
+function setNoAcc(){var v=prompt('무재해 기준 시작일(YYYY-MM-DD). 오늘까지 일수가 계산됩니다.',CFG.noAccSince||today());if(v==null)return;CFG.noAccSince=v.trim();if(sb){sb.from('app_state').upsert({key:'safety_dash_cfg',value:CFG,updated_at:new Date().toISOString()}).then(function(){},function(){});}render();}
+/* ===== 목록 (필터 적용) ===== */
+function renderLists(){
+ var reps=REPORTS.filter(function(r){return !FILTER||r.cat===FILTER;});
+ var open=reps.filter(function(r){return (r.status||'접수')!=='완료';}).sort(function(a,b){return String(b.createdAt||b.at||'').localeCompare(String(a.createdAt||a.at||''));});
+ el('rptCnt').textContent=open.length+'건'+(FILTER?(' ('+FILTER+')'):'');
+ var h='<tr><th style="width:80px">항목분류</th><th>내용</th><th style="width:110px">위치</th><th style="width:70px">상태</th><th style="width:84px">조치자</th><th style="width:96px">조치일자</th><th style="width:96px">신고일시</th></tr>';
+ if(!open.length)h+='<tr><td colspan="7" class="empty">✅ 미조치 신고 없음</td></tr>';
+ open.forEach(function(r){var ad=r.actAt||r.actionAt||r.doneAt||r.actDate||'';h+='<tr><td><span class="pill '+(r.cat||'설비이상')+'">'+esc(r.cat||'-')+'</span></td><td>'+esc(r.content||r.sub||'-')+'</td><td>'+esc(r.loc||'-')+'</td><td><span class="pill '+(r.status||'접수')+'">'+esc(r.status||'접수')+'</span></td><td>'+esc(r.mgr||'-')+'</td><td>'+esc(String(ad).slice(0,10)||'-')+'</td><td>'+esc(String(r.at||r.createdAt||'').slice(0,10))+'</td></tr>';});
  el('rptTbl').innerHTML=h;
- // ===== 점검 조치 목록 =====
- el('inspCnt').textContent=acts.length+'건';
- var ih='<tr><th style="width:64px">구분</th><th>점검항목</th><th style="width:130px">위치/설비</th><th style="width:64px">결과</th><th>조치사항</th></tr>';
- if(!acts.length)ih+='<tr><td colspan="5" class="empty">✅ 점검 이상 항목 없음 (전체 양호)</td></tr>';
+ var acts=[];
+ if(INSPECT&&INSPECT.res){CATS.forEach(function(c){if(FILTER&&FILTER!==c)return;var res=INSPECT.res[INSMAP[c]]||[];var items=(INSPECT.items&&INSPECT.items[INSMAP[c]])||[];res.forEach(function(x,i){if(x.r==='불량'||x.r==='주의')acts.push({c:c,item:(items[i]&&items[i].t)||'',loc:x.loc,r:x.r,a:x.a,actBy:x.actBy,actDate:x.actDate});});});}
+ el('inspCnt').textContent=acts.length+'건'+(FILTER?(' ('+FILTER+')'):'');
+ var ih='<tr><th style="width:64px">항목분류</th><th>점검항목</th><th style="width:120px">위치/설비</th><th style="width:60px">결과</th><th>조치사항</th><th style="width:80px">조치자</th><th style="width:96px">조치일자</th></tr>';
+ if(!acts.length)ih+='<tr><td colspan="7" class="empty">✅ 점검 이상 항목 없음</td></tr>';
  acts.sort(function(a,b){return (a.r==='불량'?0:1)-(b.r==='불량'?0:1);});
- acts.forEach(function(a){ih+='<tr><td><b>'+esc(a.c)+'</b></td><td>'+esc(a.item)+'</td><td>'+esc(a.loc||'-')+'</td><td><span class="pill '+a.r+'">'+a.r+'</span></td><td>'+esc(a.a||'(조치 미입력)')+'</td></tr>';});
+ acts.forEach(function(a){ih+='<tr><td><b>'+esc(a.c)+'</b></td><td>'+esc(a.item)+'</td><td>'+esc(a.loc||'-')+'</td><td><span class="pill '+a.r+'">'+a.r+'</span></td><td>'+esc(a.a||'(조치 미입력)')+'</td><td>'+esc(a.actBy||'-')+'</td><td>'+esc(a.actDate||'-')+'</td></tr>';});
  el('inspTbl').innerHTML=ih;
 }
-const CATS_INS=["설비","안전","소방"];
-function inspBad(cat){if(!INSPECT||!INSPECT.res)return 0;var m={"설비이상":"설비","안전":"안전","소방":"소방"};var res=INSPECT.res[m[cat]]||[];return res.filter(function(x){return x.r==='불량'||x.r==='주의';}).length;}
-function kpi(cls,t,v,u,d,extra){return '<div class="kpi '+cls+' '+extra+'"><div class="t">'+t+'</div><div class="v">'+(typeof v==='number'?cm(v):v)+' <small>'+u+'</small></div><div class="d" style="color:#94a3b8">'+d+'</div></div>';}
-function seg(cls,n,tot){return n?'<div class="seg '+cls+'" style="width:'+(n/tot*100)+'%">'+n+'</div>':'';}
-function segc(cls,n,tot){return n?'<div class="seg '+cls+'" style="width:'+(n/tot*100)+'%">'+n+'</div>':'';}
-async function setNoAcc(){var v=prompt('무재해 기준 시작일(YYYY-MM-DD)을 입력하세요. 오늘까지의 일수가 계산됩니다.',CFG.noAccSince||today());if(v==null)return;CFG.noAccSince=v.trim();if(sb){try{await sb.from('app_state').upsert({key:'safety_dash_cfg',value:CFG,updated_at:new Date().toISOString()});}catch(e){}}render();}
 async function reload(){el('cloud').textContent='● 불러오는 중…';await load();el('cloud').textContent='● 클라우드 공유';el('cloud').className='cloud on';}
-async function load(){
- var a=await Promise.all([getKey('safety_reports'),getKey('safety_inspect_v2'),getKey('safety_dash_cfg')]);
- REPORTS=normRep(a[0]); INSPECT=a[1]||null; CFG=a[2]||{noAccSince:''};
- render();
-}
+async function load(){var a=await Promise.all([getKey('safety_reports'),getKey('safety_inspect_v2'),getKey('safety_dash_cfg')]);REPORTS=normRep(a[0]);INSPECT=a[1]||null;CFG=a[2]||{noAccSince:''};render();}
 async function boot(){
  render();
- if(!sb){el('cloud').textContent='● 로컬 모드(연결 안됨)';el('cloud').className='cloud off';return;}
+ if(!sb){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';return;}
  try{var probe=await sb.from('app_state').select('key').limit(1);if(probe&&probe.error){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';return;}
-  el('cloud').textContent='● 클라우드 공유';el('cloud').className='cloud on';
-  await load();
+  el('cloud').textContent='● 클라우드 공유';el('cloud').className='cloud on';await load();
   try{['safety_reports','safety_inspect_v2'].forEach(function(k){sb.channel('sd_'+k).on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+k},function(){load();}).subscribe();});}catch(e){}
  }catch(e){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';}
 }

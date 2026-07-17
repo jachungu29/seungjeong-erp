@@ -140,7 +140,7 @@ function ensure(){
  CATS.forEach(function(c){
   if(!Array.isArray(DATA.items[c])||!DATA.items[c].length)DATA.items[c]=DEF_ITEMS[c].map(function(x){return {t:x[0],b:x[1]};});
   if(!Array.isArray(DATA.res[c]))DATA.res[c]=[];
-  while(DATA.res[c].length<DATA.items[c].length)DATA.res[c].push({r:'양호',a:'',loc:''});
+  while(DATA.res[c].length<DATA.items[c].length)DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});
   DATA.res[c].length=DATA.items[c].length;
  });
  if(!DATA.layout)DATA.layout={img:'',pins:[]};if(!Array.isArray(DATA.layout.pins))DATA.layout.pins=[];
@@ -166,14 +166,16 @@ function renderCheck(cat){
   '<div class="kpi r"><div class="l">불량</div><div class="v">'+b+'</div></div>';
  var dl=cat==='설비'?'eqdl':'locdl';
  var h='<div class="card"><div class="phead"><span class="ptitle">'+(TABS.find(function(t){return t[0]===cat;})[1])+' 항목</span>'+(EDIT?'<button class="addbtn" onclick="addItem(\''+cat+'\')">＋ 항목 추가</button>':'')+'<span class="spacer"></span></div>';
- h+='<div class="tbl-wrap"><table><tr><th class="no">No</th><th>점검 항목</th><th>점검 기준</th><th style="width:130px">'+locHdr(cat)+'</th><th style="width:104px">결과</th><th style="width:180px">조치사항</th>'+(EDIT?'<th style="width:34px">삭제</th>':'')+'</tr>';
- items.forEach(function(it,i){var r=res[i]||{r:'양호',a:'',loc:''};
+ h+='<div class="tbl-wrap"><table><tr><th class="no">No</th><th>점검 항목</th><th>점검 기준</th><th style="width:124px">'+locHdr(cat)+'</th><th style="width:96px">결과</th><th style="width:150px">조치사항</th><th style="width:88px">조치자</th><th style="width:120px">조치일자</th>'+(EDIT?'<th style="width:34px">삭제</th>':'')+'</tr>';
+ items.forEach(function(it,i){var r=res[i]||{r:'양호',a:'',loc:'',actBy:'',actDate:''};
   h+='<tr class="'+(r.r==='불량'?'bad':'')+'"><td class="no">'+(i+1)+'</td>'+
    '<td class="item"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'t\',this.innerText)"':'')+'>'+esc(it.t)+'</td>'+
    '<td class="std"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'b\',this.innerText)"':'')+'>'+esc(it.b)+'</td>'+
    '<td><input class="f" list="'+dl+'" value="'+esc(r.loc)+'" oninput="setLoc(\''+cat+'\','+i+',this.value)" placeholder="'+(cat==='설비'?'호기/설비':'위치')+'"></td>'+
    '<td><select class="rsel r-'+r.r+'" onchange="setRes(\''+cat+'\','+i+',this.value)">'+RES.map(function(o){return '<option'+(r.r===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
    '<td><input class="f" value="'+esc(r.a)+'" oninput="setAct(\''+cat+'\','+i+',this.value)" placeholder="조치·비고"></td>'+
+   '<td><input class="f" value="'+esc(r.actBy)+'" oninput="setActBy(\''+cat+'\','+i+',this.value)" placeholder="조치자"></td>'+
+   '<td><input class="f" type="date" value="'+esc(r.actDate)+'" onchange="setActDate(\''+cat+'\','+i+',this.value)"></td>'+
    (EDIT?'<td style="text-align:center"><button class="delx" onclick="delItem(\''+cat+'\','+i+')">✕</button></td>':'')+'</tr>';
  });
  h+='</table></div><div class="hint">결과 <b>불량/주의</b> 항목은 <b>'+locHdr(cat)+'</b>과 <b>조치사항</b>을 입력하세요. 위치는 🏭 LAY-OUT 탭에서 도면에 핀으로 표시할 수 있습니다.</div></div>';
@@ -181,9 +183,11 @@ function renderCheck(cat){
 }
 function setRes(c,i,v){DATA.res[c][i].r=v;markDirty();renderCheck(c);}
 function setAct(c,i,v){DATA.res[c][i].a=v;markDirty();}
+function setActBy(c,i,v){DATA.res[c][i].actBy=v;markDirty();}
+function setActDate(c,i,v){DATA.res[c][i].actDate=v;markDirty();}
 function setLoc(c,i,v){DATA.res[c][i].loc=v;markDirty();}
 function edItem(c,i,f,v){DATA.items[c][i][f]=v;markDirty();}
-function addItem(c){DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력'});DATA.res[c].push({r:'양호',a:'',loc:''});markDirty();renderCheck(c);}
+function addItem(c){DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력'});DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});markDirty();renderCheck(c);}
 function delItem(c,i){if(!confirm('이 점검항목을 삭제할까요?'))return;DATA.items[c].splice(i,1);DATA.res[c].splice(i,1);markDirty();renderCheck(c);}
 /* ===== 공장 LAY-OUT ===== */
 function renderLayout(){
@@ -219,7 +223,7 @@ function delPin(i){DATA.layout.pins.splice(i,1);markDirty();renderLayout();}
 function renderDash(){
  el('strip').innerHTML='';
  var tot=0,tg=0,tw=0,tb=0,acts=[];
- CATS.forEach(function(c){DATA.res[c].forEach(function(x,i){tot++;if(x.r==='양호')tg++;else if(x.r==='주의')tw++;else if(x.r==='불량')tb++;if(x.r==='불량'||x.r==='주의')acts.push({c:c,item:DATA.items[c][i].t,loc:x.loc,r:x.r,a:x.a});});});
+ CATS.forEach(function(c){DATA.res[c].forEach(function(x,i){tot++;if(x.r==='양호')tg++;else if(x.r==='주의')tw++;else if(x.r==='불량')tb++;if(x.r==='불량'||x.r==='주의')acts.push({c:c,item:DATA.items[c][i].t,loc:x.loc,r:x.r,a:x.a,actBy:x.actBy,actDate:x.actDate});});});
  var rate=tot?Math.round((tot-tw-tb)/tot*100):0;
  el('strip').innerHTML='<div class="kpi"><div class="l">총 점검항목</div><div class="v">'+tot+'</div></div>'+
   '<div class="kpi g"><div class="l">양호</div><div class="v">'+tg+'</div></div>'+
@@ -235,10 +239,10 @@ function renderDash(){
    (b?'<div class="seg r" style="width:'+(b/t*100)+'%">'+b+'</div>':'')+'</div></div>';});
  h+='<div style="font-size:11.5px;color:#64748b;margin-top:4px">■ <span style="color:#1e8e4e">양호</span> ■ <span style="color:#b8860b">주의</span> ■ <span style="color:#C62828">불량</span></div></div>';
  h+='<div class="chartcard"><h3>🛠️ 조치 필요 내역 ('+acts.length+'건) <span style="font-size:11.5px;color:#64748b;font-weight:400">· 불량/주의 항목</span></h3>';
- h+='<div class="tbl-wrap"><table class="acttbl"><tr><th style="width:60px">구분</th><th>점검항목</th><th style="width:130px">위치/설비</th><th style="width:70px">결과</th><th>조치사항</th></tr>';
- if(!acts.length)h+='<tr><td colspan="5" style="text-align:center;color:#1e8e4e;padding:18px;font-weight:800">✅ 이상 항목 없음 (전체 양호)</td></tr>';
+ h+='<div class="tbl-wrap"><table class="acttbl"><tr><th style="width:60px">항목분류</th><th>점검항목</th><th style="width:120px">위치/설비</th><th style="width:64px">결과</th><th>조치사항</th><th style="width:80px">조치자</th><th style="width:100px">조치일자</th></tr>';
+ if(!acts.length)h+='<tr><td colspan="7" style="text-align:center;color:#1e8e4e;padding:18px;font-weight:800">✅ 이상 항목 없음 (전체 양호)</td></tr>';
  acts.sort(function(a,b){return (a.r==='불량'?0:1)-(b.r==='불량'?0:1);});
- acts.forEach(function(a){h+='<tr class="'+(a.r==='불량'?'bad':'')+'"><td style="text-align:center;font-weight:700">'+a.c+'</td><td class="item">'+esc(a.item)+'</td><td>'+esc(a.loc||'-')+'</td><td style="text-align:center;font-weight:800;color:'+(a.r==='불량'?'#C62828':'#B8860B')+'">'+a.r+'</td><td>'+esc(a.a||'(조치 미입력)')+'</td></tr>';});
+ acts.forEach(function(a){h+='<tr class="'+(a.r==='불량'?'bad':'')+'"><td style="text-align:center;font-weight:700">'+a.c+'</td><td class="item">'+esc(a.item)+'</td><td>'+esc(a.loc||'-')+'</td><td style="text-align:center;font-weight:800;color:'+(a.r==='불량'?'#C62828':'#B8860B')+'">'+a.r+'</td><td>'+esc(a.a||'(조치 미입력)')+'</td><td>'+esc(a.actBy||'-')+'</td><td>'+esc(a.actDate||'-')+'</td></tr>';});
  h+='</table></div></div>';
  h+='</div>';
  el('body').innerHTML=h;
