@@ -3,6 +3,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="승정 이상·안전·소방 신고">
 <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c0392b">
+<link rel="apple-touch-icon" href="sj-icon.png">
+<link rel="icon" href="sj-icon.png">
 <title>㈜승정 · 설비이상·안전·소방 통합 신고</title>
 <style>
 :root{
@@ -66,6 +70,8 @@ table.form textarea{min-height:70px}
 .cambar{display:flex;gap:14px;padding:18px;background:#000;justify-content:center;align-items:center}
 .camshot{width:72px;height:72px;border-radius:50%;background:#fff;border:6px solid #c0392b;cursor:pointer;box-shadow:0 0 0 3px #fff}
 .camshot:active{transform:scale(.94)}
+.installbtn{width:100%;background:#123a52;color:#fff;border:0;border-radius:12px;padding:14px;font:inherit;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:12px;box-shadow:0 2px 8px rgba(18,58,82,.25)}
+.installbtn:active{opacity:.85}
 .submit{width:100%;background:#c0392b;color:#fff;border:none;border-radius:13px;padding:17px;font:inherit;font-size:18px;font-weight:800;cursor:pointer;margin-top:4px}
 .submit:active{opacity:.85}
 .st{font-size:11px;text-align:center;color:var(--dim);margin-top:8px}
@@ -89,6 +95,7 @@ table.form textarea{min-height:70px}
  <div class="langbar" id="langbar"></div>
 
  <div class="body">
+  <button type="button" id="installBtn" class="installbtn" style="display:none" onclick="doInstall()">📲 홈 화면에 추가</button>
   <div class="card">
    <div class="t"><span class="n">📝</span><span data-k="formTitle">비상신고서</span></div>
    <table class="form">
@@ -170,6 +177,9 @@ var T={
  photoAlbum:{ko:'🖼️ 앨범',en:'🖼️ Album',vi:'🖼️ Thư viện',th:'🖼️ อัลบั้ม',km:'🖼️ អាល់ប៊ុម',ne:'🖼️ एल्बम'},
  camTip:{ko:'현장을 비추고 아래 버튼을 누르세요',en:'Aim at the scene, press the button',vi:'Hướng vào hiện trường, nhấn nút',th:'เล็งไปที่จุดเกิดเหตุ กดปุ่ม',km:'តម្រង់ទៅកន្លែង ចុចប៊ូតុង',ne:'दृश्यमा तेर्स्याएर बटन थिच्नुहोस्'},
  camFail:{ko:'카메라를 열 수 없어 파일 선택으로 전환합니다',en:'Camera unavailable — using file picker',vi:'Không mở được camera — chọn tệp',th:'เปิดกล้องไม่ได้ — เลือกไฟล์',km:'មិនអាចបើកកាមេរ៉ា — ជ្រើសឯកសារ',ne:'क्यामेरा खुलेन — फाइल छान्नुहोस्'},
+ installBtn:{ko:'📲 홈 화면에 추가 (앱처럼 사용)',en:'📲 Add to Home Screen',vi:'📲 Thêm vào màn hình chính',th:'📲 เพิ่มลงหน้าจอหลัก',km:'📲 បន្ថែមទៅអេក្រង់ដើម',ne:'📲 होम स्क्रिनमा थप्नुहोस्'},
+ installIOS:{ko:'아이폰: 하단 공유버튼(⬆️)을 누른 뒤 "홈 화면에 추가"를 선택하세요.',en:'iPhone: tap Share (⬆️) then "Add to Home Screen".',vi:'iPhone: nhấn Chia sẻ (⬆️) rồi "Thêm vào màn hình chính".',th:'iPhone: กดปุ่มแชร์ (⬆️) แล้วเลือก "เพิ่มลงหน้าจอหลัก"',km:'iPhone: ចុចប៊ូតុងចែករំលែក (⬆️) រួចជ្រើស "បន្ថែមទៅអេក្រង់ដើម"',ne:'iPhone: सेयर बटन (⬆️) थिचेर "Add to Home Screen" रोज्नुहोस्।'},
+ installAndroid:{ko:'브라우저 메뉴(⋮)를 누른 뒤 "홈 화면에 추가"를 선택하세요.',en:'Browser menu (⋮) then "Add to Home Screen".',vi:'Menu trình duyệt (⋮) rồi "Thêm vào màn hình chính".',th:'เมนูเบราว์เซอร์ (⋮) แล้วเลือก "เพิ่มลงหน้าจอหลัก"',km:'ម៉ឺនុយកម្មវិធីរុករក (⋮) រួចជ្រើស "បន្ថែមទៅអេក្រង់ដើម"',ne:'ब्राउजर मेनु (⋮) मा गएर "Add to Home Screen" रोज्नुहोस्।'},
  photoHint:{ko:'휴대폰 카메라로 촬영하거나 앨범에서 선택 · 자동 저장',en:'Take a photo or pick from album · saved automatically',vi:'Chụp ảnh hoặc chọn từ album · tự lưu',th:'ถ่ายรูปหรือเลือกจากอัลบั้ม · บันทึกอัตโนมัติ',km:'ថតរូប ឬជ្រើសពីអាល់ប៊ុម · រក្សាទុកស្វ័យប្រវត្តិ',ne:'फोटो खिच्नुहोस् वा एल्बमबाट रोज्नुहोस् · स्वतः सेभ'},
  photoBusy:{ko:'사진 처리 중…',en:'Processing…',vi:'Đang xử lý…',th:'กำลังประมวลผล…',km:'កំពុងដំណើរការ…',ne:'प्रशोधन हुँदै…'},
  contentPh:{ko:'무엇이 어떻게 이상한지 적어주세요',en:'Describe what is wrong',vi:'Mô tả sự cố',th:'อธิบายปัญหา',km:'ពិពណ៌នាបញ្ហា',ne:'के बिग्रियो लेख्नुहोस्'},
@@ -272,6 +282,7 @@ function applyLang(){
  document.getElementById('submitBtn').textContent=tr('submit');
  document.getElementById('myTitle').textContent=tr('myTitle');
  document.getElementById('adminLink').textContent=tr('adminLink');
+ document.getElementById('installBtn').textContent=tr('installBtn');
  fillCats(); renderPhotoPrev(); renderMy();
  setSt(window.__cloudOk?tr('cloudOk'):tr('localMode'), window.__cloudOk?'#2f9e44':'#d64545');
 }
@@ -383,9 +394,24 @@ async function refreshStatus(){
  renderMy();
 }
 
+/* PWA: 홈 화면에 추가(앱 설치) */
+var deferredPrompt=null;
+function isStandalone(){try{return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}catch(e){return false;}}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;var b=document.getElementById('installBtn');if(b&&!isStandalone())b.style.display='block';});
+window.addEventListener('appinstalled',function(){deferredPrompt=null;var b=document.getElementById('installBtn');if(b)b.style.display='none';});
+function doInstall(){
+ if(deferredPrompt){deferredPrompt.prompt();try{deferredPrompt.userChoice.finally(function(){deferredPrompt=null;document.getElementById('installBtn').style.display='none';});}catch(e){}return;}
+ var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+ toast(tr(ios?'installIOS':'installAndroid'));
+}
+function initInstallBtn(){var b=document.getElementById('installBtn');if(!b)return;
+ if(isStandalone()){b.style.display='none';return;}
+ /* 모바일이면 항상 노출(안드로이드는 위 이벤트로 기능, iOS는 안내) */
+ if(/iphone|ipad|ipod|android/i.test(navigator.userAgent))b.style.display='block';}
+
 /* init */
 LANG=detectLang();document.documentElement.lang=LANG;
-buildLangBar(); applyLang(); renderMy(); refreshStatus();
+buildLangBar(); applyLang(); initInstallBtn(); renderMy(); refreshStatus();
 try{ if(window.SB) window.SB.channel("safety_rt_m")
   .on("postgres_changes",{event:"*",schema:"public",table:"app_state",filter:"key=eq."+KEY},refreshStatus).subscribe(); }catch(e){}
 </script>

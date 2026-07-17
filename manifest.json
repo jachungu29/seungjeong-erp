@@ -1,0 +1,16 @@
+{
+  "name": "승정 안전신고",
+  "short_name": "안전신고",
+  "description": "설비이상·안전·소방 통합 비상신고",
+  "start_url": "이상안전신고.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1d22",
+  "theme_color": "#c0392b",
+  "lang": "ko",
+  "icons": [
+    { "src": "sj-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "sj-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

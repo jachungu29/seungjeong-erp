@@ -54,6 +54,7 @@
  <b>🖨️ 비상신고 QR 포스터</b>
  <span class="hint">아래 [인쇄] → A4로 출력해 현장에 붙이세요</span>
  <span class="sp"></span>
+ <button onclick="shareLink()" style="background:#111;margin-right:8px">📤 카톡·문자로 공유</button>
  <button onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
 </div>
 
@@ -100,6 +101,13 @@
 <script>
 var URL_="https://jachungu29.github.io/seungjeong-erp/sos.html";
 document.getElementById('urlText').textContent=URL_;
+function shareLink(){
+ var data={title:'승정 안전신고',text:'설비이상·안전·소방 현장 신고 (휴대폰·사진 촬영 가능). 아래 링크를 눌러 신고하세요.',url:URL_};
+ if(navigator.share){navigator.share(data).catch(function(){});return;}
+ var msg='승정 설비이상·안전·소방 신고\n'+URL_;
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(function(){alert('신고 링크가 복사되었습니다.\n카카오톡 단체방에 붙여넣기(길게 눌러 붙여넣기) 하세요:\n\n'+URL_);},function(){alert(msg);});}
+ else{alert(msg);}
+}
 (function(){
  try{
   var qr=qrcode(0,'M');            // 0=자동 크기, M=오류복원(사진 위 인쇄에도 인식 잘 됨)
