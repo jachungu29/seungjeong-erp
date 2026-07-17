@@ -1,0 +1,704 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>부적합품 관리절차</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eef1f6;color:#1c2430;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
+header{background:linear-gradient(90deg,#123a52,#0d6e8c);color:#fff;padding:12px 18px;position:sticky;top:0;z-index:5}
+header .no{font-family:monospace;font-size:12px;opacity:.85;font-weight:700}
+header h1{margin:2px 0 0;font-size:19px;font-weight:800}
+header .meta{font-size:11.5px;opacity:.85;margin-top:3px}
+header button{float:right;background:#fff;color:#123a52;border:0;border-radius:8px;padding:7px 13px;font:inherit;font-weight:800;cursor:pointer;margin-left:8px}
+.wrap{padding:16px 18px 60px;overflow-x:auto}
+table{border-collapse:collapse;background:#fff;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+td{border:1px solid #c2ccd6;padding:5px 8px;vertical-align:top;white-space:pre-wrap;word-break:break-word;max-width:340px;line-height:1.5}
+h3.sh{margin:16px 0 6px;font-size:13px;color:#0d6e8c}
+@media print{header button{display:none}.wrap{overflow:visible}body{background:#fff}}
+</style></head><body>
+<header><button onclick="window.print()">🖨️ 인쇄</button><div class="no">SJQD-8019 · Rev 1</div><h1>부적합품 관리절차</h1><div class="meta">제·개정일 2018-03-20 · IATF16949 품질경영시스템 · ㈜승정 품질기획부</div></header>
+<div class="wrap"><h3 class="sh">시트 1</h3><table>
+<tr><td>품질경영 프로세스</td><td></td><td rowspan="2" colspan="7"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
+<tr><td></td><td></td><td colspan="2"></td><td colspan="3"></td></tr>
+<tr><td></td><td></td><td rowspan="2" colspan="7"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>3.5  샘플링검사</td><td></td><td></td><td></td><td></td><td></td><td></td><td>92</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>수량이 많은 로트의 제품 검사시 몇 개의 시료를 검사하여 로트전체의</td><td></td><td></td><td></td><td></td><td></td><td></td><td>94</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>품질을 판정하는 검사를 말한다.</td><td></td><td></td><td></td><td></td><td></td><td></td><td>96</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>4.관련 표준문서</td><td></td><td></td><td></td><td></td><td></td><td></td><td>98</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>99</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td>4.2 자격 관리 절차 (SJQD-7007)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>101</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td>4.3 식별 및 추적성 관리 프로세스 (SJQP-8014)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>103</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>4.4 부적합품 관리 절차(SJQD-8019)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>105</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>106</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>4.6 시정 및 예방 조치프로세스 (SJQP-9006)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>108</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>5.기록 및 보관</td><td></td><td></td><td></td><td></td><td></td><td></td><td>110</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>양   식   명</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">보존년한</td></tr>
+<tr><td></td><td>수입검사기준서</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">10년</td></tr>
+<tr><td></td><td>외관검사기준서</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">10년</td></tr>
+<tr><td></td><td>원재료 수입검사 기준서</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">10년</td></tr>
+<tr><td></td><td>수입검사 관리대장</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">5년</td></tr>
+<tr><td></td><td>공정검사 기준서</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">10년</td></tr>
+<tr><td></td><td>중점관리항목(Q-POINT)</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">5년</td></tr>
+<tr><td></td><td>출하검사 기준서</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">10년</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">5년</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">5년</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">5년</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">5년</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>129</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">보고양식</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="3">보고서</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td colspan="3">㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 2</h3><table>
+<tr><td rowspan="3" colspan="33">원재료 수입검사 성적서</td></tr>
+<tr></tr>
+<tr></tr>
+<tr><td colspan="14"></td><td colspan="17"></td></tr>
+<tr><td colspan="14"></td><td colspan="17"></td></tr>
+<tr><td colspan="14"></td><td colspan="17"></td></tr>
+<tr><td colspan="14"></td><td colspan="17"></td></tr>
+<tr><td colspan="20"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="18"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="18"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="18"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="18"></td></tr>
+<tr><td colspan="53"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="5"></td><td colspan="8"></td><td colspan="9"></td><td colspan="9"></td></tr>
+<tr><td colspan="10"></td><td colspan="15"></td><td colspan="28"></td></tr>
+<tr><td colspan="10"></td><td colspan="15"></td><td colspan="28"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="6">㈜승정</td></tr>
+</table><h3 class="sh">시트 3</h3><table>
+<tr><td rowspan="3" colspan="13">▣ &#x27;    년    월 수입검사 관리대장</td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2"></td><td rowspan="2"></td><td rowspan="2"></td></tr>
+<tr></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>입고날짜</td><td>협력사<br>(공급업체)</td><td>고객명</td><td>차종</td><td>부품품명</td><td>부품품번</td><td>입고<br>수량</td><td>LOT NO.</td><td>합격<br>여부</td><td>불량<br>수량</td><td>불량발생<br>건수</td><td>불량<br>유형</td><td>불량<br>원인</td><td>조치<br>방법</td><td>비고</td></tr>
+<tr><td>1</td><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>16</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>17</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>18</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>19</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>20</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>21</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>22</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>23</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>24</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>25</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>26</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>27</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>28</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>29</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>31</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>32</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>33</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>34</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>35</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>36</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>37</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>38</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>39</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>40</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>41</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>42</td><td>43</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>44</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>45</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>46</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>47</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>48</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>49</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>50</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>51</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>52</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>53</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>54</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>55</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>56</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>57</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>58</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>59</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>60</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>61</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>62</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>63</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>64</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>65</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>66</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>67</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>68</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>69</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>70</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>71</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>72</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>73</td><td>74</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>75</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>76</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>77</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>78</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>79</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>80</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>81</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>82</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>83</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>312</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="7"></td><td></td><td>329</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 4</h3><table>
+<tr><td colspan="2">EO.NO</td><td colspan="2"></td><td rowspan="2" colspan="15"></td><td rowspan="2" colspan="4"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td><td colspan="6"></td><td colspan="2"></td><td colspan="3"></td></tr>
+<tr><td></td><td>개<br>정<br>이<br>력</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="6"></td><td>NO</td><td colspan="3">제,개정일자</td><td colspan="4"></td><td></td><td>확인</td></tr>
+<tr><td>0</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">1</td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">2</td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">3</td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">4</td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">345</td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="11"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10">부적합발생 LOT를 파악한다.</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10">부적합품 및 부적합 LOT에 대하여 보관장소에 식별 보관한다.</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10">불량품에대한 원인분석을 실시한다</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10">중요품질문제 발생시 팀장에게 보고하여 시정 및 예방조치가 될수 있도록 한다.</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="5">검사항목</td><td colspan="2"></td><td></td><td>측정방법</td><td>비 고</td></tr>
+<tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="2"></td><td rowspan="6" colspan="3">2</td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="6"></td><td rowspan="6"></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="4"></td><td rowspan="4">5</td><td colspan="2"></td><td colspan="4"></td><td colspan="3"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="4"></td><td></td><td colspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="4"></td><td></td><td colspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="4"></td><td></td><td colspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="5">6</td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="5">355</td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="4"></td><td colspan="2">측정부위</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="2"></td><td colspan="18"></td><td colspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>㈜ 승 정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(297*210mm)</td></tr>
+</table><h3 class="sh">시트 5</h3><table>
+<tr><td rowspan="2">업체명</td><td rowspan="2">㈜승정</td><td rowspan="4" colspan="16">공정 순회 검사 CHECK SHEET         [            ]</td><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan="2"></td><td rowspan="2">373</td><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan="2"></td><td rowspan="2">주간 / 야간</td><td rowspan="3" colspan="7"></td><td></td><td></td><td>일 자</td><td colspan="10">변경점 및 세부내용</td></tr>
+<tr><td></td><td></td><td>379</td><td colspan="10"></td></tr>
+<tr><td rowspan="2"></td><td rowspan="2">2</td><td></td><td></td><td>380</td><td colspan="10"></td></tr>
+<tr><td colspan="3"></td><td></td><td colspan="4"></td><td></td><td>381</td><td colspan="10"></td></tr>
+<tr><td></td><td>작 성 자 (검사원)</td><td colspan="3"></td><td></td><td colspan="4"></td><td></td><td>383</td><td colspan="10"></td></tr>
+<tr><td rowspan="2"></td><td rowspan="2">판 정</td><td rowspan="3" colspan="2"></td><td colspan="5"></td><td rowspan="3"></td><td colspan="12">판 정</td></tr>
+<tr><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="7"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="8" colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td rowspan="3" colspan="6"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="8" colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td>388</td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td rowspan="3" colspan="6"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="8" colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td rowspan="3" colspan="6"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="3"></td><td rowspan="5" colspan="20"></td></tr>
+<tr></tr>
+<tr><td rowspan="3" colspan="3"></td></tr>
+<tr></tr>
+<tr></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 6</h3><table>
+<tr><td colspan="3">문서 번호</td><td colspan="5"></td><td rowspan="5" colspan="21"></td></tr>
+<tr><td colspan="3"></td><td colspan="5"></td></tr>
+<tr><td colspan="3"></td><td colspan="5"></td></tr>
+<tr><td colspan="3"></td><td colspan="5"></td></tr>
+<tr><td colspan="3"></td><td colspan="5"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td colspan="2">개정일</td><td colspan="10"></td><td colspan="26"></td></tr>
+<tr><td></td><td colspan="2">NO</td><td colspan="10"></td><td></td><td colspan="2">최초 발생일</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">1</td><td colspan="10"></td><td></td><td colspan="2">3</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">2</td><td colspan="10"></td><td></td><td colspan="2">4</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">3</td><td colspan="10"></td><td></td><td colspan="2">5</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">4</td><td colspan="10"></td><td></td><td colspan="2">6</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">5</td><td colspan="10"></td><td></td><td colspan="2">7</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">6</td><td colspan="10"></td><td></td><td colspan="2">8</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">7</td><td colspan="10"></td><td></td><td colspan="2">9</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">8</td><td colspan="10"></td><td></td><td colspan="2">10</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">9</td><td colspan="10"></td><td></td><td colspan="2">11</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">10</td><td colspan="10"></td><td></td><td colspan="2">12</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">11</td><td colspan="10"></td><td></td><td colspan="2">13</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">12</td><td colspan="10"></td><td></td><td colspan="2">14</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">13</td><td colspan="10"></td><td></td><td colspan="2">15</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">14</td><td colspan="10"></td><td></td><td colspan="2">16</td><td colspan="4"></td><td colspan="7"></td></tr>
+<tr><td></td><td colspan="2">15</td><td colspan="10"></td><td></td><td colspan="2">SJQD-8011-11(0)</td><td colspan="4"></td><td colspan="7"></td></tr>
+</table><h3 class="sh">시트 7</h3><table>
+<tr><td colspan="2">EO.NO</td><td colspan="2"></td><td rowspan="2" colspan="15"></td><td rowspan="2" colspan="4"></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td><td colspan="6"></td><td colspan="2"></td><td colspan="3"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>개<br>정<br>이<br>력</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="6"></td><td>NO</td><td colspan="3">제,개정일자</td><td colspan="4"></td><td></td><td>확인</td><td></td><td></td><td></td></tr>
+<tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">2</td><td colspan="4"></td><td rowspan="3"></td><td rowspan="3"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">3</td><td colspan="4"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">4</td><td colspan="4"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">5</td><td colspan="4"></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">461</td><td colspan="4"></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="11"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10">부적합및 검사 대기품 LOT 확인및 식별 구별한다.</td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10">부적합품 유출 여부 확인및 사내 전파하며 해당 ITEM 처리 완료시점까지 출하 금지 조치한다.</td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10">팀장에게 보고하여 시정 및 예방조치가 될수 있도록 한다.</td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="10"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="5">검사항목</td><td colspan="2"></td><td></td><td>측정방법</td><td>비 고</td><td></td><td></td><td></td></tr>
+<tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="8"></td><td rowspan="8" colspan="3">2</td><td colspan="2"></td><td colspan="2"></td><td rowspan="8"></td><td rowspan="9"></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td rowspan="2" colspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3">471</td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td></td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="4"></td><td colspan="2">측정부위</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="18"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>㈜ 승 정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(297*210mm)</td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 8</h3><table>
+<tr><td rowspan="4">업 체<br>SUPPLIER</td><td colspan="2">작 성<br>Prepared</td><td colspan="2"></td><td colspan="2"></td><td rowspan="4" colspan="10"></td><td rowspan="4"></td><td colspan="2">작 성<br>Prepared</td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td></tr>
+<tr></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td><td colspan="5"></td><td colspan="2"></td><td colspan="3"></td><td colspan="4"></td></tr>
+<tr><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td><td colspan="7"></td><td colspan="3"></td><td colspan="4"></td></tr>
+<tr><td colspan="3"></td><td colspan="4"></td><td rowspan="2" colspan="3"></td><td colspan="3"></td><td colspan="3"></td><td></td><td rowspan="2" colspan="3">합  부 판정<br>Judgement<br>(OK or NG)</td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td><td colspan="3"></td><td></td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td rowspan="3"></td><td colspan="2">Lot no</td><td colspan="3"></td><td rowspan="3"></td><td colspan="2">Lot no</td><td colspan="3"></td><td rowspan="3"></td><td colspan="2">Lot no</td><td colspan="3"></td><td rowspan="3"></td><td colspan="2">Lot no</td><td colspan="3"></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td></tr>
+<tr></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="24" colspan="22"></td></tr>
+<tr></tr>
+<tr><td rowspan="22" colspan="2"></td></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+<tr><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td rowspan="3" colspan="3"></td></tr>
+<tr><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td rowspan="10" colspan="2"></td><td></td><td colspan="2">2</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">3</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">4</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">5</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">6</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">7</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">8</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">9</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">10</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">509</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
+<tr><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td rowspan="2" colspan="3"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="10" colspan="2"></td><td></td><td colspan="2">2</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">3</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">4</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">5</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">6</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">7</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">8</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">9</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">10</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+<tr><td></td><td colspan="2">511</td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
+</table><h3 class="sh">시트 9</h3><table>
+<tr><td>427</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>AR Sub 1,2,3,4 LINE</td></tr>
+<tr><td>공정명</td><td></td><td></td><td></td><td></td><td></td><td></td><td>1차 사출 공정</td></tr>
+<tr><td>승인일자</td><td></td><td></td><td></td><td></td><td></td><td></td><td>2016.01.31</td></tr>
+<tr><td>유효기간</td><td></td><td></td><td></td><td></td><td></td><td></td><td>변경사항없을시자동연장</td></tr>
+<tr><td>작성자</td><td></td><td></td><td></td><td></td><td></td><td></td><td>품질보증팀 박동수</td></tr>
+<tr><td>관리번호</td><td></td><td></td><td></td><td></td><td></td><td></td><td>QC-2016-002</td></tr>
+</table><h3 class="sh">시트 10</h3><table>
+<tr><td>품질경영 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-8018</td><td colspan="2"></td><td></td></tr>
+<tr><td>개정차수</td><td colspan="2"></td><td></td></tr>
+<tr><td>검사 및 시험 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td></td></tr>
+<tr><td>페이지</td><td colspan="2"></td><td></td></tr>
+<tr><td>142</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td></td><td rowspan="2">주요 타스크<br>(WHO)</td><td>업무</td><td>산출물</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="2">적용문서</td></tr>
+<tr><td colspan="2"></td><td></td><td></td><td>( Output )</td><td>주관</td><td>협조</td></tr>
+<tr><td></td><td></td><td rowspan="8"></td><td>1.수입검사</td><td rowspan="8">발생시</td><td rowspan="8">거래명세서</td><td rowspan="8">품질팀<br><br><br><br>생산팀</td><td rowspan="8">구매팀<br><br><br><br>품질팀</td><td rowspan="8">해당<br>부서장</td><td rowspan="8" colspan="2">구매업무프로세스<br>(SJQP-8003)</td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td rowspan="18"></td><td rowspan="18">1. 수입검사공급업체 검사성적서 확인 후 &quot;검사기준서&quot;에<br>   의거 샘플링 검사를 실시한다. <br>2. 공정검사<br>  1) (   ) 작업자초,중,종물 시간대에 &quot;작업표준서&quot;에<br>     의거 샘플링 검사를 실시한다. 외관검사는 전수검사<br>     로 실시한다. <br>  2) 공정 순회 검사자는 작업셋업 검증을 수행 해야한다<br>     a. 작업 셋업은 작업의 첫 가동, 자재교체, 또는 <br>        새로운 셋업이 요구되는 작업 변경과 같이 수행<br>        될때 검증되어야 한다.<br>     b.셋업 인원을 위한 문서화된 정보를 유지하여야 <br>       하고,해당되는 경우 통계적 검증 방법을 사용하여<br>      야 한다<br>     d.해당되는 경우 초물/종물 부품 실현성 확인/타당성<br>       확인을 수행한다. 초물 부품은 종물 부품과 비교를<br>       위해 보존되어야 하며, 종물 부품은 후속되는 <br>       가동에서의 초물 부품과 비교를 위해 보존 되어야<br>       한다.<br>     e.셋업 및 초물/종물 부품 실현성확인/타당성확인에<br>       따르는 공정 및 제품 승인 프로세스 기록을 보존<br>       한다. <br>3. 출하검사<br>   출하대장에 의거 출하검사를 실시한다.<br>4. 검사원은 &quot;자격관리규정&quot;에 따라 자격인증이 보증되어<br>   야 한다.<br>5. 검사 기록은 고객요구시 이용 가능하며, 활용될 수<br>    있을것.<br>6. 조직은 제품 및 서비스 요구사항이 충족되었는지 검증<br>   하기 위하여 적절한 단계에서 계획된 결정사항을 실행<br>   하여야 한다.<br>7. 계획된 결정사항이 만족스럽게 완료될 때까지 제품 <br>   및 서비스는 고객에게 불출되지 않아야 한다. 다만<br>   관련 권한을 가진 자가 승인하고 고객이 승인한 때<br>   에는 불출할 수 있다.</td><td rowspan="18">발생시</td><td rowspan="18">생산일보<br><br><br><br><br><br>검사<br>작업일보</td><td rowspan="18">생산팀<br><br><br><br><br><br><br>품질팀</td><td rowspan="18">-</td><td rowspan="18">생산<br>부서장<br><br><br><br><br><br>품질<br>부서장</td><td rowspan="18" colspan="2">교육훈련프로세스<br>(SJQP-7006)<br>자격관리 절차<br>(SJQD-7007)</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td>㈜승정</td><td></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 11</h3><table>
+<tr><td>품질경영 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-8018</td><td colspan="2"></td><td></td></tr>
+<tr><td>개정차수</td><td colspan="2"></td><td></td></tr>
+<tr><td>검사 및 시험 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td></td></tr>
+<tr><td>페이지</td><td colspan="2"></td><td></td></tr>
+<tr><td>142</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td></td><td rowspan="2">주요 타스크<br>(WHO)</td><td>업무</td><td>산출물</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="2">적용문서</td></tr>
+<tr><td colspan="2"></td><td></td><td></td><td>( Output )</td><td>주관</td><td>협조</td></tr>
+<tr><td></td><td></td><td rowspan="26"></td><td rowspan="26"></td><td rowspan="26">발생시</td><td rowspan="26">정밀시험<br>보고서</td><td rowspan="26">품질팀</td><td rowspan="26">-</td><td rowspan="26">품질<br>부서장</td><td rowspan="26" colspan="2">교육훈련 프로세스<br>(SJQP-7006)<br>자격관리 절차<br>(SJQD-7007)</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td>㈜승정</td><td></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 12</h3><table>
+<tr><td>품질경영 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-8018</td><td colspan="2"></td><td></td></tr>
+<tr><td>개정차수</td><td colspan="2"></td><td></td></tr>
+<tr><td>검사 및 시험 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td></td></tr>
+<tr><td>페이지</td><td colspan="2"></td><td></td></tr>
+<tr><td>192</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td></td><td rowspan="2">주요 타스크<br>(WHO)</td><td>업무</td><td>산출물</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="2">적용문서</td></tr>
+<tr><td colspan="2"></td><td></td><td></td><td>( Output )</td><td>주관</td><td>협조</td></tr>
+<tr><td></td><td></td><td rowspan="20"></td><td rowspan="20"></td><td rowspan="20">발생시</td><td rowspan="20">생산일보<br>검사작업<br>일보</td><td rowspan="20">품질팀</td><td rowspan="20">-</td><td rowspan="20">품질<br>부서장</td><td rowspan="20" colspan="2">교육훈련프로세스<br>(SJQP-7006)<br>자격관리절차<br>(SJQD-7007)</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td><td rowspan="7"></td><td rowspan="7">1. 검사결과에 대한 식별은 &quot;식별 및 추적성 관리<br>   프로세스&quot;를 참조한다.<br>2. 수입검사 결과 거래명세표, 포장용기의 식별표에<br>   합부판정 후 판매부서담당자에게 통보<br>3. 출하검사 결과 검사완료품은 적재 단위별로 <br>   &quot;검사완료&quot; 라벨 및 도장으로 식별한다.<br>4. 출하검사 후, 출하검사성적서를 작성하여 제품 <br>   출하담당자에게 인계한다.</td><td rowspan="7">검사후</td><td rowspan="7">수입검사일지<br><br>출하검사대장</td><td rowspan="7">품질팀</td><td rowspan="7">품질팀<br><br>생산팀</td><td rowspan="7">해당<br>부서장</td><td rowspan="7" colspan="2">식별 및 추적성<br>관리 프로세스<br>(SJQP-8014)</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td>㈜승정</td><td></td><td></td><td>A4 ( 297x210 )</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 13</h3><table>
+<tr><td>품질경영 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-8018</td><td colspan="2"></td><td></td></tr>
+<tr><td>개정차수</td><td colspan="2"></td><td></td></tr>
+<tr><td>검사 및 시험 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td></td></tr>
+<tr><td>페이지</td><td colspan="2"></td><td></td></tr>
+<tr><td>142</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td></td><td rowspan="2">주요 타스크<br>(WHO)</td><td>업무</td><td>산출물</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="2">적용문서</td></tr>
+<tr><td colspan="2"></td><td></td><td></td><td>( Output )</td><td>주관</td><td>협조</td></tr>
+<tr><td></td><td></td><td rowspan="6"></td><td rowspan="6">1.수입검사<br> 1) 합격된 원,부자재 및 제품은 제품 창고 및 <br>    자재보관소에 입고한다.<br> 2) 부적합 판정시 공급업체로 격리 및 반출<br>2.공정검사<br>  합격품은 다음 공정으로 입고한다.<br>3.출하검사<br>  합격된 제품은 고객 포장사양 별로 포장하고<br>  고객에게 납품한다.</td><td rowspan="6">검사후</td><td rowspan="6">수입검사대장<br><br><br><br><br><br>출하검사<br>성적서</td><td rowspan="6">구매팀<br><br><br><br><br><br>품질팀</td><td rowspan="6">생산팀</td><td rowspan="6">해당<br>부서장</td><td rowspan="6" colspan="2">227</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td><td rowspan="6"></td><td rowspan="6">1.부적합 원,부자재 및 제품의 처리는 &quot;부적합품<br>  관리 프로세스&quot;에 따라 처리한다.<br>2.재검사,재작업 결과 기록은 &quot;부적합품처리 대<br>  장&quot;에 기록한다. <br>3.시정 및 예방조치 프로세스에 따라 시정조치<br>  요구서를 발행하여 해당부서에 발행한다.</td><td rowspan="6">발생시</td><td rowspan="6">부적합품<br>처리대장<br>부적합 발생<br>통보서</td><td rowspan="6">해당팀</td><td rowspan="6">품질팀</td><td rowspan="6">해당<br>부서장</td><td rowspan="6" colspan="2">부적합품<br>관리절차<br>(SJQD-8019)<br>시정및예방<br>조치 프로세스<br>(SJQP-9006)</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td><td rowspan="5"></td><td rowspan="5">1.수입검사<br>  자재의 경우 해당업체로 반품처리or선별요청<br>2.공정검사 및 출하검사<br>  재검사,재작업 로트는 별도 로트를 구분하여 <br>  검사 재의뢰</td><td rowspan="5">발생시</td><td rowspan="5">부적합품<br>처리대장</td><td rowspan="5">해당팀</td><td rowspan="5">품질팀</td><td rowspan="5">해당<br>부서장</td><td rowspan="5" colspan="2">식별 및 추적성<br>관리 프로세스<br>(SJQP-8014)</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td><td rowspan="4"></td><td rowspan="4"></td><td rowspan="4">발생시</td><td rowspan="4">검사성적서<br>부적합품<br>처리대장</td><td rowspan="4">품질팀</td><td rowspan="4">해당팀</td><td rowspan="4">해당<br>부서장</td><td rowspan="4" colspan="2">237</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td><td rowspan="4"></td><td rowspan="4">1.월간 단위 검사현황에 대한 데이터 집계 및 <br>  품질경향 분석</td><td rowspan="4">매월</td><td rowspan="4">월 품질현황</td><td rowspan="4">품질팀</td><td rowspan="4">생산팀</td><td rowspan="4">해당<br>부서장</td><td rowspan="4" colspan="2">지속적 개선<br>프로세스<br>(SJQP-9001)</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td>㈜승정</td><td></td><td></td><td>A4 ( 297x210 )</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 14</h3><table>
+<tr><td colspan="2">EO.NO</td><td colspan="2"></td><td rowspan="2" colspan="15"></td><td rowspan="2" colspan="4"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td></tr>
+<tr><td colspan="23"></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td><td colspan="6"></td><td colspan="2"></td><td colspan="3"></td></tr>
+<tr><td colspan="2"></td><td></td><td rowspan="22" colspan="9"></td><td rowspan="6"></td><td>NO</td><td colspan="3">제,개정일자</td><td colspan="4"></td><td></td><td>확인</td></tr>
+<tr><td rowspan="21" colspan="3">0</td><td></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td></tr>
+<tr><td colspan="11"></td></tr>
+<tr><td></td><td colspan="10">전량반송을 원칙으로 하고 불가시 부적합TAG 부착하여 격리후 반송조치 할것</td></tr>
+<tr><td></td><td colspan="10">합격시 &quot;합격&quot;고무인 직인후 입고 처리 할것.</td></tr>
+<tr><td></td><td colspan="10">부적합보고서를 발행하고 개선 대책서를 접수한다.</td></tr>
+<tr><td></td><td colspan="10">개선된제품은 부적합 대책과 함께 유효성을 검증한다.</td></tr>
+<tr><td></td><td colspan="5">검사항목</td><td colspan="2"></td><td></td><td>측정방법</td><td>비 고</td></tr>
+<tr><td rowspan="10"></td><td rowspan="10" colspan="3">6</td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="6"></td><td rowspan="10"></td><td rowspan="10"></td></tr>
+<tr></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td></tr>
+<tr></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td></tr>
+<tr></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td rowspan="4"></td></tr>
+<tr><td rowspan="3" colspan="2"></td><td rowspan="3" colspan="2"></td></tr>
+<tr></tr>
+<tr></tr>
+<tr><td rowspan="4"></td><td colspan="2">측정부위</td><td></td><td>-2</td><td>-3</td><td>-4</td><td>-5</td><td>-6</td><td>-7</td><td>-8</td><td>-9</td><td colspan="2">-10</td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="15"></td><td></td><td></td><td></td><td colspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>㈜ 승 정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(297*210mm)</td></tr>
+</table><h3 class="sh">시트 15</h3><table>
+<tr><td rowspan="3" colspan="10">수입검사 성적서</td><td></td><td rowspan="3"></td><td colspan="2">작  성</td><td colspan="2"></td><td></td><td>36</td></tr>
+<tr><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td><td colspan="4"></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td><td colspan="4"></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td><td colspan="4"></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td></td><td colspan="2">검 사 자</td><td colspan="4"></td><td></td><td>47</td><td colspan="4"></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="4"></td><td></td><td rowspan="4" colspan="5">48</td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td colspan="10"></td><td rowspan="2"></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
+<tr><td rowspan="3" colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td></td><td></td><td colspan="2"></td><td colspan="10"></td><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td></tr>
+<tr><td></td><td></td><td rowspan="2"></td><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2"></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>주식회사 승정</td><td></td><td></td><td></td><td></td><td></td><td>A4(210*297)mm</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table><h3 class="sh">시트 16</h3><table>
+<tr><td rowspan="2" colspan="7">외관검사기준서</td><td rowspan="2"></td><td>작   성</td><td>검   토</td><td>승   인</td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td colspan="4"></td><td colspan="2"></td></tr>
+<tr><td colspan="2"></td><td colspan="3"></td><td colspan="4"></td><td colspan="2"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="7">외<br>관<br>검<br>사</td><td>NO</td><td colspan="2">관리 항목</td><td colspan="4"></td><td></td><td>검사구</td><td>주기</td></tr>
+<tr><td></td><td colspan="2">2</td><td colspan="4"></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2"></td><td rowspan="2" colspan="2">3</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2"></td><td rowspan="2"></td></tr>
+<tr></tr>
+<tr><td></td><td colspan="2">4</td><td colspan="4"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td colspan="2">5</td><td colspan="4"></td><td></td><td></td><td></td></tr>
+<tr><td></td><td colspan="2">262</td><td colspan="4"></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="4"></td><td>순</td><td>개정일</td><td colspan="2">개정 내용</td><td></td><td>순</td><td colspan="3">개정 내용</td><td></td></tr>
+<tr><td></td><td>3</td><td colspan="2"></td><td></td><td></td><td colspan="3">1</td><td></td></tr>
+<tr><td></td><td>4</td><td colspan="2"></td><td></td><td></td><td colspan="3">2</td><td></td></tr>
+<tr><td></td><td>5</td><td colspan="2"></td><td></td><td></td><td colspan="3"></td><td></td></tr>
+</table><h3 class="sh">시트 17</h3><table>
+<tr><td rowspan="3" colspan="12">원재료 수입검사기준서</td></tr>
+<tr></tr>
+<tr></tr>
+<tr><td colspan="3"></td><td colspan="4"></td><td colspan="5"></td></tr>
+<tr><td colspan="3">273</td><td colspan="4"></td><td colspan="5"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
+<tr><td colspan="9"></td><td colspan="4"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td colspan="3">검사항목</td><td colspan="6"></td><td colspan="2"></td></tr>
+<tr><td>1</td><td colspan="3">2</td><td colspan="6"></td><td rowspan="3" colspan="2"></td></tr>
+<tr><td></td><td colspan="3">3</td><td colspan="6"></td></tr>
+<tr><td></td><td colspan="3">275</td><td colspan="6"></td></tr>
+<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td></tr>
+<tr><td></td><td colspan="3">검사항목</td><td colspan="2"></td><td colspan="4"></td><td colspan="2"></td></tr>
+<tr><td>1</td><td colspan="3">2</td><td colspan="2"></td><td colspan="4"></td><td rowspan="11" colspan="2"></td></tr>
+<tr><td></td><td colspan="3">3</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">4</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">5</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">6</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">7</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">`</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td>8</td><td colspan="3">9</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">10</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">11</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td colspan="3">283</td><td colspan="2"></td><td colspan="4"></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td colspan="2">개정일자</td><td colspan="10"></td></tr>
+<tr><td></td><td colspan="2">1</td><td colspan="10"></td></tr>
+<tr><td></td><td colspan="2">2</td><td colspan="10"></td></tr>
+<tr><td></td><td colspan="2">3</td><td colspan="10"></td></tr>
+<tr><td></td><td colspan="2">SJQP-8018-11(0)</td><td colspan="10"></td></tr>
+<tr><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td></td><td></td><td></td></tr>
+</table></div></body></html>
