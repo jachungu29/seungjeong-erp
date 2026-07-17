@@ -11,217 +11,267 @@ header h1{margin:0;font-size:16px;font-weight:800}
 .cloud{font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.18);font-weight:600}
 .cloud.on{background:#1e8e4e}.cloud.off{background:#7a8699}
 .status{font-size:12px;opacity:.95}
+.editbtn{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+.editbtn.on{background:#22c55e;color:#fff}
 .savebtn{background:var(--gold);color:#3a2a00;border:0;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
-.prnbtn{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 13px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-right:8px}
+.prnbtn{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 13px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
 .wrap{padding:12px 18px 40px}
-.tabbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.tabbtn{border:1.5px solid #b9cede;background:#fff;color:#4a6072;font-family:inherit;font-size:13.5px;font-weight:800;padding:9px 18px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.tabbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.tabbtn{border:1.5px solid #b9cede;background:#fff;color:#4a6072;font-family:inherit;font-size:13px;font-weight:800;padding:9px 15px;border-radius:9px;cursor:pointer}
 .tabbtn:hover{border-color:var(--teal);color:var(--teal)}
-.tabbtn.on{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.tabbtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
 .meta{display:flex;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:10px;align-items:center}
 .meta label{font-size:12px;color:var(--mut);font-weight:700;margin-right:4px}
 .meta input,.meta select{padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:12.5px;font-family:inherit}
-.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;margin-bottom:10px}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;margin-bottom:10px}
 .kpi{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:9px;padding:7px 12px}
 .kpi .l{font-size:11px;color:var(--mut);font-weight:600}.kpi .v{font-size:19px;font-weight:800;color:var(--navy);margin-top:1px}
 .kpi.g{border-left-color:#1e8e4e}.kpi.g .v{color:#1e8e4e}.kpi.o{border-left-color:var(--gold)}.kpi.o .v{color:#b8860b}.kpi.r{border-left-color:#C62828}.kpi.r .v{color:#C62828}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
 .phead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}.ptitle{font-size:15px;font-weight:800;color:var(--navy)}
+.addbtn{background:var(--teal);color:#fff;border:0;border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.ghostbtn{background:#fff;color:var(--teal);border:1px solid var(--teal);border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;min-width:840px}
-th{background:var(--navy);color:#fff;font-size:12px;font-weight:700;padding:8px 6px;white-space:nowrap;position:sticky;top:0;border-right:1px solid #1c5568}
-td{border-bottom:1px solid var(--line);border-right:1px solid #eef1f5;padding:6px 7px;vertical-align:middle;font-size:12.5px}
+table{border-collapse:collapse;width:100%;min-width:920px}
+th{background:var(--navy);color:#fff;font-size:11.5px;font-weight:700;padding:8px 5px;white-space:nowrap;position:sticky;top:0;border-right:1px solid #1c5568}
+td{border-bottom:1px solid var(--line);border-right:1px solid #eef1f5;padding:5px 6px;vertical-align:middle;font-size:12.5px}
 th:last-child,td:last-child{border-right:0}
 tr:nth-child(even) td{background:#f8fafc}
-td.no{text-align:center;color:var(--mut);font-weight:700;width:36px}
+td.no{text-align:center;color:var(--mut);font-weight:700;width:34px}
 td.item{font-weight:700;color:var(--navy)}
 td.std{color:#555;font-size:11.5px}
-td.res{text-align:center;width:110px}
+[contenteditable=true]{outline:1px dotted #f0b84a;border-radius:3px;background:#fffef5}
 select.rsel{padding:5px 4px;border:1px solid #cbd5e1;border-radius:6px;font-size:12.5px;font-family:inherit;font-weight:800;width:100%}
 select.rsel.r-양호{color:#1e8e4e}select.rsel.r-주의{color:#B8860B}select.rsel.r-불량{color:#C62828}select.rsel.r-해당없음{color:#94a3b8}
 tr.bad td{background:#fdeeee}
-input.act{width:100%;box-sizing:border-box;padding:5px 7px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;font-family:inherit}
+input.f{width:100%;box-sizing:border-box;padding:5px 6px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;font-family:inherit}
+.delx{background:#fff;color:#C62828;border:1px solid #E0A0A0;border-radius:6px;width:24px;height:24px;font-size:12px;cursor:pointer;font-weight:700}
 .hint{font-size:11.5px;color:var(--mut);margin-top:8px}
+/* 레이아웃 */
+.layctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.laybox{position:relative;border:1px solid var(--line);border-radius:10px;overflow:auto;background:#f4f6f8;max-height:640px}
+.layimg{display:block;max-width:100%}
+.layimg.pinmode{cursor:crosshair}
+.pin{position:absolute;transform:translate(-50%,-100%);z-index:5;display:flex;flex-direction:column;align-items:center;cursor:pointer}
+.pin .dot{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#C62828;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.pin .dot b{transform:rotate(45deg);color:#fff;font-size:12px;font-weight:800}
+.pin.설비 .dot{background:#1565c0}.pin.안전 .dot{background:#e08a00}.pin.소방 .dot{background:#C62828}
+.pinlist{margin-top:10px}
+.pinlist table{min-width:600px}
+.emptylay{padding:40px;text-align:center;color:#94a3b8;font-size:13px}
+/* 대시보드 */
+.dashgrid{display:grid;grid-template-columns:1fr;gap:12px}
+.chartcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+.chartcard h3{margin:0 0 8px;font-size:14px;color:var(--navy)}
+.bar{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar .nm{width:70px;font-weight:800;font-size:13px}
+.bar .track{flex:1;height:24px;background:#eef1f5;border-radius:6px;overflow:hidden;display:flex}
+.bar .seg{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+.seg.g{background:#1e8e4e}.seg.o{background:#F5A623}.seg.r{background:#C62828}
+.acttbl th{background:#7a1f2b}
 .printhead{display:none}.rpt-foot{display:none}
 @media print{
  @page{size:A4 portrait;margin:9mm}
- header,.tabbar,.strip,.savebtn,.prnbtn,.cloud,.status,.hint,.phead{display:none!important}
+ header,.tabbar,.strip,.savebtn,.prnbtn,.editbtn,.cloud,.status,.hint,.phead,.addbtn,.ghostbtn,.delx{display:none!important}
  .wrap{padding:0}.meta{border:0;padding:0;margin-bottom:6px}
  .printhead{display:block;margin-bottom:8px}
  .rpt-title{text-align:center;font-size:19px;font-weight:800;letter-spacing:2px}
  .rpt-sub{text-align:center;font-size:11px;color:#444;margin:3px 0 8px}
- .gyeolja{float:right;border-collapse:collapse;margin-bottom:6px}
+ .gyeolja{float:right;border-collapse:collapse}
  .gyeolja td{border:1px solid #333;text-align:center;font-size:9px;padding:2px 8px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
- .gyeolja td.gh{background:#eef2f5!important;color:#111!important;font-weight:700}.gyeolja td.sg{height:40px;width:60px}
- .card{border:0;padding:0}
- .tbl-wrap{overflow:visible!important;border:1px solid #888}
+ .gyeolja td.gh{background:#eef2f5!important;color:#111!important;font-weight:700}.gyeolja td.sg{height:40px;width:56px}
+ .card{border:0;padding:0}.tbl-wrap{overflow:visible!important;border:1px solid #888}
  table{min-width:0!important}
- th{background:#0b3d5c!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:9.5px;padding:4px 3px}
- td{padding:3px 4px;font-size:9.5px}
- select.rsel,input.act{border:0!important;background:transparent!important;font-size:9.5px!important;padding:1px!important;-webkit-appearance:none;appearance:none}
+ th{background:#0b3d5c!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:9px;padding:4px 3px}
+ td{padding:3px 4px;font-size:9px}
+ select.rsel,input.f{border:0!important;background:transparent!important;font-size:9px!important;padding:1px!important;-webkit-appearance:none;appearance:none}
  tr.bad td{background:#fdeeee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  .rpt-foot{display:block;text-align:right;font-size:9px;color:#666;margin-top:8px}
 }
 </style></head><body>
 <header>
- <h1>🛡️ 설비·안전·소방 정기점검 체크시트</h1>
+ <h1>🛡️ 설비·안전·소방 정기점검</h1>
  <span class="cloud" id="cloud">● 연결 확인 중</span>
  <span class="spacer"></span>
- <span class="status" id="st">불러오는 중…</span>
+ <span class="status" id="st"></span>
+ <button class="editbtn" id="editBtn" onclick="toggleEdit()">✏️ 항목편집</button>
  <button class="prnbtn" onclick="doPrint()">🖨️ 인쇄</button>
  <button class="savebtn" onclick="save()">💾 저장</button>
 </header>
 <div class="wrap">
  <div class="printhead" id="printhead"></div>
  <div class="tabbar" id="tabbar"></div>
- <div class="meta">
+ <div class="meta" id="meta">
   <span><label>점검일</label><input type="date" id="m_date"></span>
-  <span><label>점검주기</label><select id="m_cycle"><option>일일</option><option>주간</option><option>월간</option><option>분기</option></select></span>
-  <span><label>점검자</label><input id="m_insp" placeholder="점검자" style="width:100px"></span>
-  <span><label>확인자</label><input id="m_conf" placeholder="확인자(부서장)" style="width:120px"></span>
+  <span><label>주기</label><select id="m_cycle"><option>일일</option><option>주간</option><option>월간</option><option>분기</option></select></span>
+  <span><label>점검자</label><input id="m_insp" placeholder="점검자" style="width:90px"></span>
+  <span><label>확인자</label><input id="m_conf" placeholder="확인자" style="width:110px"></span>
   <span class="spacer"></span>
-  <span style="font-size:11.5px;color:#64748b">기본 <b style="color:#1e8e4e">양호</b> · <b style="color:#C62828">이상 항목만 주의/불량</b>으로 변경 후 조치 입력</span>
+  <span style="font-size:11.5px;color:#64748b">기본 <b style="color:#1e8e4e">양호</b> · 이상 항목만 <b style="color:#C62828">불량/주의</b> + <b>위치/설비</b> 입력</span>
  </div>
  <div class="strip" id="strip"></div>
- <div class="card">
-  <div class="phead"><span class="ptitle" id="ptitle">점검 항목</span></div>
-  <div class="tbl-wrap"><table id="tbl"></table></div>
-  <div class="hint">결과 <b>불량/주의</b> 항목은 <b>조치사항</b>을 반드시 입력하세요. 💾 저장 시 전 PC 공유, 🖨️ 인쇄로 결재 체크시트 출력.</div>
-  <div class="rpt-foot" id="rptfoot"></div>
- </div>
+ <div id="body"></div>
+ <div class="rpt-foot" id="rptfoot"></div>
 </div>
+<datalist id="eqdl"></datalist>
+<datalist id="locdl"><option>공장동 A</option><option>공장동 B</option><option>원료창고</option><option>완제품창고</option><option>사무동</option><option>출입구</option><option>식당</option><option>화기작업장</option><option>유틸리티실</option><option>옥외</option></datalist>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ===== 점검 항목 마스터 (사출·조립 제조현장 표준) ===== */
-const ITEMS={
- 설비:[
-  {t:"유압 압력",b:"규정 압력범위(사출/형체) 내 유지, 게이지 정상"},
-  {t:"유압유 누유",b:"실린더·배관·조인트 누유 없음"},
-  {t:"유압유 상태",b:"유량 적정, 오염·변색·과열 없음"},
-  {t:"배럴·노즐 히터 온도",b:"설정온도 대비 편차 정상, 단선 없음"},
-  {t:"금형 냉각수",b:"누수 없음, 유량·수온 정상, 호스 상태"},
-  {t:"형체·형개폐 작동",b:"이상음·떨림 없음, 리미트 정상"},
-  {t:"이젝터(취출) 작동",b:"전·후진 정상, 제품 취출 원활"},
-  {t:"안전문 인터록",b:"도어 열림 시 작동정지, 안전스위치 정상"},
-  {t:"유압·공압 호스",b:"균열·마모·꺾임·누기 없음"},
-  {t:"전기 제어반",b:"과열·스파크·냄새 없음, 단자 조임 상태"},
-  {t:"윤활·그리스",b:"주유부 급유 상태 양호, 유량 확인"},
-  {t:"벨트·체인",b:"장력 적정, 마모·손상 없음"},
-  {t:"압축공기",b:"공급압력 정상, 드레인 배출, 누기 없음"},
-  {t:"냉각기(칠러)",b:"수온·압력 정상, 경보 없음"},
-  {t:"호퍼·건조기",b:"온도·건조시간 정상, 이물 없음"},
-  {t:"취출로봇·컨베이어",b:"작동 정상, 이상음·정렬 상태"},
-  {t:"조립설비(리크검사·압입)",b:"게이지·설정압력 정상, 지그 상태"},
-  {t:"이상 진동·소음·경고등",b:"비정상 진동/소음 없음, 경고등 미점등"}
- ],
- 안전:[
-  {t:"안전보호구 착용",b:"장갑·보안경·안전화·귀마개 등 착용 준수"},
-  {t:"비상정지 버튼",b:"위치 식별 가능, 작동 정상"},
-  {t:"방호덮개·가드",b:"회전·구동부 가드 부착·고정 상태"},
-  {t:"통로·비상구 확보",b:"적치물 없음, 폭 확보, 표시 정상"},
-  {t:"바닥 상태",b:"미끄럼·기름유출·요철·수분 없음"},
-  {t:"전기 감전위험",b:"누전·피복손상·문어발·접지 상태"},
-  {t:"고온부 방호",b:"배럴·히터 등 화상위험부 표지·방호"},
-  {t:"지게차 운행",b:"경광등·후진경보·속도준수·유자격 운전"},
-  {t:"크레인·호이스트",b:"와이어·후크·안전장치 상태, 정기점검필"},
-  {t:"중량물 보관",b:"적재높이·전도방지·구획 준수"},
-  {t:"유해화학물질",b:"수지·이형제 밀폐보관, MSDS 비치·게시"},
-  {t:"환기·집진",b:"국소배기·집진기 정상 가동"},
-  {t:"소음·분진",b:"허용기준 이내, 보호구 지급"},
-  {t:"조명",b:"작업면 조도 적정, 등기구 파손 없음"},
-  {t:"정리정돈(3정5S)",b:"불용품 제거, 정위치·정품·정량"},
-  {t:"안전표지·경고표시",b:"위험지역·설비 표지 부착·식별"},
-  {t:"협착·끼임 위험",b:"위험지점 방호·표시, 접근제한"},
-  {t:"작업자 상태",b:"건강·피로·음주 등 이상 없음"}
- ],
- 소방:[
-  {t:"소화기",b:"위치·수량, 압력게이지 녹색, 유효기간, 봉인"},
-  {t:"옥내소화전",b:"호스·노즐·개폐밸브 정상, 표시등"},
-  {t:"스프링클러",b:"헤드 이물·도장·손상 없음, 살수 장애 없음"},
-  {t:"화재감지기",b:"연기·열감지기 부착·오염 없음"},
-  {t:"수신반",b:"전원·경보·표시등 정상, 예비축전지"},
-  {t:"비상방송·경보벨",b:"작동 시험 정상, 스피커 상태"},
-  {t:"유도등·비상조명",b:"상시 점등, 축전지 정상"},
-  {t:"비상구·피난통로",b:"개방 상태, 장애물 없음, 유도표지"},
-  {t:"방화문",b:"정상 개폐·자동폐쇄, 고임목 방치 없음"},
-  {t:"전기설비 과부하",b:"문어발·과열·임시배선 없음"},
-  {t:"가연물 관리",b:"불필요 가연물 방치 없음, 이격거리"},
-  {t:"화기작업 관리",b:"용접·절단시 소화기 비치·감시자 배치"},
-  {t:"위험물 저장·취급",b:"지정수량·저장기준·표지 준수"},
-  {t:"소방시설 주변",b:"소화기·소화전 앞 적치물 없음"},
-  {t:"대피 안내도",b:"층별 피난안내도 게시·최신화"},
-  {t:"소방안전관리",b:"관리자 지정·자위소방대·교육 실시"}
- ]
+const DEF_ITEMS={
+ 설비:[["유압 압력","규정 압력범위 유지, 게이지 정상"],["유압유 누유","실린더·배관·조인트 누유 없음"],["유압유 상태","유량 적정, 오염·과열 없음"],["배럴·노즐 히터 온도","설정온도 편차 정상, 단선 없음"],["금형 냉각수","누수 없음, 유량·수온 정상"],["형체·형개폐 작동","이상음·떨림 없음, 리미트 정상"],["이젝터(취출) 작동","전·후진 정상, 취출 원활"],["안전문 인터록","열림 시 정지, 스위치 정상"],["유압·공압 호스","균열·마모·누기 없음"],["전기 제어반","과열·스파크·냄새 없음"],["윤활·그리스","주유 상태 양호, 유량 확인"],["벨트·체인","장력 적정, 마모 없음"],["압축공기","공급압력 정상, 누기 없음"],["냉각기(칠러)","수온·압력 정상, 경보 없음"],["호퍼·건조기","온도·건조시간 정상"],["취출로봇·컨베이어","작동 정상, 정렬 상태"],["조립설비(리크·압입)","게이지·설정압력 정상"],["이상 진동·소음·경고등","비정상 진동/소음·경고등 없음"]],
+ 안전:[["안전보호구 착용","장갑·보안경·안전화·귀마개 준수"],["비상정지 버튼","위치 식별, 작동 정상"],["방호덮개·가드","회전·구동부 가드 부착"],["통로·비상구 확보","적치물 없음, 폭 확보"],["바닥 상태","미끄럼·기름유출·요철 없음"],["전기 감전위험","누전·피복손상·접지 상태"],["고온부 방호","화상위험부 표지·방호"],["지게차 운행","경광등·후진경보·유자격"],["크레인·호이스트","와이어·후크·안전장치"],["중량물 보관","적재높이·전도방지"],["유해화학물질","밀폐보관, MSDS 비치"],["환기·집진","국소배기·집진기 정상"],["소음·분진","허용기준 이내, 보호구"],["조명","조도 적정, 파손 없음"],["정리정돈(3정5S)","불용품 제거, 정위치"],["안전표지·경고표시","위험지역 표지 부착"],["협착·끼임 위험","위험지점 방호·표시"],["작업자 상태","건강·피로·음주 이상 없음"]],
+ 소방:[["소화기","위치·압력게이지·유효기간·봉인"],["옥내소화전","호스·노즐·밸브 정상"],["스프링클러","헤드 이물·손상 없음"],["화재감지기","연기·열감지기 정상"],["수신반","전원·경보·표시등 정상"],["비상방송·경보벨","작동 시험 정상"],["유도등·비상조명","상시 점등, 축전지"],["비상구·피난통로","개방, 장애물 없음"],["방화문","정상 개폐·자동폐쇄"],["전기설비 과부하","문어발·과열·임시배선 없음"],["가연물 관리","방치 없음, 이격거리"],["화기작업 관리","소화기 비치·감시자"],["위험물 저장","지정수량·표지 준수"],["소방시설 주변","소화기·소화전 앞 적치물 없음"],["대피 안내도","피난안내도 게시·최신"],["소방안전관리","관리자 지정·교육 실시"]]
 };
-const TABS=[["설비","🔧 설비 점검"],["안전","🦺 안전 점검"],["소방","🔥 소방 점검"]];
+const CATS=["설비","안전","소방"];
+const TABS=[["설비","🔧 설비 점검"],["안전","🦺 안전 점검"],["소방","🔥 소방 점검"],["layout","🏭 공장 LAY-OUT"],["dash","📊 대시보드"]];
 const RES=["양호","주의","불량","해당없음"];
-const LSKEY="safety_inspect_v1", CKEY="safety_inspect_v1";
+const EQLIST=["수직 1호기","수직 2호기","수직 3호기","수직 4호기","수직 5호기","수직 6호기","수직 7호기","수직 8호기","수평 1호기","수평 2호기","수평 3호기","수평 4호기","수평 6호기","수평 7호기","수평 9호기","볼압입 리크검사","양방향 호스조립","단방향 호스조립","유틸리티","공용"];
+const LSKEY="safety_inspect_v2", CKEY="safety_inspect_v2";
 const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 const el=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-let CAT="설비", dirty=false;
-let DATA={date:'',cycle:'일일',insp:'',conf:'',res:{설비:[],안전:[],소방:[]}};
-function initRes(){["설비","안전","소방"].forEach(function(c){if(!DATA.res[c]||DATA.res[c].length!==ITEMS[c].length){DATA.res[c]=ITEMS[c].map(function(){return {r:'양호',a:''};});}});}
+let TAB="설비", EDIT=false, PINMODE=false, dirty=false;
+let DATA={date:'',cycle:'일일',insp:'',conf:'',items:{},res:{},layout:{img:'',pins:[]}};
 function stat(m){el('st').textContent=m;}
 function markDirty(){dirty=true;stat('✏️ 수정됨 · 저장 필요');}
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function selCat(c){CAT=c;render();}
-function setRes(i,v){DATA.res[CAT][i].r=v;markDirty();var tr=el('tbl').rows[i+1];if(tr)tr.className=(v==='불량')?'bad':'';var sel=tr&&tr.querySelector('.rsel');if(sel)sel.className='rsel r-'+v;patchKPI();}
-function setAct(i,v){DATA.res[CAT][i].a=v;markDirty();}
-function edMeta(f,v){DATA[f]=v;markDirty();}
+function ensure(){
+ CATS.forEach(function(c){
+  if(!Array.isArray(DATA.items[c])||!DATA.items[c].length)DATA.items[c]=DEF_ITEMS[c].map(function(x){return {t:x[0],b:x[1]};});
+  if(!Array.isArray(DATA.res[c]))DATA.res[c]=[];
+  while(DATA.res[c].length<DATA.items[c].length)DATA.res[c].push({r:'양호',a:'',loc:''});
+  DATA.res[c].length=DATA.items[c].length;
+ });
+ if(!DATA.layout)DATA.layout={img:'',pins:[]};if(!Array.isArray(DATA.layout.pins))DATA.layout.pins=[];
+}
+function toggleEdit(){EDIT=!EDIT;el('editBtn').classList.toggle('on',EDIT);stat(EDIT?'✏️ 항목편집 ON — 항목/기준 클릭 수정 · ＋항목추가 · ✕삭제':'보기 모드');render();}
+function selTab(t){TAB=t;PINMODE=false;render();window.scrollTo(0,0);}
+function locHdr(c){return c==='설비'?'설비명/호기':'발생 위치';}
 function render(){
  el('m_date').value=DATA.date||today();if(!DATA.date)DATA.date=el('m_date').value;
  el('m_cycle').value=DATA.cycle;el('m_insp').value=DATA.insp;el('m_conf').value=DATA.conf;
- el('tabbar').innerHTML=TABS.map(function(t){return '<button class="tabbtn'+(t[0]===CAT?' on':'')+'" onclick="selCat(\''+t[0]+'\')">'+t[1]+' <span style="font-size:11px;opacity:.8">('+ITEMS[t[0]].length+')</span></button>';}).join('');
- el('ptitle').textContent=(TABS.find(function(t){return t[0]===CAT;})[1])+' 항목';
- var items=ITEMS[CAT],res=DATA.res[CAT];
- var h='<tr><th class="no">No</th><th>점검 항목</th><th>점검 기준 / 방법</th><th style="width:110px">결과</th><th style="width:200px">조치사항 (불량·주의 시)</th></tr>';
- items.forEach(function(it,i){var r=res[i]||{r:'양호',a:''};
-  h+='<tr class="'+(r.r==='불량'?'bad':'')+'"><td class="no">'+(i+1)+'</td>'+
-   '<td class="item">'+esc(it.t)+'</td><td class="std">'+esc(it.b)+'</td>'+
-   '<td class="res"><select class="rsel r-'+r.r+'" onchange="setRes('+i+',this.value)">'+RES.map(function(o){return '<option'+(r.r===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
-   '<td><input class="act" value="'+esc(r.a)+'" oninput="setAct('+i+',this.value)" placeholder="조치·비고"></td></tr>';
- });
- el('tbl').innerHTML=h;patchKPI();
+ el('tabbar').innerHTML=TABS.map(function(t){var n=CATS.indexOf(t[0])>=0?' ('+DATA.items[t[0]].length+')':'';return '<button class="tabbtn'+(t[0]===TAB?' on':'')+'" onclick="selTab(\''+t[0]+'\')">'+t[1]+n+'</button>';}).join('');
+ var metaShow=CATS.indexOf(TAB)>=0||TAB==='dash';el('meta').style.display=metaShow?'flex':'none';
+ if(CATS.indexOf(TAB)>=0)renderCheck(TAB);
+ else if(TAB==='layout')renderLayout();
+ else renderDash();
 }
-function patchKPI(){
- var res=DATA.res[CAT];var g=0,w=0,b=0,n=0;
- res.forEach(function(x){if(x.r==='양호')g++;else if(x.r==='주의')w++;else if(x.r==='불량')b++;else n++;});
- el('strip').innerHTML=''+
-  '<div class="kpi"><div class="l">점검 항목</div><div class="v">'+ITEMS[CAT].length+'</div></div>'+
+function renderCheck(cat){
+ var items=DATA.items[cat],res=DATA.res[cat];
+ var g=0,w=0,b=0;res.forEach(function(x){if(x.r==='양호')g++;else if(x.r==='주의')w++;else if(x.r==='불량')b++;});
+ el('strip').innerHTML='<div class="kpi"><div class="l">점검 항목</div><div class="v">'+items.length+'</div></div>'+
   '<div class="kpi g"><div class="l">양호</div><div class="v">'+g+'</div></div>'+
   '<div class="kpi o"><div class="l">주의</div><div class="v">'+w+'</div></div>'+
   '<div class="kpi r"><div class="l">불량</div><div class="v">'+b+'</div></div>';
+ var dl=cat==='설비'?'eqdl':'locdl';
+ var h='<div class="card"><div class="phead"><span class="ptitle">'+(TABS.find(function(t){return t[0]===cat;})[1])+' 항목</span>'+(EDIT?'<button class="addbtn" onclick="addItem(\''+cat+'\')">＋ 항목 추가</button>':'')+'<span class="spacer"></span></div>';
+ h+='<div class="tbl-wrap"><table><tr><th class="no">No</th><th>점검 항목</th><th>점검 기준</th><th style="width:130px">'+locHdr(cat)+'</th><th style="width:104px">결과</th><th style="width:180px">조치사항</th>'+(EDIT?'<th style="width:34px">삭제</th>':'')+'</tr>';
+ items.forEach(function(it,i){var r=res[i]||{r:'양호',a:'',loc:''};
+  h+='<tr class="'+(r.r==='불량'?'bad':'')+'"><td class="no">'+(i+1)+'</td>'+
+   '<td class="item"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'t\',this.innerText)"':'')+'>'+esc(it.t)+'</td>'+
+   '<td class="std"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'b\',this.innerText)"':'')+'>'+esc(it.b)+'</td>'+
+   '<td><input class="f" list="'+dl+'" value="'+esc(r.loc)+'" oninput="setLoc(\''+cat+'\','+i+',this.value)" placeholder="'+(cat==='설비'?'호기/설비':'위치')+'"></td>'+
+   '<td><select class="rsel r-'+r.r+'" onchange="setRes(\''+cat+'\','+i+',this.value)">'+RES.map(function(o){return '<option'+(r.r===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
+   '<td><input class="f" value="'+esc(r.a)+'" oninput="setAct(\''+cat+'\','+i+',this.value)" placeholder="조치·비고"></td>'+
+   (EDIT?'<td style="text-align:center"><button class="delx" onclick="delItem(\''+cat+'\','+i+')">✕</button></td>':'')+'</tr>';
+ });
+ h+='</table></div><div class="hint">결과 <b>불량/주의</b> 항목은 <b>'+locHdr(cat)+'</b>과 <b>조치사항</b>을 입력하세요. 위치는 🏭 LAY-OUT 탭에서 도면에 핀으로 표시할 수 있습니다.</div></div>';
+ el('body').innerHTML=h;
 }
+function setRes(c,i,v){DATA.res[c][i].r=v;markDirty();renderCheck(c);}
+function setAct(c,i,v){DATA.res[c][i].a=v;markDirty();}
+function setLoc(c,i,v){DATA.res[c][i].loc=v;markDirty();}
+function edItem(c,i,f,v){DATA.items[c][i][f]=v;markDirty();}
+function addItem(c){DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력'});DATA.res[c].push({r:'양호',a:'',loc:''});markDirty();renderCheck(c);}
+function delItem(c,i){if(!confirm('이 점검항목을 삭제할까요?'))return;DATA.items[c].splice(i,1);DATA.res[c].splice(i,1);markDirty();renderCheck(c);}
+/* ===== 공장 LAY-OUT ===== */
+function renderLayout(){
+ el('strip').innerHTML='';
+ var L=DATA.layout;
+ var h='<div class="card"><div class="phead"><span class="ptitle">🏭 공장 LAY-OUT · 발생위치 표시</span><span class="spacer"></span>'+
+  '<button class="ghostbtn" onclick="pickLayout()">🖼️ 도면 업로드/교체</button>'+
+  (L.img?('<button class="'+(PINMODE?'addbtn':'ghostbtn')+'" onclick="togglePin()">📍 '+(PINMODE?'핀 추가중(클릭)…끄기':'발생위치 핀 추가')+'</button>'):'')+'</div>';
+ if(!L.img){h+='<div class="emptylay">🖼️ 공장 도면(사진·이미지)을 업로드하세요.<br>업로드 후 <b>📍 발생위치 핀 추가</b>로 도면 위에 위치를 표시할 수 있습니다.</div>';}
+ else{
+  h+='<div class="layctrl"><span style="font-size:12px;color:#64748b">📍 파랑=설비 · 주황=안전 · 빨강=소방 · 도면 클릭하면 핀 추가 · 핀/아래 목록에서 내용 편집·삭제</span></div>';
+  h+='<div class="laybox" id="laybox"><img class="layimg'+(PINMODE?' pinmode':'')+'" id="layimg" src="'+L.img+'" onclick="layClick(event)">';
+  L.pins.forEach(function(p,i){h+='<div class="pin '+(p.cat||'소방')+'" style="left:'+p.x+'%;top:'+p.y+'%" onclick="pinClick('+i+')"><div class="dot"><b>'+(i+1)+'</b></div></div>';});
+  h+='</div>';
+  h+='<div class="pinlist"><div class="tbl-wrap"><table><tr><th class="no">번호</th><th style="width:90px">구분</th><th>발생위치 / 내용</th><th style="width:44px">삭제</th></tr>';
+  if(!L.pins.length)h+='<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:16px">핀이 없습니다. 도면을 클릭해 발생위치를 표시하세요.</td></tr>';
+  L.pins.forEach(function(p,i){h+='<tr><td class="no">'+(i+1)+'</td>'+
+    '<td><select class="rsel" onchange="edPin('+i+',\'cat\',this.value)"><option'+(p.cat==='설비'?' selected':'')+'>설비</option><option'+(p.cat==='안전'?' selected':'')+'>안전</option><option'+(p.cat==='소방'?' selected':'')+'>소방</option></select></td>'+
+    '<td><input class="f" value="'+esc(p.label)+'" oninput="edPin('+i+',\'label\',this.value)" placeholder="예: 수직3호기 유압누유"></td>'+
+    '<td style="text-align:center"><button class="delx" onclick="delPin('+i+')">✕</button></td></tr>';});
+  h+='</table></div></div>';
+ }
+ h+='<div class="hint">발생위치 핀은 저장 시 도면 이미지와 함께 전 PC에 공유됩니다. 점검에서 불량이 난 설비/위치를 도면에 찍어두면 한눈에 파악됩니다.</div></div>';
+ el('body').innerHTML=h;
+}
+function pickLayout(){var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=function(){var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){DATA.layout.img=rd.result;markDirty();renderLayout();};rd.readAsDataURL(f);};inp.click();}
+function togglePin(){PINMODE=!PINMODE;renderLayout();}
+function layClick(e){if(!PINMODE)return;var img=el('layimg');var r=img.getBoundingClientRect();var x=((e.clientX-r.left)/r.width*100);var y=((e.clientY-r.top)/r.height*100);DATA.layout.pins.push({x:Math.round(x*10)/10,y:Math.round(y*10)/10,cat:'소방',label:'발생위치 '+(DATA.layout.pins.length+1)});markDirty();renderLayout();}
+function pinClick(i){var p=DATA.layout.pins[i];var v=prompt('발생위치/내용 입력 (취소=변경없음)',p.label);if(v!=null){p.label=v;markDirty();renderLayout();}}
+function edPin(i,f,v){DATA.layout.pins[i][f]=v;markDirty();if(f==='cat')renderLayout();}
+function delPin(i){DATA.layout.pins.splice(i,1);markDirty();renderLayout();}
+/* ===== 대시보드 ===== */
+function renderDash(){
+ el('strip').innerHTML='';
+ var tot=0,tg=0,tw=0,tb=0,acts=[];
+ CATS.forEach(function(c){DATA.res[c].forEach(function(x,i){tot++;if(x.r==='양호')tg++;else if(x.r==='주의')tw++;else if(x.r==='불량')tb++;if(x.r==='불량'||x.r==='주의')acts.push({c:c,item:DATA.items[c][i].t,loc:x.loc,r:x.r,a:x.a});});});
+ var rate=tot?Math.round((tot-tw-tb)/tot*100):0;
+ el('strip').innerHTML='<div class="kpi"><div class="l">총 점검항목</div><div class="v">'+tot+'</div></div>'+
+  '<div class="kpi g"><div class="l">양호</div><div class="v">'+tg+'</div></div>'+
+  '<div class="kpi o"><div class="l">주의</div><div class="v">'+tw+'</div></div>'+
+  '<div class="kpi r"><div class="l">불량</div><div class="v">'+tb+'</div></div>'+
+  '<div class="kpi"><div class="l">양호율</div><div class="v">'+rate+'%</div></div>';
+ var h='<div class="dashgrid">';
+ h+='<div class="chartcard"><h3>📊 구분별 점검결과 분포</h3>';
+ CATS.forEach(function(c){var r=DATA.res[c],g=0,w=0,b=0;r.forEach(function(x){if(x.r==='양호')g++;else if(x.r==='주의')w++;else if(x.r==='불량')b++;});var t=Math.max(1,g+w+b);
+  h+='<div class="bar"><div class="nm">'+({설비:'🔧 설비',안전:'🦺 안전',소방:'🔥 소방'}[c])+'</div><div class="track">'+
+   (g?'<div class="seg g" style="width:'+(g/t*100)+'%">'+g+'</div>':'')+
+   (w?'<div class="seg o" style="width:'+(w/t*100)+'%">'+w+'</div>':'')+
+   (b?'<div class="seg r" style="width:'+(b/t*100)+'%">'+b+'</div>':'')+'</div></div>';});
+ h+='<div style="font-size:11.5px;color:#64748b;margin-top:4px">■ <span style="color:#1e8e4e">양호</span> ■ <span style="color:#b8860b">주의</span> ■ <span style="color:#C62828">불량</span></div></div>';
+ h+='<div class="chartcard"><h3>🛠️ 조치 필요 내역 ('+acts.length+'건) <span style="font-size:11.5px;color:#64748b;font-weight:400">· 불량/주의 항목</span></h3>';
+ h+='<div class="tbl-wrap"><table class="acttbl"><tr><th style="width:60px">구분</th><th>점검항목</th><th style="width:130px">위치/설비</th><th style="width:70px">결과</th><th>조치사항</th></tr>';
+ if(!acts.length)h+='<tr><td colspan="5" style="text-align:center;color:#1e8e4e;padding:18px;font-weight:800">✅ 이상 항목 없음 (전체 양호)</td></tr>';
+ acts.sort(function(a,b){return (a.r==='불량'?0:1)-(b.r==='불량'?0:1);});
+ acts.forEach(function(a){h+='<tr class="'+(a.r==='불량'?'bad':'')+'"><td style="text-align:center;font-weight:700">'+a.c+'</td><td class="item">'+esc(a.item)+'</td><td>'+esc(a.loc||'-')+'</td><td style="text-align:center;font-weight:800;color:'+(a.r==='불량'?'#C62828':'#B8860B')+'">'+a.r+'</td><td>'+esc(a.a||'(조치 미입력)')+'</td></tr>';});
+ h+='</table></div></div>';
+ h+='</div>';
+ el('body').innerHTML=h;
+}
+/* ===== 저장·인쇄·부팅 ===== */
+function pullMeta(){DATA.date=el('m_date').value;DATA.cycle=el('m_cycle').value;DATA.insp=el('m_insp').value;DATA.conf=el('m_conf').value;}
 function doPrint(){
- var t=TABS.find(function(x){return x[0]===CAT;});
- var res=DATA.res[CAT];var g=0,w=0,b=0;res.forEach(function(x){if(x.r==='양호')g++;else if(x.r==='주의')w++;else if(x.r==='불량')b++;});
+ pullMeta();
+ var isCat=CATS.indexOf(TAB)>=0;var title=isCat?((TABS.find(function(t){return t[0]===TAB;})[1]).replace(/^[^가-힣]+/,'').trim()+' 정기점검 체크시트'):(TAB==='dash'?'정기점검 대시보드':'공장 LAY-OUT');
  var html='<table class="gyeolja"><tr><td class="gh">점검자</td><td class="gh">부서장</td><td class="gh">대표이사</td></tr><tr><td class="sg"></td><td class="sg"></td><td class="sg"></td></tr></table>'
-  +'<div class="rpt-title">'+t[1].replace(/^[^가-힣]+/,'').trim()+' 정기점검 체크시트</div>'
-  +'<div class="rpt-sub">㈜승정 · 점검일 '+(DATA.date||today())+' · 주기 '+DATA.cycle+' · 점검자 '+(DATA.insp||'')+' · 확인자 '+(DATA.conf||'')+'  |  양호 '+g+' · 주의 '+w+' · 불량 '+b+'</div>';
- el('printhead').innerHTML=html;
- var rf=el('rptfoot');if(rf)rf.textContent='㈜승정 · 설비·안전·소방 정기점검 · 출력 '+today();
+  +'<div class="rpt-title">'+title+'</div>'
+  +'<div class="rpt-sub">㈜승정 · 점검일 '+(DATA.date||today())+' · 주기 '+DATA.cycle+' · 점검자 '+(DATA.insp||'')+' · 확인자 '+(DATA.conf||'')+'</div>';
+ el('printhead').innerHTML=html;var rf=el('rptfoot');if(rf)rf.textContent='㈜승정 · 설비·안전·소방 정기점검 · 출력 '+today();
  window.print();
 }
-function normalize(v){var d={date:'',cycle:'일일',insp:'',conf:'',res:{설비:[],안전:[],소방:[]}};if(v&&typeof v==='object'){d.date=v.date||'';d.cycle=v.cycle||'일일';d.insp=v.insp||'';d.conf=v.conf||'';if(v.res)['설비','안전','소방'].forEach(function(c){if(Array.isArray(v.res[c]))d.res[c]=v.res[c];});}return d;}
+function normalize(v){var d={date:'',cycle:'일일',insp:'',conf:'',items:{},res:{},layout:{img:'',pins:[]}};if(v&&typeof v==='object'){d.date=v.date||'';d.cycle=v.cycle||'일일';d.insp=v.insp||'';d.conf=v.conf||'';if(v.items)d.items=v.items;if(v.res)d.res=v.res;if(v.layout)d.layout=v.layout;}return d;}
 async function save(){
- DATA.date=el('m_date').value;DATA.cycle=el('m_cycle').value;DATA.insp=el('m_insp').value;DATA.conf=el('m_conf').value;
- stat('저장 중…');try{localStorage.setItem(LSKEY,JSON.stringify(DATA));}catch(e){}
- var ok=false;if(sb){try{var r=await sb.from('app_state').upsert({key:CKEY,value:DATA,updated_at:new Date().toISOString()});ok=!(r&&r.error);}catch(e){}}
+ pullMeta();stat('저장 중…');try{localStorage.setItem(LSKEY,JSON.stringify(DATA));}catch(e){}
+ var ok=false;if(sb){try{var r=await sb.from('app_state').upsert({key:CKEY,value:DATA,updated_at:new Date().toISOString()});ok=!(r&&r.error);if(r&&r.error)console.warn(r.error.message);}catch(e){console.warn(e);}}
  dirty=false;stat(ok?'✅ 저장됨 (전 PC 공유)':'💾 저장됨 (이 PC)');
 }
 async function boot(){
- initRes();
- try{var s=JSON.parse(localStorage.getItem(LSKEY));if(s){DATA=normalize(s);initRes();}}catch(e){}
- try{var p=new URLSearchParams(location.search).get('cat');if(p&&ITEMS[p])CAT=p;}catch(e){}
+ el('eqdl').innerHTML=EQLIST.map(function(e){return '<option>'+esc(e)+'</option>';}).join('');
+ ensure();
+ try{var s=JSON.parse(localStorage.getItem(LSKEY));if(s){DATA=normalize(s);ensure();}}catch(e){}
+ try{var p=new URLSearchParams(location.search).get('cat');if(p&&(CATS.indexOf(p)>=0||p==='layout'||p==='dash'))TAB=p;}catch(e){}
  render();
  if(!sb){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';stat('준비됨 (이 PC 저장)');return;}
  try{var probe=await sb.from('app_state').select('key').limit(1);if(probe&&probe.error){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';stat('준비됨 (이 PC 저장)');return;}
   el('cloud').textContent='● 클라우드 공유';el('cloud').className='cloud on';
   var r=await sb.from('app_state').select('value').eq('key',CKEY).maybeSingle();
-  if(r&&r.data&&r.data.value&&!dirty){DATA=normalize(r.data.value);initRes();render();stat('☁️ 클라우드에서 불러옴');}else stat('준비됨');
-  try{ sb.channel('safeins').on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+CKEY},p=>{if(dirty)return;var v=p&&p.new&&p.new.value;if(v){DATA=normalize(v);initRes();render();stat('☁️ 다른 PC 변경 반영됨');}}).subscribe(); }catch(e){}
+  if(r&&r.data&&r.data.value&&!dirty){DATA=normalize(r.data.value);ensure();render();stat('☁️ 클라우드에서 불러옴');}else stat('준비됨');
+  try{ sb.channel('safeins2').on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+CKEY},p=>{if(dirty)return;var v=p&&p.new&&p.new.value;if(v){DATA=normalize(v);ensure();render();stat('☁️ 다른 PC 변경 반영됨');}}).subscribe(); }catch(e){}
  }catch(e){el('cloud').textContent='● 로컬 모드';el('cloud').className='cloud off';stat('준비됨 (이 PC 저장)');}
 }
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
