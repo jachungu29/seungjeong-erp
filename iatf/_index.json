@@ -32,12 +32,28 @@
 "file": "iatf/iatf_SJQD-7005.html"
 },
 {
+"ch": "7.6",
+"dno": "SJQP-7006",
+"name": "교육훈련 프로세스",
+"rev": "1",
+"date": "2018-03-14",
+"file": "iatf/iatf_SJQP-7006.html"
+},
+{
 "ch": "7.7",
 "dno": "SJQD-7007",
 "name": "자격관리 절차",
 "rev": "3",
 "date": "2018-05-18",
 "file": "iatf/iatf_SJQD-7007.html"
+},
+{
+"ch": "8.1",
+"dno": "SJQP-8001",
+"name": "영업관리 프로세스",
+"rev": "2",
+"date": "2018-04-29",
+"file": "iatf/iatf_SJQP-8001.html"
 },
 {
 "ch": "8.2",
@@ -48,12 +64,44 @@
 "file": "iatf/iatf_SJQP-8002.html"
 },
 {
+"ch": "8.6",
+"dno": "SJQD-8006",
+"name": "사전제품품질기획(APQP) 절차",
+"rev": "1",
+"date": "2018-03-20",
+"file": "iatf/iatf_SJQD-8006.html"
+},
+{
+"ch": "8.8",
+"dno": "SJQP-8008",
+"name": "공정관리 프로세스",
+"rev": "2",
+"date": "2018-04-29",
+"file": "iatf/iatf_SJQP-8008.html"
+},
+{
 "ch": "8.11",
 "dno": "SJQD-8011",
 "name": "작업표준 관리절차",
 "rev": "2",
 "date": "2021-03-12",
 "file": "iatf/iatf_SJQD-8011.html"
+},
+{
+"ch": "8.13",
+"dno": "SJQD-8013",
+"name": "용기관리 절차",
+"rev": "1",
+"date": "2018-04-01",
+"file": "iatf/iatf_SJQD-8013.html"
+},
+{
+"ch": "8.15",
+"dno": "SJQD-8015",
+"name": "고객 자산관리 절차",
+"rev": "1",
+"date": "2018-03-20",
+"file": "iatf/iatf_SJQD-8015.html"
 },
 {
 "ch": "8.18",
@@ -70,6 +118,14 @@
 "rev": "1",
 "date": "2018-03-20",
 "file": "iatf/iatf_SJQD-8019.html"
+},
+{
+"ch": "9.1",
+"dno": "SJQP-9001",
+"name": "지속적 개선 프로세스",
+"rev": "3",
+"date": "2018-04-29",
+"file": "iatf/iatf_SJQP-9001.html"
 },
 {
 "ch": "9.3",

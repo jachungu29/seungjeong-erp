@@ -1,488 +1,81 @@
 <!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>시정 및 예방조치 프로세스</title><style>
-*{box-sizing:border-box}body{margin:0;background:#eef1f6;color:#1c2430;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
-header{background:linear-gradient(90deg,#123a52,#0d6e8c);color:#fff;padding:12px 18px;position:sticky;top:0;z-index:5}
+*{box-sizing:border-box}body{margin:0;background:#eef1f6;color:#222;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:14px;line-height:1.7}
+header{background:linear-gradient(90deg,#123a52,#0d6e8c);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:5}
 header .no{font-family:monospace;font-size:12px;opacity:.85;font-weight:700}
-header h1{margin:2px 0 0;font-size:19px;font-weight:800}
-header .meta{font-size:11.5px;opacity:.85;margin-top:3px}
-header button{float:right;background:#fff;color:#123a52;border:0;border-radius:8px;padding:7px 13px;font:inherit;font-weight:800;cursor:pointer;margin-left:8px}
-.wrap{padding:16px 18px 60px;overflow-x:auto}
-table{border-collapse:collapse;background:#fff;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-td{border:1px solid #c2ccd6;padding:5px 8px;vertical-align:top;white-space:pre-wrap;word-break:break-word;max-width:340px;line-height:1.5}
-h3.sh{margin:16px 0 6px;font-size:13px;color:#0d6e8c}
-@media print{header button{display:none}.wrap{overflow:visible}body{background:#fff}}
+header h1{margin:3px 0 0;font-size:21px;font-weight:800;letter-spacing:-.3px}
+header .meta{font-size:12px;opacity:.85;margin-top:4px}
+header button{float:right;background:#fff;color:#123a52;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer;margin-left:8px}
+.page{max-width:900px;margin:18px auto;background:#fff;border:1px solid #e2e8ee;border-radius:12px;padding:26px 30px 50px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+h2{font-size:16px;color:#0d6e8c;font-weight:800;margin:22px 0 8px;padding:7px 12px;background:#eef6fa;border-left:4px solid #0d6e8c;border-radius:0 7px 7px 0}
+p{margin:5px 2px}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:13px}
+th,td{border:1px solid #ccd4dc;padding:7px 10px;vertical-align:top;text-align:left;word-break:break-word}
+th{background:#f2f6f9;font-weight:800;color:#234}
+tr:nth-child(even) td{background:#fafcfd}
+.sect-flow{margin-top:26px}
+.flowwrap{display:flex;flex-wrap:wrap;gap:7px}
+.flownode{background:#f4f8fb;border:1px solid #cfe0ea;border-radius:8px;padding:7px 12px;font-size:12.5px;white-space:pre-wrap}
+.foot{margin-top:30px;padding-top:12px;border-top:1px solid #eef1f5;font-size:11.5px;color:#98a2ad;text-align:right}
+@media print{header button{display:none}body{background:#fff}.page{border:0;box-shadow:none;max-width:none;margin:0}}
 </style></head><body>
 <header><button onclick="window.print()">🖨️ 인쇄</button><div class="no">SJQP-9006 · Rev 1</div><h1>시정 및 예방조치 프로세스</h1><div class="meta">제·개정일 2018-03-28 · IATF16949 품질경영시스템 · ㈜승정 품질기획부</div></header>
-<div class="wrap"><h3 class="sh">시트 1</h3><table>
-<tr><td colspan="25">품질문서 (제정·개정·폐기) 신청서</td></tr>
-<tr><td rowspan="14" colspan="2"></td><td colspan="3"></td><td colspan="12"></td><td colspan="3"></td><td colspan="5"></td></tr>
-<tr><td colspan="3"></td><td colspan="9"></td><td colspan="3"></td><td colspan="8"></td></tr>
-<tr><td colspan="3"></td><td colspan="9"></td><td colspan="3"></td><td colspan="8"></td></tr>
-<tr><td></td><td></td><td></td><td colspan="4"></td><td colspan="4"></td><td colspan="12"></td></tr>
-<tr><td></td><td></td><td></td><td colspan="4"></td><td colspan="4"></td><td colspan="12"></td></tr>
-<tr><td></td><td></td><td></td><td colspan="4"></td><td colspan="4"></td><td colspan="12"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td rowspan="2" colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td rowspan="12" colspan="2"></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">개발팀</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">46</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="22"></td></tr>
-<tr><td rowspan="5" colspan="2"></td><td colspan="7"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="5"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="5"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="5"></td></tr>
-<tr></tr>
-<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="5"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="5"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="5"></td></tr>
-<tr></tr>
-<tr><td colspan="6"></td><td colspan="14"></td><td></td><td></td><td></td><td></td></tr>
-</table><h3 class="sh">시트 2</h3><table>
-<tr><td>품  질  절  차</td><td></td><td></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td>제 정 일 자</td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="7"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>68</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>69</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>70</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>71</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>72</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="4"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>73</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>74</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>75</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>76</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>77</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>78</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>79</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>80</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>81</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>82</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>83</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>84</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>85</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>86</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>87</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>88</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="6"></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>품  질  절  차</td><td></td><td></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td>제 정 일 자</td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>93</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>94</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>95</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>96</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>97</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>98</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>4.3     품질 부서장</td><td>101</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>102</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>103</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>104</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>105</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>106</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>107</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>108</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>109</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>110</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>111</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>112</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>113</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>114</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>115</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>116</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>88</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="5"></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>56</td></tr>
-<tr><td></td><td></td><td></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td>제 정 일 자</td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>120</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>121</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>122</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>123</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>124</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>125</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>126</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>127</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>128</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>129</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>130</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>131</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>132</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>133</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>134</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>135</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>136</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>137</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>138</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>139</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>140</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>141</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>88</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="5"></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>품  질  절  차</td><td></td><td></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="2"></td><td></td><td></td><td>60</td></tr>
-<tr><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>145</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>146</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>147</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>148</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>149</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="5"></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>56</td></tr>
-<tr><td></td><td></td><td></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="2"></td><td></td><td></td><td>60</td></tr>
-<tr><td></td><td></td><td></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="10"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td colspan="3"></td><td colspan="3"></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td>158</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td>항목</td><td colspan="2">세부항목</td><td colspan="6"></td><td colspan="2"></td><td colspan="3"></td><td colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="6"></td><td rowspan="2">교육<br>훈련</td><td rowspan="2" colspan="2">교육<br>훈련</td><td colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="4"></td><td rowspan="2" colspan="2">인증유지<br>관리비용</td><td colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="2" colspan="2"></td><td colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="8"></td><td rowspan="2">검사<br>시험</td><td rowspan="2" colspan="2">검사<br>시험<br>비용</td><td colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="6"></td><td rowspan="2" colspan="2">장비구입<br>유지<br>비용</td><td colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="2" colspan="2"></td><td colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="2" colspan="2"></td><td colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td colspan="6"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="4"></td><td rowspan="4">공<br>정<br><br>불<br>량</td><td rowspan="2" colspan="2">부적합품<br>폐기</td><td rowspan="2" colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="6"></td><td rowspan="2">CLA<br>IM</td><td rowspan="2" colspan="2">CLAIM<br>처리비용</td><td rowspan="2" colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="4"></td><td rowspan="2" colspan="2">부적합품<br>폐기</td><td rowspan="2" colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="2"></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="5"></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-</table><h3 class="sh">시트 3</h3><table>
-<tr><td rowspan="2" colspan="2">문      서<br>기호/번호</td><td rowspan="2" colspan="2"></td><td colspan="6"></td></tr>
-<tr><td colspan="6"></td></tr>
-<tr><td colspan="3"></td><td></td><td>이  사</td><td>전   무</td><td></td><td></td><td colspan="2">사   장</td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="3"></td><td></td><td>/</td><td>/</td><td>/</td><td>/</td><td colspan="2">/</td></tr>
-<tr><td colspan="3"></td><td colspan="2"></td><td></td><td>발송번호</td><td></td><td colspan="2">8</td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="3"></td><td colspan="2"></td><td rowspan="3" colspan="2"></td><td rowspan="3" colspan="3"></td></tr>
-<tr><td colspan="3"></td><td colspan="2"></td></tr>
-<tr><td colspan="3"></td><td colspan="2"></td></tr>
-<tr><td colspan="3"></td><td colspan="7"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td>14</td><td></td><td></td><td></td></tr>
-<tr><td></td><td>17</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td colspan="2"></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td>224</td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(210㎜×297㎜)</td><td></td></tr>
-</table><h3 class="sh">시트 4</h3><table>
-<tr><td rowspan="2" colspan="11">2017년 Q-COST 현황</td><td></td><td>검토</td><td>승인</td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td>1월</td><td>2월</td><td>3월</td><td>4월</td><td>5월</td><td>6월</td><td>7월</td><td>8월</td><td>9월</td><td>10월</td><td>11월</td><td>12월</td><td>합 계</td></tr>
-<tr><td>예방비용</td><td>185</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>186</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>187</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>183</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>SJQD-9005-11(0)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(210X297)</td></tr>
-</table><h3 class="sh">시트 5</h3><table>
-<tr><td rowspan="4" colspan="18">▣ &#x27;18년 02月 부품 품질불만족 실패비용</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td rowspan="2"></td><td rowspan="2"></td><td rowspan="2">발생 지</td><td rowspan="2">차 종</td><td rowspan="2">발생 수량<br>(고객기준_EA)</td><td rowspan="2">선별 인원<br>(名)</td><td rowspan="2">선별 시간<br>(HR)</td><td colspan="2">선별 진행 자</td><td rowspan="2"></td><td rowspan="2">임 률</td><td rowspan="2" colspan="3">문제점 세부내용</td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td></tr>
-<tr><td></td><td>관리자</td></tr>
-<tr><td></td><td rowspan="5"></td><td rowspan="5">HIC IN-LINE<br>/<br>승정 IN-LINE</td><td>HFP1</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>809</td><td>17932</td><td colspan="3">청소 및 작업준비</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>951</td><td>17932</td><td colspan="3">압입기 누유 및 샤프트 스크래치 불량 외</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>910</td><td>17932</td><td colspan="3">압입기 인덱스 회전 에러 및 샤프트 스크래치 불량 외</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>935</td><td>17932</td><td colspan="3">-</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1137</td><td>17932</td><td colspan="3">-</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td rowspan="2">SEBA</td><td rowspan="2">SEBA IN-LINE<br>/<br>승정 IN-LINE</td><td>EVP(EVV)</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>855</td><td>17932</td><td colspan="3">-</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>630</td><td>17932</td><td colspan="3">-</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">HIC 누계</td><td></td><td>0</td><td>0</td><td>-</td><td>-</td><td rowspan="3">-</td><td></td><td colspan="3">-</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">SEBA 누계</td><td></td><td>0</td><td>0</td><td>-</td><td>-</td><td></td><td colspan="3">-</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">TOTAL</td><td></td><td>0</td><td>0</td><td>-</td><td>-</td><td></td><td colspan="3">-</td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2">㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-</table><h3 class="sh">시트 6</h3><table>
-<tr><td rowspan="6" colspan="47">▣ 2018년 고객사 CLAIM 발생 현황_ 통합</td></tr>
-<tr></tr>
-<tr></tr>
-<tr></tr>
-<tr></tr>
-<tr></tr>
-<tr><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="5"></td><td rowspan="2" colspan="7"></td><td rowspan="2" colspan="7"></td></tr>
-<tr></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td colspan="5"></td><td colspan="7"></td><td colspan="7"></td></tr>
-<tr><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-</table><h3 class="sh">시트 7</h3><table>
-<tr><td rowspan="8" colspan="17">▣ 2018년 12月 고객 IN-LINE CLAIM 현황</td><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>315</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td colspan="4"></td><td></td><td>1월</td><td>2월</td><td>3월</td><td>4월</td><td>5월</td><td>6월</td><td>7월</td><td>8월</td><td>9월</td><td>10월</td><td>11월</td><td>12월</td><td colspan="2">합 계</td></tr>
-<tr><td rowspan="4"></td><td colspan="3">부적합 수량</td><td></td><td>7</td><td>36</td><td>8</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td colspan="2">51</td></tr>
-<tr><td colspan="3"></td><td></td><td>1968-11-19</td><td>125561.3</td><td>1970-09-18</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td colspan="2">176551.4</td></tr>
-<tr><td colspan="3"></td><td></td><td>7</td><td>43</td><td>51</td><td>51</td><td>51</td><td>51</td><td>51</td><td>51</td><td>51</td><td>51</td><td>51</td><td>51</td><td colspan="2">51</td></tr>
-<tr><td colspan="3"></td><td></td><td>1968-11-19</td><td>150722.29999999999</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td>176551.4</td><td colspan="2">176551.4</td></tr>
-<tr><td rowspan="19"></td><td rowspan="2">EFP GASOLIN</td><td colspan="2">부적합 수량</td><td></td><td></td><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td>3663.0000000000005</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td></td><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td></td><td>17853</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td></td><td>2</td><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td></td><td>6564</td><td>9548.2999999999993</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td>4</td><td>5</td><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td>12967</td><td>15843</td><td>2017-09-04</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td>27</td><td>1</td><td>30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td>91757</td><td>3422.1000000000004</td><td>102505.1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td>36</td><td>8</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td colspan="2">51</td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td>125561.3</td><td>1970-09-18</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td colspan="2">176551.4</td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td>125561.3</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td>151390.39999999999</td><td colspan="2">151390.39999999999</td></tr>
-<tr><td rowspan="7"></td><td rowspan="2">EVP(EVV)</td><td colspan="2">부적합 수량</td><td></td><td></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td rowspan="2"></td><td colspan="2">부적합 수량</td><td></td><td></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td></td><td></td><td colspan="2"></td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td colspan="2">0</td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td colspan="2">0</td></tr>
-<tr><td colspan="3"></td><td></td><td></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td colspan="2">0</td></tr>
-</table><h3 class="sh">시트 8</h3><table>
-<tr><td>189</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="3" colspan="37"></td></tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr><td></td><td rowspan="3" colspan="24"></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td colspan="37"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="7"></td><td colspan="5"></td><td colspan="8"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="18"></td><td colspan="19"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="4"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="5" colspan="37"></td></tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="11"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>190</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="3" colspan="24"></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td colspan="37"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="7"></td><td colspan="5"></td><td colspan="8"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="31"></td></tr>
-<tr><td></td><td colspan="18"></td><td colspan="19"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="6"></td><td colspan="4"></td><td colspan="8"></td><td colspan="6"></td><td colspan="13"></td></tr>
-<tr><td></td><td colspan="4"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="5" colspan="37"></td></tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="11"></td></tr>
-</table></div></body></html>
+<div class="page"><p>품질문서 (제정·개정·폐기) 신청서</p>
+<table><tr><td>문서구분</td><td>매뉴얼( ), 절차(○), 프로세스( )</td><td>개정번호</td><td></td><td></td></tr><tr><td></td><td>SJQD-9005</td><td>표 준 명</td><td></td><td>품질 비용 절차</td></tr><tr><td></td><td>제정(○), 개정( ), 폐기( )</td><td>작 성 팀</td><td></td><td>품질팀</td></tr><tr><td></td><td></td><td>제·개정 일자</td><td>개    정    내    용</td><td></td></tr></table>
+<p>IATF16949:2016년 도입개정</p>
+<table><tr><th>부서(부문)</th><th></th><th>직책</th><th></th><th>성    명</th><th>서    명</th><th>부서(부문)</th><th></th><th>직책</th><th>성    명</th><th></th><th>서    명</th></tr><tr><td></td><td>개발팀</td><td>이사</td><td></td><td>백 허 영</td><td>구매팀</td><td></td><td></td><td>이사</td><td>홍 태 선</td><td></td><td></td></tr><tr><td></td><td></td><td>차장</td><td></td><td>양 태 영</td><td>품질팀</td><td></td><td></td><td>과장</td><td>곽 홍 신</td><td></td><td></td></tr><tr><td></td><td></td><td>사원</td><td></td><td>유영혜</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td>작    성</td><td></td><td>검     토</td><td></td><td></td><td>승     인</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td>곽 홍 신</td><td>성 명</td><td></td><td>구 자 권</td><td>성 명</td><td></td><td></td><td>구 자 춘</td><td></td></tr><tr><td></td><td></td><td></td><td>SIGN</td><td></td><td></td><td>SIGN</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>㈜승정</td><td></td><td></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><table><tr><td>품  질  절  차</td><td>문 서 번 호</td><td>SJQD-9005</td><td>1/5</td></tr></table>
+<p>제 정 일 자</p>
+<p>개 정 일 자</p>
+<table><tr><th></th><th>㈜승정</th><th></th><th>A4(210×297)</th><th></th><th></th></tr><tr><td>품  질  절  차</td><td></td><td>문 서 번 호</td><td></td><td>SJQD-9005</td><td>2/5</td></tr></table>
+<p>제 정 일 자</p>
+<p>개 정 일 자</p>
+<h2>4.3     품질 부서장</h2>
+<table><tr><th>㈜승정</th><th></th><th>A4(210×297)</th><th></th><th></th></tr><tr><td></td><td>문 서 번 호</td><td></td><td>SJQD-9005</td><td>3/5</td></tr></table>
+<p>제 정 일 자</p>
+<p>개 정 일 자</p>
+<table><tr><th></th><th>㈜승정</th><th></th><th>A4(210×297)</th><th></th><th></th></tr><tr><td>품  질  절  차</td><td></td><td>문 서 번 호</td><td></td><td>SJQD-9005</td><td>4/5</td></tr></table>
+<p>개 정 일 자</p>
+<table><tr><th></th><th>양식번호</th><th></th><th></th><th>보존년한</th><th>보관부서</th><th></th><th></th></tr><tr><td></td><td>SJQD-9005-10</td><td></td><td></td><td>3년</td><td>품질 부서</td><td></td><td></td></tr><tr><td></td><td>SJQD-9005-11</td><td></td><td></td><td>3년</td><td>품질 부서</td><td></td><td></td></tr><tr><td></td><td>SJQD-9005-12</td><td></td><td></td><td>3년</td><td>품질 부서</td><td></td><td></td></tr><tr><td></td><td>SJQD-9005-13</td><td></td><td></td><td>3년</td><td>품질 부서</td><td></td><td></td></tr><tr><td></td><td>SJQD-9005-14</td><td></td><td></td><td>3년</td><td>품질 부서</td><td></td><td></td></tr><tr><td>㈜승정</td><td></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td>문 서 번 호</td><td></td><td></td><td></td><td>SJQD-9005</td><td>5/5</td></tr></table>
+<p>개 정 일 자</p>
+<table><tr><th></th><th>항목</th><th>세부항목</th><th>적용범위</th><th>산출방법</th><th>관련자료</th><th>관련부서</th></tr><tr><td></td><td>교육<br>훈련</td><td>교육<br>훈련</td><td>품질부문의 사외 교육훈련</td><td>교육료</td><td>품의서</td><td>해당부서</td></tr><tr><td></td><td></td><td>인증유지<br>관리비용</td><td>품질인증 유지/취득 및 사후</td><td>인증료+<br>컨설팅+<br>경비</td><td>품의서</td><td>품질부서</td></tr><tr><td></td><td></td><td></td><td>고객 감사시 소요된 비용</td><td>경비</td><td>출장비<br>정산내역서</td><td>품질부서<br>관리부서</td></tr><tr><td></td><td>검사<br>시험</td><td>검사<br>시험<br>비용</td><td>품질평가를 위해서 사외에서</td><td>검사비+<br>시험비</td><td>품의서</td><td>품질부서</td></tr><tr><td></td><td></td><td>장비구입<br>유지<br>비용</td><td>검사,계측 및 시험장비의</td><td>구입비+<br>소모품+<br>유지비</td><td>품의서</td><td>품질부서</td></tr><tr><td></td><td></td><td></td><td>검사,계측 및 시험장비의</td><td>검교정비</td><td>품의서</td><td>품질부서</td></tr><tr><td></td><td></td><td></td><td>정규공정 외 추가 검사를</td><td>인건비</td><td>급여명세서</td><td>품질부서<br>생산부서</td></tr><tr><td></td><td>공<br>정<br>불<br>량</td><td>부적합품<br>폐기</td><td>공정에서 발생한 불량품의<br>폐기에 따른 자재/제품<br>손실비용</td><td>폐기수량 X<br>제품단가</td><td>품의서</td><td>생산부서</td></tr><tr><td></td><td></td><td></td><td>공정에서 발생한 불량품의<br>리워크 및 선별에 소요된 인건비</td><td>인건비</td><td>품의서</td><td>품질부서<br>생산부서</td></tr><tr><td></td><td>CLA<br>IM</td><td>CLAIM<br>처리비용</td><td>고객으로부터 접수된<br>월 CLAIM 공문</td><td>CLAIM<br>공문</td><td>고객 CLAIM<br>공문</td><td>품질부서</td></tr><tr><td></td><td></td><td>부적합품<br>폐기</td><td>고객에서 발생한 불량품의<br>폐기에 따른 자재/제품<br>손실비용</td><td>폐기수량 X<br>제품단가</td><td>품의서</td><td>품질부서</td></tr><tr><td></td><td></td><td></td><td>고객에서 발생한 불량품의<br>리워크 및 선별에 소요된<br>인건비 및 경비</td><td>인건비+<br>교통비+<br>경비</td><td>품의서<br>출장비<br>정산내역서</td><td>품질부서</td></tr><tr><td>㈜승정</td><td></td><td></td><td></td><td>A4(210×297)</td><td></td><td></td></tr></table><table><tr><th>문      서<br>기호/번호</th><th>기    안</th><th></th><th></th><th></th><th></th></tr><tr><td></td><td>담   당</td><td>이  사</td><td>전   무</td><td></td><td>사   장</td></tr><tr><td></td><td>보존기간</td><td></td><td></td><td>발송번호</td><td></td></tr></table>
+<p>발      신</p>
+<p>A4(210㎜×297㎜)</p><table><tr><th>2017년 Q-COST 현황</th><th>담당</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>검토</th><th>승인</th></tr><tr><td></td><td>1월</td><td>2월</td><td>3월</td><td>4월</td><td>5월</td><td>6월</td><td>7월</td><td>8월</td><td>9월</td><td>10월</td><td>11월</td><td>12월</td><td>합 계</td></tr></table>
+<p>예방비용</p>
+<p>SJQD-9005-11(0)</p>
+<table><tr><td>㈜승정</td><td>A4(210X297)</td></tr></table><p>▣ &#x27;18년 02月 부품 품질불만족 실패비용</p>
+<table><tr><td>발생 지</td><td>차 종</td><td>발생 수량<br>(고객기준_EA)</td><td>선별 인원<br>(名)</td><td>선별 시간<br>(HR)</td><td>선별 진행 자</td><td>단 가</td><td>임 률</td><td>문제점 세부내용</td><td>P-COST</td><td>A-COST</td><td>IF-COST</td><td>EF-COST</td><td>Q-COST 비용</td></tr></table>
+<p>관리자</p>
+<table><tr><td></td><td>HIC IN-LINE<br>/<br>승정 IN-LINE</td><td>HFP1</td><td>청소 및 작업준비</td></tr><tr><td>HFP1.2</td><td></td><td></td><td>압입기 누유 및 샤프트 스크래치 불량 외</td></tr><tr><td>HFP2</td><td></td><td></td><td>압입기 인덱스 회전 에러 및 샤프트 스크래치 불량 외</td></tr></table>
+<p>HFP2-L200</p>
+<p>EFP</p>
+<table><tr><td>SEBA</td><td>SEBA IN-LINE<br>/<br>승정 IN-LINE</td><td>EVP(EVV)</td></tr></table>
+<p>HE50</p>
+<p>HIC 누계</p>
+<p>SEBA 누계</p>
+<p>TOTAL</p>
+<table><tr><td>㈜승정</td><td>A4(210*297)</td></tr></table><p>▣ 2018년 고객사 CLAIM 발생 현황_ 통합</p>
+<table><tr><th>접수일</th><th>문서<br>번호</th><th>고 객 사</th><th>차 종</th><th>당사 품명</th><th>당사 품번</th><th>발생일</th><th>불량 현상및<br>세부 내용</th><th></th><th>개선 대책안</th><th>CLAIM<br>발생비용</th><th>발생<br>건수</th><th>불량 발생 수량</th><th>귀책 여부</th><th>비 고</th><th></th><th></th></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>외주</td><td>고객</td><td></td></tr><tr><td></td><td>품질18-001</td><td>HIC</td><td>HFP1.2외 1종</td><td>AR&#x27; ASS&#x27;Y INSULATION (1차사출품)</td><td>2134-840240 외 1종</td><td>17.12/1~12/28</td><td>2차사출품 외관불량<br> - CORE 찍힘불량 (POM 수지침투/ 승정 낙하흔적 有)</td><td></td><td>이의제기</td><td></td><td></td><td></td><td></td><td></td><td></td><td>기각</td></tr><tr><td></td><td>품질18-002</td><td>HIC</td><td>HFP1외 3종</td><td>AR&#x27; ASS&#x27;Y INSULATION (1차사출품)</td><td>2134-710170 외 3종</td><td>1/8~ 1/29</td><td>2차사출품 외관불량 외<br> - CORE 찍힘 外 이종/혼입 등</td><td></td><td>1. CORE 찍힘: 작업자 교육실시<br> 1-1. 낙하품 후공정 투입금지<br>2. 이종/혼입: 차종변경 검사의뢰서 관리 등</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td>품질18-003</td><td>HIC</td><td>HFP1외 2종</td><td>AR&#x27; ASS&#x27;Y INSULATION (1차사출품)</td><td>2134-710170 외 2종</td><td>2/2~ 2/28</td><td>2차사출품 외관불량<br> - 1차사출품 內 PA66수지 침투<br> (성형 전공정 낙하품 후공정 투입)</td><td></td><td>작업자 교육<br> - 낙하품 유출방지 집중교육<br> - 공정 별 CORE부품 낙하발생 유추 분석예정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(210*297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><p>▣ 2018년 12月 고객 IN-LINE CLAIM 현황</p>
+<table><tr><td>2017 년</td><td>1월</td><td>2월</td><td>3월</td><td>4월</td><td>5월</td><td>6월</td><td>7월</td><td>8월</td><td>9월</td><td>10월</td><td>11월</td><td>12월</td><td>합 계</td></tr></table>
+<p>부적합 수량</p>
+<table><tr><td>EFP GASOLIN</td><td>부적합 수량</td></tr></table>
+<p>부적합 수량</p>
+<p>부적합 수량</p>
+<p>부적합 수량</p>
+<p>부적합 수량</p>
+<p>부적합 수량</p>
+<p>부적합 수량</p>
+<p>부적합 수량</p>
+<table><tr><td>EVP(EVV)</td><td>부적합 수량</td></tr></table>
+<p>부적합 수량</p><table><tr><th></th><th></th><th></th><th>작성</th><th>검토</th><th>심의</th><th>승인</th></tr><tr><td>직 급</td><td>성  명</td><td>(인)</td><td></td><td></td><td></td><td></td></tr></table>
+<p>20  년   월   일부터  20  년   월   일까지(    일간)</p>
+<p>출장지(왕복) :        km</p>
+<p>출장지(왕복) :        km</p>
+<p>출장지(왕복) :        km</p>
+<p>출 장 경 비</p>
+<table><tr><td>직  급</td><td>성       명</td><td>이  동  수  단</td><td></td><td></td><td>회사차 (   ) , 자차 (   ) , 대중교통 (   ) , 기타 (            )</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>㈜승정</td><td></td><td></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>작성</td><td>검토</td><td>심의</td><td>승인</td></tr><tr><td>직 급</td><td></td><td></td><td>성  명</td><td></td><td></td><td>(인)</td><td></td><td></td><td></td><td></td></tr></table>
+<p>20  년   월   일부터  20  년   월   일까지(    일간)</p>
+<p>출장지(왕복) :        km</p>
+<p>출장지(왕복) :        km</p>
+<p>출장지(왕복) :        km</p>
+<p>출 장 경 비</p>
+<table><tr><td>직  급</td><td>성       명</td><td>이  동  수  단</td><td></td><td>회사차 (   ) , 자차 (   ) , 대중교통 (   ) , 기타 (            )</td></tr><tr><td>㈜승정</td><td></td><td></td><td>A4(210×297)</td><td></td></tr></table><div class="sect-flow"><h2>◈ 업무 흐름도 · 도식 내용</h2><div class="flowwrap"><span class="flownode">1월            2월              3월                4월              5월              6월              7월              8월             9월               10월          11월             12월            합계</span><span class="flownode">(EA)</span><span class="flownode">CALIM 대장 참고</span><span class="flownode">BOX</span></div></div><div class="foot">원본: 9.6. (SJQP-9006) 시정 및 예방조치 프로세스_Rev.1_180328 (1).xlsx</div></div></body></html>

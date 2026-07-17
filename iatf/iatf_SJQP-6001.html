@@ -1,223 +1,51 @@
 <!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>리스크관리 프로세스</title><style>
-*{box-sizing:border-box}body{margin:0;background:#eef1f6;color:#1c2430;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
-header{background:linear-gradient(90deg,#123a52,#0d6e8c);color:#fff;padding:12px 18px;position:sticky;top:0;z-index:5}
+*{box-sizing:border-box}body{margin:0;background:#eef1f6;color:#222;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:14px;line-height:1.7}
+header{background:linear-gradient(90deg,#123a52,#0d6e8c);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:5}
 header .no{font-family:monospace;font-size:12px;opacity:.85;font-weight:700}
-header h1{margin:2px 0 0;font-size:19px;font-weight:800}
-header .meta{font-size:11.5px;opacity:.85;margin-top:3px}
-header button{float:right;background:#fff;color:#123a52;border:0;border-radius:8px;padding:7px 13px;font:inherit;font-weight:800;cursor:pointer;margin-left:8px}
-.wrap{padding:16px 18px 60px;overflow-x:auto}
-table{border-collapse:collapse;background:#fff;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-td{border:1px solid #c2ccd6;padding:5px 8px;vertical-align:top;white-space:pre-wrap;word-break:break-word;max-width:340px;line-height:1.5}
-h3.sh{margin:16px 0 6px;font-size:13px;color:#0d6e8c}
-@media print{header button{display:none}.wrap{overflow:visible}body{background:#fff}}
+header h1{margin:3px 0 0;font-size:21px;font-weight:800;letter-spacing:-.3px}
+header .meta{font-size:12px;opacity:.85;margin-top:4px}
+header button{float:right;background:#fff;color:#123a52;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer;margin-left:8px}
+.page{max-width:900px;margin:18px auto;background:#fff;border:1px solid #e2e8ee;border-radius:12px;padding:26px 30px 50px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+h2{font-size:16px;color:#0d6e8c;font-weight:800;margin:22px 0 8px;padding:7px 12px;background:#eef6fa;border-left:4px solid #0d6e8c;border-radius:0 7px 7px 0}
+p{margin:5px 2px}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:13px}
+th,td{border:1px solid #ccd4dc;padding:7px 10px;vertical-align:top;text-align:left;word-break:break-word}
+th{background:#f2f6f9;font-weight:800;color:#234}
+tr:nth-child(even) td{background:#fafcfd}
+.sect-flow{margin-top:26px}
+.flowwrap{display:flex;flex-wrap:wrap;gap:7px}
+.flownode{background:#f4f8fb;border:1px solid #cfe0ea;border-radius:8px;padding:7px 12px;font-size:12.5px;white-space:pre-wrap}
+.foot{margin-top:30px;padding-top:12px;border-top:1px solid #eef1f5;font-size:11.5px;color:#98a2ad;text-align:right}
+@media print{header button{display:none}body{background:#fff}.page{border:0;box-shadow:none;max-width:none;margin:0}}
 </style></head><body>
 <header><button onclick="window.print()">🖨️ 인쇄</button><div class="no">SJQP-6001 · Rev 2</div><h1>리스크관리 프로세스</h1><div class="meta">제·개정일 2022-03-15 · IATF16949 품질경영시스템 · ㈜승정 품질기획부</div></header>
-<div class="wrap"><h3 class="sh">시트 1</h3><table>
-<tr><td rowspan="4" colspan="3">품질경영 프로세스</td><td rowspan="2" colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td rowspan="2" colspan="6"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>3.관련 표준문서</td><td></td><td></td><td></td><td></td><td></td><td>45</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>3.1 사업계획운영 절차 (SJQD-4002)</td><td></td><td></td><td></td><td></td><td></td><td>47</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>3.2 문서화 정보관리 절차 (SJQD-7008)</td><td></td><td></td><td></td><td></td><td></td><td>49</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>50</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>51</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>52</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>53</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>4.기록 및 보관</td><td></td><td></td><td></td><td></td><td></td><td colspan="5"></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>양   식   명</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>1.프로세스 SWOT분석표</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>2.리스크분석시트</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>60</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>66</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>67</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>68</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>69</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>70</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>71</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>72</td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="2"></td><td></td></tr>
-<tr><td></td><td>73</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>5.측정지표</td><td></td><td></td><td></td><td></td><td></td><td colspan="5"></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td colspan="3">㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-</table><h3 class="sh">시트 2</h3><table>
-<tr><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-6001</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr></tr>
-<tr><td rowspan="2"></td><td rowspan="2" colspan="2">주요 타스크<br>(Who)</td><td></td><td rowspan="2">산출물<br>(Output)</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="3">적용문서/양식</td></tr>
-<tr><td></td><td></td><td>협조</td></tr>
-<tr><td></td><td></td><td rowspan="3"></td><td rowspan="3" colspan="2">1.각 팀은 Risk 항목별로 Risk가 발생/전개되는<br>  과정(Machanism)을 파악하여야하며 이를 위하여 <br>  발생원인과 영향/결과를 파악하여 정리한다.<br>2.원인 규명 시에는 &quot;SWOT분석표(SJQP-6001-01)&quot;를<br>  이용하여, 발생과정과 원인을 파악한다.<br>3.Risk에 따른 영향/결과(Consequence)를 다음을<br>  포함하여 파악한다.<br>   (1)고객에게 미치는 영향<br>   (2)회사의 손익/수익성에 미치는 영향<br>   (3)내, 외부 이해관계자에게 미치는 영향<br>   (4)제품 품질 및 납기에 미치는 영향<br>   (5)제품/서비스사용 및 유지에 미치는 영향<br>   (6)회사 이미지/평판에 미치는 영향<br>4.파악된 내용은 &quot;부정적 사항(위험)과 긍정적 사<br>  항(기회)&quot;로 나누어 분류하며,<br>  &quot;프로세스 Risk 분석표(SJQP-6001-02)&quot;에 <br>  등록한다.</td><td rowspan="3"></td><td rowspan="3">프로세스<br>리스크분석표</td><td rowspan="3">각부서</td><td rowspan="3">관련<br>부서</td><td rowspan="3">각팀장</td><td rowspan="3" colspan="3">RISK 분석표<br>(SJQP-6001-11)</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td rowspan="3"></td><td rowspan="3" colspan="2">1.각 팀은 Risk의 영향,발생빈도,감지가능성/돌발<br>  성에 대한 의사소통과 합리적인 수준 평가를 위<br>  하여 수준등급을 정하고 점수를 부여하여야 <br>  한다.<br>2.각 팀은 Risk의 영향/결과에 대하여 심각한 정<br>  도를 판단하고 이를 점수화 한다. Risk심각도의<br>  점수화 기준은 부표1에 따른다.<br>3.각 팀은 Risk의 원인에 대하여 발생빈도를 추정<br>  하고 이를 점수화 한다. Risk발생도의 점수화 <br>  기준은 부표2에 따른다.<br>4.각 팀은 Risk의 등록여부 기준을 정한다.</td><td rowspan="3"></td><td rowspan="3">리스크심각도<br><br>리스크점수<br>기준</td><td rowspan="3">각부서</td><td rowspan="3">관련<br>부서</td><td rowspan="3">각팀장</td><td rowspan="3" colspan="3">RISK 분석표<br>(SJQP-6001-11)</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td></tr>
-</table><h3 class="sh">시트 3</h3><table>
-<tr><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-6001</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr></tr>
-<tr><td rowspan="2"></td><td rowspan="2" colspan="2">주요 타스크<br>(Who)</td><td></td><td rowspan="2">산출물<br>(Output)</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="3">적용문서/양식</td></tr>
-<tr><td></td><td></td><td>협조</td></tr>
-<tr><td></td><td></td><td rowspan="2"></td><td rowspan="2" colspan="2">1.각 팀은 매년 사업계획 수립 시 또는 주요 변경사항<br>  발생시 해당 팀의 주요 업무분야 및 프로세스에<br>  대하여 Risk파악 및 분석을 하여야한다. <br>2.각 팀은 매년 사업계획 수립 시 다음을 고려하여<br>  Risk분석 대상을 정한다.<br>  (1)고객의 신제품 개발, 생산 및 경영 동향 및 변화<br>  (2)국제 경제 환경, 변동 요소 및 이슈사항<br>  (3)주요공급자의 변동사항,잠재공급자,공급환경<br>  (4)현재/잠재 경쟁자의 개발,생산,조직운영 및 주요<br>     변동사항<br>  (5)법규,제도 및 사회환경 변화내용<br>  (6)조직구조/인적자원/시스템 및 운영방식/재무구조<br>     등 내부이슈<br>3.각팀은 Risk분석결과를 사업계획에 반영하여야 하며<br>  사업계획 실행중 목표달성에영향을 끼칠 수 있는 <br>  변동이나 이슈가 발생된 경우 Risk분석을 실시한다.</td><td rowspan="2"></td><td rowspan="2">리스크분석표</td><td rowspan="2">작성<br>부서</td><td rowspan="2">관련<br>부서</td><td rowspan="2">각팀장</td><td rowspan="2" colspan="3">RISK 분석표<br>(SJQP-6001-11)</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td rowspan="4"></td><td rowspan="4" colspan="2">1.각 팀은 파악된 이슈,주요변화요소 및 성과에 중대한<br>  영향을 미치는 프로세스 등에 대하여 Risk 파악을 실<br>  시한다.<br>2.Risk 파악은 업무/프로세스에 있어 그 목적의 미달성,<br>  고객불만족,효율성저하,재산/이익측면의 손실발생,직<br>  원안전/건강 또는 사기저하 등을 유발 할 수 있는 기<br>  술적 위협,자연재해,의도된 위협을 포함한다.<br>3.Risk 분석시 잠재/실제 리콜,필드반송,수리,불만,폐기 <br>  및 모든 재작업으로부터의 습득교훈이 포함되도록 하<br>  여야 한다.<br>4.Risk 파악시에는 정상상황 뿐만 아니라 비정상 상황<br>  에서 발생되는 요소도 포함하여야 한다.</td><td rowspan="4"></td><td rowspan="4">리스크파악표</td><td rowspan="4">작성<br>부서</td><td rowspan="4">-</td><td rowspan="4">각팀장</td><td rowspan="4" colspan="3">112</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td></tr>
-</table><h3 class="sh">시트 4</h3><table>
-<tr><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-6001</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr></tr>
-<tr><td rowspan="2"></td><td rowspan="2" colspan="2">주요 타스크<br>(Who)</td><td></td><td rowspan="2">산출물<br>(Output)</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="3">적용문서/양식</td></tr>
-<tr><td></td><td></td><td>협조</td></tr>
-<tr><td></td><td></td><td rowspan="4"></td><td rowspan="4" colspan="2">5.Risk파악시 Risk와 그 원인 및 영향이 혼동되지 않도 <br>  록 구분하여야 한다.<br>  예)프로세스:자금관리, Risk:단기자금경색,<br>     원인:수금 또는 자금조달과 지출의 불일치에 의한 <br>          자금지출불능 발생<br>     영향:임금/구입대금등 지급 지연에 의한 신용저하,<br>          조직이미지 실추<br>     대응(단기):수금계획,자금계획(월,주) 수립 및 운영<br>     대응(장기):단기자금 차입 축소 전략/계획수립</td><td rowspan="4"></td><td rowspan="4">리스크<br>파악표</td><td rowspan="4">작성<br>부서</td><td rowspan="4">-</td><td rowspan="4">각팀장</td><td rowspan="4" colspan="3">127</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td colspan="2">1.각 팀은 리스크 분석표에 따라 <br>1)리스크/기회요인을 파악한다.<br>2)요인 별, 조직에 미치는 영향을 조사한다.<br>3)각 영향에 대해 리스크 또는 기회를 결정한다<br>4)결정된 영향 중에서 조치등급을 부여하고 조치<br>  여부 등록한 후 수용 또는 미수용을 결정한다.<br>5)등록이 결정된 사항은 식별번호를 부여한다.<br>2.Risk 분석 결과는 RISK 분석표에 기록한다.</td><td></td><td>리스크<br>분석표</td><td>작성<br>부서</td><td>관련부서</td><td>부서장</td><td colspan="3">RISK 분석표<br>(SJQP-6001-11)</td></tr>
-<tr><td></td><td></td><td></td><td colspan="2">1.각 팀은 각 Risk 항목에 대하여 대응방안을 수립한다.<br>2.대응방안은 위험과 기회 또는 이들 모두에 해당되는<br>  경우로 구분하여 수립한다. 세부사항은 부표2에 따른다.<br>3.각 팀은 위험에 대한 대응방안이 &quot;통제(Control)이거나<br>  기회로써 대응이 필요한 경우 구체 대응 방안을 수립하<br>  고 사업계획에 반영한다.<br>4.대응방안 수립시에는 적절한 기한내에 완성되도록 하고, <br>  달성가능(Achievable)한 방안으로써 목표 달성여부의 <br>  측정가능(Measurable)한 것이 되도록 한다.<br>5.Risk 대응방안 수립결과는 RISK 분석표에 기록한다.</td><td></td><td></td><td>작성<br>부서</td><td>관련부서</td><td>부서장</td><td colspan="3">RISK 분석표<br>(SJQP-6001-11)</td></tr>
-<tr><td></td><td></td><td></td><td></td><td>㈜승정</td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-</table><h3 class="sh">시트 5</h3><table>
-<tr><td rowspan="4" colspan="3">품질경영 프로세스</td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">SJQP-6001</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2" colspan="2">품질팀</td><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="2"></td><td colspan="2"></td></tr>
-<tr><td colspan="14"></td></tr>
-<tr><td rowspan="2" colspan="3"></td><td rowspan="2"></td><td rowspan="2" colspan="2">주요 타스크<br>(Who)</td><td></td><td rowspan="2">산출물<br>(Output)</td><td colspan="2">관련부서</td><td rowspan="2"></td><td rowspan="2" colspan="3">적용문서/양식</td></tr>
-<tr><td></td><td></td><td>협조</td></tr>
-<tr><td></td><td></td><td></td><td></td><td colspan="2">1.각 팀은 다음을 포함하여 Risk 대응방안을 실행<br>  하여야 한다.<br>  (1)관련 프로세스/시스템 개정 또는 개선<br>  (2)관련 물적자원 확보 또는 변경<br>  (3)관련인원 훈련 및 이해여부 확인<br>  (4)기타 취약성의 보완<br>2.각 팀은 대응방안의 실행과정 및 완료 여부를 <br>  모니터링 하여야 한다. 또한 실행결과를 보고<br>  하여야 한다.</td><td></td><td>리스크<br>평가표</td><td>작성<br>부서</td><td>관련<br>부서</td><td>각팀장</td><td colspan="3">133</td></tr>
-<tr><td></td><td></td><td></td><td rowspan="3"></td><td rowspan="3" colspan="2">1.각 팀은 대응방안 실행 이후 잔존위험의 존재 여<br>  부와 수준을 파악하고 평가하여야 한다.<br>2.잔존위험이 감내할 수준이 아닌 경우 Risk 분석<br>  및 대응방안 수립,실행을 다시 진행하여야 한다.<br>3.각 팀은 Risk 항목 별로 사후관리 필요여부를<br>  판단한다. Risk 대응방안 실행으로 위험이 무시<br>  가능 수준이된 경우 사후관리에서 제외한다.</td><td rowspan="3"></td><td rowspan="3">리스크<br>평가표</td><td rowspan="3">작성<br>부서</td><td rowspan="3">관련<br>부서</td><td rowspan="3">각팀장</td><td rowspan="3" colspan="3">133</td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td rowspan="2"></td><td rowspan="2" colspan="2">4.사후 관리가 필요한 경우 Risk 모니터링 Point&quot;<br>  를 수립하고 RISK 분석표에 등록하며, 다음과<br>  같이 점검 및 조치를한다.<br>  (1)실무 담당: 수시점검, 보고 및 조치<br>  (2)책임 관리자: 정기(최소 연 1회)점검 및 조치<br>  (3)경영시스템 심사원: 심사 체크 항목에 반영,<br>     심사 실시<br>5.각 팀은 매년 및 수시로 RISK 분석표의 개정 필<br>  요여부를 판단하고 개정하여 예기치 못한 중대사<br>  고가 최소화되도록 하여야 한다.</td><td rowspan="2"></td><td rowspan="2">리스크<br>평가표</td><td rowspan="2">작성<br>부서</td><td rowspan="2">관련<br>부서</td><td rowspan="2">각팀장</td><td rowspan="2" colspan="3">112</td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td></tr>
-</table><h3 class="sh">시트 6</h3><table>
-<tr><td>품질경영 프로세스</td><td></td><td></td><td></td><td rowspan="2" colspan="19"></td><td rowspan="2" colspan="3"></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td rowspan="2" colspan="19"></td><td rowspan="2" colspan="3"></td></tr>
-<tr><td colspan="2"></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>145</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td>발생도</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>147</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="4"></td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td rowspan="2">5<br>(EXTREME)</td><td>단계</td><td rowspan="2"></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="4"></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="6" colspan="2"></td><td rowspan="6" colspan="3"></td><td rowspan="6" colspan="4"></td><td rowspan="6" colspan="4"></td><td rowspan="6"></td><td rowspan="6">ᆞ조직의 계속<br>  성에 의문을<br>  가질만한 매<br>  우 심각한<br>  영향</td><td>정도</td><td rowspan="6"></td><td rowspan="6" colspan="2"></td><td rowspan="6" colspan="3"></td><td rowspan="6" colspan="4"></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="6" colspan="2"></td><td rowspan="6" colspan="3"></td><td rowspan="6" colspan="4"></td><td rowspan="6" colspan="4"></td><td rowspan="6"></td><td rowspan="6">ᆞ전사 핵심<br>  목표달성의<br>  실패가 가능<br>  하여 최고경<br>  영진 차원의<br>  관리가 필요<br>  한 수준</td><td>설명</td><td rowspan="6"></td><td rowspan="6" colspan="2"></td><td rowspan="6" colspan="3"></td><td rowspan="6" colspan="4"></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td></td></tr>
-<tr><td colspan="15"></td><td colspan="6"></td><td></td><td colspan="3"></td><td></td></tr>
-</table><h3 class="sh">시트 7</h3><table>
-<tr><td rowspan="4" colspan="4">품질경영 프로세스</td><td rowspan="2" colspan="22"></td></tr>
-<tr></tr>
-<tr><td rowspan="2" colspan="22"></td></tr>
-<tr></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td>대응전략</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>147</td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="4"></td><td rowspan="2" colspan="4"></td><td rowspan="2" colspan="4"></td><td rowspan="2"></td><td>코드</td><td></td><td></td><td colspan="2">용어</td><td colspan="11"></td></tr>
-<tr><td></td><td></td><td></td><td rowspan="3"></td><td rowspan="3" colspan="2">회피</td><td rowspan="3" colspan="11"></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="10" colspan="2"></td><td rowspan="10" colspan="3"></td><td rowspan="10" colspan="4"></td><td rowspan="10" colspan="4"></td><td rowspan="10" colspan="4"></td><td rowspan="10"></td><td>192</td><td></td></tr>
-<tr><td></td><td></td><td></td><td rowspan="2"></td><td rowspan="2" colspan="2">활용</td><td rowspan="2" colspan="11"></td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td rowspan="2"></td><td rowspan="2" colspan="2">강화</td><td rowspan="2" colspan="11"></td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td rowspan="3"></td><td rowspan="3" colspan="2">통제</td><td rowspan="3" colspan="11"></td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td rowspan="3"></td><td rowspan="3" colspan="2">수용</td><td rowspan="3" colspan="11"></td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td rowspan="11" colspan="2"></td><td rowspan="11" colspan="3"></td><td rowspan="11" colspan="4"></td><td rowspan="11" colspan="4"></td><td rowspan="11" colspan="4"></td><td rowspan="11"></td><td>F</td><td></td><td rowspan="2"></td><td rowspan="2" colspan="2">전가</td><td rowspan="2" colspan="11"></td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td>212</td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td>213</td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td>81</td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td></tr>
-<tr><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="7"></td><td></td><td colspan="3"></td></tr>
-</table><h3 class="sh">시트 8</h3><table>
-<tr><td>SJQP-6001-10(0)</td><td></td><td></td><td></td><td></td><td></td><td colspan="2">㈜승정</td></tr>
-</table><h3 class="sh">시트 9</h3><table>
-<tr><td rowspan="3" colspan="37">▣ RISK 분석을 통한 잠재적 고장형태의 파악</td></tr>
-<tr></tr>
-<tr></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td rowspan="3" colspan="2"></td><td colspan="2"></td><td colspan="3"></td><td rowspan="3" colspan="30"></td></tr>
-<tr><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td colspan="2"></td><td colspan="3"></td></tr>
-<tr><td rowspan="2"></td><td rowspan="2" colspan="3">프로세스 명칭</td><td rowspan="2" colspan="2"></td><td rowspan="2" colspan="3"></td><td rowspan="2" colspan="3"></td><td rowspan="2"></td><td rowspan="2">발생도</td><td rowspan="2">검출도</td><td rowspan="2">위험수준</td><td colspan="7">통제 및 관리방식</td><td rowspan="2" colspan="3"></td></tr>
-<tr><td colspan="3"></td><td colspan="4"></td></tr>
-<tr><td></td><td colspan="3">판매/물류 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>2</td><td>3</td><td>10</td><td colspan="3">담당자 교육 및 숙련도 교육 <br>담당 관리자 지정</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">판매/물류 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>3</td><td>3</td><td>12</td><td colspan="3">담당자 교육 및 숙련도 향상</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">판매/물류 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>2</td><td>2</td><td>8</td><td colspan="3">일일 재고관리</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">판매/물류 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>3</td><td>3</td><td>12</td><td colspan="3">담당자 교육<br>담당자 숙련도 향상</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">판매/물류 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>4</td><td>4</td><td>16</td><td colspan="3">담당자 교육<br>담당자 숙련도 향상</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">판매/물류 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>4</td><td>4</td><td>16</td><td colspan="3">담당자 교육<br>담당자 숙련도 향상</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">생산운영 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>4</td><td>3</td><td>16</td><td colspan="3">표준교육, 작업일보 기록</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">생산운영 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>3</td><td>3</td><td>9</td><td colspan="3">모니터링 검사강화</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">생산운영 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>3</td><td>3</td><td>16</td><td colspan="3">부적합품처리교육<br>부적합품장소지정<br>식별표 부착</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">생산운영 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>4</td><td>4</td><td>16</td><td colspan="3">모니터링 폐기상태 점검 강화</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">내부심사 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>2</td><td>5</td><td>8</td><td colspan="3">년간 계획서 수립<br>담당자 교육</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">내부심사 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>2</td><td>3</td><td>8</td><td colspan="3">년간 계획서 수립<br>담당자 교육</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">내부심사 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>2</td><td>3</td><td>8</td><td colspan="3">년간 계획서 수립<br>담당자 교육</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3">내부심사 PROCESS</td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td>3</td><td>3</td><td>12</td><td colspan="3">년간 계획서 수립<br>담당자 교육</td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td></td><td colspan="3"></td><td colspan="2"></td><td colspan="3"></td><td colspan="3"></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td colspan="3"></td></tr>
-<tr><td colspan="4"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td colspan="3"></td><td colspan="4"></td><td></td><td></td><td></td></tr>
-</table></div></body></html>
+<div class="page"><table><tr><th>품질경영 프로세스</th><th>문서번호</th><th>SJQP-6001</th><th>제정일자</th></tr><tr><td></td><td>주관부서</td><td>품질팀</td><td>개정일자</td></tr></table>
+<p>1 / 7</p>
+<h2>3.관련 표준문서</h2>
+<h2>3.1 사업계획운영 절차 (SJQD-4002)</h2>
+<p>3.2 문서화 정보관리 절차 (SJQD-7008)</p>
+<h2>4.기록 및 보관</h2>
+<table><tr><th>양   식   명</th><th>양식번호</th><th>보관부서</th><th>보존년한</th></tr><tr><td>1.프로세스 SWOT분석표</td><td>SJQP-6001-10</td><td>품질팀</td><td>5년</td></tr><tr><td>2.리스크분석시트</td><td>SJQP-6001-11</td><td>품질팀</td><td>5년</td></tr></table>
+<h2>5.측정지표</h2>
+<table><tr><th></th><th></th><th>측정주기</th><th>측정책임자</th><th>보고양식</th></tr><tr><td></td><td></td><td>1회/년</td><td>품질팀</td><td></td></tr><tr><td>㈜승정</td><td>A4(210×297)</td><td></td><td></td><td></td></tr></table><table><tr><th>문서번호</th><th>SJQP-6001</th><th>제정일자</th></tr><tr><td>주관부서</td><td>품질팀</td><td>개정일자</td></tr></table>
+<p>2 / 7</p>
+<table><tr><th>입력물<br>(Input)</th><th>주요 타스크<br>(Who)</th><th>업무</th><th>산출물<br>(Output)</th><th>관련부서</th><th>승인</th><th></th><th>적용문서/양식</th><th></th></tr><tr><td></td><td></td><td></td><td>주관</td><td></td><td>협조</td><td></td><td></td><td></td></tr><tr><td></td><td>1.각 팀은 Risk 항목별로 Risk가 발생/전개되는<br>  과정(Machanism)을 파악하여야하며 이를 위하여<br>  발생원인과 영향/결과를 파악하여 정리한다.<br>2.원인 규명 시에는 &quot;SWOT분석표(SJQP-6001-01)&quot;를<br>  이용하여, 발생과정과 원인을 파악한다.<br>3.Risk에 따른 영향/결과(Consequence)를 다음을<br>  포함하여 파악한다.<br>   (1)고객에게 미치는 영향<br>   (2)회사의 손익/수익성에 미치는 영향<br>   (3)내, 외부 이해관계자에게 미치는 영향<br>   (4)제품 품질 및 납기에 미치는 영향<br>   (5)제품/서비스사용 및 유지에 미치는 영향<br>   (6)회사 이미지/평판에 미치는 영향<br>4.파악된 내용은 &quot;부정적 사항(위험)과 긍정적 사<br>  항(기회)&quot;로 나누어 분류하며,<br>  &quot;프로세스 Risk 분석표(SJQP-6001-02)&quot;에<br>  등록한다.</td><td>매년/<br>수시</td><td>프로세스<br>리스크분석표</td><td>각부서</td><td>관련<br>부서</td><td>각팀장</td><td>RISK 분석표<br>(SJQP-6001-11)</td><td></td></tr><tr><td></td><td>1.각 팀은 Risk의 영향,발생빈도,감지가능성/<br>  돌발성에 대한 의사소통과 합리적인 수준<br>  평가를 위하여 수준등급을 정하고 점수를 부여<br>  하여야 한다.<br>2.각 팀은 Risk의 영향/결과에 대하여 심각한 정<br>  도를 판단하고 이를 점수화 한다. Risk심각도<br>  의점수화 기준은 부표1에 따른다.<br>3.각 팀은 Risk의 원인에 대하여 발생빈도를<br>  추정 하고 이를 점수화 한다. Risk발생도의 점  수화기준은 부표2에 따른다.<br>4.각 팀은 Risk의 등록여부 기준을 정한다.</td><td>매년/<br>수시</td><td>리스크심각도<br>리스크점수<br>기준</td><td>각부서</td><td>관련<br>부서</td><td>각팀장</td><td>RISK 분석표<br>(SJQP-6001-11)</td><td></td></tr><tr><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td></tr></table><table><tr><th>문서번호</th><th>SJQP-6001</th><th>제정일자</th></tr><tr><td>주관부서</td><td>품질팀</td><td>개정일자</td></tr></table>
+<p>3 / 7</p>
+<table><tr><th>입력물<br>(Input)</th><th>주요 타스크<br>(Who)</th><th>업무</th><th>산출물<br>(Output)</th><th>관련부서</th><th>승인</th><th></th><th>적용문서/양식</th><th></th></tr><tr><td></td><td></td><td></td><td>주관</td><td></td><td>협조</td><td></td><td></td><td></td></tr><tr><td></td><td>1.각 팀은 매년 사업계획 수립 시 또는 주요 변경사항<br>  발생시 해당 팀의 주요 업무분야 및 프로세스에<br>  대하여 Risk파악 및 분석을 하여야한다.<br>2.각 팀은 매년 사업계획 수립 시 다음을 고려하여<br>  Risk분석 대상을 정한다.<br>  (1)고객의 신제품 개발, 생산 및 경영 동향 및 변화<br>  (2)국제 경제 환경, 변동 요소 및 이슈사항<br>  (3)주요공급자의 변동사항,잠재공급자,공급환경<br>  (4)현재/잠재 경쟁자의 개발,생산,조직운영 및 주요<br>     변동사항<br>  (5)법규,제도 및 사회환경 변화내용<br>  (6)조직구조/인적자원/시스템 및 운영방식/재무구조<br>     등 내부이슈<br>3.각팀은 Risk분석결과를 사업계획에 반영하여야 하며<br>  사업계획 실행중 목표달성에영향을 끼칠 수 있는<br>  변동이나 이슈가 발생된 경우 Risk분석을 실시한다.</td><td>매년/ 수시</td><td>리스크분석표</td><td>작성<br>부서</td><td>관련<br>부서</td><td>각팀장</td><td>RISK 분석표<br>(SJQP-6001-11)</td><td></td></tr><tr><td></td><td>1.각 팀은 파악된 이슈,주요변화요소 및 성과에<br>  중대한 영향을 미치는 프로세스 등에 대하여<br>  Risk 파악을 실시한다.<br>2.Risk 파악은 업무/프로세스에 있어 그 목적의<br>  미달성,고객불만족,효율성저하,재산/이익측면의 손실  발생,직원안전/건강 또는 사기저하 등을 유발 할 수   있는 기술적 위협,자연재해,의도된 위협을 포함한다.<br>3.Risk 분석시 잠재/실제 리콜,필드반송,수리,불만,<br>  폐기 및 모든 재작업으로부터의 습득교훈이 포함되<br>  도록 하여야 한다.<br>4.Risk 파악시에는 정상상황 뿐만 아니라 비정상 상황<br>  에서 발생되는 요소도 포함하여야 한다.</td><td>매년/ 수시</td><td>리스크파악표</td><td>작성<br>부서</td><td></td><td>각팀장</td><td></td><td></td></tr><tr><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td></tr></table><table><tr><th>문서번호</th><th>SJQP-6001</th><th>제정일자</th></tr><tr><td>주관부서</td><td>품질팀</td><td>개정일자</td></tr></table>
+<p>4 / 7</p>
+<table><tr><th>입력물<br>(Input)</th><th>주요 타스크<br>(Who)</th><th>업무</th><th></th><th>산출물<br>(Output)</th><th>관련부서</th><th>승인</th><th></th><th>적용문서/양식</th><th></th></tr><tr><td></td><td></td><td></td><td></td><td>주관</td><td></td><td>협조</td><td></td><td></td><td></td></tr><tr><td></td><td>5.Risk파악시 Risk와 그 원인 및 영향이 혼동되지 않도<br>  록 구분하여야 한다.<br>  예)프로세스:자금관리, Risk:단기자금경색,<br>     원인:수금 또는 자금조달과 지출의 불일치에 의한<br>          자금지출불능 발생<br>     영향:임금/구입대금등 지급 지연에 의한 신용저하,<br>          조직이미지 실추<br>     대응(단기):수금계획,자금계획(월,주) 수립 및<br>               운영<br>     대응(장기):단기자금 차입 축소 전략/계획수립</td><td>매년</td><td></td><td>리스크<br>파악표</td><td>작성<br>부서</td><td></td><td>각팀장</td><td></td><td></td></tr><tr><td></td><td>1.각 팀은 리스크 분석표에 따라<br>1)리스크/기회요인을 파악한다.<br>2)요인 별, 조직에 미치는 영향을 조사한다.<br>3)각 영향에 대해 리스크 또는 기회를 결정한다<br>4)결정된 영향 중에서 조치등급을 부여하고 조치<br>  여부 등록한 후 수용 또는 미수용을 결정한다.<br>5)등록이 결정된 사항은 식별번호를 부여한다.<br>2.Risk 분석 결과는 RISK 분석표에 기록한다.</td><td>매년</td><td></td><td>리스크<br>분석표</td><td>작성<br>부서</td><td>관련부서</td><td>부서장</td><td>RISK 분석표<br>(SJQP-6001-11)</td><td></td></tr><tr><td></td><td>1.각 팀은 각 Risk 항목에 대하여 대응방안을 수립한다.<br>2.대응방안은 위험과 기회 또는 이들 모두에 해당되는<br>  경우로 구분하여 수립한다. 세부사항은 부표2에 따른다.<br>3.각 팀은 위험에 대한 대응방안이 &quot;통제(Control)이거나<br>  기회로써 대응이 필요한 경우 구체 대응 방안을 수립하<br>  고 사업계획에 반영한다.<br>4.대응방안 수립시에는 적절한 기한내에 완성되도록 하고,<br>  달성가능(Achievable)한 방안으로써 목표 달성여부의<br>  측정가능(Measurable)한 것이 되도록 한다.<br>5.Risk 대응방안 수립결과는 RISK 분석표에 기록한다.</td><td>리스크<br>평가표</td><td></td><td></td><td>작성<br>부서</td><td>관련부서</td><td>부서장</td><td>RISK 분석표<br>(SJQP-6001-11)</td><td>SJQP-6001-03(0)</td></tr><tr><td></td><td></td><td>㈜승정</td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><table><tr><th>품질경영 프로세스</th><th>문서번호</th><th>SJQP-6001</th><th>제정일자</th></tr><tr><td></td><td>주관부서</td><td>품질팀</td><td>개정일자</td></tr></table>
+<p>5 / 7</p>
+<table><tr><th>입력물<br>(Input)</th><th>주요 타스크<br>(Who)</th><th>업무</th><th>산출물<br>(Output)</th><th>관련부서</th><th>승인</th><th></th><th>적용문서/양식</th><th></th></tr><tr><td></td><td></td><td></td><td>주관</td><td></td><td>협조</td><td></td><td></td><td></td></tr><tr><td></td><td>1.각 팀은 다음을 포함하여 Risk 대응방안을 실행<br>  하여야 한다.<br>  (1)관련 프로세스/시스템 개정 또는 개선<br>  (2)관련 물적자원 확보 또는 변경<br>  (3)관련인원 훈련 및 이해여부 확인<br>  (4)기타 취약성의 보완<br>2.각 팀은 대응방안의 실행과정 및 완료 여부를<br>  모니터링 하여야 한다. 또한 실행결과를 보고<br>  하여야 한다.</td><td>매년</td><td>리스크<br>평가표</td><td>작성<br>부서</td><td>관련<br>부서</td><td>각팀장</td><td></td><td></td></tr><tr><td></td><td>1.각 팀은 대응방안 실행 이후 잔존위험의 존재 여<br>  부와 수준을 파악하고 평가하여야 한다.<br>2.잔존위험이 감내할 수준이 아닌 경우 Risk 분석<br>  및 대응방안 수립,실행을 다시 진행하여야 한다.<br>3.각 팀은 Risk 항목 별로 사후관리 필요여부를<br>  판단한다. Risk 대응방안 실행으로 위험이 무시<br>  가능 수준이된 경우 사후관리에서 제외한다.</td><td>매년</td><td>리스크<br>평가표</td><td>작성<br>부서</td><td>관련<br>부서</td><td>각팀장</td><td></td><td></td></tr><tr><td></td><td>4.사후 관리가 필요한 경우 Risk 모니터링 Point&quot;<br>  를 수립하고 RISK 분석표에 등록하며, 다음과<br>  같이 점검 및 조치를한다.<br>  (1)실무 담당: 수시점검, 보고 및 조치<br>  (2)책임 관리자: 정기(최소 연 1회)점검 및 조치<br>  (3)경영시스템 심사원: 심사 체크 항목에 반영,<br>     심사 실시<br>5.각 팀은 매년 및 수시로 RISK 분석표의 개정 필<br>  요여부를 판단하고 개정하여 예기치 못한 중대사<br>  고가 최소화되도록 하여야 한다.</td><td>매년</td><td>리스크<br>평가표</td><td>작성<br>부서</td><td>관련<br>부서</td><td>각팀장</td><td></td><td></td></tr><tr><td></td><td></td><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td></tr></table><table><tr><th>품질경영 프로세스</th><th>문서번호</th><th>SJQP-6001</th><th>제정일자</th></tr><tr><td></td><td>책임부서</td><td>품질팀</td><td>개정일자</td></tr></table>
+<p>6 / 7</p>
+<p>발생도</p>
+<table><tr><th></th><th>1<br>(LOW)</th><th>2<br>(MINOR)</th><th>3<br>(MODERATE)</th><th>4<br>(MAJOR)</th><th>5<br>(EXTREME)</th><th>단계</th><th>1<br>(LOW)</th><th>2<br>(MINOR)</th><th>3<br>(MODERATE)</th><th>4<br>(MAJOR)</th><th>5<br>(EXTREME)</th></tr><tr><td></td><td>ᆞ조직 및 주요<br>  비즈니스에<br>  미치는 영향이<br>  미미함</td><td>ᆞ주요 비즈니<br>  스와는 무관<br>  하지만 일부<br>  업무에 부정적<br>  인 영향</td><td>ᆞ주요 비즈니스<br>  또는 부수적인<br>  업무에 부정적<br>  인 영향</td><td>ᆞ조직 존폐와<br>  무관하지만<br>  주요 비스니스<br>  에 상당히<br>  부정적인<br>  영향</td><td>ᆞ조직의 계속<br>  성에 의문을<br>  가질만한 매<br>  우 심각한<br>  영향</td><td>정도</td><td>ᆞ발생가능성이<br>  희박함<br>ᆞ예외적인 상<br>  황에서만 발생<br>  가능한 수준</td><td>ᆞ발생가능성이<br>  낮음<br>ᆞ때때로 발생<br>  가능한 수준</td><td>ᆞ발생가능성이<br>  있음<br>ᆞ발생할 것으로<br>  예측되는 수준</td><td>ᆞ발생가능성이<br>  높음<br>ᆞ발생빈도가<br>  높은 수준</td><td>ᆞ발생가능성이<br>  매우 높음<br>ᆞ발생할 것이<br>  거의 확실함</td></tr><tr><td></td><td>ᆞ부정적 영향<br>  을 쉽게 완화<br>  할 수 있으나,<br>  영향을 최소화<br>  하기 위해<br>  관리 노력이<br>  필요한 수준</td><td>ᆞ적정량의 자<br>  원과 관리 노<br>  력이 투입되는<br>  일반적 운영<br>  으로 관리가능<br>  한 수준</td><td>ᆞ사업부 사업<br>  목표 달성에<br>  상당한 영향을<br>  주어 일반관리<br>  이외에 추가<br>  적인 관리가<br>  필요한 수준</td><td>ᆞ사업부 목표<br>  달성에 심각<br>  한 영향을 미<br>  쳐 경영진 차<br>  원의 관리가<br>  필요한 수준</td><td>ᆞ전사 핵심<br>  목표달성의<br>  실패가 가능<br>  하여 최고경<br>  영진 차원의<br>  관리가 필요<br>  한 수준</td><td>설명</td><td>ᆞ과거에 발생<br>  경험이 없음<br>ᆞ현재 및 향후<br>  에 발생가능성<br>  이 거의 없음</td><td>ᆞ과거 발생경<br>  험 없음<br>ᆞ현재 및 향후<br>  에 발생가능성<br>  이 존재함</td><td>ᆞ과거 발생경험<br>  이 있음<br>ᆞ현재 및 향후<br>  에 발생가능성<br>  이 있음</td><td>ᆞ과거 발생경<br>  험이 있음<br>ᆞ현재 및 향후<br>  에 발생가능성<br>  이 높음</td><td>ᆞ과거 발생빈<br>  도가 높게 나<br>  타남<br>ᆞ현재 및 향후<br>  에도 지속적<br>  으로 발생 가<br>  능함</td></tr><tr><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td><td></td></tr></table><table><tr><th>품질경영 프로세스</th><th>문서번호</th><th>SJQP-6001</th><th>제정일자</th></tr><tr><td></td><td>책임부서</td><td>품질팀</td><td>개정일자</td></tr></table>
+<p>7 / 7</p>
+<p>대응전략</p>
+<table><tr><th></th><th>1<br>(LOW)</th><th>2<br>(MINOR)</th><th>3<br>(MODERATE)</th><th>4<br>(MAJOR)</th><th>5<br>(EXTREME)</th><th></th><th>코드</th><th>용어</th><th>개념/의미</th><th>위험수준</th></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>회피</td><td>리스크가 발생되는 활동 자체를 하지 않는 전략</td><td>1~9</td></tr><tr><td></td><td>ᆞ리스크가 사<br>  전에 파악됨<br>ᆞ위기 발생원<br>  인과 영향, 위<br>  기간 연관관계<br>  분석 존재<br>ᆞ위기징후가<br>  사전에 포착<br>  되고 위기 발<br>  생 시나리오<br>  보유</td><td>ᆞ리스크가 사<br>  전에 파악됨<br>ᆞ위기발생원인<br>  과 영향, 위기<br>  간 연관관계<br>  분석 존재<br>ᆞ위기징후가<br>  사전에 포착됨</td><td>ᆞ리스크가 사전<br>  에 파악됨<br>ᆞ위기발생원인<br>  과 영향에 대한<br>  별도 분석이<br>  존재하지 않음<br>ᆞ일부 위기징후<br>  가 사전에 포<br>  착됨</td><td>ᆞ일부 리스크<br>  가 사전에 파<br>  악됨<br>ᆞ위기발생원인<br>  과 영향에 대<br>  한 별도 분석<br>  이 존재하지<br>  않음<br>ᆞ위기징후가<br>  사전에 포착<br>  이 거의 안됨</td><td>ᆞ리스크가 사<br>  전에 파악되<br>  지 않음<br>ᆞ위기발생원인<br>  과 영향에 대<br>  한 별도 분석<br>  이 존재하지<br>  않음<br>ᆞ위기징후에<br>  대해 사전 포<br>  착이 안됨</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>활용</td><td>잠자적으로 발생가능한 기회가 확실하게<br>추구하도록 만드는 전략</td><td>10~29</td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>강화</td><td>기회의 원인을 촉진시키거나 강화시키는 방안<br>모색하는 방법, 사전예방이 어려운 리스크에<br>추가적인 관린방안 모색하는 전략</td><td>30~39</td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>통제</td><td>리스크에 대한 발생가능석 or 그 발생이 결과에<br>미치는 영향을 줄이는 전략</td><td>40~79</td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>수용</td><td>위협과 기회에 모두 대응할 수 있는 전략, 리스크에 대한<br>존재는 알고있지만 사전에 그 리스크를 제거하거나<br>줄일 수 있는 마땅한 대안이 없을 경우 채택</td><td>80~125</td></tr><tr><td></td><td>ᆞ위기보고가<br>  전사적으로<br>  진행<br>ᆞ전사차원의<br>  위기 대응조직<br>  이 구성됨<br>ᆞ핵심리스크<br>  유형별 대응<br>  매뉴얼이 설계<br>  됨<br>ᆞ매뉴얼에 따<br>  라 대응/복구<br>  활동 수행</td><td>ᆞ위기보고가<br>  사업부단위<br>  진행<br>ᆞ위기유형별<br>  대응조직이<br>  구성됨<br>ᆞ핵심리스크<br>  유형별 대응<br>  매뉴얼이 설계<br>  됨<br>ᆞ매뉴얼에 따<br>  라 대응/복구<br>  활동 수행</td><td>ᆞ위기보고가<br>  사업부단위<br>  진행<br>ᆞ위기유형별 대<br>  응조직이 구성<br>  됨<br>ᆞ일부 유형별<br>  대응 매뉴얼이<br>  설계됨<br>ᆞ매뉴얼에 따라<br>  대응/복구활동<br>  수행</td><td>ᆞ위기보고가<br>  각 부서 단위<br>  로 진행<br>ᆞ협업부서 자<br>  체의 대응조직<br>  이 구성됨<br>ᆞ별도의 위기<br>  대응 매뉴얼이<br>  없음</td><td>ᆞ위기보고가<br>  일부 단위에서<br>  진행<br>ᆞ별도의 위기<br>  대응 조직이<br>  없음<br>ᆞ별도의 위기<br>  대응 매뉴얼이<br>  없음</td><td></td><td>F</td><td>전가</td><td>리스크를  제 3자에게 전달하는 것으로 리스크의<br>발생 결과 및 대응의 주체를 프로젝트 외부로<br>이동시키는 전략</td><td></td></tr><tr><td>㈜승정</td><td></td><td></td><td></td><td></td><td></td><td>A4(210×297)</td><td></td><td></td><td></td><td></td></tr></table><table><tr><th>-.소품종 다량 생산.</th><th>-.자동차 산업의 변화</th><th>-.경쟁기업의 쇠퇴</th><th>-.새로운 경쟁기업 출현</th></tr><tr><td>-.높은 생산성</td><td>-.판매량의 감소</td><td>-.신시장 등장</td><td>-.불리한 정책, 제도</td></tr><tr><td>-.독점적 기술</td><td>-.수익성 저하</td><td>-.새로운 기술 등장</td><td>-.구매자 공급자 도산 증대</td></tr><tr><td>-.안정적 공급선</td><td>-.대체품 개발 부족</td><td>-.신시장 등장</td><td>-.대체 상품 개발</td></tr></table>
+<p>-.경기 침체</p>
+<table><tr><td>SJQP-6001-10(0)</td><td>㈜승정</td><td>A4(210*297)</td></tr></table><p>▣ RISK 분석을 통한 잠재적 고장형태의 파악</p>
+<table><tr><td>PROCESS RISK</td><td>작  성</td><td>검   토</td><td>승  인</td></tr></table>
+<p>rev.0</p>
+<p>조윤정</p>
+<table><tr><th>프로세스 명칭</th><th>위협/기회</th><th>리스크 영향</th><th>리스크 원인</th><th>심각도</th><th>발생도</th><th>검출도</th><th>위험수준</th><th>통제 및 관리방식</th><th>개선/완화방안<br>(권고사항)</th><th></th><th>주관팀</th><th>조치 예정일<br>(완료일)</th><th>조치 후 잔존 리스크</th><th>잔존 리스크 평가</th><th>유지관리 방안</th><th></th><th></th><th></th><th>비  고</th></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>발견/감지수단 및 관리방법</td><td>심각도</td><td></td><td></td><td></td><td></td><td>발생도</td><td>검출도</td><td>위험수준</td><td></td><td></td></tr><tr><td>생산운영 PROCESS</td><td>생산 설비 오류</td><td>고객 결품<br>고객 불만<br>손실비용 발생</td><td>작업 관리 소홀<br>검사 미실시</td><td></td><td></td><td></td><td></td><td>시업전 마스터 관리</td><td>생산 체크시트 작성</td><td></td><td>생산운영팀</td><td></td><td></td><td></td><td></td><td></td><td></td><td>지속적 모니터링</td><td></td></tr><tr><td>생산운영 PROCESS</td><td>이종품 혼입</td><td>고객불만<br>손실비용 증가</td><td>작업 관리소홀<br>식별관리 미흡</td><td></td><td></td><td></td><td></td><td>모니터링 검사강화</td><td>혼입확인/모니터링 확인관리</td><td>지속적모니터링</td><td>생산운영팀</td><td></td><td></td><td></td><td></td><td></td><td></td><td>지속적 모니터링</td><td></td></tr><tr><td>생산운영 PROCESS</td><td>초기셋팅품 유입</td><td>고객불만<br>손실비용 증가</td><td>작업 관리소홀<br>식별관리 미흡</td><td></td><td></td><td></td><td></td><td>모니터링 검사강화</td><td>혼입확인/모니터링 확인관리</td><td>지속적모니터링</td><td>생산운영팀</td><td></td><td></td><td></td><td></td><td></td><td></td><td>일단위 재고 확인 및 전산 입력</td><td></td></tr><tr><td>생산운영 PROCESS</td><td>부적합품 폐기 미스</td><td>불량발생<br>고객불만<br>손실비용증가</td><td>작업 관리소홀<br>식별관리 미흡</td><td></td><td></td><td></td><td></td><td>부적합품처리교육<br>부적합품장소지정<br>식별표 부착</td><td>부적합품 처리기준서/모니터링 확인관리</td><td>지속적모니터링</td><td>주관팀</td><td>주관팀장<br>작업자</td><td></td><td></td><td></td><td></td><td></td><td>지속적 모니터링</td><td></td></tr><tr><td>생산운영 PROCESS</td><td>부적합품 처리 미준수</td><td>불량품 혼입<br>고객불만<br>손실비용 증가</td><td>부적합품 처리기준 미준수<br>식별관리 미흡</td><td></td><td></td><td></td><td></td><td>부적합품처리교육<br>부적합품장소지정<br>식별표 부착</td><td>부적합품 처리기준서/모니터링 확인관리</td><td>지속적모니터링</td><td>주관팀</td><td>주관팀장<br>작업자</td><td></td><td></td><td></td><td></td><td></td><td>시정조티상태 색상별 관리</td><td></td></tr><tr><td>내부심사 PROCESS</td><td>주요 프로세스 누락</td><td>해당 운영상태 점검 미흡</td><td>년간 계획 미수립, 내부심사원 인식 부족, 부서간 협조 미흡</td><td></td><td></td><td></td><td></td><td>년간 계획서 수립<br>담당자 교육</td><td>업무보고서 PROCES/PROCESS</td><td>PROCESS별 감사 계획서 수립</td><td>주관팀</td><td>담당 팀장</td><td></td><td></td><td></td><td></td><td></td><td>년간 계획서 수립 및 점검</td><td></td></tr><tr><td>내부심사 PROCESS</td><td>감사원 자격 미달</td><td>감사원 자격 미달</td><td>전산 관리 운영상태 점검 미흡</td><td></td><td></td><td></td><td></td><td>년간 계획서 수립<br>담당자 교육</td><td>업무보고서 PROCES/업무보고서</td><td>공정별 감사계획서 수립</td><td>주관팀</td><td>담당 팀장</td><td></td><td></td><td></td><td></td><td></td><td>공정별 감사계획서 수리</td><td></td></tr><tr><td>내부심사 PROCESS</td><td>공정감사 누락</td><td>공정관리상태 점검 미흡</td><td>년간 계획 미수립, 내부심사원 인식 부족, 생산부서 협조 미흡</td><td></td><td></td><td></td><td></td><td>년간 계획서 수립<br>담당자 교육</td><td>업무보고서 제품결 계획서/제품별 계획서</td><td>제품별 감사계획서</td><td>주관팀</td><td>담당 팀장</td><td></td><td></td><td></td><td></td><td></td><td>제품별 감사계획서 수립</td><td></td></tr><tr><td>㈜승   정</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>A4(210*297)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table><div class="sect-flow"><h2>◈ 업무 흐름도 · 도식 내용</h2><div class="flowwrap"><span class="flownode">Threat ( 위협 )</span><span class="flownode">Opportunity ( 기회 )</span><span class="flownode">Weakness ( 약점 )</span><span class="flownode">Strength ( 강점 )</span><span class="flownode">-.기존 연료펌프 부품기술의 우수성-.관련 연료펌프 산업의 경쟁력 보유-.글로벌 시장의 진입-.정부의 강력한 지원</span><span class="flownode">-.경쟁사 대비 생산설비의 자동화율 저조-.독창적 자체 기술 개발능력 부족-.기술향상 및 기술혁신 전문인력 부족</span><span class="flownode">-.연료펌프 부품의 지속적 성장-.연표펌프 부품의 중요성 증대-.글로벌 시장의 성장 가능성</span><span class="flownode">-.국내외 환경규제 강화-.중국, 인도 등 후발 주자의 가격경쟁 심화-.소량 다품종으로 생산성 저하</span><span class="flownode">S - O</span><span class="flownode">W - O</span><span class="flownode">S - T</span><span class="flownode">W - T</span><span class="flownode">리스크 대응방안 실행</span><span class="flownode">유지 관리</span><span class="flownode">리스크 평가</span><span class="flownode">리스크 파악</span><span class="flownode">Risk 분석</span><span class="flownode">리스크 대응방안 수립</span><span class="flownode">Risk 추정</span><span class="flownode">Risk 매커니즘규명</span><span class="flownode">리스크 분석대상결정</span><span class="flownode">리스크 파악</span></div></div><div class="foot">원본: 6.1. (SJQP-6001) 리스크관리 프로세스_Rev.2_220315 (3).xlsx</div></div></body></html>
