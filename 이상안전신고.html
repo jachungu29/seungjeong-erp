@@ -57,6 +57,15 @@ table.form textarea{min-height:70px}
 .pdel{margin-top:6px;width:100%;background:#fff;border:1px solid var(--fire);color:var(--fire);border-radius:9px;padding:8px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .phint{font-size:11px;color:var(--faint);margin-top:6px}
 .pbusy{font-size:12px;color:var(--blue);margin-top:6px;font-weight:700}
+/* 화면 내장 카메라 */
+.cammodal{position:fixed;inset:0;background:#000;z-index:100;display:none;flex-direction:column}
+.cammodal.on{display:flex}
+.cammodal video{flex:1;width:100%;min-height:0;object-fit:cover;background:#000}
+.camx{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);color:#fff;border:0;font-size:20px;width:46px;height:46px;border-radius:50%;cursor:pointer}
+.camtip{position:absolute;top:16px;left:0;right:0;text-align:center;color:#fff;font-size:14px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.cambar{display:flex;gap:14px;padding:18px;background:#000;justify-content:center;align-items:center}
+.camshot{width:72px;height:72px;border-radius:50%;background:#fff;border:6px solid #c0392b;cursor:pointer;box-shadow:0 0 0 3px #fff}
+.camshot:active{transform:scale(.94)}
 .submit{width:100%;background:#c0392b;color:#fff;border:none;border-radius:13px;padding:17px;font:inherit;font-size:18px;font-weight:800;cursor:pointer;margin-top:4px}
 .submit:active{opacity:.85}
 .st{font-size:11px;text-align:center;color:var(--dim);margin-top:8px}
@@ -103,7 +112,7 @@ table.form textarea{min-height:70px}
      <input type="file" id="f_photo_cam" accept="image/*" capture="environment" style="display:none" onchange="onPhoto(this)">
      <input type="file" id="f_photo_alb" accept="image/*" style="display:none" onchange="onPhoto(this)">
      <div class="photorow">
-      <button type="button" class="photobtn cam" id="photoCamBtn" onclick="document.getElementById('f_photo_cam').click()">📷 사진 촬영</button>
+      <button type="button" class="photobtn cam" id="photoCamBtn" onclick="openCamera()">📷 사진 촬영</button>
       <button type="button" class="photobtn alb" id="photoAlbBtn" onclick="document.getElementById('f_photo_alb').click()">🖼️ 앨범</button>
      </div>
      <div class="pbusy" id="photoBusy" style="display:none">…</div>
@@ -125,6 +134,12 @@ table.form textarea{min-height:70px}
 
   <a class="link" id="adminLink" href="이상안전이력.html">🖥️ 관리자 이력 화면 열기 →</a>
  </div>
+</div>
+<div class="cammodal" id="cammodal">
+ <div class="camtip" id="camtip">📷</div>
+ <video id="camvideo" playsinline autoplay muted></video>
+ <button class="camx" onclick="closeCamera()">✕</button>
+ <div class="cambar"><button class="camshot" id="camshot" onclick="capturePhoto()" title="촬영"></button></div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -153,6 +168,8 @@ var T={
  uLow:{ko:'낮음',en:'Low',vi:'Thấp',th:'ต่ำ',km:'ទាប',ne:'कम'},
  photoCam:{ko:'📷 사진 촬영',en:'📷 Take Photo',vi:'📷 Chụp ảnh',th:'📷 ถ่ายรูป',km:'📷 ថតរូប',ne:'📷 फोटो खिच्ने'},
  photoAlbum:{ko:'🖼️ 앨범',en:'🖼️ Album',vi:'🖼️ Thư viện',th:'🖼️ อัลบั้ม',km:'🖼️ អាល់ប៊ុម',ne:'🖼️ एल्बम'},
+ camTip:{ko:'현장을 비추고 아래 버튼을 누르세요',en:'Aim at the scene, press the button',vi:'Hướng vào hiện trường, nhấn nút',th:'เล็งไปที่จุดเกิดเหตุ กดปุ่ม',km:'តម្រង់ទៅកន្លែង ចុចប៊ូតុង',ne:'दृश्यमा तेर्स्याएर बटन थिच्नुहोस्'},
+ camFail:{ko:'카메라를 열 수 없어 파일 선택으로 전환합니다',en:'Camera unavailable — using file picker',vi:'Không mở được camera — chọn tệp',th:'เปิดกล้องไม่ได้ — เลือกไฟล์',km:'មិនអាចបើកកាមេរ៉ា — ជ្រើសឯកសារ',ne:'क्यामेरा खुलेन — फाइल छान्नुहोस्'},
  photoHint:{ko:'휴대폰 카메라로 촬영하거나 앨범에서 선택 · 자동 저장',en:'Take a photo or pick from album · saved automatically',vi:'Chụp ảnh hoặc chọn từ album · tự lưu',th:'ถ่ายรูปหรือเลือกจากอัลบั้ม · บันทึกอัตโนมัติ',km:'ថតរូប ឬជ្រើសពីអាល់ប៊ុម · រក្សាទុកស្វ័យប្រវត្តិ',ne:'फोटो खिच्नुहोस् वा एल्बमबाट रोज्नुहोस् · स्वतः सेभ'},
  photoBusy:{ko:'사진 처리 중…',en:'Processing…',vi:'Đang xử lý…',th:'กำลังประมวลผล…',km:'កំពុងដំណើរការ…',ne:'प्रशोधन हुँदै…'},
  contentPh:{ko:'무엇이 어떻게 이상한지 적어주세요',en:'Describe what is wrong',vi:'Mô tả sự cố',th:'อธิบายปัญหา',km:'ពិពណ៌នាបញ្ហា',ne:'के बिग्रियो लेख्नुहोस्'},
@@ -283,6 +300,32 @@ function compressImage(file,maxDim,quality){return new Promise(function(resolve)
    try{cv.getContext('2d').drawImage(img,0,0,w,h);resolve(cv.toDataURL('image/jpeg',quality));}catch(e){resolve('');}};
   img.onerror=function(){resolve('');};img.src=rd.result;};
  rd.onerror=function(){resolve('');};rd.readAsDataURL(file);});}
+/* 화면 내장 카메라: 버튼 클릭 → 라이브 미리보기 → 촬영 → 압축 → 저장 */
+var CAMSTREAM=null;
+function openCamera(){
+ var md=navigator.mediaDevices;
+ if(!md||!md.getUserMedia){document.getElementById('f_photo_cam').click();return;} /* 구형: 기본 카메라 */
+ document.getElementById('camtip').textContent=tr('camTip');
+ md.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(stream){
+  CAMSTREAM=stream;var v=document.getElementById('camvideo');v.srcObject=stream;
+  var p=v.play();if(p&&p.catch)p.catch(function(){});
+  document.getElementById('cammodal').classList.add('on');
+ }).catch(function(err){
+  /* 권한 거부/카메라 없음 → 기본 카메라·파일선택으로 폴백 */
+  toast(tr('camFail'));document.getElementById('f_photo_cam').click();
+ });
+}
+function stopCam(){if(CAMSTREAM){try{CAMSTREAM.getTracks().forEach(function(t){t.stop();});}catch(e){}CAMSTREAM=null;}}
+function closeCamera(){stopCam();document.getElementById('cammodal').classList.remove('on');var v=document.getElementById('camvideo');try{v.pause();}catch(e){}v.srcObject=null;}
+function capturePhoto(){
+ var v=document.getElementById('camvideo');var w=v.videoWidth,h=v.videoHeight;
+ if(!w||!h){toast(tr('photoFail'));return;}
+ var maxDim=1024;if(w>h){if(w>maxDim){h=Math.round(h*maxDim/w);w=maxDim;}}else{if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim;}}
+ var cv=document.createElement('canvas');cv.width=w;cv.height=h;
+ try{cv.getContext('2d').drawImage(v,0,0,w,h);PHOTO=cv.toDataURL('image/jpeg',0.7);}catch(e){PHOTO='';}
+ closeCamera();
+ if(PHOTO)renderPhotoPrev();else toast(tr('photoFail'));
+}
 async function onPhoto(inp){var f=inp.files&&inp.files[0];if(!f)return;
  document.getElementById('photoBusy').style.display='block';
  PHOTO=await compressImage(f,1024,0.7);
