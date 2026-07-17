@@ -40,12 +40,13 @@ table.form td{padding:8px;border:1px solid var(--line);vertical-align:middle}
 table.form select,table.form input,table.form textarea{padding:10px 11px;font-size:14px;border-radius:9px}
 table.form textarea{min-height:70px}
 /* 유형 스위치 */
-.rtypes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.rtypes{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .rt{border:2px solid var(--line);border-radius:12px;background:#fff;padding:10px 4px;text-align:center;cursor:pointer;font-weight:800;font-size:13px;transition:.12s}
 .rt .ic{font-size:22px;display:block;margin-bottom:3px}
 .rt.on[data-rt="설비이상"]{border-color:var(--machine);background:#fbeee9;color:var(--machine)}
 .rt.on[data-rt="안전"]{border-color:var(--safety);background:#e9f2fb;color:var(--safety)}
 .rt.on[data-rt="소방"]{border-color:var(--fire);background:#fdecec;color:var(--fire)}
+.rt.on[data-rt="불량발생"]{border-color:#7c3aed;background:#f1ebfb;color:#7c3aed}
 .urg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 .urg .u{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 4px;text-align:center;font-weight:800;font-size:13px;cursor:pointer}
 .urg .u.on{color:#fff}.urg .u.on[data-u="긴급"]{background:var(--fire);border-color:var(--fire)}
@@ -80,7 +81,7 @@ table.form textarea{min-height:70px}
 .rep{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px}
 .rep .rr{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--dim)}
 .badge{font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px}
-.b-설비이상{background:#fbeee9;color:var(--machine)}.b-안전{background:#e9f2fb;color:var(--safety)}.b-소방{background:#fdecec;color:var(--fire)}
+.b-설비이상{background:#fbeee9;color:var(--machine)}.b-안전{background:#e9f2fb;color:var(--safety)}.b-소방{background:#fdecec;color:var(--fire)}.b-불량발생{background:#f1ebfb;color:#7c3aed}
 .stt{margin-left:auto;font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px}
 .s-접수{background:#eef0f3;color:#6b7280}.s-조치중{background:rgba(208,135,0,.16);color:#d08700}.s-완료{background:rgba(47,158,68,.14);color:var(--green)}
 .rep .rc{font-size:14px;font-weight:700;margin-top:5px}
@@ -104,6 +105,7 @@ table.form textarea{min-height:70px}
       <div class="rt on" data-rt="설비이상"><span class="ic">🔧</span><span class="lb"></span></div>
       <div class="rt" data-rt="안전"><span class="ic">🦺</span><span class="lb"></span></div>
       <div class="rt" data-rt="소방"><span class="ic">🧯</span><span class="lb"></span></div>
+      <div class="rt" data-rt="불량발생"><span class="ic">🚫</span><span class="lb"></span></div>
      </div></td></tr>
     <tr><th data-k="thCat">대분류</th><td><select id="f_cat" onchange="onCat()"></select></td></tr>
     <tr><th data-k="thSub">세부항목</th><td><select id="f_sub"></select></td></tr>
@@ -170,6 +172,7 @@ var T={
  tyMachine:{ko:'설비이상',en:'Equipment',vi:'Thiết bị',th:'อุปกรณ์',km:'ឧបករណ៍',ne:'उपकरण'},
  tySafety:{ko:'안전',en:'Safety',vi:'An toàn',th:'ปลอดภัย',km:'សុវត្ថិភាព',ne:'सुरक्षा'},
  tyFire:{ko:'소방',en:'Fire',vi:'PCCC',th:'อัคคีภัย',km:'អគ្គិភ័យ',ne:'अग्नि'},
+ tyDefect:{ko:'불량발생',en:'Defect',vi:'Lỗi',th:'ของเสีย',km:'ខូច',ne:'त्रुटि'},
  uHigh:{ko:'긴급',en:'Urgent',vi:'Khẩn',th:'ด่วน',km:'បន្ទាន់',ne:'जरुरी'},
  uMid:{ko:'보통',en:'Normal',vi:'Thường',th:'ปกติ',km:'ធម្មតា',ne:'सामान्य'},
  uLow:{ko:'낮음',en:'Low',vi:'Thấp',th:'ต่ำ',km:'ទាប',ne:'कम'},
@@ -213,6 +216,11 @@ var CATL={
  '자재/재료':{en:'Material',vi:'Vật tư',th:'วัสดุ',km:'សម្ភារៈ',ne:'सामग्री'},
  '작업방법/사람':{en:'Method/People',vi:'Cách/Người',th:'วิธี/คน',km:'វិធី/មនុស្ស',ne:'विधि/मानिस'},
  '계측/품질':{en:'Measure/Quality',vi:'Đo/Chất lượng',th:'วัด/คุณภาพ',km:'វាស់/គុណភាព',ne:'मापन/गुणस्तर'},
+ '외관 불량':{en:'Appearance',vi:'Ngoại quan',th:'ผิวภายนอก',km:'រូបរាង',ne:'बाह्य दोष'},
+ '치수 불량':{en:'Dimension',vi:'Kích thước',th:'ขนาด',km:'ទំហំ',ne:'आयाम दोष'},
+ '성형 불량':{en:'Molding',vi:'Ép/Đúc',th:'การขึ้นรูป',km:'ចាក់ផ្សិត',ne:'मोल्डिङ दोष'},
+ '기능 불량':{en:'Function',vi:'Chức năng',th:'การทำงาน',km:'មុខងារ',ne:'कार्य दोष'},
+ '기타 불량':{en:'Other defect',vi:'Lỗi khác',th:'อื่นๆ',km:'ផ្សេងទៀត',ne:'अन्य दोष'},
  '시설·설비안전':{en:'Facility safety',vi:'An toàn cơ sở',th:'ความปลอดภัยสถานที่',km:'សុវត្ថិភាពទីតាំង',ne:'सुविधा सुरक्षा'},
  '기계·기구안전':{en:'Machine safety',vi:'An toàn máy',th:'ความปลอดภัยเครื่องจักร',km:'សុវត្ថិភាពម៉ាស៊ីន',ne:'मेसिन सुरक्षा'},
  '전기안전':{en:'Electrical safety',vi:'An toàn điện',th:'ความปลอดภัยไฟฟ้า',km:'សុវត្ថិភាពអគ្គិសនី',ne:'विद्युत सुरक्षा'},
@@ -228,9 +236,15 @@ var CATL={
 };
 /* 분류 데이터: 대분류→[{k:한국어값, e:영어표시}] */
 var CATS={'설비이상':['설비','금형','자재/재료','작업방법/사람','계측/품질'],
+ '불량발생':['외관 불량','치수 불량','성형 불량','기능 불량','기타 불량'],
  '안전':['시설·설비안전','기계·기구안전','전기안전','화학물질·유해인자','작업환경·인간공학','복지·보건위생','개인보호구'],
  '소방':['소화설비','경보설비','피난·유도설비','화재·폭발위험','소방점검·교육']};
 var SUBS={
+ '외관 불량':[['스크래치·찍힘','Scratch/Dent'],['이물·오염','Contamination'],['색상·광택 불량','Color/Gloss'],['웰드라인·플로우마크','Weld/Flow mark'],['기타 외관','Other']],
+ '치수 불량':[['규격 초과','Over spec'],['규격 미달','Under spec'],['휨·변형','Warp/Deform'],['기타 치수','Other']],
+ '성형 불량':[['미성형·쇼트','Short shot'],['버·플래시','Burr/Flash'],['싱크마크','Sink mark'],['기포·보이드','Void/Bubble'],['기타 성형','Other']],
+ '기능 불량':[['조립 불가','Assembly fail'],['작동 불량','Malfunction'],['누설·리크','Leak'],['강도 부족','Weak strength'],['기타 기능','Other']],
+ '기타 불량':[['기타 불량','Other defect']],
  '설비':[['가동 이상·정지','Operation fault/stop'],['이상소음·진동','Abnormal noise/vibration'],['누유·누수','Oil/water leak'],['과열·온도이상','Overheat'],['센서·전장 이상','Sensor/electrical'],['기타 설비','Other equipment']],
  '금형':[['파손·크랙','Broken/crack'],['마모·치수 이상','Wear/dimension'],['냉각·히터 이상','Cooling/heater'],['기타 금형','Other mold']],
  '자재/재료':[['자재 부족','Shortage'],['규격 불일치','Spec mismatch'],['오염·변질','Contamination'],['기타 자재','Other material']],
@@ -270,7 +284,7 @@ function setLang(l){LANG=l;try{localStorage.setItem('SJ_LANG',l);}catch(e){}
 function applyLang(){
  document.getElementById('hdrTitle').textContent=tr('title');
  [].forEach.call(document.querySelectorAll('[data-k]'),function(el){el.textContent=tr(el.getAttribute('data-k'));});
- var rts=document.querySelectorAll('#rtypes .rt .lb');rts[0].textContent=tr('tyMachine');rts[1].textContent=tr('tySafety');rts[2].textContent=tr('tyFire');
+ var rts=document.querySelectorAll('#rtypes .rt .lb');rts[0].textContent=tr('tyMachine');rts[1].textContent=tr('tySafety');rts[2].textContent=tr('tyFire');if(rts[3])rts[3].textContent=tr('tyDefect');
  var uls=document.querySelectorAll('#urg .ul');uls[0].textContent=tr('uHigh');uls[1].textContent=tr('uMid');uls[2].textContent=tr('uLow');
  document.getElementById('photoCamBtn').textContent=tr('photoCam');
  document.getElementById('photoAlbBtn').textContent=tr('photoAlbum');

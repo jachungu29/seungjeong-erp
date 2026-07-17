@@ -46,6 +46,8 @@ select.rsel.r-양호{color:#1e8e4e}select.rsel.r-주의{color:#B8860B}select.rse
 tr.bad td{background:#fdeeee}
 tr.grp td{background:linear-gradient(90deg,#e8f1f8,#f2f7fb);color:#0b4a8f;font-weight:800;font-size:13px;padding:7px 12px;border-top:2px solid #bcd6e6;letter-spacing:.2px}
 tr.grp .gcnt{font-size:11px;font-weight:700;color:#5b7186;margin-left:6px;background:#fff;border:1px solid #cfe0ec;border-radius:10px;padding:1px 8px}
+tr.grp .grpadd{margin-left:8px;background:#0b6e8c;color:#fff;border:0;border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+tr.grp .grpadd:hover{background:#095b73}
 th.filt{cursor:pointer;user-select:none;white-space:nowrap}
 th.filt .fic{margin-left:4px;font-size:10px;opacity:.75}
 th.filt.act{background:#e6f2ff;color:#0b4a8f}
@@ -212,7 +214,7 @@ function renderCheck(cat){
   var vis=all.filter(function(i){return passFilt(cat,res[i]||{});});
   if(!vis.length)return;
   var cnt=FILT[cat]?(vis.length+'/'+all.length+'항목'):(all.length+'항목');
-  h+='<tr class="grp"><td colspan="'+colspan+'">▣ '+esc(gg)+' <span class="gcnt">'+cnt+'</span></td></tr>';
+  h+='<tr class="grp"><td colspan="'+colspan+'">▣ '+esc(gg)+' <span class="gcnt">'+cnt+'</span>'+(EDIT?' <button class="grpadd" onclick="addItem(\''+cat+'\',\''+encodeURIComponent(gg)+'\')">＋ 이 구분에 항목추가</button>':'')+'</td></tr>';
   vis.forEach(function(i){var it=items[i],r=res[i]||{r:'양호',a:'',loc:'',actBy:'',actDate:''};seq++;shown++;
    h+='<tr><td class="no">'+seq+'</td>'+
     '<td class="item"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'t\',this.innerText)"':'')+'>'+esc(it.t)+'</td>'+
@@ -251,7 +253,7 @@ function openFilt(e,cat){e.stopPropagation();closeFilt();var th=e.currentTarget;
 function closeFilt(){var p=el('fpop');if(p&&p.parentNode)p.parentNode.removeChild(p);document.removeEventListener('click',closeFilt);}
 function setFilt(cat,mode,idx){if(mode==null)FILT[cat]=null;else if(mode==='issue')FILT[cat]={mode:'issue'};else if(mode==='loc')FILT[cat]={mode:'loc',val:_FL[idx]};closeFilt();renderCheck(cat);}
 function edItem(c,i,f,v){DATA.items[c][i][f]=v;markDirty();}
-function addItem(c){DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력',g:'기타 점검'});DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});markDirty();renderCheck(c);}
+function addItem(c,g){var grp=g?decodeURIComponent(g):'기타 점검';DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력',g:grp});DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});markDirty();renderCheck(c);}
 function delItem(c,i){if(!confirm('이 점검항목을 삭제할까요?'))return;DATA.items[c].splice(i,1);DATA.res[c].splice(i,1);markDirty();renderCheck(c);}
 /* ===== 공장 LAY-OUT ===== */
 function renderLayout(){
