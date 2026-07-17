@@ -47,7 +47,10 @@ table.form textarea{min-height:70px}
 .urg .u.on{color:#fff}.urg .u.on[data-u="긴급"]{background:var(--fire);border-color:var(--fire)}
 .urg .u.on[data-u="보통"]{background:var(--safety);border-color:var(--safety)}.urg .u.on[data-u="낮음"]{background:var(--dim);border-color:var(--dim)}
 /* 사진 첨부 */
-.photobtn{width:100%;background:#eef2f7;border:1.5px dashed #b3c1d1;border-radius:10px;padding:14px;font:inherit;font-size:14px;font-weight:800;color:#2f6feb;cursor:pointer}
+.photorow{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.photobtn{width:100%;background:#eef2f7;border:1.5px dashed #b3c1d1;border-radius:10px;padding:15px 10px;font:inherit;font-size:15px;font-weight:800;color:#2f6feb;cursor:pointer}
+.photobtn.cam{background:#2f6feb;color:#fff;border:1.5px solid #2f6feb}
+.photobtn.alb{background:#eef2f7;color:#2f6feb;border:1.5px dashed #b3c1d1}
 .photobtn:active{opacity:.82}
 .pthumb{margin-top:8px}
 .pthumb img{width:100%;max-height:240px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#f4f2ee;display:block}
@@ -97,8 +100,12 @@ table.form textarea{min-height:70px}
       <div class="u" data-u="낮음"><span class="ue">⚪</span> <span class="ul"></span></div>
      </div></td></tr>
     <tr><th data-k="thPhoto">사진 첨부</th><td>
-     <input type="file" id="f_photo" accept="image/*" style="display:none" onchange="onPhoto(this)">
-     <button type="button" class="photobtn" id="photoBtn" onclick="document.getElementById('f_photo').click()">📷 사진 촬영 / 앨범 선택</button>
+     <input type="file" id="f_photo_cam" accept="image/*" capture="environment" style="display:none" onchange="onPhoto(this)">
+     <input type="file" id="f_photo_alb" accept="image/*" style="display:none" onchange="onPhoto(this)">
+     <div class="photorow">
+      <button type="button" class="photobtn cam" id="photoCamBtn" onclick="document.getElementById('f_photo_cam').click()">📷 사진 촬영</button>
+      <button type="button" class="photobtn alb" id="photoAlbBtn" onclick="document.getElementById('f_photo_alb').click()">🖼️ 앨범</button>
+     </div>
      <div class="pbusy" id="photoBusy" style="display:none">…</div>
      <div id="photoPrev"></div>
      <div class="phint" id="photoHint"></div>
@@ -144,7 +151,8 @@ var T={
  uHigh:{ko:'긴급',en:'Urgent',vi:'Khẩn',th:'ด่วน',km:'បន្ទាន់',ne:'जरुरी'},
  uMid:{ko:'보통',en:'Normal',vi:'Thường',th:'ปกติ',km:'ធម្មតា',ne:'सामान्य'},
  uLow:{ko:'낮음',en:'Low',vi:'Thấp',th:'ต่ำ',km:'ទាប',ne:'कम'},
- photoBtn:{ko:'📷 사진 촬영 / 앨범 선택',en:'📷 Take / Choose Photo',vi:'📷 Chụp / Chọn ảnh',th:'📷 ถ่าย / เลือกรูป',km:'📷 ថត / ជ្រើសរូប',ne:'📷 फोटो खिच्नुहोस्'},
+ photoCam:{ko:'📷 사진 촬영',en:'📷 Take Photo',vi:'📷 Chụp ảnh',th:'📷 ถ่ายรูป',km:'📷 ថតរូប',ne:'📷 फोटो खिच्ने'},
+ photoAlbum:{ko:'🖼️ 앨범',en:'🖼️ Album',vi:'🖼️ Thư viện',th:'🖼️ อัลบั้ม',km:'🖼️ អាល់ប៊ុម',ne:'🖼️ एल्बम'},
  photoHint:{ko:'휴대폰 카메라로 촬영하거나 앨범에서 선택 · 자동 저장',en:'Take a photo or pick from album · saved automatically',vi:'Chụp ảnh hoặc chọn từ album · tự lưu',th:'ถ่ายรูปหรือเลือกจากอัลบั้ม · บันทึกอัตโนมัติ',km:'ថតរូប ឬជ្រើសពីអាល់ប៊ុម · រក្សាទុកស្វ័យប្រវត្តិ',ne:'फोटो खिच्नुहोस् वा एल्बमबाट रोज्नुहोस् · स्वतः सेभ'},
  photoBusy:{ko:'사진 처리 중…',en:'Processing…',vi:'Đang xử lý…',th:'กำลังประมวลผล…',km:'កំពុងដំណើរការ…',ne:'प्रशोधन हुँदै…'},
  contentPh:{ko:'무엇이 어떻게 이상한지 적어주세요',en:'Describe what is wrong',vi:'Mô tả sự cố',th:'อธิบายปัญหา',km:'ពិពណ៌នាបញ្ហា',ne:'के बिग्रियो लेख्नुहोस्'},
@@ -237,7 +245,8 @@ function applyLang(){
  [].forEach.call(document.querySelectorAll('[data-k]'),function(el){el.textContent=tr(el.getAttribute('data-k'));});
  var rts=document.querySelectorAll('#rtypes .rt .lb');rts[0].textContent=tr('tyMachine');rts[1].textContent=tr('tySafety');rts[2].textContent=tr('tyFire');
  var uls=document.querySelectorAll('#urg .ul');uls[0].textContent=tr('uHigh');uls[1].textContent=tr('uMid');uls[2].textContent=tr('uLow');
- document.getElementById('photoBtn').textContent=tr('photoBtn');
+ document.getElementById('photoCamBtn').textContent=tr('photoCam');
+ document.getElementById('photoAlbBtn').textContent=tr('photoAlbum');
  document.getElementById('photoHint').textContent=tr('photoHint');
  document.getElementById('photoBusy').textContent=tr('photoBusy');
  document.getElementById('f_content').placeholder=tr('contentPh');
@@ -282,7 +291,7 @@ async function onPhoto(inp){var f=inp.files&&inp.files[0];if(!f)return;
  renderPhotoPrev();}
 function renderPhotoPrev(){var box=document.getElementById('photoPrev');
  box.innerHTML=PHOTO?('<div class="pthumb"><img src="'+PHOTO+'" alt="photo"><button type="button" class="pdel" onclick="clearPhoto()">'+esc(tr('delPhoto'))+'</button></div>'):'';}
-function clearPhoto(){PHOTO='';var i=document.getElementById('f_photo');if(i)i.value='';renderPhotoPrev();}
+function clearPhoto(){PHOTO='';['f_photo_cam','f_photo_alb'].forEach(function(id){var i=document.getElementById(id);if(i)i.value='';});renderPhotoPrev();}
 
 /* 내 신고(이 기기) */
 function myReps(){try{return JSON.parse(localStorage.getItem("SJ_MY_SAFETY")||"[]");}catch(e){return[];}}
