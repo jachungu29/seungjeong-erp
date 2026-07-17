@@ -140,6 +140,21 @@ function render(){
  renderLists();
 }
 /* ===== 꺾은선 차트 (상호작용) ===== */
+function smoothPath(P,ymin,ymax){
+ if(!P.length)return'';
+ var rd=function(n){return Math.round(n*10)/10;};
+ var cy=function(y){return ymin==null?y:Math.max(ymin,Math.min(ymax,y));};
+ if(P.length===1)return'M'+rd(P[0][0])+','+rd(P[0][1]);
+ if(P.length===2)return'M'+rd(P[0][0])+','+rd(P[0][1])+' L'+rd(P[1][0])+','+rd(P[1][1]);
+ var d='M'+rd(P[0][0])+','+rd(P[0][1]);
+ for(var i=0;i<P.length-1;i++){
+  var p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||P[i+1];
+  var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=cy(p1[1]+(p2[1]-p0[1])/6);
+  var c2x=p2[0]-(p3[0]-p1[0])/6,c2y=cy(p2[1]-(p3[1]-p1[1])/6);
+  d+=' C'+rd(c1x)+','+rd(c1y)+' '+rd(c2x)+','+rd(c2y)+' '+rd(p2[0])+','+rd(p2[1]);
+ }
+ return d;
+}
 function buildChart(){
  var months=last6();
  var ser={};CATS.forEach(function(c){ser[c]=months.map(function(){return 0;});});
@@ -153,8 +168,8 @@ function buildChart(){
  for(var k=0;k<=4;k++){var gy=pT+ph-k/4*ph,gv=Math.round(top*k/4);g+='<line class="gline" x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'"/><text class="axlbl" x="'+(pL-6)+'" y="'+(gy+4)+'" text-anchor="end">'+gv+'</text>';}
  months.forEach(function(mo,i){g+='<text class="axlbl" x="'+X(i)+'" y="'+(H-14)+'" text-anchor="middle">'+mo.slice(2)+'</text>';});
  CATS.forEach(function(c){if(HIDE[c])return;var col=CCOLOR[c];
-  var pts=ser[c].map(function(v,i){return X(i)+','+Y(v);}).join(' ');
-  g+='<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2.6" stroke-linejoin="round"/>';
+  var P=ser[c].map(function(v,i){return [X(i),Y(v)];});
+  g+='<path d="'+smoothPath(P,pT,pT+ph)+'" fill="none" stroke="'+col+'" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>';
   ser[c].forEach(function(v,i){g+='<circle class="dot" cx="'+X(i)+'" cy="'+Y(v)+'" r="5" fill="'+col+'" stroke="#fff" stroke-width="1.5" onmouseover="showTip(event,\''+c+'\',\''+months[i]+'\','+v+')" onmouseout="hideTip()"/>';});
  });
  el('chart').innerHTML='<svg class="chart" viewBox="0 0 '+W+' '+H+'">'+g+'</svg>';
