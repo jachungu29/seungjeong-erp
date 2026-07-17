@@ -44,6 +44,8 @@ td.std{color:#555;font-size:11.5px}
 select.rsel{padding:5px 4px;border:1px solid #cbd5e1;border-radius:6px;font-size:12.5px;font-family:inherit;font-weight:800;width:100%}
 select.rsel.r-양호{color:#1e8e4e}select.rsel.r-주의{color:#B8860B}select.rsel.r-불량{color:#C62828}select.rsel.r-해당없음{color:#94a3b8}
 tr.bad td{background:#fdeeee}
+tr.grp td{background:linear-gradient(90deg,#e8f1f8,#f2f7fb);color:#0b4a8f;font-weight:800;font-size:13px;padding:7px 12px;border-top:2px solid #bcd6e6;letter-spacing:.2px}
+tr.grp .gcnt{font-size:11px;font-weight:700;color:#5b7186;margin-left:6px;background:#fff;border:1px solid #cfe0ec;border-radius:10px;padding:1px 8px}
 th.filt{cursor:pointer;user-select:none;white-space:nowrap}
 th.filt .fic{margin-left:4px;font-size:10px;opacity:.75}
 th.filt.act{background:#e6f2ff;color:#0b4a8f}
@@ -98,6 +100,8 @@ input.f{width:100%;box-sizing:border-box;padding:5px 6px;border:1px solid #cbd5e
  td{padding:3px 4px;font-size:9px}
  select.rsel,input.f{border:0!important;background:transparent!important;font-size:9px!important;padding:1px!important;-webkit-appearance:none;appearance:none}
  tr.bad td{background:#fdeeee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ tr.grp td{background:#e8f1f8!important;color:#0b3d5c!important;font-weight:800;font-size:9px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ tr.grp .gcnt{background:#fff!important;border:1px solid #cfe0ec}
  .rpt-foot{display:block;text-align:right;font-size:9px;color:#666;margin-top:8px}
 }
 </style></head><body>
@@ -130,10 +134,29 @@ input.f{width:100%;box-sizing:border-box;padding:5px 6px;border:1px solid #cbd5e
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const DEF_ITEMS={
- 설비:[["유압 압력","규정 압력범위 유지, 게이지 정상"],["유압유 누유","실린더·배관·조인트 누유 없음"],["유압유 상태","유량 적정, 오염·과열 없음"],["배럴·노즐 히터 온도","설정온도 편차 정상, 단선 없음"],["금형 냉각수","누수 없음, 유량·수온 정상"],["형체·형개폐 작동","이상음·떨림 없음, 리미트 정상"],["이젝터(취출) 작동","전·후진 정상, 취출 원활"],["안전문 인터록","열림 시 정지, 스위치 정상"],["유압·공압 호스","균열·마모·누기 없음"],["전기 제어반","과열·스파크·냄새 없음"],["윤활·그리스","주유 상태 양호, 유량 확인"],["벨트·체인","장력 적정, 마모 없음"],["압축공기","공급압력 정상, 누기 없음"],["냉각기(칠러)","수온·압력 정상, 경보 없음"],["호퍼·건조기","온도·건조시간 정상"],["취출로봇·컨베이어","작동 정상, 정렬 상태"],["조립설비(리크·압입)","게이지·설정압력 정상"],["이상 진동·소음·경고등","비정상 진동/소음·경고등 없음"]],
- 안전:[["안전보호구 착용","장갑·보안경·안전화·귀마개 준수"],["비상정지 버튼","위치 식별, 작동 정상"],["방호덮개·가드","회전·구동부 가드 부착"],["통로·비상구 확보","적치물 없음, 폭 확보"],["바닥 상태","미끄럼·기름유출·요철 없음"],["전기 감전위험","누전·피복손상·접지 상태"],["고온부 방호","화상위험부 표지·방호"],["지게차 운행","경광등·후진경보·유자격"],["크레인·호이스트","와이어·후크·안전장치"],["중량물 보관","적재높이·전도방지"],["유해화학물질","밀폐보관, MSDS 비치"],["환기·집진","국소배기·집진기 정상"],["소음·분진","허용기준 이내, 보호구"],["조명","조도 적정, 파손 없음"],["정리정돈(3정5S)","불용품 제거, 정위치"],["안전표지·경고표시","위험지역 표지 부착"],["협착·끼임 위험","위험지점 방호·표시"],["작업자 상태","건강·피로·음주 이상 없음"]],
- 소방:[["소화기","위치·압력게이지·유효기간·봉인"],["옥내소화전","호스·노즐·밸브 정상"],["스프링클러","헤드 이물·손상 없음"],["화재감지기","연기·열감지기 정상"],["수신반","전원·경보·표시등 정상"],["비상방송·경보벨","작동 시험 정상"],["유도등·비상조명","상시 점등, 축전지"],["비상구·피난통로","개방, 장애물 없음"],["방화문","정상 개폐·자동폐쇄"],["전기설비 과부하","문어발·과열·임시배선 없음"],["가연물 관리","방치 없음, 이격거리"],["화기작업 관리","소화기 비치·감시자"],["위험물 저장","지정수량·표지 준수"],["소방시설 주변","소화기·소화전 앞 적치물 없음"],["대피 안내도","피난안내도 게시·최신"],["소방안전관리","관리자 지정·교육 실시"]]
+ 설비:[
+  ["유압 압력","규정 압력범위 유지, 게이지 정상","유압장치"],["유압유 누유","실린더·배관·조인트 누유 없음","유압장치"],["유압유 상태","유량 적정, 오염·과열 없음","유압장치"],["유압·공압 호스","균열·마모·누기 없음","유압장치"],
+  ["배럴·노즐 히터 온도","설정온도 편차 정상, 단선 없음","온도·냉각"],["금형 냉각수","누수 없음, 유량·수온 정상","온도·냉각"],["냉각기(칠러)","수온·압력 정상, 경보 없음","온도·냉각"],["호퍼·건조기","온도·건조시간 정상","온도·냉각"],
+  ["형체·형개폐 작동","이상음·떨림 없음, 리미트 정상","구동·안전장치"],["이젝터(취출) 작동","전·후진 정상, 취출 원활","구동·안전장치"],["안전문 인터록","열림 시 정지, 스위치 정상","구동·안전장치"],["벨트·체인","장력 적정, 마모 없음","구동·안전장치"],
+  ["전기 제어반","과열·스파크·냄새 없음","전기·제어"],["이상 진동·소음·경고등","비정상 진동/소음·경고등 없음","전기·제어"],
+  ["압축공기","공급압력 정상, 누기 없음","부대설비"],["윤활·그리스","주유 상태 양호, 유량 확인","부대설비"],["취출로봇·컨베이어","작동 정상, 정렬 상태","부대설비"],["조립설비(리크·압입)","게이지·설정압력 정상","부대설비"]
+ ],
+ 안전:[
+  ["안전보호구 착용","장갑·보안경·안전화·귀마개 준수","보호구·작업자"],["작업자 상태","건강·피로·음주 이상 없음","보호구·작업자"],
+  ["비상정지 버튼","위치 식별, 작동 정상","기계·전기 방호"],["방호덮개·가드","회전·구동부 가드 부착","기계·전기 방호"],["협착·끼임 위험","위험지점 방호·표시","기계·전기 방호"],["고온부 방호","화상위험부 표지·방호","기계·전기 방호"],["전기 감전위험","누전·피복손상·접지 상태","기계·전기 방호"],
+  ["지게차 운행","경광등·후진경보·유자격","운반·중량물"],["크레인·호이스트","와이어·후크·안전장치","운반·중량물"],["중량물 보관","적재높이·전도방지","운반·중량물"],
+  ["유해화학물질","밀폐보관, MSDS 비치","작업환경·위생"],["환기·집진","국소배기·집진기 정상","작업환경·위생"],["소음·분진","허용기준 이내, 보호구","작업환경·위생"],["조명","조도 적정, 파손 없음","작업환경·위생"],
+  ["통로·비상구 확보","적치물 없음, 폭 확보","통로·정리정돈"],["바닥 상태","미끄럼·기름유출·요철 없음","통로·정리정돈"],["정리정돈(3정5S)","불용품 제거, 정위치","통로·정리정돈"],["안전표지·경고표시","위험지역 표지 부착","통로·정리정돈"]
+ ],
+ 소방:[
+  ["소화기","위치·압력게이지·유효기간·봉인","소화설비"],["옥내소화전","호스·노즐·밸브 정상","소화설비"],["스프링클러","헤드 이물·손상 없음","소화설비"],
+  ["화재감지기","연기·열감지기 정상","경보·감지설비"],["수신반","전원·경보·표시등 정상","경보·감지설비"],["비상방송·경보벨","작동 시험 정상","경보·감지설비"],
+  ["유도등·비상조명","상시 점등, 축전지","피난설비"],["비상구·피난통로","개방, 장애물 없음","피난설비"],["방화문","정상 개폐·자동폐쇄","피난설비"],["대피 안내도","피난안내도 게시·최신","피난설비"],
+  ["전기설비 과부하","문어발·과열·임시배선 없음","화기·위험물"],["가연물 관리","방치 없음, 이격거리","화기·위험물"],["화기작업 관리","소화기 비치·감시자","화기·위험물"],["위험물 저장","지정수량·표지 준수","화기·위험물"],
+  ["소방시설 주변","소화기·소화전 앞 적치물 없음","유지·관리"],["소방안전관리","관리자 지정·교육 실시","유지·관리"]
+ ]
 };
+function defGroupOf(cat,t){var a=DEF_ITEMS[cat]||[];for(var i=0;i<a.length;i++)if(a[i][0]===t)return a[i][2];return '기타 점검';}
 const CATS=["설비","안전","소방"];
 const TABS=[["설비","🔧 설비 점검"],["안전","🦺 안전 점검"],["소방","🔥 소방 점검"],["layout","🏭 공장 LAY-OUT"],["dash","📊 대시보드"]];
 const RES=["양호","주의","불량","해당없음"];
@@ -151,7 +174,8 @@ function markDirty(){dirty=true;stat('✏️ 수정됨 · 저장 필요');}
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function ensure(){
  CATS.forEach(function(c){
-  if(!Array.isArray(DATA.items[c])||!DATA.items[c].length)DATA.items[c]=DEF_ITEMS[c].map(function(x){return {t:x[0],b:x[1]};});
+  if(!Array.isArray(DATA.items[c])||!DATA.items[c].length)DATA.items[c]=DEF_ITEMS[c].map(function(x){return {t:x[0],b:x[1],g:x[2]};});
+  else DATA.items[c].forEach(function(it){if(!it.g)it.g=defGroupOf(c,it.t);});
   if(!Array.isArray(DATA.res[c]))DATA.res[c]=[];
   while(DATA.res[c].length<DATA.items[c].length)DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});
   DATA.res[c].length=DATA.items[c].length;
@@ -180,18 +204,26 @@ function renderCheck(cat){
  var dl=cat==='설비'?'eqdl':'locdl';
  var h='<div class="card"><div class="phead"><span class="ptitle">'+(TABS.find(function(t){return t[0]===cat;})[1])+' 항목</span>'+(EDIT?'<button class="addbtn" onclick="addItem(\''+cat+'\')">＋ 항목 추가</button>':'')+'<span class="spacer"></span></div>';
  h+='<div class="tbl-wrap"><table><tr><th class="no">No</th><th>점검 항목</th><th>점검 기준</th><th class="filt'+(FILT[cat]?' act':'')+'" style="width:124px" onclick="openFilt(event,\''+cat+'\')" title="클릭하여 위치별로 걸러보기">'+locHdr(cat)+'<span class="fic">▼</span></th><th style="width:96px">결과</th><th style="width:150px">조치사항</th><th style="width:88px">조치자</th><th style="width:120px">조치일자</th>'+(EDIT?'<th style="width:34px">삭제</th>':'')+'</tr>';
- var shown=0,colspan=EDIT?9:8;
- items.forEach(function(it,i){var r=res[i]||{r:'양호',a:'',loc:'',actBy:'',actDate:''};
-  if(!passFilt(cat,r))return;shown++;
-  h+='<tr><td class="no">'+(i+1)+'</td>'+
-   '<td class="item"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'t\',this.innerText)"':'')+'>'+esc(it.t)+'</td>'+
-   '<td class="std"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'b\',this.innerText)"':'')+'>'+esc(it.b)+'</td>'+
-   '<td><input class="f" list="'+dl+'" value="'+esc(r.loc)+'" oninput="setLoc(\''+cat+'\','+i+',this.value)" placeholder="'+(cat==='설비'?'호기/설비':'위치')+'"></td>'+
-   '<td><select class="rsel" onchange="setRes(\''+cat+'\','+i+',this.value)">'+RES.map(function(o){return '<option'+(r.r===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
-   '<td><input class="f" value="'+esc(r.a)+'" oninput="setAct(\''+cat+'\','+i+',this.value)" placeholder="조치·비고"></td>'+
-   '<td><input class="f" value="'+esc(r.actBy)+'" oninput="setActBy(\''+cat+'\','+i+',this.value)" placeholder="조치자"></td>'+
-   '<td><input class="f" type="date" value="'+esc(r.actDate)+'" onchange="setActDate(\''+cat+'\','+i+',this.value)"></td>'+
-   (EDIT?'<td style="text-align:center"><button class="delx" onclick="delItem(\''+cat+'\','+i+')">✕</button></td>':'')+'</tr>';
+ var shown=0,colspan=EDIT?9:8,seq=0;
+ var groupOrder=[];(DEF_ITEMS[cat]||[]).forEach(function(x){if(groupOrder.indexOf(x[2])<0)groupOrder.push(x[2]);});
+ items.forEach(function(it){var gg=it.g||'기타 점검';if(groupOrder.indexOf(gg)<0)groupOrder.push(gg);});
+ groupOrder.forEach(function(gg){
+  var all=[];items.forEach(function(it,i){if((it.g||'기타 점검')===gg)all.push(i);});
+  var vis=all.filter(function(i){return passFilt(cat,res[i]||{});});
+  if(!vis.length)return;
+  var cnt=FILT[cat]?(vis.length+'/'+all.length+'항목'):(all.length+'항목');
+  h+='<tr class="grp"><td colspan="'+colspan+'">▣ '+esc(gg)+' <span class="gcnt">'+cnt+'</span></td></tr>';
+  vis.forEach(function(i){var it=items[i],r=res[i]||{r:'양호',a:'',loc:'',actBy:'',actDate:''};seq++;shown++;
+   h+='<tr><td class="no">'+seq+'</td>'+
+    '<td class="item"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'t\',this.innerText)"':'')+'>'+esc(it.t)+'</td>'+
+    '<td class="std"'+(EDIT?' contenteditable="true" oninput="edItem(\''+cat+'\','+i+',\'b\',this.innerText)"':'')+'>'+esc(it.b)+'</td>'+
+    '<td><input class="f" list="'+dl+'" value="'+esc(r.loc)+'" oninput="setLoc(\''+cat+'\','+i+',this.value)" placeholder="'+(cat==='설비'?'호기/설비':'위치')+'"></td>'+
+    '<td><select class="rsel" onchange="setRes(\''+cat+'\','+i+',this.value)">'+RES.map(function(o){return '<option'+(r.r===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
+    '<td><input class="f" value="'+esc(r.a)+'" oninput="setAct(\''+cat+'\','+i+',this.value)" placeholder="조치·비고"></td>'+
+    '<td><input class="f" value="'+esc(r.actBy)+'" oninput="setActBy(\''+cat+'\','+i+',this.value)" placeholder="조치자"></td>'+
+    '<td><input class="f" type="date" value="'+esc(r.actDate)+'" onchange="setActDate(\''+cat+'\','+i+',this.value)"></td>'+
+    (EDIT?'<td style="text-align:center"><button class="delx" onclick="delItem(\''+cat+'\','+i+')">✕</button></td>':'')+'</tr>';
+  });
  });
  if(!shown)h+='<tr><td colspan="'+colspan+'" style="text-align:center;color:#94a3b8;padding:18px">필터 결과에 해당하는 항목이 없습니다.</td></tr>';
  var fbar=FILT[cat]?'<span class="filtbar">🔍 필터: '+esc(filtLabel(cat))+' · '+shown+'/'+items.length+'건 <button onclick="setFilt(\''+cat+'\',null)">필터 해제</button></span>':'';
@@ -219,7 +251,7 @@ function openFilt(e,cat){e.stopPropagation();closeFilt();var th=e.currentTarget;
 function closeFilt(){var p=el('fpop');if(p&&p.parentNode)p.parentNode.removeChild(p);document.removeEventListener('click',closeFilt);}
 function setFilt(cat,mode,idx){if(mode==null)FILT[cat]=null;else if(mode==='issue')FILT[cat]={mode:'issue'};else if(mode==='loc')FILT[cat]={mode:'loc',val:_FL[idx]};closeFilt();renderCheck(cat);}
 function edItem(c,i,f,v){DATA.items[c][i][f]=v;markDirty();}
-function addItem(c){DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력'});DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});markDirty();renderCheck(c);}
+function addItem(c){DATA.items[c].push({t:'새 점검항목',b:'점검 기준 입력',g:'기타 점검'});DATA.res[c].push({r:'양호',a:'',loc:'',actBy:'',actDate:''});markDirty();renderCheck(c);}
 function delItem(c,i){if(!confirm('이 점검항목을 삭제할까요?'))return;DATA.items[c].splice(i,1);DATA.res[c].splice(i,1);markDirty();renderCheck(c);}
 /* ===== 공장 LAY-OUT ===== */
 function renderLayout(){
