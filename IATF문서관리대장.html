@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IATF16949 문서관리대장 · 품질기획부</title>
+<style>
+:root{--navy:#123a52;--teal:#0d6e8c;--line:#dfe4ea;--bg:#eef1f6;--good:#1c8a4a;--warn:#c77800;--bad:#C62828}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:#1c2430;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
+header{position:sticky;top:0;z-index:40;background:linear-gradient(90deg,var(--navy),var(--teal));color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px}
+header h1{margin:0;font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px}
+.cloud{font-size:11px;background:rgba(255,255,255,.16);border-radius:20px;padding:3px 10px;font-weight:700}
+header .sp{margin-left:auto}
+header button{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;margin-left:8px}
+header button.save{background:var(--warn);color:#fff}
+.body{padding:14px 16px 60px}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.kpi{flex:1;min-width:110px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:10px;padding:10px 14px}
+.kpi.g{border-left-color:var(--good)}.kpi.o{border-left-color:var(--warn)}.kpi.b{border-left-color:var(--teal)}
+.kpi .l{font-size:11.5px;color:#64748b;font-weight:700}.kpi .v{font-size:22px;font-weight:800;margin-top:2px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.toolbar input,.toolbar select{border:1px solid var(--line);border-radius:9px;padding:8px 11px;font:inherit;font-size:13px}
+.toolbar input.q{flex:1;min-width:180px}
+.addbtn{background:var(--teal);color:#fff;border:0;border-radius:9px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer}
+.hint{margin-left:auto;font-size:11.5px;color:#94a3b8}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:920px}
+th,td{border:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:middle}
+thead th{background:var(--navy);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;position:sticky;top:0}
+td .f{width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:6px 7px;font:inherit;font-size:12.5px;background:#fff}
+td .f:focus{outline:none;border-color:var(--teal)}
+td.no{text-align:center;color:#64748b;font-weight:700;width:34px}
+.ch{font-family:monospace;font-weight:700;color:var(--teal);width:52px;text-align:center}
+.dno{font-family:monospace;font-weight:700;width:120px}
+select.st{font-weight:800}
+select.st.s-유효{color:var(--good)}select.st.s-개정중{color:var(--warn)}select.st.s-폐기{color:var(--bad)}
+tr.dead td{background:#fbeeee}
+.delx{background:#fff;border:1px solid #f0c4c4;color:var(--bad);border-radius:6px;width:26px;height:26px;font-size:13px;cursor:pointer}
+.foot-hint{font-size:11.5px;color:#64748b;margin-top:8px}
+.empty{text-align:center;color:#94a3b8;padding:24px}
+@media print{header button,.toolbar .addbtn,.delx{display:none}.tbl-wrap{overflow:visible}}
+</style></head><body>
+<header>
+ <h1>📚 IATF16949 문서관리대장</h1><span class="cloud" id="st">연결 확인 중…</span>
+ <span class="sp"></span>
+ <button onclick="window.print()">🖨️ 인쇄</button>
+ <button class="save" onclick="save()">💾 저장</button>
+</header>
+<div class="body">
+ <div class="kpis" id="kpis"></div>
+ <div class="card">
+  <div class="toolbar">
+   <input class="q" id="q" placeholder="🔍 문서번호·문서명 검색" oninput="render()">
+   <select id="fch" onchange="render()"><option value="">장(章) 전체</option></select>
+   <select id="fst" onchange="render()"><option value="">상태 전체</option><option>유효</option><option>개정중</option><option>폐기</option></select>
+   <button class="addbtn" onclick="addRow()">＋ 문서 추가</button>
+   <span class="hint" id="cnt"></span>
+  </div>
+  <div class="tbl-wrap"><table>
+   <thead><tr><th class="no">No</th><th style="width:52px">장</th><th style="width:120px">문서번호</th><th>문서명</th><th style="width:56px">Rev</th><th style="width:120px">제·개정일</th><th style="width:92px">상태</th><th>비고</th><th style="width:34px">삭제</th></tr></thead>
+   <tbody id="body"></tbody>
+  </table></div>
+  <div class="foot-hint">셀 직접 입력 → <b>💾 저장</b> 시 클라우드에 저장(전 PC 공유) · 첨부 원본(.xls/.ppt)은 구글드라이브 링크로 연결 가능(비고에 URL 기입 시 자동 링크). · IATF16949 SJQM/SJQD/SJQP 문서체계</div>
+ </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const KEY="iatf_doc_v1";
+let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
+const el=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const STAT=["유효","개정중","폐기"];
+let ROWS=[], dirty=false;
+/* 첨부 파일명에서 추출한 IATF 문서목록 (중복·구버전 제거, 최신 Rev) */
+function seed(){return [
+ ['1-2','','Process Map','0','2017-06-23','유효',''],
+ ['1','SJQM-IATF-001','품질경영시스템 매뉴얼','2','2018-04-30','유효',''],
+ ['4.1','SJQD-4001','조직의 상황관리 절차','1','2018-03-13','유효',''],
+ ['4.1','SJQD-4001','작업자 제안제도 및 포상 절차서','-','2024-08-30','유효','문서번호 중복(4001)'],
+ ['4.2','SJQD-4002','사업계획 수립절차','1','2018-03-13','유효',''],
+ ['5.1','SJQD-5001','다기능팀 운영절차','1','2018-03-13','유효',''],
+ ['5.2','SJQP-5002','품질방침 및 목표관리 프로세스','1','2018-03-14','유효',''],
+ ['5.3','SJQP-5003','조직 및 업무분장 프로세스','2','2018-04-29','유효',''],
+ ['5.4','SJQD-5004','프로세스 운영관리 절차','1','2018-03-13','유효',''],
+ ['6.1','SJQP-6001','리스크관리 프로세스','2','2022-03-15','유효',''],
+ ['6.2','SJQD-6002','변경관리 절차','2','2018-04-29','유효',''],
+ ['6.3','SJQD-6003','비상대비 및 대응 프로세스','1','2022-04-01','개정중','추가중'],
+ ['6.3','','비상사태 운영계획(추가)','-','','개정중','PPT'],
+ ['6.4','SJQD-6004','안전관리 프로세스','1','2021-03-18','유효',''],
+ ['7.1','SJQP-7001','제조설비관리 프로세스','2','2021-03-25','유효','원본 손상'],
+ ['7.2','SJQP-7002','청정활동 프로세스','2','2025-01-10','유효',''],
+ ['7.3','SJQD-7003','측정 시스템 운영 절차','2','2022-04-28','유효',''],
+ ['7.4','SJQP-7004','계측기 관리 프로세스','3','2025-11-05','유효',''],
+ ['7.5','SJQD-7005','실험실 운영절차','1','2018-04-09','유효',''],
+ ['7.6','SJQP-7006','교육훈련 프로세스','1','2018-03-14','유효',''],
+ ['7.7','SJQD-7007','자격관리 절차','3','2018-05-18','유효',''],
+ ['7.8','SJQD-7008','문서화 정보관리 절차','1','2018-03-14','유효',''],
+ ['7.9','SJQD-7009','문서관리 절차','2','2018-04-29','유효',''],
+ ['7.10','SJQD-7010','기록관리 절차','2','2018-04-29','유효',''],
+ ['7.11','SJQP-7011','4M변경 관리 프로세스','1','2018-03-14','유효',''],
+ ['8.1','SJQP-8001','영업관리 프로세스','2','2018-04-29','유효',''],
+ ['8.2','SJQP-8002','고객관리 프로세스','1','2018-03-20','유효',''],
+ ['8.3','SJQP-8003','구매업무 프로세스','1','2018-03-20','유효',''],
+ ['8.4','SJQP-8004','협력업체 평가 프로세스','2','2018-04-29','유효',''],
+ ['8.5','SJQD-8005','양산제품 승인업무 절차','1','2018-03-20','유효',''],
+ ['8.6','SJQD-8006','사전제품품질기획(APQP) 절차','1','2018-03-20','유효',''],
+ ['8.7','SJQD-8007','FMEA 운영절차','1','2018-03-20','유효',''],
+ ['8.8','SJQP-8008','공정관리 프로세스','2','2018-04-29','유효',''],
+ ['8.9','SJQP-8009','생산관리 프로세스','1','2018-03-22','유효',''],
+ ['8.10','SJQD-8010','관리계획서 운영절차','1','2018-03-20','유효',''],
+ ['8.11','SJQD-8011','작업표준 관리절차','2','2021-03-12','유효',''],
+ ['8.12','SJQD-8012','금형관리 절차','1','2026-01-06','유효',''],
+ ['8.13','SJQD-8013','용기관리 절차','1','2018-04-01','유효',''],
+ ['8.14','SJQP-8014','식별 및 추적성 관리 프로세스','1','2018-03-22','유효',''],
+ ['8.15','SJQD-8015','고객 자산관리 절차','1','2018-03-20','유효',''],
+ ['8.16','SJQP-8016','자재관리 프로세스','1','2018-03-22','유효',''],
+ ['8.17','SJQP-8017','제품관리 프로세스','2','2018-04-29','유효',''],
+ ['8.18','SJQP-8018','검사업무 프로세스','2','2021-03-02','유효',''],
+ ['8.19','SJQD-8019','부적합품 관리절차','1','2018-03-20','유효',''],
+ ['9.1','SJQP-9001','지속적 개선 프로세스','3','2018-04-29','유효',''],
+ ['9.2','SJQD-9002','고객만족조사 절차','3','2022-04-28','유효',''],
+ ['9.3','SJQD-9003','내부심사 절차','3','2021-03-02','유효',''],
+ ['9.4','SJQP-9004','경영검토 프로세스','1','2018-03-28','유효',''],
+ ['9.5','SJQD-9005','품질 비용절차','2','2018-04-29','유효',''],
+ ['9.6','SJQP-9006','시정 및 예방조치 프로세스','1','2018-03-28','유효',''],
+ ['9.7','SJQD-9007','실수방지 절차','1','2018-04-01','유효',''],
+ ['9.8','SJQP-9008','도면·부품 일치성 프로세스','2','2018-04-29','유효',''],
+ ['-','','다기능평가시스템','-','2026-04-20','유효','신규'],
+ ['-','','품질측정실 운영방안','-','2026-04-20','유효','신규']
+].map(function(a){return {ch:a[0],dno:a[1],name:a[2],rev:a[3],date:a[4],status:a[5],note:a[6]};});}
+function stat(m,c){el('st').textContent=m;el('st').style.color=c||'#fff';}
+function markDirty(){dirty=true;stat('✏️ 수정됨 · 저장 필요','#ffe08a');}
+async function load(){
+ if(!sb){ROWS=seed();stat('⚠ 로컬 모드','#ffd0d0');render();return;}
+ try{var r=await sb.from('app_state').select('value').eq('key',KEY).maybeSingle();
+  if(r.error){ROWS=seed();stat('⚠ 로컬 모드','#ffd0d0');}
+  else if(r.data&&Array.isArray(r.data.value)&&r.data.value.length){ROWS=r.data.value;stat('클라우드 연결됨 ✓','#bff0c8');}
+  else {ROWS=seed();stat('클라우드 연결됨 ✓ (초기 목록)','#bff0c8');}
+ }catch(e){ROWS=seed();stat('⚠ 로컬 모드','#ffd0d0');}
+ render();
+}
+async function save(){
+ if(!sb){alert('클라우드 미연결 — 저장할 수 없습니다');return;}
+ try{ await sb.from('app_state').upsert({key:KEY,value:ROWS,updated_at:new Date().toISOString()});
+  dirty=false;stat('저장됨 ✓ '+new Date().toLocaleTimeString(),'#bff0c8'); }
+ catch(e){ stat('저장 실패, 다시 시도','#ffd0d0'); }
+}
+function addRow(){ROWS.push({ch:'',dno:'',name:'',rev:'',date:'',status:'유효',note:''});markDirty();render();}
+function delRow(i){if(!confirm('이 문서 행을 삭제할까요?'))return;ROWS.splice(i,1);markDirty();render();}
+function setV(i,k,v){ROWS[i][k]=v;markDirty();if(k==='status'||k==='ch')render();}
+function match(r,q){if(!q)return true;q=q.toLowerCase();return ((r.dno||'')+' '+(r.name||'')).toLowerCase().indexOf(q)>=0;}
+function noteCell(n){var m=String(n||'').match(/https?:\/\/\S+/);if(m)return '<a href="'+esc(m[0])+'" target="_blank" style="color:var(--teal);font-weight:700">📎 원본 열기</a>';return esc(n||'');}
+function render(){
+ var q=el('q').value.trim(), fch=el('fch').value, fst=el('fst').value;
+ var tot=ROWS.length, good=0,mid=0;var chs={};
+ ROWS.forEach(function(r){if(r.status==='유효')good++;else if(r.status==='개정중')mid++;if(r.ch)chs[r.ch]=1;});
+ el('kpis').innerHTML='<div class="kpi"><div class="l">총 문서</div><div class="v">'+tot+'</div></div>'+
+  '<div class="kpi g"><div class="l">유효</div><div class="v">'+good+'</div></div>'+
+  '<div class="kpi o"><div class="l">개정중</div><div class="v">'+mid+'</div></div>'+
+  '<div class="kpi b"><div class="l">장(章)</div><div class="v">'+Object.keys(chs).length+'</div></div>';
+ var sel=el('fch'),cur=sel.value;var order=Object.keys(chs).sort(function(a,b){return parseFloat(a)-parseFloat(b)||a.localeCompare(b);});
+ sel.innerHTML='<option value="">장(章) 전체</option>'+order.map(function(c){return '<option'+(c===cur?' selected':'')+'>'+esc(c)+'</option>';}).join('');
+ var shown=0,h='';
+ ROWS.forEach(function(r,i){
+  if(!match(r,q))return; if(fch&&r.ch!==fch)return; if(fst&&r.status!==fst)return; shown++;
+  h+='<tr class="'+(r.status==='폐기'?'dead':'')+'"><td class="no">'+(i+1)+'</td>'+
+   '<td><input class="f ch" value="'+esc(r.ch)+'" oninput="setV('+i+',\'ch\',this.value)"></td>'+
+   '<td><input class="f dno" value="'+esc(r.dno)+'" oninput="setV('+i+',\'dno\',this.value)" placeholder="SJQ..."></td>'+
+   '<td><input class="f" value="'+esc(r.name)+'" oninput="setV('+i+',\'name\',this.value)" placeholder="문서명"></td>'+
+   '<td><input class="f" value="'+esc(r.rev)+'" oninput="setV('+i+',\'rev\',this.value)" placeholder="Rev"></td>'+
+   '<td><input class="f" type="date" value="'+esc(r.date)+'" onchange="setV('+i+',\'date\',this.value)"></td>'+
+   '<td><select class="f st s-'+esc(r.status)+'" onchange="setV('+i+',\'status\',this.value)">'+STAT.map(function(o){return '<option'+(r.status===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td>'+
+   '<td><input class="f" value="'+esc(r.note)+'" oninput="setV('+i+',\'note\',this.value)" placeholder="비고·원본 URL"></td>'+
+   '<td style="text-align:center"><button class="delx" onclick="delRow('+i+')">✕</button></td></tr>';
+ });
+ if(!shown)h='<tr><td colspan="9" class="empty">'+(tot?'검색 결과가 없습니다.':'문서가 없습니다.')+'</td></tr>';
+ el('body').innerHTML=h;
+ el('cnt').textContent=shown+' / '+tot+'건';
+}
+window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
+load();
+try{ if(sb) sb.channel('iatf_rt').on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+KEY},function(){ if(!dirty) load(); }).subscribe(); }catch(e){}
+</script>
+</body></html>
