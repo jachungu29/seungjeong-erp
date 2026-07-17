@@ -1,36 +1,80 @@
 <!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>IATF16949 품질 절차서 · 품질기획부</title><style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:#eef1f6;color:#1c2430;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
-.top{background:linear-gradient(90deg,#123a52,#0d6e8c);color:#fff;padding:11px 16px;display:flex;align-items:center;gap:10px}
-.top h1{margin:0;font-size:16px;font-weight:800}.top .c{margin-left:auto;font-size:11px;opacity:.8}
-.layout{display:flex;height:calc(100vh - 46px)}
-.side{width:320px;flex:0 0 320px;background:#fff;border-right:1px solid #dfe4ea;overflow-y:auto;padding:10px}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#eef1f6;color:#222;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:14px;line-height:1.7}
+.top{background:linear-gradient(90deg,#123a52,#0d6e8c);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.top h1{margin:0;font-size:16px;font-weight:800}.top .st{margin-left:auto;font-size:11px;opacity:.85}
+.top button{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:8px;padding:7px 12px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;margin-left:6px}
+.layout{display:flex;height:calc(100vh - 42px)}
+.side{width:300px;flex:0 0 300px;background:#fff;border-right:1px solid #dfe4ea;overflow-y:auto;padding:10px;transition:.2s}
+.side.hide{width:0;flex-basis:0;padding:0;overflow:hidden;border:0}
 .side input{width:100%;border:1px solid #dfe4ea;border-radius:9px;padding:9px 11px;font:inherit;font-size:13px;margin-bottom:8px}
 .doc{display:block;width:100%;text-align:left;border:1px solid #e7ebf0;border-radius:9px;background:#fff;padding:9px 11px;margin-bottom:6px;cursor:pointer;font:inherit}
 .doc:hover{border-color:#0d6e8c;background:#f2f8fb}.doc.on{border-color:#0d6e8c;background:#e7f1f6}
 .doc .nm{font-weight:800;font-size:13px}.doc .mt{font-size:11px;color:#6a7b88;margin-top:2px;font-family:monospace}
-.doc.xls{opacity:.55;cursor:default}.doc.xls:hover{border-color:#e7ebf0;background:#fff}
-.side .hd{font-size:11px;color:#8b95a1;font-weight:800;margin:12px 4px 6px;letter-spacing:.3px}
-.frwrap{flex:1;background:#fff}.frwrap iframe{width:100%;height:100%;border:0}
-.empty{padding:40px;color:#94a3b8;text-align:center}
-@media(max-width:720px){.layout{flex-direction:column;height:auto}.side{width:auto;flex:none;max-height:44vh}.frwrap{height:56vh}}
+.main{flex:1;overflow-y:auto;padding:0}
+.dhead{background:#f4f8fb;border-bottom:1px solid #dfe4ea;padding:14px 22px;position:sticky;top:0;z-index:3}
+.dhead .no{font-family:monospace;font-size:12px;color:#0d6e8c;font-weight:700}
+.dhead h2{margin:2px 0 0;font-size:20px;font-weight:800;color:#123a52}
+.dhead .meta{font-size:12px;color:#6a7b88;margin-top:3px}
+.dbar{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.dbar button{border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer}
+.b-edit{background:#0d6e8c;color:#fff}.b-save{background:#c77800;color:#fff}.b-cancel{background:#eef1f6;color:#333;border:1px solid #dfe4ea!important}.b-print{background:#eef1f6;color:#333}
+.editing #content{outline:2px dashed #c77800;outline-offset:6px;background:#fffdf7}
+.wrap{max-width:920px;margin:16px auto;padding:0 22px 70px}
+#content{background:#fff;border:1px solid #e2e8ee;border-radius:12px;padding:26px 30px 44px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+h2{font-size:16px;color:#0d6e8c;font-weight:800;margin:22px 0 8px;padding:7px 12px;background:#eef6fa;border-left:4px solid #0d6e8c;border-radius:0 7px 7px 0}
+p{margin:5px 2px}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:13px}
+th,td{border:1px solid #ccd4dc;padding:7px 10px;vertical-align:top;text-align:left;word-break:break-word}
+th{background:#f2f6f9;font-weight:800;color:#234}tr:nth-child(even) td{background:#fafcfd}
+.pdiv{text-align:center;margin:30px 0 12px;border-top:1px dashed #cbd5df}.pdiv span{background:#fff;color:#95a2ae;font-size:11px;font-weight:700;padding:0 14px;position:relative;top:-10px}
+.sect-flow{margin-top:26px}.flowwrap{display:flex;flex-wrap:wrap;gap:7px}.flownode{background:#f4f8fb;border:1px solid #cfe0ea;border-radius:8px;padding:7px 12px;font-size:12.5px;white-space:pre-wrap}
+.foot{margin-top:30px;padding-top:12px;border-top:1px solid #eef1f5;font-size:11.5px;color:#98a2ad;text-align:right}
+.empty{padding:60px;text-align:center;color:#9aa5b0}
+@media print{.top,.side,.dbar{display:none}.main{overflow:visible}.dhead{position:static}body{background:#fff}#content{border:0;box-shadow:none}}
+@media(max-width:720px){.side{position:absolute;z-index:5;height:100%;box-shadow:2px 0 12px rgba(0,0,0,.15)}}
 </style></head><body>
-<div class="top"><h1>📋 IATF16949 품질 절차서</h1><span class="c">품질기획부 · 클릭하면 문서가 열립니다</span></div>
+<div class="top"><h1>📋 IATF16949 품질 절차서</h1>
+ <button onclick="toggleSide()">☰ 목록</button>
+ <span class="st" id="st">불러오는 중…</span></div>
 <div class="layout">
- <div class="side"><input id="q" placeholder="🔍 문서번호·문서명 검색" oninput="render()"><div id="list"></div>
-   <div class="hd">원본 .xls (미리보기 미지원)</div><div id="xlslist" style="font-size:11.5px;color:#94a3b8;line-height:1.9;padding:0 4px"></div></div>
- <div class="frwrap"><iframe id="fr" title="문서"></iframe></div>
+ <div class="side" id="side"><input id="q" placeholder="🔍 문서번호·문서명 검색" oninput="renderList()"><div id="list"></div></div>
+ <div class="main" id="main"><div class="empty">왼쪽에서 문서를 선택하세요.</div></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-var DOCS=[{"ch": "6.1", "dno": "SJQP-6001", "name": "리스크관리 프로세스", "rev": "2", "date": "2022-03-15", "file": "iatf/iatf_SJQP-6001.html"}, {"ch": "7.2", "dno": "SJQP-7002", "name": "청정활동 프로세스", "rev": "2", "date": "2025-01-10", "file": "iatf/iatf_SJQP-7002.html"}, {"ch": "7.4", "dno": "SJQP-7004", "name": "계측기 관리 프로세스", "rev": "3", "date": "2025-11-05", "file": "iatf/iatf_SJQP-7004.html"}, {"ch": "7.5", "dno": "SJQD-7005", "name": "실험실 운영절차", "rev": "1", "date": "2018-04-09", "file": "iatf/iatf_SJQD-7005.html"}, {"ch": "7.6", "dno": "SJQP-7006", "name": "교육훈련 프로세스", "rev": "1", "date": "2018-03-14", "file": "iatf/iatf_SJQP-7006.html"}, {"ch": "7.7", "dno": "SJQD-7007", "name": "자격관리 절차", "rev": "3", "date": "2018-05-18", "file": "iatf/iatf_SJQD-7007.html"}, {"ch": "8.1", "dno": "SJQP-8001", "name": "영업관리 프로세스", "rev": "2", "date": "2018-04-29", "file": "iatf/iatf_SJQP-8001.html"}, {"ch": "8.2", "dno": "SJQP-8002", "name": "고객관리 프로세스", "rev": "1", "date": "2018-03-20", "file": "iatf/iatf_SJQP-8002.html"}, {"ch": "8.6", "dno": "SJQD-8006", "name": "사전제품품질기획(APQP) 절차", "rev": "1", "date": "2018-03-20", "file": "iatf/iatf_SJQD-8006.html"}, {"ch": "8.8", "dno": "SJQP-8008", "name": "공정관리 프로세스", "rev": "2", "date": "2018-04-29", "file": "iatf/iatf_SJQP-8008.html"}, {"ch": "8.11", "dno": "SJQD-8011", "name": "작업표준 관리절차", "rev": "2", "date": "2021-03-12", "file": "iatf/iatf_SJQD-8011.html"}, {"ch": "8.13", "dno": "SJQD-8013", "name": "용기관리 절차", "rev": "1", "date": "2018-04-01", "file": "iatf/iatf_SJQD-8013.html"}, {"ch": "8.15", "dno": "SJQD-8015", "name": "고객 자산관리 절차", "rev": "1", "date": "2018-03-20", "file": "iatf/iatf_SJQD-8015.html"}, {"ch": "8.18", "dno": "SJQP-8018", "name": "검사업무 프로세스", "rev": "2", "date": "2021-03-02", "file": "iatf/iatf_SJQP-8018.html"}, {"ch": "8.19", "dno": "SJQD-8019", "name": "부적합품 관리절차", "rev": "1", "date": "2018-03-20", "file": "iatf/iatf_SJQD-8019.html"}, {"ch": "9.1", "dno": "SJQP-9001", "name": "지속적 개선 프로세스", "rev": "3", "date": "2018-04-29", "file": "iatf/iatf_SJQP-9001.html"}, {"ch": "9.3", "dno": "SJQD-9003", "name": "내부심사 절차", "rev": "3", "date": "2021-03-02", "file": "iatf/iatf_SJQD-9003.html"}, {"ch": "9.4", "dno": "SJQP-9004", "name": "경영검토 프로세스", "rev": "1", "date": "2018-03-28", "file": "iatf/iatf_SJQP-9004.html"}, {"ch": "9.5", "dno": "SJQD-9005", "name": "품질 비용절차", "rev": "2", "date": "2018-04-29", "file": "iatf/iatf_SJQD-9005.html"}, {"ch": "9.6", "dno": "SJQP-9006", "name": "시정 및 예방조치 프로세스", "rev": "1", "date": "2018-03-28", "file": "iatf/iatf_SJQP-9006.html"}, {"ch": "-", "dno": "QSPEC-001", "name": "품질측정실 운영방안", "rev": "-", "date": "2026-04-20", "file": "iatf/iatf_QSPEC-001.html"}, {"ch": "-", "dno": "QSPEC-002", "name": "다기능평가시스템", "rev": "-", "date": "2026-04-20", "file": "iatf/iatf_QSPEC-002.html"}];
-var XLS=["품질경영시스템 매뉴얼", "조직상황/사업계획/다기능팀/품질방침/조직업무분장", "프로세스운영/변경/비상대비/안전관리", "측정시스템/문서화/문서관리/기록/4M변경", "구매업무/양산승인/FMEA/관리계획서/금형/식별추적/자재/제품/생산관리/실수방지/도면부품 등 (.xls 구형 → xlsx 저장 시 변환가능)"];
-function pick(i){var d=DOCS[i];document.getElementById('fr').src=d.file;[].forEach.call(document.querySelectorAll('.doc'),function(e){e.classList.remove('on');});var b=document.getElementById('d'+i);if(b)b.classList.add('on');}
+const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const CKEY="iatf_procs_v1";
+let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
+const IDX=[{"key": "SJQP-6001", "ch": "6.1", "dno": "SJQP-6001", "name": "리스크관리 프로세스", "rev": "2", "date": "2022-03-15"}, {"key": "SJQP-7002", "ch": "7.2", "dno": "SJQP-7002", "name": "청정활동 프로세스", "rev": "2", "date": "2025-01-10"}, {"key": "SJQP-7004", "ch": "7.4", "dno": "SJQP-7004", "name": "계측기 관리 프로세스", "rev": "3", "date": "2025-11-05"}, {"key": "SJQD-7005", "ch": "7.5", "dno": "SJQD-7005", "name": "실험실 운영절차", "rev": "1", "date": "2018-04-09"}, {"key": "SJQP-7006", "ch": "7.6", "dno": "SJQP-7006", "name": "교육훈련 프로세스", "rev": "1", "date": "2018-03-14"}, {"key": "SJQD-7007", "ch": "7.7", "dno": "SJQD-7007", "name": "자격관리 절차", "rev": "3", "date": "2018-05-18"}, {"key": "SJQP-8001", "ch": "8.1", "dno": "SJQP-8001", "name": "영업관리 프로세스", "rev": "2", "date": "2018-04-29"}, {"key": "SJQP-8002", "ch": "8.2", "dno": "SJQP-8002", "name": "고객관리 프로세스", "rev": "1", "date": "2018-03-20"}, {"key": "SJQD-8006", "ch": "8.6", "dno": "SJQD-8006", "name": "사전제품품질기획(APQP) 절차", "rev": "1", "date": "2018-03-20"}, {"key": "SJQP-8008", "ch": "8.8", "dno": "SJQP-8008", "name": "공정관리 프로세스", "rev": "2", "date": "2018-04-29"}, {"key": "SJQD-8011", "ch": "8.11", "dno": "SJQD-8011", "name": "작업표준 관리절차", "rev": "2", "date": "2021-03-12"}, {"key": "SJQD-8013", "ch": "8.13", "dno": "SJQD-8013", "name": "용기관리 절차", "rev": "1", "date": "2018-04-01"}, {"key": "SJQD-8015", "ch": "8.15", "dno": "SJQD-8015", "name": "고객 자산관리 절차", "rev": "1", "date": "2018-03-20"}, {"key": "SJQP-8018", "ch": "8.18", "dno": "SJQP-8018", "name": "검사업무 프로세스", "rev": "2", "date": "2021-03-02"}, {"key": "SJQD-8019", "ch": "8.19", "dno": "SJQD-8019", "name": "부적합품 관리절차", "rev": "1", "date": "2018-03-20"}, {"key": "SJQP-9001", "ch": "9.1", "dno": "SJQP-9001", "name": "지속적 개선 프로세스", "rev": "3", "date": "2018-04-29"}, {"key": "SJQD-9003", "ch": "9.3", "dno": "SJQD-9003", "name": "내부심사 절차", "rev": "3", "date": "2021-03-02"}, {"key": "SJQP-9004", "ch": "9.4", "dno": "SJQP-9004", "name": "경영검토 프로세스", "rev": "1", "date": "2018-03-28"}, {"key": "SJQD-9005", "ch": "9.5", "dno": "SJQD-9005", "name": "품질 비용절차", "rev": "2", "date": "2018-04-29"}, {"key": "SJQP-9006", "ch": "9.6", "dno": "SJQP-9006", "name": "시정 및 예방조치 프로세스", "rev": "1", "date": "2018-03-28"}, {"key": "QSPEC-001", "ch": "-", "dno": "QSPEC-001", "name": "품질측정실 운영방안", "rev": "-", "date": "2026-04-20"}, {"key": "QSPEC-002", "ch": "-", "dno": "QSPEC-002", "name": "다기능평가시스템", "rev": "-", "date": "2026-04-20"}];
+let STORE={}, cur=null, editing=false;
+const el=id=>document.getElementById(id);
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function render(){var q=(document.getElementById('q').value||'').toLowerCase();var h='';
- DOCS.forEach(function(d,i){if(q&&((d.dno+' '+d.name).toLowerCase().indexOf(q)<0))return;
-  h+='<button class="doc" id="d'+i+'" onclick="pick('+i+')"><div class="nm">'+esc(d.name)+'</div><div class="mt">'+esc(d.dno||'-')+' · Rev '+esc(d.rev)+' · '+esc(d.ch)+'장</div></button>';});
- document.getElementById('list').innerHTML=h||'<div class="empty">검색 결과 없음</div>';
- document.getElementById('xlslist').innerHTML=XLS.map(function(n){return '• '+esc(n);}).join('<br>');
+function stat(m,c){el('st').textContent=m;el('st').style.color=c||'';}
+function toggleSide(){el('side').classList.toggle('hide');}
+async function load(){
+ if(!sb){stat('오프라인');return;}
+ try{var r=await sb.from('app_state').select('value').eq('key',CKEY).maybeSingle();
+  STORE=(r.data&&r.data.value)||{}; stat('클라우드 연결됨 ✓','#bff0c8');}
+ catch(e){stat('로드 실패');}
+ renderList(); if(IDX.length) pick(encodeURIComponent(IDX[0].key));
 }
-render(); if(DOCS.length) pick(0);
+function renderList(){var q=(el('q').value||'').toLowerCase();var h='';
+ IDX.forEach(function(d){if(q&&((d.dno+' '+d.name).toLowerCase().indexOf(q)<0))return;
+  h+='<button class="doc'+(d.key===cur?' on':'')+'" onclick="pick(\''+encodeURIComponent(d.key)+'\')"><div class="nm">'+esc(d.name)+'</div><div class="mt">'+esc(d.dno||'-')+' · Rev '+esc(d.rev)+' · '+esc(d.ch)+'장</div></button>';});
+ el('list').innerHTML=h||'<div style="color:#9aa;padding:10px;font-size:12px">검색 결과 없음</div>';}
+function pick(k){k=decodeURIComponent(k);if(editing&&!confirm('편집 중입니다. 저장하지 않고 이동할까요?'))return;editing=false;cur=k;
+ var meta=IDX.find(function(x){return x.key===k;})||{};var rec=STORE[k]||{};
+ el('main').innerHTML='<div class="dhead"><div class="no">'+esc(meta.dno||'-')+' · Rev '+esc(meta.rev)+'</div><h2>'+esc(meta.name)+'</h2><div class="meta">제·개정일 '+esc(meta.date)+' · '+esc(meta.ch)+'장 · IATF16949 · ㈜승정 품질기획부</div>'
+  +'<div class="dbar"><button class="b-edit" onclick="startEdit()">✏️ 편집</button><button class="b-print" onclick="window.print()">🖨️ 인쇄</button><button class="b-print" onclick="toggleSide()">⤢ 목록접기/펼치기</button></div></div>'
+  +'<div class="wrap"><div id="content">'+(rec.html||'<div class="empty">내용이 없습니다.</div>')+'</div></div>';
+ renderList();el('main').scrollTop=0;}
+function startEdit(){editing=true;var c=el('content');c.contentEditable=true;c.focus();document.body.classList.add('editing');
+ var bar=document.querySelector('.dbar');bar.innerHTML='<button class="b-save" onclick="saveDoc()">💾 저장(클라우드)</button><button class="b-cancel" onclick="pick(encodeURIComponent(cur))">취소</button>';}
+async function saveDoc(){var c=el('content');if(STORE[cur])STORE[cur].html=c.innerHTML;else STORE[cur]={html:c.innerHTML};
+ stat('저장 중…');
+ try{await sb.from('app_state').upsert({key:CKEY,value:STORE,updated_at:new Date().toISOString()});stat('저장됨 ✓ '+new Date().toLocaleTimeString(),'#bff0c8');}
+ catch(e){stat('저장 실패');alert('저장 실패 — 다시 시도하세요');return;}
+ editing=false;c.contentEditable=false;document.body.classList.remove('editing');pick(encodeURIComponent(cur));}
+load();
 </script></body></html>
