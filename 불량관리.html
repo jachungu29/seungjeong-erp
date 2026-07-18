@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="icon" href="sj-icon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HFP 불량분석 시스템</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2333;--border:#30363d;
+  --accent:#00d4aa;--accent2:#ff6b35;--accent3:#4d90fe;
+  --warn:#f0a500;--danger:#e53e3e;--purple:#a371f7;
+  --text:#e6edf3;--muted:#7d8590;--input-bg:#0d1117;
+  --radius:6px;--sb:190px;
+  --font-mono:'Share Tech Mono',monospace;--font:'Noto Sans KR',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;display:flex;min-height:100vh}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sb);min-height:100vh;background:var(--surface);
+  border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;
+  display:flex;flex-direction:column;z-index:300;overflow-y:auto;
+}
+.sb-logo{
+  padding:18px 16px 14px;border-bottom:1px solid var(--border);
+  font-size:18px;font-weight:900;color:var(--accent);letter-spacing:.06em;
+  display:flex;align-items:center;gap:8px;
+}
+.sb-logo .sb-tag{background:var(--accent);color:#000;font-size:9px;padding:2px 5px;border-radius:3px;letter-spacing:.1em}
+.sb-section{padding:14px 12px 6px;font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.nav-btn{
+  display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;
+  background:transparent;border:none;color:var(--muted);font-family:var(--font);
+  font-size:13px;cursor:pointer;border-radius:var(--radius);transition:all .15s;
+  text-align:left;margin-bottom:2px;
+}
+.nav-btn:hover{background:var(--surface2);color:var(--text)}
+.nav-btn.active{background:rgba(0,212,170,.12);color:var(--accent);font-weight:700}
+.nav-btn .nav-icon{font-size:16px;width:22px;flex-shrink:0}
+.sb-divider{margin:8px 12px;border:none;border-top:1px solid var(--border)}
+.sb-date-info{padding:10px 14px;font-size:11px;color:var(--muted);line-height:1.6}
+.sb-date-info strong{color:var(--accent);font-family:var(--font-mono)}
+
+/* Sidebar chart */
+.sb-chart-wrap{padding:4px 10px 12px;flex:1;display:flex;flex-direction:column;gap:6px;min-height:0}
+.sb-chart-title{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:6px 4px 2px;border-top:1px solid var(--border)}
+.sb-chart-row{display:flex;align-items:center;gap:5px;min-height:18px}
+.sb-chart-label{font-size:9.5px;color:var(--muted);width:72px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.sb-chart-bar-wrap{flex:1;height:10px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.sb-chart-bar{height:100%;border-radius:3px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.sb-chart-val{font-family:var(--font-mono);font-size:10px;color:var(--warn);width:20px;text-align:right;flex-shrink:0}
+.sb-total-row{display:flex;align-items:center;justify-content:space-between;padding:5px 4px 0;border-top:1px solid var(--border);margin-top:2px}
+.sb-total-label{font-size:10px;color:var(--muted)}
+.sb-total-val{font-family:var(--font-mono);font-size:14px;font-weight:bold;color:var(--warn)}
+.sb-machine-legend{display:flex;gap:8px;padding:0 4px 4px;flex-wrap:wrap}
+.sb-legend-dot{display:flex;align-items:center;gap:3px;font-size:9px;color:var(--muted)}
+.sb-legend-pip{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ══ CONTENT WRAP ══ */
+.content-wrap{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ══ HEADER ══ */
+.page-header{
+  background:var(--surface);border-bottom:2px solid var(--accent);
+  padding:13px 24px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;gap:12px;flex-wrap:wrap;
+}
+.page-header-left{display:flex;align-items:center;gap:12px}
+.view-title{font-size:15px;font-weight:700;color:var(--text);letter-spacing:.03em}
+.view-title .vt-sub{font-size:11px;color:var(--muted);font-weight:400;margin-left:6px}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.date-pill{
+  display:flex;align-items:center;gap:8px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:20px;padding:5px 14px;
+}
+.date-pill label{color:var(--muted);font-size:11px}
+.date-pill input[type=date]{
+  background:transparent;border:none;color:var(--text);
+  font-family:var(--font);font-size:13px;outline:none;cursor:pointer;
+}
+
+/* ══ VIEW SYSTEM ══ */
+.view{display:none;flex:1}
+.view.active{display:block}
+
+/* ══ MAIN (input view) ══ */
+.main{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+
+/* ── Share Panel ── */
+.share-panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--accent3);border-radius:10px;
+  padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.share-panel-title{font-size:12px;font-weight:700;color:var(--accent3);white-space:nowrap}
+.share-panel-desc{font-size:11px;color:var(--muted);flex:1;min-width:180px;line-height:1.6}
+.share-panel-desc strong{color:var(--text)}
+.share-actions{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ── History ── */
+.history-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.history-header{
+  padding:10px 16px;display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface2);cursor:pointer;user-select:none;border-bottom:1px solid var(--border);
+}
+.history-header-title{font-size:12px;font-weight:700;color:var(--warn);display:flex;align-items:center;gap:8px}
+.history-toggle{color:var(--muted);font-size:12px;transition:transform .2s}
+.history-toggle.open{transform:rotate(180deg)}
+.history-body{display:none;padding:12px 16px}
+.history-body.open{display:block}
+.history-list{display:flex;flex-wrap:wrap;gap:5px}
+.history-chip{
+  background:var(--surface2);border:1px solid var(--border);border-radius:14px;
+  padding:3px 10px;font-size:11px;display:flex;align-items:center;gap:5px;
+  transition:border-color .15s;
+}
+.history-chip:hover{border-color:var(--accent)}
+.chip-date{font-family:var(--font-mono);color:var(--accent);cursor:pointer}
+.chip-date:hover{text-decoration:underline}
+.chip-total{color:var(--warn);font-family:var(--font-mono)}
+.chip-btn{background:none;border:none;cursor:pointer;padding:1px 3px;border-radius:3px;font-size:11px;color:var(--muted);transition:all .15s;line-height:1}
+.chip-btn:hover{color:var(--accent)}
+.chip-btn.del:hover{color:var(--danger)!important}
+.history-empty{color:var(--muted);font-size:12px}
+
+/* ══ MACHINE CARDS ══ */
+.machines-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.machine-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;display:flex;flex-direction:column;
+}
+.machine-2{border-top:3px solid var(--accent)}
+.machine-3{border-top:3px solid var(--accent3)}
+.machine-4{border-top:3px solid var(--accent2)}
+.machine-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.machine-name{font-size:14px;font-weight:900;letter-spacing:.05em}
+.machine-2 .machine-name{color:var(--accent)}
+.machine-3 .machine-name{color:var(--accent3)}
+.machine-4 .machine-name{color:var(--accent2)}
+.total-badge{font-family:var(--font-mono);font-size:12px;font-weight:bold;padding:2px 9px;border-radius:12px;background:var(--surface2);border:1px solid var(--border)}
+.machine-2 .total-badge{color:var(--accent);border-color:var(--accent)}
+.machine-3 .total-badge{color:var(--accent3);border-color:var(--accent3)}
+.machine-4 .total-badge{color:var(--accent2);border-color:var(--accent2)}
+
+/* Worker row */
+.worker-row{padding:8px 14px;display:flex;gap:10px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.worker-item{display:flex;align-items:center;gap:5px;flex:1}
+.worker-item label{font-size:11px;color:var(--muted);white-space:nowrap;min-width:26px}
+.worker-item input[type=text]{
+  flex:1;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:var(--font);font-size:12px;padding:4px 7px;outline:none;transition:border-color .2s;
+}
+.worker-item input:focus{border-color:var(--accent)}
+
+/* Type grid */
+.type-summary{padding:9px 14px;border-bottom:1px solid var(--border)}
+.type-summary-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3px}
+.type-item{display:flex;align-items:center;gap:5px;padding:3px 5px;border-radius:4px;background:var(--surface2);transition:background .15s}
+.type-item:hover{background:#21262d}
+.type-label{font-size:11px;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.type-count-input{
+  width:40px;background:var(--input-bg);border:1px solid var(--border);border-radius:3px;
+  color:var(--accent);font-family:var(--font-mono);font-size:12px;font-weight:bold;
+  text-align:center;padding:2px 3px;outline:none;transition:border-color .2s;
+}
+.type-count-input:focus{border-color:var(--accent)}
+.type-count-input.has-value{color:var(--warn)}
+/* 자동집계 배지 (읽기전용) */
+.type-count-badge{
+  font-family:var(--font-mono);font-size:13px;font-weight:bold;color:var(--muted);
+  min-width:28px;text-align:center;padding:2px 6px;border-radius:3px;
+  border:1px solid transparent;transition:all .2s;line-height:1;
+}
+.type-count-badge.has-cnt{color:var(--warn);border-color:rgba(240,165,0,.4);background:rgba(240,165,0,.08)}
+
+/* Log table */
+.log-section{padding:9px 14px;flex:1}
+.log-section-title{
+  font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;
+}
+.add-row-btn{
+  background:transparent;border:1px dashed var(--border);border-radius:4px;
+  color:var(--muted);font-size:11px;padding:2px 8px;cursor:pointer;
+  transition:all .15s;font-family:var(--font);
+}
+.add-row-btn:hover{border-color:var(--accent);color:var(--accent)}
+.log-table{width:100%;border-collapse:collapse}
+.log-table thead th{
+  background:var(--surface2);color:var(--muted);font-size:10px;font-weight:700;
+  letter-spacing:.05em;padding:4px 4px;text-align:left;border-bottom:1px solid var(--border);
+}
+.log-table tbody tr{border-bottom:1px solid #1e242c}
+.log-table tbody tr:hover{background:#1a1f27}
+.log-table tbody td{padding:2px 3px;vertical-align:middle}
+.tbl-input{
+  background:var(--input-bg);border:1px solid transparent;border-radius:3px;
+  color:var(--text);font-family:var(--font);font-size:11px;padding:3px 4px;outline:none;
+  width:100%;transition:border-color .15s;
+}
+.tbl-input:focus{border-color:var(--accent);background:#161b22}
+.tbl-input.qty-input{font-family:var(--font-mono);text-align:center;color:var(--warn);width:38px}
+.tbl-input.time-input{width:64px;font-family:var(--font-mono)}
+.tbl-input.cav-input{
+  width:46px;font-family:var(--font-mono);color:var(--purple);text-align:center;
+  border-color:rgba(163,113,247,.3);font-weight:700;font-size:13px;
+}
+.tbl-input.time-input{
+  width:100%;font-family:var(--font-mono);color-scheme:dark;
+  color:var(--text);padding:3px 2px 3px 4px;
+}
+input[type=time]::-webkit-datetime-edit{color:var(--text)}
+input[type=time]::-webkit-datetime-edit-fields-wrapper{color:var(--text)}
+input[type=time]::-webkit-datetime-edit-hour-field{color:var(--accent)}
+input[type=time]::-webkit-datetime-edit-colon-field{color:var(--muted)}
+input[type=time]::-webkit-datetime-edit-minute-field{color:var(--accent)}
+input[type=time]::-webkit-calendar-picker-indicator{width:13px;opacity:.45;cursor:pointer;filter:invert(.7)}
+.tbl-input.cav-input:focus{border-color:var(--purple)}
+.tbl-input.cav-input::placeholder{color:#555;font-size:10px}
+select.tbl-input{
+  cursor:pointer;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%237d8590'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 4px center;padding-right:16px;
+}
+.etc-memo-input{display:block;width:100%;background:var(--input-bg);border:1px dashed var(--warn)!important;border-radius:3px;color:var(--warn)!important;font-family:var(--font);font-size:11px;padding:3px 6px;outline:none;transition:border-color .2s;}
+.etc-memo-input:focus{border-color:var(--accent)!important;color:var(--text)!important}
+.etc-memo-input::placeholder{color:var(--muted);font-size:10px}
+.del-btn{background:transparent;border:none;color:var(--border);cursor:pointer;font-size:13px;padding:2px 3px;border-radius:3px;transition:all .15s;line-height:1}
+.del-btn:hover{color:var(--danger);background:#3d1515}
+.cav-cell{display:none}
+.cav-cell.show{display:table-cell}
+
+/* ── Row Photo ── */
+.row-photo-btn{
+  background:var(--surface2);border:1px solid var(--border);border-radius:4px;
+  color:var(--muted);cursor:pointer;font-size:11px;padding:2px 5px;
+  transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;
+  font-family:var(--font);line-height:1.4;
+}
+.row-photo-btn:hover{border-color:var(--purple);color:var(--purple)}
+.row-photo-btn.has-p{border-color:var(--purple);color:var(--purple);background:rgba(163,113,247,.1)}
+.row-photo-cnt{
+  background:var(--purple);color:#fff;border-radius:8px;
+  font-size:9px;font-weight:700;padding:0 4px;min-width:13px;text-align:center;
+  font-family:var(--font-mono);
+}
+.row-photo-sub{background:#0f1419 !important}
+.row-photo-sub td{padding:5px 10px 7px !important}
+.row-photo-strip{display:flex;gap:7px;flex-wrap:wrap}
+.row-photo-card{
+  position:relative;width:72px;height:72px;border-radius:6px;
+  overflow:hidden;border:1px solid var(--border);cursor:zoom-in;
+  transition:transform .15s,border-color .15s;flex-shrink:0;
+}
+.row-photo-card:hover{transform:scale(1.04);border-color:var(--purple)}
+.row-photo-card img{width:100%;height:100%;object-fit:cover;display:block}
+.row-photo-del{
+  position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;
+  background:rgba(229,62,62,.9);border:none;color:#fff;font-size:9px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .15s;
+}
+.row-photo-card:hover .row-photo-del{opacity:1}
+
+/* ── Photo Section (machine gallery) ── */
+.photo-section{padding:9px 14px;border-top:1px solid var(--border)}
+.photo-section-title{
+  font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:7px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.photo-add-btn{
+  background:transparent;border:1px dashed var(--border);border-radius:4px;
+  color:var(--muted);font-size:11px;padding:2px 8px;cursor:pointer;
+  transition:all .15s;font-family:var(--font);
+}
+.photo-add-btn:hover{border-color:var(--purple);color:var(--purple)}
+.photo-gallery{display:flex;gap:6px;flex-wrap:wrap;min-height:10px}
+.photo-thumb{
+  position:relative;width:62px;height:62px;border-radius:6px;
+  overflow:hidden;border:1px solid var(--border);cursor:pointer;
+  transition:transform .15s;flex-shrink:0;
+}
+.photo-thumb:hover{transform:scale(1.05)}
+.photo-thumb img{width:100%;height:100%;object-fit:cover}
+.photo-del{
+  position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;
+  background:rgba(229,62,62,.85);border:none;color:#fff;font-size:10px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .15s;line-height:1;
+}
+.photo-thumb:hover .photo-del{opacity:1}
+.photo-empty{font-size:11px;color:var(--muted)}
+.photo-input{display:none}
+
+/* ══ SUMMARY ══ */
+.summary-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px}
+.summary-title{
+  font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:11px;display:flex;align-items:center;gap:8px;
+}
+.summary-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:6px}
+.summary-item{
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:8px 12px;display:flex;align-items:center;justify-content:space-between;
+}
+.summary-item .s-label{color:var(--muted);font-size:11px}
+.summary-item .s-counts{display:flex;gap:8px}
+.summary-item .s-count{font-family:var(--font-mono);font-size:14px;font-weight:bold}
+.s-count.c2{color:var(--accent)} .s-count.c3{color:var(--accent3)} .s-count.c4{color:var(--accent2)}
+.s-count.total{color:var(--warn);font-size:16px}
+
+/* ══ BUTTONS ══ */
+.actions{display:flex;gap:8px;justify-content:flex-end;padding-bottom:8px}
+.btn{
+  padding:7px 15px;border-radius:var(--radius);border:none;font-family:var(--font);
+  font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:5px;white-space:nowrap;
+}
+.btn-primary{background:var(--accent);color:#000}.btn-primary:hover{background:#00f0c0}
+.btn-export{background:var(--accent3);color:#fff}.btn-export:hover{background:#6aa5ff}
+.btn-import{background:var(--warn);color:#000}.btn-import:hover{background:#ffbe33}
+.btn-secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-danger:hover{background:#3d1515}
+
+/* ══ ANALYSIS VIEW ══ */
+.analysis-main{padding:18px 22px;display:flex;flex-direction:column;gap:18px}
+.analysis-filter-bar{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.filter-group{display:flex;align-items:center;gap:8px}
+.filter-group label{font-size:11px;color:var(--muted);white-space:nowrap}
+.filter-input{
+  background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:var(--font);font-size:12px;padding:5px 9px;outline:none;
+  cursor:pointer;transition:border-color .2s;
+}
+.filter-input:focus{border-color:var(--accent)}
+input[type=date].filter-input{font-family:var(--font-mono)}
+.analysis-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:4px;
+}
+.stat-card .sc-label{font-size:11px;color:var(--muted);letter-spacing:.05em}
+.stat-card .sc-value{font-family:var(--font-mono);font-size:26px;font-weight:bold}
+.stat-card .sc-sub{font-size:10px;color:var(--muted)}
+.sc-value.v-total{color:var(--warn)}
+.sc-value.v-m2{color:var(--accent)}
+.sc-value.v-m3{color:var(--accent3)}
+.sc-value.v-m4{color:var(--accent2)}
+
+/* Chart cards */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-card-full{grid-column:1/-1}
+/* PPM 추이: 전폭 상단 / 하단 두 차트: 좌우 */
+.chart-card-ppm{grid-column:1/-1}
+.chart-card-left{grid-column:1/2}
+.chart-card-right{grid-column:2/3}
+.chart-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:16px;display:flex;flex-direction:column;gap:10px;
+}
+.chart-card-title{
+  font-size:12px;font-weight:700;color:var(--text);letter-spacing:.04em;
+  display:flex;align-items:center;gap:8px;
+}
+.chart-card-title .ct-badge{
+  font-size:10px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:4px;padding:1px 7px;color:var(--muted);
+}
+.chart-wrap{position:relative;width:100%;overflow:hidden}
+.chart-wrap canvas{display:block}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.no-data{
+  color:var(--muted);font-size:12px;text-align:center;
+  padding:40px 20px;border:1px dashed var(--border);border-radius:8px;
+}
+
+/* ══ PHOTO MODAL (light box) ══ */
+.lightbox{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);
+  z-index:900;align-items:center;justify-content:center;flex-direction:column;
+}
+.lightbox.show{display:flex}
+.lightbox img{max-width:90vw;max-height:85vh;border-radius:8px;object-fit:contain}
+.lightbox-close{
+  position:absolute;top:20px;right:24px;background:transparent;border:none;
+  color:#fff;font-size:28px;cursor:pointer;opacity:.7;transition:opacity .15s;
+}
+.lightbox-close:hover{opacity:1}
+.lightbox-caption{color:#aaa;font-size:12px;margin-top:10px}
+
+/* ══ IMPORT MODAL ══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;max-width:460px;width:90%;display:flex;flex-direction:column;gap:14px}
+.modal-title{font-size:14px;font-weight:700;color:var(--accent3);display:flex;align-items:center;gap:8px}
+.modal-desc{font-size:12px;color:var(--muted);line-height:1.7}
+.modal-desc strong{color:var(--text)}.modal-desc .wt{color:var(--warn)}
+.drop-zone{border:2px dashed var(--border);border-radius:8px;padding:28px 20px;text-align:center;transition:all .2s;cursor:pointer;position:relative}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent3);background:#1a2133}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-zone-icon{font-size:32px;margin-bottom:8px}
+.drop-zone-text{font-size:13px;color:var(--muted);line-height:1.6}
+.drop-zone-text strong{color:var(--accent3)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:22px;right:22px;background:var(--accent);color:#000;font-weight:700;
+  padding:10px 18px;border-radius:8px;font-size:13px;z-index:999;
+  opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;max-width:300px;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.warn{background:var(--warn);color:#000}
+.toast.err{background:var(--danger);color:#fff}
+
+/* ══ MISC ══ */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.7);cursor:pointer}
+
+/* ══ PROGRESS OVERLAY ══ */
+.progress-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);
+  z-index:800;align-items:center;justify-content:center;flex-direction:column;gap:18px;
+}
+.progress-overlay.show{display:flex}
+.progress-box{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:28px 36px;text-align:center;min-width:280px;
+}
+.progress-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
+.progress-bar-wrap{background:var(--surface2);border-radius:20px;height:8px;overflow:hidden;margin:10px 0}
+.progress-bar{background:var(--accent);height:100%;border-radius:20px;width:0;transition:width .3s}
+.progress-msg{font-size:12px;color:var(--muted);margin-top:6px}
+
+@media print{
+  .sidebar,.share-panel,.history-panel,.actions,.modal-overlay,.photo-add-btn,.add-row-btn,.del-btn,.chip-btn{display:none!important}
+  body{display:block}
+  .content-wrap{margin-left:0}
+  .page-header{position:static;background:white;border-bottom:2px solid #333}
+  .machine-card{border:1px solid #ccc;break-inside:avoid}
+  .tbl-input,.type-count-input,.worker-item input{border:1px solid #ccc;color:black;background:white}
+  .machines-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+  .analysis-main{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar">
+  <div class="sb-logo"><span class="sb-tag">HFP</span> 불량분석</div>
+  <div class="sb-section">메뉴</div>
+  <button class="nav-btn active" onclick="switchView('input')" id="nav-input">
+    <span class="nav-icon">📝</span><span>일일 입력</span>
+  </button>
+  <button class="nav-btn" onclick="switchView('analysis')" id="nav-analysis">
+    <span class="nav-icon">📊</span><span>집계 분석</span>
+  </button>
+  <hr class="sb-divider">
+  <div class="sb-section">저장</div>
+  <button class="nav-btn" onclick="saveData()"><span class="nav-icon">💾</span><span>저장</span></button>
+  <button class="nav-btn" onclick="loadDateData()"><span class="nav-icon">📂</span><span>불러오기</span></button>
+  <button class="nav-btn" onclick="exportAllData()"><span class="nav-icon">📤</span><span>전체 내보내기</span></button>
+  <button class="nav-btn" onclick="openImportModal()"><span class="nav-icon">📥</span><span>가져오기</span></button>
+  <button class="nav-btn" onclick="bulkRecompressPhotos()" style="color:var(--accent)"><span class="nav-icon">🪄</span><span>사진 일괄 재압축</span></button>
+  <hr class="sb-divider">
+  <div class="sb-date-info">
+    작성일<br><strong id="sb-cur-date">-</strong>
+  </div>
+  <hr class="sb-divider">
+  <div class="sb-section">오늘 집계</div>
+  <div class="sb-machine-legend">
+    <div class="sb-legend-dot"><div class="sb-legend-pip" style="background:#00d4aa"></div>2호기</div>
+    <div class="sb-legend-dot"><div class="sb-legend-pip" style="background:#4d90fe"></div>3호기</div>
+    <div class="sb-legend-dot"><div class="sb-legend-pip" style="background:#ff6b35"></div>4호기</div>
+  </div>
+  <div class="sb-chart-wrap" id="sbChartWrap">
+    <div class="sb-chart-title">유형별 합산</div>
+    <!-- rows injected by JS -->
+    <div class="sb-total-row">
+      <span class="sb-total-label">전체 합계</span>
+      <span class="sb-total-val" id="sbTotalVal">0</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONTENT WRAP ══ -->
+<div class="content-wrap">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="view-title" id="view-title-text">일일 설비별·유형별 불량분석</div>
+    </div>
+    <div class="header-right">
+      <div class="date-pill" id="date-pill-input">
+        <label>작성일</label>
+        <input type="date" id="reportDate">
+      </div>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ 인쇄</button>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: INPUT ══ -->
+  <div class="view active" id="view-input">
+    <div class="main">
+
+      <!-- Share -->
+      <div class="share-panel">
+        <div class="share-panel-title">🔗 공유 / 백업</div>
+        <div class="share-panel-desc">
+          <strong>전체 내보내기</strong>: 모든 날짜 데이터 + <strong style="color:var(--purple)">사진 파일 포함</strong> → JSON 저장 |
+          다른 PC에서 <strong>가져오기</strong>로 <strong>데이터·사진 병합</strong>됩니다.
+        </div>
+        <div class="share-actions">
+          <button class="btn btn-export" onclick="exportAllData()">📤 전체 내보내기 (사진포함)</button>
+          <button class="btn btn-import" onclick="openImportModal()">📥 가져오기</button>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="history-panel">
+        <div class="history-header" onclick="toggleHistory()">
+          <div class="history-header-title">📅 저장된 날짜 목록 <span id="historyCount" style="font-size:11px;color:var(--muted);font-weight:400"></span></div>
+          <div class="history-toggle" id="historyToggle">▼</div>
+        </div>
+        <div class="history-body" id="historyBody">
+          <div class="history-list" id="historyList"></div>
+        </div>
+      </div>
+
+      <!-- Machine Grid -->
+      <div class="machines-grid" id="machinesGrid"></div>
+
+      <!-- Summary -->
+      <div class="summary-section">
+        <div class="summary-title">유형별 합산 집계</div>
+        <div class="summary-grid" id="summaryGrid"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-danger" onclick="clearAll()">🗑️ 현재 날짜 초기화</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ VIEW: ANALYSIS ══ -->
+  <div class="view" id="view-analysis">
+    <div class="analysis-main">
+
+      <!-- Filter bar -->
+      <div class="analysis-filter-bar">
+        <div class="filter-group">
+          <label>📅 기간 시작</label>
+          <input type="date" class="filter-input" id="af-from">
+        </div>
+        <div class="filter-group">
+          <label>~</label>
+          <input type="date" class="filter-input" id="af-to">
+        </div>
+        <div class="filter-group">
+          <label>설비</label>
+          <select class="filter-input" id="af-machine">
+            <option value="all">전체</option>
+            <option value="0">2호기</option>
+            <option value="1">3호기</option>
+            <option value="2">4호기</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>일 생산수량</label>
+          <input type="number" class="filter-input" id="af-prod" placeholder="PPM 계산용" min="1" style="width:110px">
+        </div>
+        <button class="btn btn-primary" onclick="renderAnalysis()">🔍 조회</button>
+        <button class="btn btn-secondary" onclick="setThisMonth()">이번달</button>
+      </div>
+
+      <!-- Stats row -->
+      <div class="analysis-stats" id="analysisStats"></div>
+
+      <!-- Charts -->
+      <div class="charts-grid" id="chartsGrid">
+        <!-- dynamically built -->
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /content-wrap -->
+
+<!-- Progress Overlay -->
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-box">
+    <div class="progress-title" id="progressTitle">처리 중...</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="progress-msg" id="progressMsg"></div>
+  </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <div class="modal-title">📥 데이터 가져오기 (병합)</div>
+    <div class="modal-desc">
+      다른 컴퓨터에서 내보낸 <strong>JSON 파일</strong>을 선택하세요.<br>
+      기존 저장 데이터는 <strong>유지</strong>되며, 날짜별로 <strong>병합</strong>됩니다.<br>
+      <strong style="color:var(--purple)">📷 사진 파일도 함께 가져옵니다.</strong><br>
+      <span style="color:var(--accent);font-size:11px">🪄 큰 사진은 자동으로 표준 화질(1280px)로 압축되어 저장됩니다.</span><br>
+      <span style="color:var(--accent);font-size:11px">📂 파일이 큰 경우 분할된 JSON을 순서대로 가져오세요.</span><br>
+      <span class="wt">⚠ 동일 날짜가 있으면 가져온 파일 데이터로 덮어씁니다.</span>
+    </div>
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept=".json" onchange="handleFileSelect(event)">
+      <div class="drop-zone-icon">📂</div>
+      <div class="drop-zone-text"><strong>클릭하여 JSON 파일 선택</strong><br>또는 이 영역에 드래그</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeImportModal()">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════════════ */
+const MACHINES=['2호기','3호기','4호기'];
+const DEFECT_TYPES=[
+  '①CORE찍힘','②SHAFT찍힘','③Burr','④미성형',
+  '⑤발청','⑥이물','⑦뜯김','⑧융착',
+  '⑨CORE들뜸','⑩낙하(설비)','⑪낙하(작업자)',
+  '⑫긁힘','⑬샤프트 소재불량','⑭기타'
+];
+const MISF_TYPE='④미성형';
+const ETC_TYPE='⑭기타';
+const CAVITIES=[1,2,3,4,5,6,7,8];
+const STORE_KEY='hfp_defect_all';
+const COLORS_M=['#00d4aa','#4d90fe','#ff6b35'];
+const COLORS_T=['#00d4aa','#4d90fe','#ff6b35','#f0a500','#a371f7','#e53e3e','#38d9a9','#74c0fc','#ffa94d','#63e6be','#748ffc','#f783ac','#20c997','#845ef7'];
+
+/* ═══════════════════════════════════════════════════
+   BLOB ↔ BASE64 HELPERS
+═══════════════════════════════════════════════════ */
+function blobToBase64(blob){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>resolve(r.result);
+    r.onerror=reject;
+    r.readAsDataURL(blob);
+  });
+}
+// base64ToBlob: fetch API 비동기 방식 (atob 동기 블로킹 제거)
+// 동기 버전은 소용량 fallback용으로만 유지
+function base64ToBlobSync(dataUrl){
+  const parts=dataUrl.split(',');
+  if(parts.length<2)throw new Error('Invalid data URL');
+  const mime=parts[0].match(/:(.*?);/)?.[1]||'image/jpeg';
+  const bstr=atob(parts[1]);
+  const n=bstr.length;
+  const u8=new Uint8Array(n);
+  for(let i=0;i<n;i++)u8[i]=bstr.charCodeAt(i);
+  return new Blob([u8],{type:mime});
+}
+function base64ToBlob(dataUrl){
+  // 소용량(300KB 이하)은 동기 처리
+  if(dataUrl.length < 409600) return base64ToBlobSync(dataUrl);
+  // 대용량은 fetch 비동기 (호출부에서 await 필요 없음 - Blob 반환)
+  // importJSON 에서는 await base64ToBlobAsync() 사용
+  return base64ToBlobSync(dataUrl);
+}
+async function base64ToBlobAsync(dataUrl){
+  try{
+    const res=await fetch(dataUrl);
+    return await res.blob();
+  }catch(e){
+    // fallback: 동기 변환
+    return base64ToBlobSync(dataUrl);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   IMAGE COMPRESSION  (표준 화질: 1280px / JPEG 75%)
+   - 새 사진 업로드 + JSON 임포트 + 내보내기 시 검증 압축
+   - 1장당 ~170KB로 자동 축소 (원본 5MB 기준 96% ↓)
+   - v10: 타임아웃, 재시도, 실패 추적 강화
+   - v11: 메모리 안전 가져오기 (날짜별 즉시저장, GC유도, 배치처리)
+   - v11.1: base64 비동기화, createImageBitmap, toBlob 타임아웃 30s
+═══════════════════════════════════════════════════ */
+const PHOTO_MAX_SIZE=1280;       // 긴 변 최대 px
+const PHOTO_QUALITY=0.75;        // JPEG 품질 0~1
+const PHOTO_SKIP_BYTES=300*1024; // 이미 작은 사진(300KB 이하)은 건너뜀
+const PHOTO_LARGE_BYTES=500*1024;// 500KB 초과면 export 시 재압축 대상
+const PHOTO_LOAD_TIMEOUT=15000;  // 이미지 로딩 최대 15초 (큰 사진 대응)
+
+function blobToImage(blob){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(blob);
+    const img=new Image();
+    let timer=setTimeout(()=>{
+      URL.revokeObjectURL(url);
+      reject(new Error('image load timeout'));
+    },PHOTO_LOAD_TIMEOUT);
+    img.onload=()=>{clearTimeout(timer);URL.revokeObjectURL(url);resolve(img);};
+    img.onerror=e=>{clearTimeout(timer);URL.revokeObjectURL(url);reject(e);};
+    img.src=url;
+  });
+}
+
+// 압축 결과를 명시적으로 반환: {blob, ok, reason}
+// v11.1: createImageBitmap 우선 사용 (DOM img보다 메모리 효율적)
+//        toBlob 타임아웃 30초 추가 (무한 대기 방지)
+//        압축 후 즉시 ImageBitmap.close() 호출 (GPU 메모리 해제)
+async function compressImageBlobSafe(fileOrBlob,maxSize=PHOTO_MAX_SIZE,quality=PHOTO_QUALITY){
+  if(fileOrBlob.size && fileOrBlob.size <= PHOTO_SKIP_BYTES &&
+     (fileOrBlob.type==='image/jpeg'||fileOrBlob.type==='image/jpg')){
+    return {blob:fileOrBlob,ok:true,reason:'already-small'};
+  }
+  for(let attempt=1;attempt<=2;attempt++){
+    try{
+      let w,h,bmp=null,img=null;
+      // createImageBitmap 지원 여부 확인 (메모리 효율적)
+      if(typeof createImageBitmap==='function'){
+        bmp=await createImageBitmap(fileOrBlob);
+        w=bmp.width; h=bmp.height;
+      } else {
+        img=await blobToImage(fileOrBlob);
+        w=img.naturalWidth||img.width;
+        h=img.naturalHeight||img.height;
+      }
+      if(!w||!h)throw new Error('invalid image dimensions');
+      if(Math.max(w,h)>maxSize){
+        if(w>=h){h=Math.round(h*maxSize/w);w=maxSize;}
+        else    {w=Math.round(w*maxSize/h);h=maxSize;}
+      }
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
+      if(bmp){ctx.drawImage(bmp,0,0,w,h); bmp.close(); bmp=null;}
+      else   {ctx.drawImage(img,0,0,w,h); img=null;}
+      // toBlob에 30초 타임아웃 (무한 대기 방지)
+      const result=await Promise.race([
+        new Promise((res,rej)=>{
+          canvas.toBlob(b=>{b?res(b):rej(new Error('toBlob returned null'));},
+                        'image/jpeg',quality);
+        }),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('toBlob timeout')),30000))
+      ]);
+      canvas.width=0; canvas.height=0;
+      return {blob:result,ok:true,reason:attempt===1?'compressed':'compressed-retry'};
+    }catch(e){
+      console.warn(`압축 시도 ${attempt} 실패:`,e.message);
+      if(attempt===1) await new Promise(r=>setTimeout(r,200));
+    }
+  }
+  return {blob:fileOrBlob,ok:false,reason:'compress-failed'};
+}
+
+// 기존 호환 함수: blob만 반환
+async function compressImageBlob(fileOrBlob,maxSize=PHOTO_MAX_SIZE,quality=PHOTO_QUALITY){
+  const r=await compressImageBlobSafe(fileOrBlob,maxSize,quality);
+  return r.blob;
+}
+
+// base64 dataURL → 압축된 base64 dataURL (행별 사진용)
+async function compressDataUrl(dataUrl,maxSize=PHOTO_MAX_SIZE,quality=PHOTO_QUALITY){
+  try{
+    const blob=base64ToBlob(dataUrl);
+    const compressed=await compressImageBlob(blob,maxSize,quality);
+    return await blobToBase64(compressed);
+  }catch(e){
+    console.warn('dataUrl 압축 실패:',e);
+    return dataUrl;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   PROGRESS OVERLAY
+═══════════════════════════════════════════════════ */
+function showProgress(title,msg='',pct=0){
+  document.getElementById('progressTitle').textContent=title;
+  document.getElementById('progressMsg').textContent=msg;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressOverlay').classList.add('show');
+}
+function updateProgress(msg,pct){
+  document.getElementById('progressMsg').textContent=msg;
+  document.getElementById('progressBar').style.width=pct+'%';
+}
+function hideProgress(){
+  document.getElementById('progressOverlay').classList.remove('show');
+}
+
+/* ═══════════════════════════════════════════════════
+   INDEXEDDB (Photos)
+═══════════════════════════════════════════════════ */
+let photoDB=null;
+const PDB='HFP_Photos_v1';
+
+function openPhotoDB(){
+  return new Promise((res,rej)=>{
+    if(photoDB){res(photoDB);return;}
+    const req=indexedDB.open(PDB,1);
+    req.onupgradeneeded=e=>{
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('photos'))
+        db.createObjectStore('photos',{keyPath:'id'});
+    };
+    req.onsuccess=e=>{photoDB=e.target.result;res(photoDB)};
+    req.onerror=e=>rej(e);
+  });
+}
+async function dbSavePhoto(date,mi,uid,blob,name){
+  const db=await openPhotoDB();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction('photos','readwrite');
+    tx.objectStore('photos').put({id:`${date}_${mi}_${uid}`,date,mi,uid,blob,name});
+    tx.oncomplete=()=>res();
+    tx.onerror=e=>rej(e);
+  });
+}
+async function dbGetPhotos(date,mi){
+  const db=await openPhotoDB();
+  return new Promise((res)=>{
+    const tx=db.transaction('photos','readonly');
+    const store=tx.objectStore('photos');
+    const results=[];
+    const req=store.openCursor();
+    req.onsuccess=e=>{
+      const cur=e.target.result;
+      if(cur){
+        if(cur.value.date===date&&cur.value.mi===mi)results.push(cur.value);
+        cur.continue();
+      }else res(results);
+    };
+    req.onerror=()=>res([]);
+  });
+}
+async function dbDeletePhoto(date,mi,uid){
+  const db=await openPhotoDB();
+  return new Promise((res)=>{
+    const tx=db.transaction('photos','readwrite');
+    tx.objectStore('photos').delete(`${date}_${mi}_${uid}`);
+    tx.oncomplete=()=>res();
+    tx.onerror=()=>res();
+  });
+}
+
+// IndexedDB 모든 사진 한 번에 조회 (재압축 도구용)
+async function dbGetAllPhotos(){
+  const db=await openPhotoDB();
+  return new Promise((res)=>{
+    const tx=db.transaction('photos','readonly');
+    const store=tx.objectStore('photos');
+    const results=[];
+    const req=store.openCursor();
+    req.onsuccess=e=>{
+      const cur=e.target.result;
+      if(cur){results.push(cur.value);cur.continue();}
+      else res(results);
+    };
+    req.onerror=()=>res([]);
+  });
+}
+
+// 🪄 일괄 재압축: IndexedDB 모든 사진을 점검하고 큰 것만 압축
+async function bulkRecompressPhotos(){
+  const allPhotos=await dbGetAllPhotos();
+  if(!allPhotos.length){
+    showToast('📷 저장된 사진이 없습니다.','warn');
+    return;
+  }
+
+  // 압축이 필요한 사진만 추림 (500KB 초과)
+  const large=allPhotos.filter(p=>p.blob && p.blob.size>PHOTO_LARGE_BYTES);
+  const totalSize=allPhotos.reduce((s,p)=>s+(p.blob?.size||0),0);
+  const largeSize=large.reduce((s,p)=>s+p.blob.size,0);
+
+  if(!large.length){
+    showToast(`✅ 모든 사진이 이미 압축됨 (${allPhotos.length}장, 총 ${(totalSize/1024/1024).toFixed(1)}MB)`);
+    return;
+  }
+
+  // 사용자 확인
+  const msg=`사진 ${allPhotos.length}장 중 ${large.length}장이 큰 상태입니다.\n\n`+
+            `현재 총 크기: ${(totalSize/1024/1024).toFixed(1)} MB\n`+
+            `재압축 대상: ${(largeSize/1024/1024).toFixed(1)} MB → 예상 ${(large.length*0.2).toFixed(1)} MB\n\n`+
+            `재압축 하시겠습니까?\n(원본은 IndexedDB에서 압축본으로 교체됩니다)`;
+  if(!confirm(msg))return;
+
+  showProgress('🪄 사진 재압축 중',`0 / ${large.length}장`,0);
+  await new Promise(r=>setTimeout(r,50));
+
+  let done=0,success=0,failed=0;
+  let beforeBytes=0,afterBytes=0;
+
+  for(const p of large){
+    beforeBytes+=p.blob.size;
+    try{
+      const r=await compressImageBlobSafe(p.blob);
+      if(r.ok&&r.blob.size<p.blob.size){
+        await dbSavePhoto(p.date,p.mi,p.uid,r.blob,p.name);
+        afterBytes+=r.blob.size;
+        success++;
+      }else{
+        afterBytes+=p.blob.size; // 원본 유지
+        failed++;
+      }
+    }catch(e){
+      console.error('재압축 실패:',e);
+      afterBytes+=p.blob.size;
+      failed++;
+    }
+    done++;
+    const pct=Math.round(done/large.length*100);
+    updateProgress(`${done} / ${large.length}장 · 성공 ${success} · 실패 ${failed}`,pct);
+    await new Promise(r=>setTimeout(r,0));
+  }
+
+  hideProgress();
+
+  // 현재 화면의 사진 갤러리 갱신
+  const curDate=document.getElementById('reportDate').value;
+  for(let mi=0;mi<MACHINES.length;mi++){
+    await loadPhotosForMachine(curDate,mi);
+  }
+
+  const saved=(beforeBytes-afterBytes)/1024/1024;
+  let msg2=`🪄 재압축 완료 · 성공 ${success}장`;
+  if(failed>0)msg2+=` · 실패 ${failed}장`;
+  msg2+=` · ${saved.toFixed(1)}MB 절감`;
+  showToast(msg2);
+}
+
+/* ═══════════════════════════════════════════════════
+   STORAGE (Data)
+═══════════════════════════════════════════════════ */
+function getAllStorage(){
+  try{return JSON.parse(localStorage.getItem(STORE_KEY)||'{}')}catch{return{}}
+}
+function setAllStorage(obj){localStorage.setItem(STORE_KEY,JSON.stringify(obj))}
+function migrateLegacy(){
+  const all=getAllStorage();let n=0;const rem=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('hfp_defect_')&&k!==STORE_KEY){
+      try{const d=JSON.parse(localStorage.getItem(k));if(d&&d.date&&d.state&&!all[d.date]){all[d.date]=d;n++;}rem.push(k);}catch{}
+    }
+  }
+  if(n>0){setAllStorage(all);rem.forEach(k=>localStorage.removeItem(k));showToast(`🔄 기존 데이터 ${n}건 통합`);}
+}
+
+/* ═══════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════ */
+let state=emptyState();
+function emptyState(){
+  return MACHINES.map(()=>({
+    worker_day:'',worker_night:'',
+    typeCounts:Object.fromEntries(DEFECT_TYPES.map(t=>[t,0])),
+    rows:[]
+  }));
+}
+function normalizeState(raw){
+  if(!Array.isArray(raw))return emptyState();
+  return raw.map(s=>({
+    worker_day:s.worker_day||'',
+    worker_night:s.worker_night||'',
+    typeCounts:Object.fromEntries(DEFECT_TYPES.map(t=>[t,(s.typeCounts&&s.typeCounts[t])||0])),
+    rows:Array.isArray(s.rows)?s.rows.map(r=>({
+      time:r.time||'',type:r.type||'',qty:r.qty||0,cavity:r.cavity||'',memo:r.memo||'',
+      photos:Array.isArray(r.photos)?r.photos:[]
+    })):[]
+  }));
+}
+
+/* ═══════════════════════════════════════════════════
+   VIEW SWITCHING
+═══════════════════════════════════════════════════ */
+let currentView='input';
+function switchView(v){
+  currentView=v;
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`view-${v}`).classList.add('active');
+  document.getElementById(`nav-${v}`).classList.add('active');
+  const titles={input:'일일 설비별·유형별 불량분석',analysis:'불량집계 분석표'};
+  document.getElementById('view-title-text').textContent=titles[v]||v;
+  document.getElementById('date-pill-input').style.display=v==='input'?'flex':'none';
+  if(v==='analysis')renderAnalysis();
+}
+
+/* ═══════════════════════════════════════════════════
+   BUILD MACHINE GRID
+═══════════════════════════════════════════════════ */
+function init(){
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('reportDate').value=today;
+  updateSbDate(today);
+  buildMachineGrid();
+  buildSummary();
+  refreshHistoryPanel();
+  setThisMonth();
+}
+
+function buildMachineGrid(){
+  const grid=document.getElementById('machinesGrid');
+  grid.innerHTML='';
+  MACHINES.forEach((name,mi)=>{
+    const card=document.createElement('div');
+    card.className=`machine-card machine-${mi+2}`;
+    card.id=`mcard_${mi}`;
+    card.innerHTML=`
+      <div class="machine-header">
+        <span class="machine-name">${name}</span>
+        <span class="total-badge" id="total_${mi}">TOTAL: 0</span>
+      </div>
+      <div class="worker-row">
+        <div class="worker-item"><label>☀️ 주간</label><input type="text" placeholder="작업자" id="wday_${mi}" oninput="syncWorker(${mi},'day',this.value)"></div>
+        <div class="worker-item"><label>🌙 야간</label><input type="text" placeholder="작업자" id="wnight_${mi}" oninput="syncWorker(${mi},'night',this.value)"></div>
+      </div>
+      <div class="log-section">
+        <div class="log-section-title">
+          발생 내역
+          <button class="add-row-btn" onclick="addRow(${mi})">＋ 행 추가</button>
+        </div>
+        <table class="log-table">
+          <thead><tr>
+            <th style="width:22px">No</th>
+            <th style="width:76px;color:var(--accent);opacity:.8">⏱ 시간</th>
+            <th style="min-width:90px">유형</th>
+            <th class="cav-header" id="cavhdr_${mi}" style="display:none;color:var(--purple);opacity:.8">CV#</th>
+            <th>수량</th>
+            <th style="width:52px;color:var(--purple);opacity:.8">📷</th>
+            <th style="width:18px"></th>
+          </tr></thead>
+          <tbody id="tbody_${mi}"></tbody>
+        </table>
+      </div>
+      <div class="type-summary">
+        <div class="type-summary-title" style="display:flex;align-items:center;gap:6px">
+          유형별 수량 <span style="background:var(--accent);color:#000;font-size:8px;font-weight:900;padding:1px 5px;border-radius:2px;letter-spacing:.08em">AUTO</span>
+        </div>
+        <div class="type-grid" id="typegrid_${mi}"></div>
+      </div>
+      <div class="photo-section">
+        <div class="photo-section-title">
+          📷 사진
+          <button class="photo-add-btn" onclick="triggerPhotoInput(${mi})">＋ 사진 추가</button>
+        </div>
+        <input type="file" class="photo-input" id="photoinput_${mi}" accept="image/*" multiple onchange="handlePhotoUpload(${mi},this)">
+        <div class="photo-gallery" id="gallery_${mi}">
+          <span class="photo-empty">사진 없음</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    buildTypeGrid(mi);
+    renderRows(mi);
+    recomputeAndUpdate(mi);
+    // restore worker
+    const wd=document.getElementById(`wday_${mi}`);
+    const wn=document.getElementById(`wnight_${mi}`);
+    if(wd)wd.value=state[mi].worker_day||'';
+    if(wn)wn.value=state[mi].worker_night||'';
+  });
+  // load photos async
+  const date=document.getElementById('reportDate').value;
+  MACHINES.forEach((_,mi)=>loadPhotosForMachine(date,mi));
+}
+
+function buildTypeGrid(mi){
+  const tg=document.getElementById(`typegrid_${mi}`);
+  if(!tg)return;
+  tg.innerHTML='';
+  const counts=computeTypeCounts(mi);
+  DEFECT_TYPES.forEach(t=>{
+    const val=counts[t]||0;
+    const div=document.createElement('div');
+    div.className='type-item'+(val>0?' has-value':'');
+    div.innerHTML=`
+      <span class="type-label" title="${t}">${t}</span>
+      <span class="type-count-badge${val>0?' has-cnt':''}" id="tcb_${mi}_${t.replace(/[^a-zA-Z가-힣0-9]/g,'_')}">${val}</span>`;
+    tg.appendChild(div);
+  });
+}
+
+function renderRows(mi){
+  const tbody=document.getElementById(`tbody_${mi}`);
+  if(!tbody)return;
+  tbody.innerHTML='';
+  let hasMisf=false;
+  state[mi].rows.forEach((row,ri)=>{
+    const isMisf=row.type===MISF_TYPE;
+    if(isMisf)hasMisf=true;
+    const photos=row.photos||[];
+    const pc=photos.length;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td style="text-align:center;color:var(--muted);font-family:var(--font-mono);font-size:10px">${ri+1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:3px">
+          <input class="tbl-input time-input" type="time" value="${row.time||''}"
+            oninput="state[${mi}].rows[${ri}].time=this.value"
+            style="border-color:rgba(0,212,170,.3)">
+        </div>
+      </td>
+      <td>
+        <select class="tbl-input" onchange="onRowTypeChange(${mi},${ri},this.value)">
+          <option value="">-- 유형 선택 --</option>
+          ${DEFECT_TYPES.map(t=>`<option value="${t}"${row.type===t?' selected':''}>${t}</option>`).join('')}
+        </select>
+        ${row.type===ETC_TYPE?`<input class="tbl-input etc-memo-input" type="text" placeholder="기타 내용 입력..." value="${(row.memo||'').replace(/"/g,'&quot;')}" oninput="state[${mi}].rows[${ri}].memo=this.value" style="margin-top:3px;">`:''}
+      </td>
+      <td class="cav-cell${isMisf?' show':''}" id="cavcell_${mi}_${ri}" style="${isMisf?'':'display:none'}">
+        <input class="tbl-input cav-input" type="number" min="1" max="8"
+          value="${row.cavity||''}" placeholder="1-8"
+          title="캐비티 번호 (1~8)"
+          oninput="state[${mi}].rows[${ri}].cavity=this.value">
+      </td>
+      <td><input class="tbl-input qty-input" type="number" min="0" value="${row.qty||0}"
+        oninput="state[${mi}].rows[${ri}].qty=parseInt(this.value)||0;recomputeAndUpdate(${mi})"></td>
+      <td>
+        <button class="row-photo-btn${pc>0?' has-p':''}" onclick="attachRowPhoto(${mi},${ri})">
+          📷${pc>0?`<span class="row-photo-cnt">${pc}</span>`:''}
+        </button>
+      </td>
+      <td><button class="del-btn" onclick="delRow(${mi},${ri})">✕</button></td>`;
+    tbody.appendChild(tr);
+
+    // 사진 서브행
+    if(pc>0){
+      const sub=document.createElement('tr');
+      sub.className='row-photo-sub';
+      const colSpan=isMisf?7:6;
+      sub.innerHTML=`<td colspan="${colSpan}">
+        <div class="row-photo-strip">
+          ${photos.map((p,pi)=>`
+            <div class="row-photo-card"
+              onclick="openLightbox('${p.data}','${p.name.replace(/'/g,"\\'")}')">
+              <img src="${p.data}" alt="${p.name}">
+              <button class="row-photo-del"
+                onclick="event.stopPropagation();deleteRowPhoto(${mi},${ri},${pi})"
+                title="삭제">✕</button>
+            </div>`).join('')}
+        </div>
+      </td>`;
+      tbody.appendChild(sub);
+    }
+  });
+  const hdr=document.getElementById(`cavhdr_${mi}`);
+  if(hdr)hdr.style.display=hasMisf?'':'none';
+}
+
+/* ═══════════════════════════════════════════════════
+   STATE MUTATIONS
+═══════════════════════════════════════════════════ */
+function addRow(mi){
+  const now=new Date();
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  state[mi].rows.push({time:`${hh}:${mm}`,type:'',qty:1,cavity:'',memo:'',photos:[]});
+  renderRows(mi);
+}
+function delRow(mi,ri){state[mi].rows.splice(ri,1);renderRows(mi);recomputeAndUpdate(mi)}
+function syncWorker(mi,shift,val){state[mi][shift==='day'?'worker_day':'worker_night']=val}
+function onTypeCountChange(mi,type,input){
+  const val=parseInt(input.value)||0;
+  state[mi].typeCounts[type]=val;
+  input.classList.toggle('has-value',val>0);
+  updateTotal(mi);
+}
+function onRowTypeChange(mi,ri,val){
+  state[mi].rows[ri].type=val;
+  if(val!==MISF_TYPE)state[mi].rows[ri].cavity='';
+  if(val!==ETC_TYPE)state[mi].rows[ri].memo='';
+  renderRows(mi);
+  recomputeAndUpdate(mi);
+}
+
+/* ── 자동 집계 ── */
+function computeTypeCounts(mi){
+  const c=Object.fromEntries(DEFECT_TYPES.map(t=>[t,0]));
+  (state[mi].rows||[]).forEach(r=>{
+    if(r.type&&c[r.type]!==undefined) c[r.type]+=(parseInt(r.qty)||0);
+  });
+  return c;
+}
+function recomputeAndUpdate(mi){
+  const counts=computeTypeCounts(mi);
+  state[mi].typeCounts=counts;
+  // 배지 갱신
+  DEFECT_TYPES.forEach(t=>{
+    const el=document.getElementById(`tcb_${mi}_${t.replace(/[^a-zA-Z가-힣0-9]/g,'_')}`);
+    if(!el)return;
+    const v=counts[t]||0;
+    el.textContent=v;
+    el.className='type-count-badge'+(v>0?' has-cnt':'');
+    const item=el.parentElement;
+    if(item)item.className='type-item'+(v>0?' has-value':'');
+  });
+  updateTotal(mi);
+}
+function updateTotal(mi,doSummary=true){
+  const counts=computeTypeCounts(mi);
+  const total=Object.values(counts).reduce((s,v)=>s+v,0);
+  const badge=document.getElementById(`total_${mi}`);
+  if(badge)badge.textContent=`TOTAL: ${total}`;
+  if(doSummary)buildSummary();
+}
+function buildSummary(){
+  const sg=document.getElementById('summaryGrid');
+  sg.innerHTML='';
+  const totals=MACHINES.map((_,mi)=>Object.values(computeTypeCounts(mi)).reduce((s,v)=>s+v,0));
+  const grand=totals.reduce((a,b)=>a+b,0);
+  const grandEl=document.createElement('div');
+  grandEl.className='summary-item';grandEl.style.gridColumn='span 2';
+  grandEl.innerHTML=`<span class="s-label" style="font-weight:700;color:var(--text)">전체 합계</span>
+    <div class="s-counts">
+      <span class="s-count c2">${totals[0]}</span><span style="color:var(--muted)">+</span>
+      <span class="s-count c3">${totals[1]}</span><span style="color:var(--muted)">+</span>
+      <span class="s-count c4">${totals[2]}</span><span style="color:var(--muted)">=</span>
+      <span class="s-count total">${grand}</span>
+    </div>`;
+  sg.appendChild(grandEl);
+  DEFECT_TYPES.forEach(t=>{
+    const counts=MACHINES.map((_,mi)=>computeTypeCounts(mi)[t]||0);
+    const sum=counts.reduce((a,b)=>a+b,0);
+    if(sum===0)return;
+    const item=document.createElement('div');
+    item.className='summary-item';
+    item.innerHTML=`<span class="s-label">${t}</span>
+      <div class="s-counts">
+        <span class="s-count c2" style="font-size:12px">${counts[0]}</span>
+        <span style="color:var(--muted);font-size:10px">/</span>
+        <span class="s-count c3" style="font-size:12px">${counts[1]}</span>
+        <span style="color:var(--muted);font-size:10px">/</span>
+        <span class="s-count c4" style="font-size:12px">${counts[2]}</span>
+        <span style="color:var(--muted);font-size:10px">= </span>
+        <span class="s-count total" style="font-size:14px">${sum}</span>
+      </div>`;
+    sg.appendChild(item);
+  });
+  buildSidebarChart();
+}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR CHART
+═══════════════════════════════════════════════════ */
+function buildSidebarChart(){
+  const wrap=document.getElementById('sbChartWrap');
+  if(!wrap)return;
+
+  // 유형별 3호기 합산
+  const allCounts=MACHINES.map((_,mi)=>computeTypeCounts(mi));
+  const typeSums=DEFECT_TYPES.map(t=>({
+    label:t,
+    vals:allCounts.map(c=>c[t]||0),
+    sum:allCounts.reduce((s,c)=>s+(c[t]||0),0)
+  }));
+  const grand=typeSums.reduce((s,r)=>s+r.sum,0);
+  const maxSum=Math.max(...typeSums.map(r=>r.sum),1);
+
+  // 전체 합계 업데이트
+  const tv=document.getElementById('sbTotalVal');
+  if(tv)tv.textContent=grand;
+
+  // 기존 차트 행 제거 (title, legend, total-row는 유지)
+  wrap.querySelectorAll('.sb-chart-row').forEach(el=>el.remove());
+
+  // 총합 기준 내림차순, 0인 항목은 마지막
+  const sorted=[...typeSums].sort((a,b)=>b.sum-a.sum);
+  const titleEl=wrap.querySelector('.sb-chart-title');
+
+  sorted.forEach(row=>{
+    const div=document.createElement('div');
+    div.className='sb-chart-row';
+    const pct=row.sum>0?(row.sum/maxSum*100).toFixed(1):0;
+
+    // 스택바: 2호기/3호기/4호기 비율
+    let stackHTML='';
+    let offset=0;
+    COLORS_M.forEach((col,i)=>{
+      const w=row.sum>0?(row.vals[i]/maxSum*100).toFixed(2):0;
+      if(row.vals[i]>0)
+        stackHTML+=`<div style="width:${w}%;height:100%;background:${col};float:left;transition:width .35s"></div>`;
+    });
+
+    div.innerHTML=`
+      <span class="sb-chart-label" title="${row.label}">${row.label}</span>
+      <div class="sb-chart-bar-wrap">
+        <div style="height:100%;overflow:hidden;border-radius:3px">${stackHTML}</div>
+      </div>
+      <span class="sb-chart-val" style="${row.sum>0?'color:var(--warn)':'color:var(--border)'}">${row.sum||''}</span>
+    `;
+    // 타이틀 바로 뒤에 삽입
+    wrap.insertBefore(div,titleEl.nextSibling);
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   ROW-LEVEL PHOTOS (base64, state에 저장)
+═══════════════════════════════════════════════════ */
+function attachRowPhoto(mi,ri){
+  const input=document.createElement('input');
+  input.type='file';input.accept='image/*';input.multiple=true;
+  input.onchange=async e=>{
+    const files=Array.from(e.target.files);
+    if(!files.length)return;
+    if(!state[mi].rows[ri].photos)state[mi].rows[ri].photos=[];
+    for(const file of files){
+      try{
+        const compressed=await compressImageBlob(file);
+        const dataUrl=await blobToBase64(compressed);
+        state[mi].rows[ri].photos.push({data:dataUrl,name:file.name});
+      }catch(err){console.error('Row photo error:',err);}
+    }
+    renderRows(mi);
+  };
+  input.click();
+}
+function deleteRowPhoto(mi,ri,pi){
+  state[mi].rows[ri].photos.splice(pi,1);
+  renderRows(mi);
+}
+
+/* ═══════════════════════════════════════════════════
+   PHOTOS (machine gallery — IndexedDB)
+═══════════════════════════════════════════════════ */
+function triggerPhotoInput(mi){
+  document.getElementById(`photoinput_${mi}`).click();
+}
+async function handlePhotoUpload(mi,input){
+  const date=document.getElementById('reportDate').value;
+  const files=Array.from(input.files);
+  if(!files.length){input.value='';return;}
+  showProgress('📷 사진 압축 중',`0 / ${files.length}`,0);
+  await new Promise(r=>setTimeout(r,30));
+  let done=0,failed=0;
+  for(const file of files){
+    if(!file.type.startsWith('image/')){failed++;continue;}
+    try{
+      const compressed=await compressImageBlob(file);
+      const uid=Date.now()+'_'+Math.random().toString(36).slice(2,7);
+      await dbSavePhoto(date,mi,uid,compressed,file.name);
+    }catch(e){console.error('Photo upload error:',e);failed++;}
+    done++;
+    updateProgress(`${done} / ${files.length} 처리됨`,Math.round(done/files.length*100));
+    await new Promise(r=>setTimeout(r,0));
+  }
+  input.value='';
+  hideProgress();
+  await loadPhotosForMachine(date,mi);
+  const msg=failed>0?`📷 ${done-failed}장 저장 (${failed}장 실패)`:`📷 사진 ${done}장 저장됨 (자동 압축)`;
+  showToast(msg);
+}
+async function loadPhotosForMachine(date,mi){
+  const gallery=document.getElementById(`gallery_${mi}`);
+  if(!gallery)return;
+  const photos=await dbGetPhotos(date,mi);
+  gallery.innerHTML='';
+  if(photos.length===0){gallery.innerHTML='<span class="photo-empty">사진 없음</span>';return;}
+  photos.sort((a,b)=>a.uid.localeCompare(b.uid));
+  photos.forEach(p=>{
+    const url=URL.createObjectURL(p.blob);
+    const thumb=document.createElement('div');
+    thumb.className='photo-thumb';
+    thumb.innerHTML=`<img src="${url}" alt="${p.name||''}" onclick="openLightbox('${url}','${p.name||''}')">
+      <button class="photo-del" onclick="event.stopPropagation();deletePhoto('${date}',${mi},'${p.uid}')">✕</button>`;
+    gallery.appendChild(thumb);
+  });
+}
+async function deletePhoto(date,mi,uid){
+  await dbDeletePhoto(date,mi,uid);
+  await loadPhotosForMachine(date,mi);
+}
+function openLightbox(src,caption){
+  document.getElementById('lightbox-img').src=src;
+  document.getElementById('lightbox-caption').textContent=caption;
+  document.getElementById('lightbox').classList.add('show');
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('show')}
+
+/* ═══════════════════════════════════════════════════
+   SAVE / LOAD
+═══════════════════════════════════════════════════ */
+function syncWorkersFromDOM(){
+  MACHINES.forEach((_,mi)=>{
+    const wd=document.getElementById(`wday_${mi}`);
+    const wn=document.getElementById(`wnight_${mi}`);
+    if(wd)state[mi].worker_day=wd.value;
+    if(wn)state[mi].worker_night=wn.value;
+  });
+}
+function saveData(){
+  syncWorkersFromDOM();
+  const date=document.getElementById('reportDate').value;
+  const all=getAllStorage();
+  all[date]={date,state:JSON.parse(JSON.stringify(state))};
+  setAllStorage(all);
+  refreshHistoryPanel();
+  showToast(`✅ 저장 완료 (${date})`);
+}
+function loadDateData(){
+  const date=document.getElementById('reportDate').value;
+  const all=getAllStorage();
+  if(!all[date]){showToast(`⚠️ ${date} 저장 데이터 없음`,'warn');return;}
+  applyRecord(all[date],date);
+  showToast(`📂 불러오기 완료 (${date})`);
+}
+function applyRecord(record,date){
+  state=normalizeState(record.state);
+  buildMachineGrid();
+  MACHINES.forEach((_,mi)=>updateTotal(mi,false));
+  buildSummary();
+  if(date){
+    updateSbDate(date);
+    MACHINES.forEach((_,mi)=>loadPhotosForMachine(date,mi));
+  }
+}
+function clearAll(){
+  const date=document.getElementById('reportDate').value;
+  if(!confirm(`[${date}] 데이터를 초기화하시겠습니까?`))return;
+  state=emptyState();
+  const all=getAllStorage();delete all[date];setAllStorage(all);
+  buildMachineGrid();buildSummary();refreshHistoryPanel();
+  showToast('🗑️ 초기화 완료');
+}
+function updateSbDate(d){
+  const el=document.getElementById('sb-cur-date');
+  if(el)el.textContent=d||'-';
+}
+
+/* ═══════════════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════════════ */
+let historyOpen=false;
+function toggleHistory(){
+  historyOpen=!historyOpen;
+  document.getElementById('historyBody').classList.toggle('open',historyOpen);
+  document.getElementById('historyToggle').classList.toggle('open',historyOpen);
+}
+function refreshHistoryPanel(){
+  const all=getAllStorage();
+  const dates=Object.keys(all).sort().reverse();
+  document.getElementById('historyCount').textContent=dates.length?`(${dates.length}건)`:'';
+  const list=document.getElementById('historyList');
+  list.innerHTML='';
+  if(!dates.length){list.innerHTML='<div class="history-empty">저장된 데이터가 없습니다.</div>';return;}
+  dates.forEach(date=>{
+    const record=all[date];
+    const total=record.state?record.state.reduce((s,m,mi)=>{
+      const rows=m.rows||[];
+      const c=Object.fromEntries(DEFECT_TYPES.map(t=>[t,0]));
+      rows.forEach(r=>{if(r.type&&c[r.type]!==undefined)c[r.type]+=(parseInt(r.qty)||0)});
+      return s+DEFECT_TYPES.reduce((ss,t)=>ss+(m.typeCounts&&m.typeCounts[t]||c[t]||0),0);
+    },0):0;
+    const chip=document.createElement('div');chip.className='history-chip';
+    chip.innerHTML=`<span class="chip-date" onclick="jumpToDate('${date}')">${date}</span>
+      <span style="color:var(--border)">|</span>
+      <span class="chip-total">${total}건</span>
+      <button class="chip-btn" onclick="exportSingleDate('${date}')" title="내보내기">📤</button>
+      <button class="chip-btn del" onclick="deleteDate('${date}')" title="삭제">✕</button>`;
+    list.appendChild(chip);
+  });
+}
+function jumpToDate(date){
+  document.getElementById('reportDate').value=date;
+  updateSbDate(date);
+  const all=getAllStorage();
+  if(all[date]){applyRecord(all[date],date);showToast(`📂 ${date} 불러옴`);}
+}
+function deleteDate(date){
+  if(!confirm(`[${date}] 데이터를 삭제하시겠습니까?`))return;
+  const all=getAllStorage();delete all[date];setAllStorage(all);
+  refreshHistoryPanel();showToast(`🗑️ ${date} 삭제됨`);
+}
+
+/* ═══════════════════════════════════════════════════
+   EXPORT / IMPORT (사진 포함)
+═══════════════════════════════════════════════════ */
+async function exportAllData(){
+  syncWorkersFromDOM();
+  const all=getAllStorage();
+  const dates=Object.keys(all);
+  if(!dates.length){showToast('⚠️ 저장된 데이터가 없습니다.','warn');return;}
+
+  showProgress('📤 내보내기 준비 중','사진 데이터 수집 중...',0);
+  await new Promise(r=>setTimeout(r,50));
+
+  const exportData={};
+  let done=0;
+  let totalPhotos=0;
+  let reCompressed=0;     // export 직전 재압축된 사진 수
+  let failedRecompress=0;
+  // 전체 사진 수 먼저 카운트
+  for(const date of dates){
+    for(let mi=0;mi<MACHINES.length;mi++){
+      const photos=await dbGetPhotos(date,mi);
+      totalPhotos+=photos.length;
+    }
+  }
+  let photosDone=0;
+
+  for(const date of dates){
+    const rec=all[date];
+    exportData[date]={...rec,photos:{}};
+    for(let mi=0;mi<MACHINES.length;mi++){
+      const photos=await dbGetPhotos(date,mi);
+      exportData[date].photos[mi]=[];
+      for(const p of photos){
+        try{
+          let blobToExport=p.blob;
+          // 🛡 안전망: 사진이 너무 크면 export 직전에 재압축
+          if(blobToExport.size>PHOTO_LARGE_BYTES){
+            const r=await compressImageBlobSafe(blobToExport);
+            if(r.ok&&r.blob.size<blobToExport.size){
+              blobToExport=r.blob;
+              reCompressed++;
+              // IndexedDB도 압축된 것으로 갱신 (다음 내보내기 시 빠름)
+              try{await dbSavePhoto(date,mi,p.uid,blobToExport,p.name);}catch(_){}
+            }else if(!r.ok){
+              failedRecompress++;
+            }
+          }
+          const b64=await blobToBase64(blobToExport);
+          exportData[date].photos[mi].push({uid:p.uid,name:p.name,data:b64});
+        }catch(e){console.error('Photo export error:',e);}
+        photosDone++;
+        if(totalPhotos>0&&photosDone%3===0){
+          const pct=Math.round(photosDone/totalPhotos*90); // export는 0~90% 사용
+          const recompTxt=reCompressed>0?` · 재압축 ${reCompressed}`:'';
+          updateProgress(`${date} · ${photosDone}/${totalPhotos}장${recompTxt}`,pct);
+          await new Promise(r=>setTimeout(r,0));
+        }
+      }
+    }
+    done++;
+    updateProgress(`${date} 완료 (${done}/${dates.length})`,
+                   Math.round(90+done/dates.length*9));
+    await new Promise(r=>setTimeout(r,10));
+  }
+
+  updateProgress('파일 생성 중...',99);
+  await new Promise(r=>setTimeout(r,50));
+  downloadJSON({_version:3,_app:'HFP불량분석',_exported:new Date().toISOString(),data:exportData},
+    `HFP_불량분석_전체_${new Date().toISOString().slice(0,10)}.json`);
+  hideProgress();
+  let msg=`📤 ${dates.length}개 날짜 내보내기 완료`;
+  if(reCompressed>0)msg+=` · ${reCompressed}장 자동 재압축`;
+  if(failedRecompress>0)msg+=` · ${failedRecompress}장 실패`;
+  showToast(msg);
+}
+
+async function exportSingleDate(date){
+  const all=getAllStorage();
+  if(!all[date]){showToast('⚠️ 데이터 없음','warn');return;}
+
+  showProgress(`📤 ${date} 내보내기`,'사진 수집 중...',0);
+  await new Promise(r=>setTimeout(r,50));
+
+  const rec={...all[date],photos:{}};
+  for(let mi=0;mi<MACHINES.length;mi++){
+    const photos=await dbGetPhotos(date,mi);
+    rec.photos[mi]=[];
+    for(const p of photos){
+      try{const b64=await blobToBase64(p.blob);rec.photos[mi].push({uid:p.uid,name:p.name,data:b64});}
+      catch(e){console.error(e);}
+    }
+    updateProgress(`${MACHINES[mi]} 처리 완료`,Math.round((mi+1)/MACHINES.length*100));
+    await new Promise(r=>setTimeout(r,10));
+  }
+
+  downloadJSON({_version:3,_app:'HFP불량분석',_exported:new Date().toISOString(),data:{[date]:rec}},
+    `HFP_불량분석_${date}.json`);
+  hideProgress();
+  showToast(`📤 ${date} 내보내기 완료 (사진 포함)`);
+}
+
+function downloadJSON(obj,fname){
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=fname;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function openImportModal(){document.getElementById('importModal').classList.add('show')}
+function closeImportModal(){document.getElementById('importModal').classList.remove('show');document.getElementById('fileInput').value=''}
+function handleFileSelect(e){const file=e.target.files[0];if(file)readAndImport(file)}
+function readAndImport(file){
+  const sizeMB=file.size/1024/1024;
+  if(sizeMB>50){
+    showProgress('📂 큰 파일 읽는 중',`${sizeMB.toFixed(0)}MB · 파일 로딩 (잠시만 기다려 주세요)`,5);
+  }
+  const r=new FileReader();
+  r.onprogress=ev=>{
+    if(sizeMB>50&&ev.lengthComputable){
+      const pct=Math.round(ev.loaded/ev.total*30); // 읽기는 전체의 30%로 표시
+      updateProgress(`파일 읽는 중 ${(ev.loaded/1024/1024).toFixed(0)} / ${sizeMB.toFixed(0)} MB`,pct);
+    }
+  };
+  r.onload=e=>{
+    if(sizeMB>50)updateProgress('JSON 파싱 중...',32);
+    setTimeout(()=>importJSON(e.target.result),20);
+  };
+  r.onerror=()=>{hideProgress();showToast('❌ 파일 읽기 실패','err');};
+  r.readAsText(file);
+}
+
+async function importJSON(text){
+  // ── v11: 메모리 안전 가져오기 ──────────────────────────────
+  // 변경사항:
+  //  1) text 파싱 후 즉시 참조 해제 (GC 유도)
+  //  2) 날짜별 즉시 localStorage 저장 (전체 누적 후 저장 → OOM 방지)
+  //  3) 사진 1장 처리 후 yield(setTimeout 0) → UI 응답성 + GC 기회 확보
+  //  4) 배치(5장) 단위로 추가 GC 대기(50ms)
+  //  5) 날짜 완료 후 incoming[date] 메모리 해제
+  //  6) 분할 JSON(_chunk 필드) 안내 메시지 지원
+  // ────────────────────────────────────────────────────────────
+  let parsed;
+  try{parsed=JSON.parse(text);}catch{showToast('❌ JSON 파일 오류','err');return;}
+
+  let incoming={};
+  const isChunk=!!(parsed._chunk);
+  const chunkInfo=parsed._chunk_dates?` [${parsed._chunk_dates}]`:'';
+
+  if(parsed._version>=2&&parsed.data)incoming=parsed.data;
+  else if(parsed.date&&parsed.state)incoming[parsed.date]=parsed;
+  else Object.keys(parsed).forEach(k=>{if(parsed[k]?.date&&parsed[k]?.state)incoming[k]=parsed[k];});
+
+  // text 참조 해제 → GC 유도
+  text=null;
+  parsed=null;
+  await new Promise(r=>setTimeout(r,30));
+
+  const keys=Object.keys(incoming);
+  if(!keys.length){showToast('❌ 인식 가능한 데이터 없음','err');return;}
+
+  // 전체 사진 수 미리 계산
+  let totalPhotos=0;
+  for(const date of keys){
+    const pd=incoming[date]?.photos;
+    if(pd&&typeof pd==='object'){
+      for(const miStr of Object.keys(pd)){
+        const arr=pd[miStr];
+        if(Array.isArray(arr))totalPhotos+=arr.filter(p=>p&&p.data).length;
+      }
+    }
+  }
+
+  closeImportModal();
+  const chunkLabel=isChunk?`분할파일${chunkInfo} · `:'';
+  showProgress('📥 가져오기 중',`${chunkLabel}데이터 ${keys.length}일 · 사진 ${totalPhotos}장 처리 예정`,0);
+  await new Promise(r=>setTimeout(r,80));
+
+  let doneDates=0;
+  let donePhotos=0;
+  let compressedPhotos=0;
+  let failedPhotos=0;
+  let importErrors=0;
+  const BATCH=5; // 사진 N장마다 추가 GC 대기
+
+  for(const date of keys){
+    const record=incoming[date];
+    const{photos:photoData,...recordCore}=record;
+
+    // ★ 날짜별 즉시 저장 (전체 완료 후 저장하지 않음 → 중단 시 손실 최소화)
+    const all=getAllStorage();
+    all[date]=recordCore;
+    setAllStorage(all);
+
+    // 사진 → 압축 후 IndexedDB 저장
+    if(photoData&&typeof photoData==='object'){
+      for(const miStr of Object.keys(photoData)){
+        const mi=parseInt(miStr);
+        const photoArr=photoData[miStr];
+        if(!Array.isArray(photoArr))continue;
+        for(const p of photoArr){
+          if(!p.data)continue;
+          try{
+            const originalBlob=await base64ToBlobAsync(p.data);
+            // base64 data 즉시 해제
+            p.data=null;
+            // GC 기회 제공 후 압축
+            await new Promise(r=>setTimeout(r,0));
+            const result=await compressImageBlobSafe(originalBlob);
+            await dbSavePhoto(date,mi,
+              p.uid||(Date.now()+'_'+Math.random().toString(36).slice(2,7)),
+              result.blob,p.name||'photo');
+            donePhotos++;
+            if(result.ok&&result.reason!=='already-small')compressedPhotos++;
+            if(!result.ok)failedPhotos++;
+          }catch(e){
+            console.error('Photo import error:',e);
+            importErrors++;
+          }
+          // ★ 매 장마다 UI yield
+          await new Promise(r=>setTimeout(r,0));
+          // ★ BATCH장마다 GC 대기
+          if((donePhotos+importErrors)%BATCH===0){
+            await new Promise(r=>setTimeout(r,50));
+          }
+          if(totalPhotos>0){
+            const pct=Math.round((donePhotos+importErrors)/totalPhotos*100);
+            const failTxt=failedPhotos>0?` · 압축실패 ${failedPhotos}`:'';
+            updateProgress(`${date} 처리 중 · ${donePhotos+importErrors}/${totalPhotos}장 (${pct}%)${failTxt}`,pct);
+          }
+        }
+      }
+    }
+
+    // ★ 날짜 처리 완료 후 incoming[date] 메모리 해제
+    delete incoming[date];
+    await new Promise(r=>setTimeout(r,30));
+
+    doneDates++;
+    const datePct=Math.round(doneDates/keys.length*100);
+    updateProgress(`${date} 완료 (${doneDates}/${keys.length}일) · 압축 ${compressedPhotos} · 실패 ${failedPhotos}`,datePct);
+  }
+
+  // incoming 전체 해제
+  incoming=null;
+
+  refreshHistoryPanel();
+  hideProgress();
+
+  const curDate=document.getElementById('reportDate').value;
+  const finalAll=getAllStorage();
+  if(finalAll[curDate])applyRecord(finalAll[curDate],curDate);
+
+  let photoMsg='';
+  if(totalPhotos>0){
+    photoMsg=` · 사진 ${donePhotos}장 (압축 ${compressedPhotos}`;
+    if(failedPhotos>0)photoMsg+=`, 실패 ${failedPhotos}`;
+    photoMsg+=')';
+  }
+  const chunkDoneMsg=isChunk?` ${chunkInfo}`:'';
+  showToast(`✅ ${keys.length}개 날짜 병합 완료${chunkDoneMsg}${photoMsg}`);
+
+  if(failedPhotos>0){
+    setTimeout(()=>{
+      showToast(`⚠️ ${failedPhotos}장 압축 실패 — '사진 일괄 재압축' 버튼을 눌러 정리하세요`,'warn');
+    },1500);
+  }
+}
+const dz=document.getElementById('dropZone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+dz.addEventListener('drop',e=>{
+  e.preventDefault();dz.classList.remove('drag-over');
+  const file=e.dataTransfer.files[0];
+  if(!file||!file.name.endsWith('.json')){showToast('⚠️ JSON 파일만 가능','warn');return;}
+  readAndImport(file);
+});
+
+/* ═══════════════════════════════════════════════════
+   ANALYSIS
+═══════════════════════════════════════════════════ */
+function setThisMonth(){
+  const now=new Date();
+  const y=now.getFullYear(),m=String(now.getMonth()+1).padStart(2,'0');
+  const last=new Date(y,now.getMonth()+1,0).getDate();
+  document.getElementById('af-from').value=`${y}-${m}-01`;
+  document.getElementById('af-to').value=`${y}-${m}-${String(last).padStart(2,'0')}`;
+}
+
+function aggregateData(){
+  const from=document.getElementById('af-from').value;
+  const to=document.getElementById('af-to').value;
+  const mfilt=document.getElementById('af-machine').value;
+  const all=getAllStorage();
+  const dates=Object.keys(all).filter(d=>d>=from&&d<=to).sort();
+
+  const byType=Object.fromEntries(DEFECT_TYPES.map(t=>[t,[0,0,0]]));
+  const byMachine=[0,0,0];
+  const byCavity={}; // {cavNum: [0,0,0]}
+  let grandTotal=0;
+
+  dates.forEach(date=>{
+    const rec=all[date];
+    if(!rec||!rec.state)return;
+    rec.state.forEach((ms,mi)=>{
+      if(mfilt!=='all'&&parseInt(mfilt)!==mi)return;
+      DEFECT_TYPES.forEach(t=>{
+        const cnt=ms.typeCounts[t]||0;
+        byType[t][mi]+=cnt;
+        byMachine[mi]+=cnt;
+        grandTotal+=cnt;
+      });
+      // cavity from rows
+      if(ms.rows){
+        ms.rows.forEach(row=>{
+          if(row.type===MISF_TYPE&&row.cavity){
+            const c=String(row.cavity);
+            if(!byCavity[c])byCavity[c]=[0,0,0];
+            byCavity[c][mi]+=(row.qty||0);
+          }
+        });
+      }
+    });
+  });
+
+  return {byType,byMachine,byCavity,grandTotal,dates};
+}
+
+function renderAnalysis(){
+  const {byType,byMachine,byCavity,grandTotal,dates}=aggregateData();
+  const allRec=getAllStorage();
+  const from=document.getElementById('af-from').value;
+  const to=document.getElementById('af-to').value;
+  const mfilt=document.getElementById('af-machine').value;
+  const prodQty=parseInt(document.getElementById('af-prod').value)||0;
+
+  /* ── Stats ── */
+  const stats=document.getElementById('analysisStats');
+  const ppmTotal=prodQty>0&&dates.length>0
+    ? Math.round(grandTotal/(prodQty*dates.length)*1e6) : null;
+  stats.innerHTML=`
+    <div class="stat-card">
+      <div class="sc-label">총 불량 수량</div>
+      <div class="sc-value v-total">${grandTotal}</div>
+      <div class="sc-sub">분석 날짜: ${dates.length}일</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">2호기 불량</div>
+      <div class="sc-value v-m2">${byMachine[0]}</div>
+      <div class="sc-sub">${grandTotal?((byMachine[0]/grandTotal*100).toFixed(1)):'0'}%</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">3호기 불량</div>
+      <div class="sc-value v-m3">${byMachine[1]}</div>
+      <div class="sc-sub">${grandTotal?((byMachine[1]/grandTotal*100).toFixed(1)):'0'}%</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">${prodQty>0?'평균 PPM':'4호기 불량'}</div>
+      <div class="sc-value" style="color:${prodQty>0?'var(--warn)':'var(--accent2)'}">${prodQty>0?(ppmTotal?.toLocaleString()||'-'):byMachine[2]}</div>
+      <div class="sc-sub">${prodQty>0?'일 생산수량 '+prodQty.toLocaleString()+'개 기준':grandTotal?((byMachine[2]/grandTotal*100).toFixed(1))+'%':'0%'}</div>
+    </div>`;
+
+  const cg=document.getElementById('chartsGrid');
+  cg.innerHTML='';
+
+  /* ══ 1. 일일 PPM / 불량수 추이 (전폭, 최상단, 선형) ══ */
+  const trendDates=Object.keys(allRec).filter(d=>d>=from&&d<=to).sort();
+  const legendMHTML=MACHINES.map((m,i)=>`<div class="legend-item"><div class="legend-dot" style="background:${COLORS_M[i]}"></div>${m}</div>`).join('');
+  const ppmLabel=prodQty>0?'일일 불량율(PPM) 추이':'일일 불량수 추이';
+  const ppmBadge=prodQty>0?`생산수량 ${prodQty.toLocaleString()}개/일 기준`:'일 생산수량 미입력 → 건수 표시';
+  const c_ppm=makeChartCard(`📈 ${ppmLabel}`,'chart-card-ppm',ppmBadge,`<div class="chart-legend">${legendMHTML}<div class="legend-item"><div class="legend-dot" style="background:#f0a500"></div>전체</div></div>`);
+  cg.appendChild(c_ppm.card);
+
+  if(trendDates.length===0){
+    c_ppm.canvas.parentElement.innerHTML='<div class="no-data">해당 기간에 저장된 데이터가 없습니다.</div>';
+  }else{
+    // 설비별 + 전체 라인 데이터
+    const machineLines=MACHINES.map((_,mi)=>trendDates.map(date=>{
+      if(mfilt!=='all'&&parseInt(mfilt)!==mi)return null;
+      const rec=allRec[date];
+      if(!rec||!rec.state||!rec.state[mi])return 0;
+      const cnt=DEFECT_TYPES.reduce((s,t)=>s+(rec.state[mi].typeCounts[t]||0),0);
+      return prodQty>0?Math.round(cnt/prodQty*1e6):cnt;
+    }));
+    const totalLine=trendDates.map((_,di)=>{
+      const s=machineLines.reduce((sum,ml)=>sum+(ml[di]??0),0);
+      return mfilt==='all'?s:(machineLines[parseInt(mfilt)]?.[di]??0);
+    });
+    const allVals=[...machineLines.flat().filter(v=>v!=null),...totalLine];
+    drawLineChart(c_ppm.canvas,{
+      labels:trendDates.map(d=>d.slice(5)),
+      datasets:[
+        ...MACHINES.map((m,i)=>({label:m,color:COLORS_M[i],values:machineLines[i],dash:false})),
+        {label:'전체',color:'#f0a500',values:totalLine,dash:true}
+      ],
+      maxVal:Math.max(...allVals,1),
+      height:280,
+      yLabel:prodQty>0?'PPM':'건'
+    });
+  }
+
+  /* ══ 2. 설비별 불량 유형합계 (좌측하단, 누적 막대) ══ */
+  const typeColors=COLORS_T;
+  const c_mach=makeChartCard('🏭 설비별 불량 유형합계','chart-card-left','설비별 유형 누적 막대',`
+    <div class="chart-legend" style="flex-wrap:wrap;max-width:100%">
+      ${DEFECT_TYPES.map((t,i)=>`<div class="legend-item"><div class="legend-dot" style="background:${typeColors[i]}"></div><span style="font-size:10px">${t}</span></div>`).join('')}
+    </div>`);
+  cg.appendChild(c_mach.card);
+  // 설비가 X축, 유형이 스택
+  const machStackData=MACHINES.map((_,mi)=>DEFECT_TYPES.map(t=>byType[t][mi]));
+  drawStackedBarChart(c_mach.canvas,{
+    labels:MACHINES,
+    segments:DEFECT_TYPES.map((t,i)=>({label:t,color:typeColors[i]})),
+    data:machStackData,   // data[machineIdx][typeIdx]
+    height:300
+  });
+
+  /* ══ 3. 유형별 불량 합계 (우측하단, 수평 막대) ══ */
+  const typeTotals=DEFECT_TYPES.map(t=>MACHINES.reduce((s,_,mi)=>s+byType[t][mi],0));
+  const c_type=makeChartCard('📊 유형별 불량 합계','chart-card-right','전 설비 합산 기준',`
+    <div class="chart-legend">
+      ${MACHINES.map((m,i)=>`<div class="legend-item"><div class="legend-dot" style="background:${COLORS_M[i]}"></div>${m}</div>`).join('')}
+    </div>`);
+  cg.appendChild(c_type.card);
+  drawHorizontalGroupedBar(c_type.canvas,{
+    labels:DEFECT_TYPES.map(t=>t),
+    datasets:MACHINES.map((m,i)=>({label:m,color:COLORS_M[i],values:DEFECT_TYPES.map(t=>byType[t][i])})),
+    height:Math.max(280, DEFECT_TYPES.length*28+60)
+  });
+}
+
+function makeChartCard(title,extraClass,badge,legendHTML){
+  const card=document.createElement('div');
+  card.className=`chart-card${extraClass?' '+extraClass:''}`;
+  card.innerHTML=`
+    <div class="chart-card-title">${title}<span class="ct-badge">${badge}</span></div>
+    <div class="chart-wrap"><canvas></canvas></div>
+    ${legendHTML}`;
+  const canvas=card.querySelector('canvas');
+  return{card,canvas};
+}
+
+/* ═══════════════════════════════════════════════════
+   CHART DRAWING
+═══════════════════════════════════════════════════ */
+function getCtx(canvas,w,h){
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  return{ctx,W:w,H:h};
+}
+
+/* ── 선형 그래프 (PPM 추이) ── */
+function drawLineChart(canvas,{labels,datasets,maxVal,height,yLabel}){
+  requestAnimationFrame(()=>{
+    const W=canvas.parentElement.offsetWidth||800;
+    const H=height||280;
+    const{ctx}=getCtx(canvas,W,H);
+    const ml=58,mr=20,mt=28,mb=56;
+    const cW=W-ml-mr,cH=H-mt-mb;
+    const maxY=Math.ceil(maxVal*1.15/5)*5||5;
+    const steps=5;
+
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    // Grid + Y labels
+    for(let i=0;i<=steps;i++){
+      const y=mt+cH*(1-i/steps);
+      const val=Math.round(maxY*i/steps);
+      ctx.strokeStyle='rgba(48,54,61,0.8)';ctx.lineWidth=1;
+      ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(ml,y);ctx.lineTo(ml+cW,y);ctx.stroke();
+      ctx.fillStyle='#7d8590';ctx.font=`10px Share Tech Mono`;ctx.textAlign='right';
+      ctx.fillText(val.toLocaleString(),ml-6,y+3);
+    }
+    // Y axis label
+    ctx.save();ctx.fillStyle='#7d8590';ctx.font=`10px Share Tech Mono`;
+    ctx.translate(12,mt+cH/2);ctx.rotate(-Math.PI/2);
+    ctx.textAlign='center';ctx.fillText(yLabel||'',0,0);ctx.restore();
+
+    // X axis line
+    ctx.strokeStyle='#30363d';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(ml,mt+cH);ctx.lineTo(ml+cW,mt+cH);ctx.stroke();
+
+    const n=labels.length;
+    const xStep=n>1?cW/(n-1):cW/2;
+
+    // X labels
+    ctx.fillStyle='#7d8590';ctx.font=`10px Noto Sans KR`;
+    labels.forEach((lbl,i)=>{
+      const x=n>1?ml+i*xStep:ml+cW/2;
+      ctx.save();ctx.translate(x,mt+cH+10);ctx.rotate(-Math.PI/6);
+      ctx.textAlign='right';ctx.fillText(lbl,0,0);ctx.restore();
+    });
+
+    // Lines + dots
+    datasets.forEach(ds=>{
+      const vals=ds.values;
+      if(!vals||vals.every(v=>!v))return;
+
+      ctx.strokeStyle=ds.color;ctx.lineWidth=ds.dash?1.5:2;
+      ctx.setLineDash(ds.dash?[5,4]:[]);
+      ctx.lineJoin='round';ctx.lineCap='round';
+
+      // Area fill (semi-transparent, skip dashed)
+      if(!ds.dash){
+        ctx.beginPath();
+        vals.forEach((v,i)=>{
+          const x=n>1?ml+i*xStep:ml+cW/2;
+          const y=mt+cH-((v??0)/maxY)*cH;
+          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        });
+        ctx.lineTo(n>1?ml+(n-1)*xStep:ml+cW/2,mt+cH);
+        ctx.lineTo(ml,mt+cH);
+        ctx.closePath();
+        ctx.fillStyle=ds.color+'18';
+        ctx.fill();
+      }
+
+      // Line
+      ctx.beginPath();
+      vals.forEach((v,i)=>{
+        const x=n>1?ml+i*xStep:ml+cW/2;
+        const y=mt+cH-((v??0)/maxY)*cH;
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Dots + values
+      vals.forEach((v,i)=>{
+        if(v==null)return;
+        const x=n>1?ml+i*xStep:ml+cW/2;
+        const y=mt+cH-(v/maxY)*cH;
+        ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);
+        ctx.fillStyle=ds.color;ctx.fill();
+        if(v>0){
+          ctx.fillStyle=ds.color;ctx.font=`bold 9px Share Tech Mono`;ctx.textAlign='center';
+          ctx.fillText(v.toLocaleString(),x,y-8);
+        }
+      });
+    });
+  });
+}
+
+/* ── 누적 막대 (설비별 유형합계) ── */
+function drawStackedBarChart(canvas,{labels,segments,data,height}){
+  requestAnimationFrame(()=>{
+    const W=canvas.parentElement.offsetWidth||400;
+    const H=height||300;
+    const{ctx}=getCtx(canvas,W,H);
+    const ml=48,mr=14,mt=24,mb=44;
+    const cW=W-ml-mr,cH=H-mt-mb;
+
+    // max = tallest stack
+    const stackTotals=data.map(d=>d.reduce((s,v)=>s+v,0));
+    const maxVal=Math.max(...stackTotals,1);
+    const maxY=Math.ceil(maxVal*1.15/5)*5||5;
+    const steps=5;
+
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    for(let i=0;i<=steps;i++){
+      const y=mt+cH*(1-i/steps);
+      const val=Math.round(maxY*i/steps);
+      ctx.strokeStyle='rgba(48,54,61,0.8)';ctx.lineWidth=1;
+      ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(ml,y);ctx.lineTo(ml+cW,y);ctx.stroke();
+      ctx.fillStyle='#7d8590';ctx.font=`10px Share Tech Mono`;ctx.textAlign='right';
+      ctx.fillText(val,ml-6,y+3);
+    }
+    ctx.strokeStyle='#30363d';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ml,mt+cH);ctx.lineTo(ml+cW,mt+cH);ctx.stroke();
+
+    const nG=labels.length;
+    const groupW=cW/Math.max(nG,1);
+    const barW=groupW*0.58;
+
+    labels.forEach((lbl,gi)=>{
+      const segs=data[gi];
+      const stackTotal=segs.reduce((s,v)=>s+v,0);
+      let curY=mt+cH;
+      const x=ml+gi*groupW+(groupW-barW)/2;
+
+      segs.forEach((val,si)=>{
+        if(!val)return;
+        const barH=(val/maxY)*cH;
+        curY-=barH;
+        ctx.fillStyle=segments[si].color;
+        const r=si===segs.length-1?Math.min(3,barW/2-1):0;
+        ctx.beginPath();
+        if(ctx.roundRect&&r>0){ctx.roundRect(x,curY,barW,barH,[r,r,0,0]);}
+        else{ctx.rect(x,curY,barW,barH);}
+        ctx.fill();
+      });
+
+      // 합계 값
+      if(stackTotal>0){
+        ctx.fillStyle='#e6edf3';ctx.font=`bold 11px Share Tech Mono`;ctx.textAlign='center';
+        ctx.fillText(stackTotal,x+barW/2,mt+cH-(stackTotal/maxY)*cH-6);
+      }
+      // X label
+      ctx.fillStyle='#aaa';ctx.font=`11px Noto Sans KR`;ctx.textAlign='center';
+      ctx.fillText(lbl,ml+gi*groupW+groupW/2,mt+cH+18);
+    });
+  });
+}
+
+/* ── 수평 그룹 막대 (유형별 합계) ── */
+function drawHorizontalGroupedBar(canvas,{labels,datasets,height}){
+  requestAnimationFrame(()=>{
+    const W=canvas.parentElement.offsetWidth||400;
+    const H=height||360;
+    const{ctx}=getCtx(canvas,W,H);
+    const ml=96,mr=52,mt=16,mb=20;
+    const cW=W-ml-mr,cH=H-mt-mb;
+
+    const allVals=datasets.flatMap(ds=>ds.values);
+    const maxVal=Math.max(...allVals,1);
+    const maxX=Math.ceil(maxVal*1.2/5)*5||5;
+    const nDS=datasets.length;
+    const nG=labels.length;
+    const rowH=cH/Math.max(nG,1);
+    const barH=Math.min(rowH*0.22,12);
+    const groupPad=rowH*0.18;
+
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    // vertical grid lines
+    const vSteps=4;
+    for(let i=0;i<=vSteps;i++){
+      const x=ml+cW*i/vSteps;
+      const val=Math.round(maxX*i/vSteps);
+      ctx.strokeStyle='rgba(48,54,61,0.7)';ctx.lineWidth=1;ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(x,mt);ctx.lineTo(x,mt+cH);ctx.stroke();
+      ctx.fillStyle='#7d8590';ctx.font=`9px Share Tech Mono`;ctx.textAlign='center';
+      ctx.fillText(val,x,mt+cH+12);
+    }
+    // Y axis line
+    ctx.strokeStyle='#30363d';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+cH);ctx.stroke();
+
+    labels.forEach((lbl,gi)=>{
+      const groupY=mt+gi*rowH+groupPad;
+      const totalGroupH=rowH-groupPad*2;
+      const slotH=totalGroupH/Math.max(nDS,1);
+
+      // Y label
+      ctx.fillStyle='#c0c8d2';ctx.font=`10px Noto Sans KR`;ctx.textAlign='right';
+      ctx.fillText(lbl,ml-6,groupY+totalGroupH/2+4);
+
+      // row separator
+      if(gi>0){
+        ctx.strokeStyle='rgba(48,54,61,0.4)';ctx.lineWidth=1;ctx.setLineDash([2,3]);
+        ctx.beginPath();ctx.moveTo(ml,mt+gi*rowH);ctx.lineTo(ml+cW,mt+gi*rowH);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      datasets.forEach((ds,di)=>{
+        const val=ds.values[gi];
+        if(!val)return;
+        const barW=Math.max((val/maxX)*cW,1);
+        const y=groupY+di*slotH+(slotH-barH)/2;
+        const r=Math.min(3,barH/2);
+        ctx.fillStyle=ds.color;
+        ctx.beginPath();
+        if(ctx.roundRect){ctx.roundRect(ml,y,barW,barH,[0,r,r,0]);}
+        else{ctx.rect(ml,y,barW,barH);}
+        ctx.fill();
+        // value label
+        ctx.fillStyle=ds.color;ctx.font=`bold 9px Share Tech Mono`;ctx.textAlign='left';
+        ctx.fillText(val,ml+barW+4,y+barH-1);
+      });
+    });
+
+    // Dataset legend at right edge
+    datasets.forEach((ds,di)=>{
+      const y=mt+10+di*16;
+      ctx.fillStyle=ds.color;ctx.fillRect(ml+cW+4,y,8,8);
+      ctx.fillStyle='#7d8590';ctx.font=`9px Noto Sans KR`;ctx.textAlign='left';
+      ctx.fillText(ds.label,ml+cW+15,y+7);
+    });
+  });
+}
+
+function drawGroupedBarChart(canvas,{labels,datasets,maxVal,height}){
+  requestAnimationFrame(()=>{
+    const W=canvas.parentElement.offsetWidth||600;
+    const H=height||280;
+    const{ctx}=getCtx(canvas,W,H);
+    const ml=44,mr=12,mt=24,mb=64;
+    const cW=W-ml-mr,cH=H-mt-mb;
+    const maxY=Math.ceil(maxVal*1.2/5)*5||5;
+    const steps=5;
+
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    // Grid + Y labels
+    for(let i=0;i<=steps;i++){
+      const y=mt+cH*(1-i/steps);
+      const val=Math.round(maxY*i/steps);
+      ctx.strokeStyle='rgba(48,54,61,0.9)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(ml,y);ctx.lineTo(ml+cW,y);ctx.stroke();
+      ctx.fillStyle='#7d8590';ctx.font=`10px Share Tech Mono`;ctx.textAlign='right';
+      ctx.fillText(val,ml-6,y+3);
+    }
+
+    // Bars
+    const nG=labels.length,nDS=datasets.length;
+    const groupW=cW/Math.max(nG,1);
+    const totalBarW=groupW*0.72;
+    const barW=totalBarW/Math.max(nDS,1);
+
+    datasets.forEach((ds,di)=>{
+      ctx.fillStyle=ds.color;
+      ds.values.forEach((val,gi)=>{
+        if(!val)return;
+        const barH=(val/maxY)*cH;
+        const x=ml+gi*groupW+groupW*0.14+di*barW;
+        const y=mt+cH-barH;
+        const r=Math.min(3,barW/2-1);
+        ctx.beginPath();
+        if(ctx.roundRect){ctx.roundRect(x,y,barW-1,barH,[r,r,0,0]);}
+        else{ctx.rect(x,y,barW-1,barH);}
+        ctx.fill();
+        if(val>0&&barW>12){
+          ctx.fillStyle=ds.color;ctx.font=`bold 9px Share Tech Mono`;ctx.textAlign='center';
+          ctx.fillText(val,x+(barW-1)/2,y-3);
+          ctx.fillStyle=ds.color;
+        }
+      });
+    });
+
+    // X labels
+    ctx.fillStyle='#7d8590';ctx.font=`10px Noto Sans KR`;
+    labels.forEach((lbl,gi)=>{
+      const x=ml+gi*groupW+groupW/2;
+      ctx.save();ctx.translate(x,mt+cH+12);ctx.rotate(-Math.PI/5);
+      ctx.textAlign='right';ctx.fillText(lbl,0,0);ctx.restore();
+    });
+
+    // X axis line
+    ctx.strokeStyle='#30363d';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ml,mt+cH);ctx.lineTo(ml+cW,mt+cH);ctx.stroke();
+  });
+}
+
+function drawSingleBarChart(canvas,{labels,values,colors,height}){
+  requestAnimationFrame(()=>{
+    const W=canvas.parentElement.offsetWidth||300;
+    const H=height||260;
+    const{ctx}=getCtx(canvas,W,H);
+    const ml=44,mr=12,mt=24,mb=50;
+    const cW=W-ml-mr,cH=H-mt-mb;
+    const maxVal=Math.max(...values,1);
+    const maxY=Math.ceil(maxVal*1.2/5)*5||5;
+    const steps=5;
+
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    for(let i=0;i<=steps;i++){
+      const y=mt+cH*(1-i/steps);
+      const val=Math.round(maxY*i/steps);
+      ctx.strokeStyle='rgba(48,54,61,0.9)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(ml,y);ctx.lineTo(ml+cW,y);ctx.stroke();
+      ctx.fillStyle='#7d8590';ctx.font=`10px Share Tech Mono`;ctx.textAlign='right';
+      ctx.fillText(val,ml-6,y+3);
+    }
+
+    const nG=labels.length;
+    const groupW=cW/Math.max(nG,1);
+    const barW=groupW*0.55;
+
+    labels.forEach((lbl,gi)=>{
+      const val=values[gi];
+      if(!val)return;
+      const barH=(val/maxY)*cH;
+      const x=ml+gi*groupW+groupW*0.225;
+      const y=mt+cH-barH;
+      ctx.fillStyle=colors[gi]||'#00d4aa';
+      const r=Math.min(4,barW/2-1);
+      ctx.beginPath();
+      if(ctx.roundRect){ctx.roundRect(x,y,barW,barH,[r,r,0,0]);}
+      else{ctx.rect(x,y,barW,barH);}
+      ctx.fill();
+      // value
+      ctx.fillStyle=colors[gi]||'#00d4aa';
+      ctx.font=`bold 12px Share Tech Mono`;ctx.textAlign='center';
+      ctx.fillText(val,x+barW/2,y-6);
+      // pct
+      const total=values.reduce((a,b)=>a+b,0);
+      if(total>0){
+        ctx.fillStyle='#7d8590';ctx.font=`10px Noto Sans KR`;
+        ctx.fillText(`${(val/total*100).toFixed(1)}%`,x+barW/2,y-18);
+      }
+      // label
+      ctx.fillStyle='#aaa';ctx.font=`11px Noto Sans KR`;ctx.textAlign='center';
+      ctx.fillText(lbl,ml+gi*groupW+groupW/2,mt+cH+18);
+    });
+
+    ctx.strokeStyle='#30363d';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ml,mt+cH);ctx.lineTo(ml+cW,mt+cH);ctx.stroke();
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════ */
+function showToast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast${type==='warn'?' warn':type==='err'?' err':''}`;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ═══════════════════════════════════════════════════
+   DATE CHANGE
+═══════════════════════════════════════════════════ */
+document.getElementById('reportDate').addEventListener('change',function(){
+  updateSbDate(this.value);
+  const all=getAllStorage();
+  if(all[this.value]){applyRecord(all[this.value],this.value);showToast(`📂 ${this.value} 불러옴`);}
+  else{state=emptyState();buildMachineGrid();buildSummary();}
+});
+
+/* ═══════════════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════════════ */
+migrateLegacy();
+init();
+(()=>{
+  const today=document.getElementById('reportDate').value;
+  const all=getAllStorage();
+  if(all[today])applyRecord(all[today],today);
+})();
+</script>
+
+<script>
+/* ===== 승정 ERP 클라우드 동기화 (불량관리/HFP) ===== */
+(function(){
+  var SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co";
+  var SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+  var CKEY="defect_hfp_v1";
+  var LKEY="hfp_defect_all";
+  function hdr(x){var o={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};if(x)for(var k in x)o[k]=x[k];return o;}
+  var t=null,lastPushed=null;
+  function push(){
+    var body=localStorage.getItem(LKEY); if(body==null)body="";
+    if(body===lastPushed)return; lastPushed=body;
+    fetch(SB_URL+"/rest/v1/app_state",{method:"POST",headers:hdr({"Prefer":"resolution=merge-duplicates"}),
+      body:JSON.stringify({key:CKEY,value:{data:body}})}).catch(function(){});
+  }
+  var _set=localStorage.setItem.bind(localStorage);
+  localStorage.setItem=function(k,v){_set(k,v); if(k===LKEY){clearTimeout(t);t=setTimeout(push,800);}};
+  try{
+    fetch(SB_URL+"/rest/v1/app_state?key=eq."+CKEY+"&select=value",{headers:hdr()})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      if(!rows||!rows.length)return;
+      var cd=(rows[0].value&&rows[0].value.data)||"";
+      var local=localStorage.getItem(LKEY)||"";
+      if(cd!==local && cd!==""){
+        _set(LKEY,cd); lastPushed=cd; location.reload();
+      } else { lastPushed=local; }
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
