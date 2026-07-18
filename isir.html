@@ -63,6 +63,7 @@
    <div class="fld"><label>검사일</label><input type="date" id="e_date"></div>
    <div class="fld"><label>검사자</label><input id="e_insp"></div>
    <div class="fld"><label>종합 판정</label><select id="e_judge"><option>합격</option><option>조건부</option><option>불합격</option></select></div>
+   <div class="fld wide"><label>📄 PDF 파일 (링크/경로) — 저장하면 품번·품명 클릭 시 열림</label><input id="e_pdf" placeholder="예: isir_pdf/ISIR-01.pdf 또는 https://…/파일.pdf"></div>
    <div class="fld wide"><label>비고</label><input id="e_note"></div>
   </div>
   <div class="meas"><div class="mh"><b>측정 항목 (치수·특성)</b><button type="button" onclick="addMeas()">＋ 측정 항목 추가</button></div>
@@ -91,7 +92,10 @@ function render(){var box=document.getElementById("rows"),list=filtered();
  document.getElementById("cnt").textContent="총 "+ROWS.length+"건 · 표시 "+list.length;
  if(!list.length){box.innerHTML='<tr><td colspan="10" class="empty">성적서가 없습니다.</td></tr>';return;}
  box.innerHTML=list.map(function(o){var r=o.r,i=o.i;
-  return '<tr><td><span class="code">'+esc(r.no)+'</span></td><td><span class="code">'+esc(r.part)+'</span></td><td>'+esc(r.name)+'</td><td>'+esc(r.cust)+'</td><td>'+esc(r.dwg)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.insp)+'</td><td>'+((r.meas||[]).length)+'항목</td><td><span class="pill p-'+esc(r.judge)+'">'+esc(r.judge)+'</span></td>'+
+  var pl=r.pdf?(' href="'+esc(r.pdf)+'" target="_blank" title="PDF 열기" style="color:var(--blue);text-decoration:underline;cursor:pointer"'):"";
+  var partCell=r.pdf?('<a'+pl+' class="code">'+esc(r.part||"(품번)")+'</a>'):('<span class="code">'+esc(r.part)+'</span>');
+  var nameCell=r.pdf?('<a'+pl+'>📄 '+esc(r.name)+'</a>'):esc(r.name);
+  return '<tr><td><span class="code">'+esc(r.no)+'</span></td><td>'+partCell+'</td><td>'+nameCell+'</td><td>'+esc(r.cust)+'</td><td>'+esc(r.dwg)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.insp)+'</td><td>'+((r.meas||[]).length)+'항목</td><td><span class="pill p-'+esc(r.judge)+'">'+esc(r.judge)+'</span></td>'+
    '<td class="act" style="text-align:right;white-space:nowrap"><button onclick="editRow('+i+')">편집</button><button class="del" onclick="delRow('+i+')">✕</button></td></tr>';
  }).join("");}
 
@@ -115,9 +119,9 @@ function openForm(t){document.getElementById("editTitle").textContent=t;document
 function closeForm(){document.getElementById("editCard").classList.remove("on");EDIT=-1;}
 function setF(id,v){var e=document.getElementById(id);if(e)e.value=v==null?"":v;}
 function getF(id){var e=document.getElementById(id);return e?(e.value||"").trim():"";}
-function newRow(){EDIT=-1;["e_no","e_part","e_name","e_cust","e_dwg","e_lot","e_date","e_insp","e_note"].forEach(function(id){setF(id,"");});setF("e_judge","합격");MEAS=[];renderMeas();openForm("＋ 초도품 검사성적서");}
-function editRow(i){var r=ROWS[i];if(!r)return;EDIT=i;setF("e_no",r.no);setF("e_part",r.part);setF("e_name",r.name);setF("e_cust",r.cust);setF("e_dwg",r.dwg);setF("e_lot",r.lot);setF("e_date",r.date);setF("e_insp",r.insp);setF("e_judge",r.judge);setF("e_note",r.note);MEAS=(r.meas||[]).map(function(m){return Object.assign({},m);});renderMeas();openForm("✏️ 검사성적서 편집");}
-function saveForm(){var rec={no:getF("e_no"),part:getF("e_part"),name:getF("e_name"),cust:getF("e_cust"),dwg:getF("e_dwg"),lot:getF("e_lot"),date:getF("e_date"),insp:getF("e_insp"),judge:getF("e_judge"),note:getF("e_note"),meas:MEAS.map(function(m){return Object.assign({},m);})};
+function newRow(){EDIT=-1;["e_no","e_part","e_name","e_cust","e_dwg","e_lot","e_date","e_insp","e_pdf","e_note"].forEach(function(id){setF(id,"");});setF("e_judge","합격");MEAS=[];renderMeas();openForm("＋ 초도품 검사성적서");}
+function editRow(i){var r=ROWS[i];if(!r)return;EDIT=i;setF("e_no",r.no);setF("e_part",r.part);setF("e_name",r.name);setF("e_cust",r.cust);setF("e_dwg",r.dwg);setF("e_lot",r.lot);setF("e_date",r.date);setF("e_insp",r.insp);setF("e_judge",r.judge);setF("e_pdf",r.pdf);setF("e_note",r.note);MEAS=(r.meas||[]).map(function(m){return Object.assign({},m);});renderMeas();openForm("✏️ 검사성적서 편집");}
+function saveForm(){var rec={no:getF("e_no"),part:getF("e_part"),name:getF("e_name"),cust:getF("e_cust"),dwg:getF("e_dwg"),lot:getF("e_lot"),date:getF("e_date"),insp:getF("e_insp"),judge:getF("e_judge"),pdf:getF("e_pdf"),note:getF("e_note"),meas:MEAS.map(function(m){return Object.assign({},m);})};
  if(!rec.no&&!rec.part){alert("성적서 No 또는 품번을 입력하세요.");return;}
  if(EDIT>=0)ROWS[EDIT]=rec;else ROWS.unshift(rec);closeForm();saveCloud();render();}
 function delRow(i){if(!confirm("이 성적서를 삭제할까요?"))return;ROWS.splice(i,1);saveCloud();render();}
