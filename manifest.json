@@ -11,6 +11,6 @@
   "lang": "ko",
   "icons": [
     { "src": "sj-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "sj-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "sj-icon-mask.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
