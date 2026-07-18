@@ -35,7 +35,20 @@
  <div class="filter">
   <input class="search" id="fSearch" placeholder="🔍 품번·품명·고객·성적서No 검색" oninput="render()">
   <select id="fJudge" onchange="render()"><option value="">판정 전체</option><option>합격</option><option>조건부</option><option>불합격</option></select>
-  <button class="addbtn" onclick="newRow()">＋ 신규 성적서</button><span class="cnt" id="cnt"></span>
+  <button class="addbtn" onclick="newRow()">＋ 신규 성적서</button>
+  <button class="btn" onclick="exportXls()">📥 엑셀</button>
+  <button class="btn" onclick="openPaste()">📋 엑셀 붙여넣기</button><span class="cnt" id="cnt"></span>
+ </div>
+
+ <div id="pasteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:20px;max-width:580px;width:92%">
+   <h3 style="margin:0 0 8px;font-size:15px">📋 엑셀에서 붙여넣기 (대량 추가)</h3>
+   <p style="font-size:12.5px;color:#8b8f96;margin:0 0 8px">엑셀에서 행들을 복사(Ctrl+C)한 뒤 아래 칸에 붙여넣기(Ctrl+V) → [추가].<br><b>열 순서:</b> 성적서No · 품번 · 품명 · 고객 · 도면REV · LOT · 검사일 · 검사자 · 판정 · 비고</p>
+   <textarea id="pasteTa" style="width:100%;height:180px;border:1px solid #e7e3db;border-radius:9px;padding:10px;font:inherit;font-size:12.5px" placeholder="여기에 붙여넣기…"></textarea>
+   <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+    <button class="clr" onclick="closePaste()">취소</button><button class="save" onclick="doPaste()">＋ 추가</button>
+   </div>
+  </div>
  </div>
 
  <div class="editcard" id="editCard">
@@ -108,6 +121,21 @@ function saveForm(){var rec={no:getF("e_no"),part:getF("e_part"),name:getF("e_na
  if(!rec.no&&!rec.part){alert("성적서 No 또는 품번을 입력하세요.");return;}
  if(EDIT>=0)ROWS[EDIT]=rec;else ROWS.unshift(rec);closeForm();saveCloud();render();}
 function delRow(i){if(!confirm("이 성적서를 삭제할까요?"))return;ROWS.splice(i,1);saveCloud();render();}
+function exportXls(){
+ var cols=["성적서No","품번","품명","고객","도면REV","LOT","검사일","검사자","판정","항목수","비고"];
+ var body=ROWS.map(function(r){var c=[r.no,r.part,r.name,r.cust,r.dwg,r.lot,r.date,r.insp,r.judge,(r.meas||[]).length,r.note];
+  return "<tr>"+c.map(function(v){return '<td>'+esc(v)+'</td>';}).join("")+"</tr>";}).join("");
+ var html='<meta charset="utf-8"><table border="1"><tr>'+cols.map(function(c){return '<th>'+c+'</th>';}).join("")+"</tr>"+body+"</table>";
+ var blob=new Blob(["﻿"+html],{type:"application/vnd.ms-excel;charset=utf-8"});
+ var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ISIR_성적서.xls";document.body.appendChild(a);a.click();a.remove();}
+function openPaste(){document.getElementById("pasteModal").style.display="flex";document.getElementById("pasteTa").value="";setTimeout(function(){document.getElementById("pasteTa").focus();},50);}
+function closePaste(){document.getElementById("pasteModal").style.display="none";}
+function doPaste(){var t=(document.getElementById("pasteTa").value||"").replace(/\r/g,"");if(!t.trim()){closePaste();return;}
+ var added=0;t.split("\n").forEach(function(ln){if(!ln.trim())return;var c=ln.split("\t");
+  if(/성적서|품번/.test(c[0]||""))return;
+  var jg=(c[8]||"").trim();if(["합격","조건부","불합격"].indexOf(jg)<0)jg="합격";
+  ROWS.unshift({no:(c[0]||"").trim(),part:(c[1]||"").trim(),name:(c[2]||"").trim(),cust:(c[3]||"").trim(),dwg:(c[4]||"").trim(),lot:(c[5]||"").trim(),date:(c[6]||"").trim(),insp:(c[7]||"").trim(),judge:jg,note:(c[9]||"").trim(),meas:[]});added++;});
+ closePaste();saveCloud();render();alert(added+"건 추가되었습니다.");}
 var _t=null;function saveCloud(){if(!window.SB)return;clearTimeout(_t);_t=setTimeout(function(){window.SB.from("app_state").upsert({key:KEY,value:ROWS,src:(window.__CID||""),updated_at:new Date().toISOString()}).then(function(r){setSt(r&&r.error?"저장 실패":"클라우드 저장됨 ✓",r&&r.error?"r":"g");}).catch(function(){setSt("저장 실패","r");});},400);}
 async function load(){if(!window.SB){setSt("로컬 모드","r");render();return;}setSt("불러오는 중…");
  try{var r=await window.SB.from("app_state").select("value").eq("key",KEY).maybeSingle();if(r.error){setSt("연결 확인 필요","r");render();return;}
