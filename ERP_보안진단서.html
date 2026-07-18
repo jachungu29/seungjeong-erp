@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-store"><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<title>승정 ERP · 보안 진단서 & 즉시 조치안</title><style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bd:#30363d;--tx:#e6edf3;--tx2:#8b949e;--tx3:#6e7681;--blue:#58a6ff;--green:#3fb950;--yellow:#d29922;--red:#f85149}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--tx);font-family:"Pretendard","Malgun Gothic",sans-serif;font-size:14px;line-height:1.65;padding:0 0 70px}
+header{background:linear-gradient(180deg,#161b22,#0d1117);border-bottom:1px solid var(--bd);padding:24px 32px}
+.eyebrow{color:var(--tx3);font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}h1{font-size:21px;font-weight:700}.sub{color:var(--tx2);font-size:13px;margin-top:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}section{margin-top:26px}h2{font-size:16px;font-weight:700;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--bd)}
+.exec{background:#2a1215;border:1px solid #5c2327;border-left:3px solid var(--red);border-radius:8px;padding:16px 18px;margin-top:14px}
+.exec b{color:var(--red)}.exec ol{margin:8px 0 0 18px}.exec li{margin:5px 0;font-size:13.5px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--bg2);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+th,td{padding:9px 12px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}th{background:var(--bg3);color:var(--tx2);font-size:12px}
+.sev{font-size:11px;font-weight:700;border-radius:11px;padding:2px 9px;white-space:nowrap}.s-hi{background:#3a1416;color:var(--red);border:1px solid #5c2327}.s-md{background:#2d2510;color:var(--yellow);border:1px solid #5c4413}.s-lo{background:#0f2439;color:var(--blue);border:1px solid #194b7d}
+.mono{font-family:Consolas,monospace;font-size:12px}
+.note{background:#1c1a10;border:1px solid #5c4413;border-left:3px solid var(--yellow);border-radius:6px;padding:13px 16px;font-size:12.5px;color:#e3c88a;margin-top:10px}.note b{color:var(--yellow)}
+.ok{background:#122d1a;border:1px solid #20502c;border-left:3px solid var(--green);border-radius:6px;padding:13px 16px;font-size:12.5px;color:#a6e6b8;margin-top:10px}.ok b{color:var(--green)}
+.phase{font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;background:var(--bg3);border:1px solid var(--bd);color:var(--tx2)}
+.bar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:8px 32px;position:sticky;top:0;z-index:5}.bar button{background:var(--green);color:#0d1117;border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:700;cursor:pointer}
+@media print{body{background:#fff;color:#111}.bar{display:none}header{background:#fff}table{background:#fff}}
+</style></head><body>
+<div class="bar"><button onclick="window.print()">🖨️ 인쇄 / PDF</button></div>
+<header><div class="wrap"><div class="eyebrow">㈜승정 · ERP 종합보고서 부속 · 대외비</div>
+<h1>ERP 보안 진단서 &amp; 즉시 조치안</h1>
+<div class="sub">보고서 「보안」장 근거 · Executive Summary 반영용 · 기준일 2026-07-18</div></div></header>
+<div class="wrap">
+
+ <section><h2>Executive Summary <span style="color:var(--tx3);font-weight:400;font-size:12px">— 3줄 요약</span></h2>
+  <div class="exec"><b>⚠ 최우선 보안 사안.</b>
+   <ol>
+    <li>ERP는 <b>로그인 없이 익명 키(publishable)</b>로 클라우드에 접속하며, 이 키는 모든 화면에 포함되어 <b>GitHub에 공개</b>되어 있다.</li>
+    <li>클라우드(app_state) 정책이 <b>익명 사용자에게 읽기·수정·삭제를 전부 허용</b> — <b>실증 확인됨</b>(키만으로 데이터 삭제 성공). 즉 키를 아는 누구나 전 데이터 열람·변조·<b>일괄 삭제</b> 가능.</li>
+    <li>우선순위 원칙(안전·법규 &gt; 품질···)에 따라 <b>본 건은 품질·납기보다 앞선 즉시 조치 1순위</b>. 핵심 방어는 (a)삭제 차단 (b)자동 백업 (c)민감정보 분리.</li>
+   </ol></div>
+ </section>
+
+ <section><h2>1. 취약점 진단</h2>
+  <table><tr><th>#</th><th>취약점</th><th>심각도</th><th>내용 / 근거</th></tr>
+   <tr><td>V1</td><td>익명 전체권한(RLS)</td><td><span class="sev s-hi">높음</span></td><td>app_state에 익명 <b>SELECT·INSERT·UPDATE·DELETE 모두 허용</b>. 실측: publishable 키만으로 테스트 키 삭제(204) 성공 → 악의적 <b>전 데이터 삭제·위조</b> 가능.</td></tr>
+   <tr><td>V2</td><td>민감정보 익명 노출</td><td><span class="sev s-hi">높음</span></td><td><span class="mono">safety_reports</span>(이상안전신고·사진)에 <b>외국인 근로자 정보·현장 사진</b> 포함 가능 → 익명 열람 시 개인정보·영업비밀 유출.</td></tr>
+   <tr><td>V3</td><td>감사로그 부재</td><td><span class="sev s-md">중간</span></td><td>누가·언제·무엇을 바꿨는지 기록 없음(<span class="mono">updated_at·src</span>만 존재). 사고 시 <b>추적·복구 근거 부족</b>.</td></tr>
+   <tr><td>V4</td><td>백업 체계 부재</td><td><span class="sev s-md">중간</span></td><td>일괄 삭제·손상 시 되돌릴 <b>정기 백업 없음</b>. (익명 삭제가 가능한 만큼 백업이 최후 방어선)</td></tr>
+   <tr><td>V5</td><td>버전·형상관리 위험</td><td><span class="sev s-lo">낮음</span></td><td>파일명 버전(v1→v379)·단일 52MB 파일 → 롤백·변경추적 취약(형상관리 장과 연계).</td></tr>
+  </table>
+  <div class="note"><b>오해 정정.</b> "키가 공개된 것" 자체는 Supabase 설계상 정상(publishable 키는 공개용)입니다. <b>진짜 문제는 그 키에 붙은 권한(RLS)이 너무 넓은 것</b> — 조치의 초점은 키 숨기기가 아니라 <b>권한 축소</b>입니다.</div>
+ </section>
+
+ <section><h2>2. 즉시 조치안 (단계별)</h2>
+  <table><tr><th>단계</th><th>조치</th><th>대상</th><th>비고</th></tr>
+   <tr><td><span class="phase">즉시</span></td><td><b>익명 DELETE 차단</b> — RLS에서 삭제 정책 제거(익명은 읽기·쓰기만). 삭제는 관리자만.</td><td>V1</td><td>Supabase 대시보드 정책 수정. 앱은 삭제를 거의 안 쓰므로 영향 적음.</td></tr>
+   <tr><td><span class="phase">즉시</span></td><td><b>자동 백업</b> — app_state 전체를 매일 JSON으로 내보내 보관(3-2-1). 삭제·손상 시 복구.</td><td>V4</td><td>간단 백업 화면/스크립트로 구현 가능.</td></tr>
+   <tr><td><span class="phase">단기</span></td><td><b>민감정보 분리</b> — safety_reports 등 개인정보 포함 키는 별도 테이블+접근제한, 사진은 만료링크.</td><td>V2</td><td>보존기간 규정 수립 병행.</td></tr>
+   <tr><td><span class="phase">단기</span></td><td><b>공용 접근 게이트</b> — 사내 공용 비밀번호 또는 Supabase Auth로 최소한의 인증 추가.</td><td>V1</td><td>로그인 없는 편의성과 절충 — 사내망/공용PIN 수준.</td></tr>
+   <tr><td><span class="phase">중기</span></td><td><b>감사로그</b> — 변경 이력 테이블(트리거)로 누가·언제·무엇 기록.</td><td>V3</td><td>사고 추적·IATF 심사 대응.</td></tr>
+   <tr><td><span class="phase">중기</span></td><td><b>형상관리 정비</b> — 파일명 버전 → git 브랜치/태그, 52MB 단일파일 분할.</td><td>V5</td><td>보고서 「Git 구조」장과 연계.</td></tr>
+  </table>
+  <div class="ok"><b>보상 통제(현실적 최선).</b> 로그인 없는 편의성을 당장 포기하기 어렵다면, <b>①삭제 차단 + ②매일 자동 백업 + ③민감정보 미저장/분리</b> 3가지만으로도 최악(전삭제·유출)의 대부분을 막습니다. 이 3건을 <b>이번 주 내 착수</b> 권고.</div>
+ </section>
+
+ <div style="margin-top:26px;padding-top:12px;border-top:1px solid var(--bd);font-size:12px;color:var(--tx3);text-align:center">㈜승정 · ERP 보안 진단서 · 대외비 · 2026-07-18</div>
+</div></body></html>
