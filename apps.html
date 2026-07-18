@@ -63,7 +63,7 @@ h1{font-size:24px;font-weight:800;margin:0 0 3px}
 
 <div id="viewer"><div class="vbar"><button class="back" onclick="closeView()">← 목록</button><b id="vtitle"></b><button class="abtn" onclick="popOut()">새 창</button></div><iframe id="vframe"></iframe></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 <script>
 var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
 var PAGES=[], FILEHTML=null, FILENAME="";
