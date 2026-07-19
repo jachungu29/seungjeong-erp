@@ -345,6 +345,36 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .fg4{grid-template-columns:repeat(2,1fr)}
 }
 </style>
+
+<style id="SJ-HORIZONTAL-NAV">
+/* ===== 승정: 좌측 세로 사이드바 → 상단 가로 메뉴바 ===== */
+.layout{ display:flex !important; flex-direction:column !important; min-height:100vh; }
+.sidebar{
+  position:sticky !important; top:0 !important; left:0 !important;
+  width:100% !important; height:auto !important;
+  flex-direction:row !important; align-items:center !important; flex-wrap:nowrap !important;
+  gap:18px !important; padding:8px 16px !important; box-sizing:border-box !important;
+  overflow-x:auto !important; overflow-y:hidden !important; z-index:200 !important;
+  border-bottom:2px solid rgba(255,255,255,.08);
+}
+.sb-brand{ flex:0 0 auto !important; margin:0 !important; padding:0 !important; }
+.sb-db{ flex:0 0 auto !important; margin:0 !important; padding:0 !important;
+  display:flex !important; flex-direction:row !important; align-items:center !important; gap:8px !important; }
+.sb-db > div[style]{ margin-top:0 !important; }
+.sb-nav{ display:flex !important; flex-direction:row !important; align-items:center !important;
+  gap:4px !important; flex:1 1 auto !important; overflow-x:auto !important; padding:0 !important; margin:0 !important; }
+.sb-group{ display:none !important; }
+.sb-item{ flex:0 0 auto !important; white-space:nowrap !important;
+  padding:9px 13px !important; margin:0 !important; border-radius:8px !important; }
+.sb-footer{ display:none !important; }
+.main{ margin-left:0 !important; margin-top:0 !important; }
+/* 좁은 화면 접힘 규칙 무력화(가로바 유지) */
+@media(max-width:860px){
+  .sidebar{ width:100% !important; }
+  .sb-label,.sb-badge,.sb-title,.sb-sub{ display:inline-block !important; }
+  .main{ margin-left:0 !important; }
+}
+</style>
 </head>
 <body>
 <div class="layout">
