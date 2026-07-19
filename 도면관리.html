@@ -513,7 +513,30 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .tab-content.active { display: block; }
 </style>
 <script src="supabase.js"></script>
-</head>
+<style id="SJ-HORIZONTAL-NAV">
+/* ===== 승정: 좌측 세로 사이드바 → 상단 가로 메뉴바 ===== */
+#app{ flex-direction:column !important; }
+#sidebar{
+  width:100% !important; min-width:0 !important; height:auto !important;
+  flex-direction:row !important; align-items:center !important; flex-wrap:nowrap !important;
+  overflow-x:auto !important; overflow-y:hidden !important;
+  border-right:0 !important; border-bottom:1px solid var(--border) !important;
+  gap:12px !important; padding:6px 16px !important; box-sizing:border-box !important;
+}
+.sidebar-logo{ order:1; flex:0 0 auto !important; padding:0 8px 0 0 !important; border-bottom:0 !important; }
+.sidebar-logo .logo-sub{ font-size:9px !important; opacity:.6 !important; }
+.sidebar-nav{ order:2; flex:0 1 auto !important; display:flex !important; flex-direction:row !important;
+  align-items:center !important; gap:4px !important; overflow-x:auto !important; overflow-y:hidden !important; padding:0 !important; }
+.nav-section-label{ display:none !important; }
+.nav-item{ flex:0 0 auto !important; white-space:nowrap !important; padding:8px 13px !important; margin:0 !important;
+  border-radius:8px 8px 0 0 !important; }
+.nav-item.active{ box-shadow:inset 0 -3px 0 var(--cyan) !important; }
+.nav-badge{ margin-left:6px !important; }
+.sidebar-bottom{ order:3; margin-left:auto !important; display:flex !important; flex-direction:row !important;
+  align-items:center !important; gap:8px !important; flex:0 0 auto !important; padding:0 !important; border-top:0 !important; }
+.sidebar-bottom > #storageStats{ padding:0 4px !important; white-space:nowrap !important; }
+main{ flex:1 1 auto !important; min-height:0 !important; }
+</style></head>
 <body>
 <div id="app">
   <!-- Sidebar -->
