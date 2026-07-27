@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>승정 ERP · REV-0 (간편)</title>
+<link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png"><meta name="theme-color" content="#0d1117">
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#13233a;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;--faint:#6e7681;--blue:#58a6ff;--green:#3fb950;--amber:#d29922;--purple:#bc8cff;--cyan:#39c5cf;--mono:"JetBrains Mono",Consolas,monospace;--kr:Pretendard,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);line-height:1.6;font-size:15px}
+.wrap{max-width:940px;margin:0 auto;padding:44px 18px 90px}
+h1{font-size:30px;font-weight:800;margin:0 0 3px}
+h1 .rev{font-family:var(--mono);font-size:12px;background:var(--blue);color:#08131f;padding:2px 9px;border-radius:6px;margin-left:8px;vertical-align:middle}
+.lead{color:var(--dim);font-size:14px;margin-bottom:26px}
+.main-card{display:block;text-decoration:none;color:var(--txt);border:1px solid #2b4b6f;border-radius:18px;background:var(--panel2);padding:26px 26px;transition:.14s;margin-bottom:22px}
+.main-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 10px 30px rgba(88,166,255,.14)}
+.main-card .ic{font-size:34px;margin-bottom:10px}
+.main-card .t{font-size:22px;font-weight:800}
+.main-card .t .en{font-family:var(--mono);font-size:12px;color:var(--faint);font-weight:600;margin-left:8px}
+.main-card .d{font-size:14px;color:var(--dim);margin-top:8px;max-width:640px}
+.main-card .go{font-family:var(--mono);font-size:12.5px;color:var(--blue);margin-top:16px;font-weight:700}
+.sec{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:1px;margin:26px 0 12px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:13px}
+a.card{display:block;text-decoration:none;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:16px 18px;transition:.14s;color:var(--txt)}
+a.card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.card.cloud{border-color:#2b4b6f;background:var(--panel2)}
+.card .ic{font-size:22px;margin-bottom:8px}
+.card .t{font-size:15.5px;font-weight:800}
+.card .t .en{font-family:var(--mono);font-size:10.5px;color:var(--faint);font-weight:600;margin-left:5px}
+.card .d{font-size:12.5px;color:var(--dim);margin-top:4px}
+.addrow{margin-top:11px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.addrow input,.addrow select{background:var(--panel3,#21262d);border:1px solid var(--line);border-radius:9px;padding:9px 12px;color:var(--txt);font:inherit;font-size:13px}
+.addrow input{flex:1;min-width:150px}
+.addrow button{background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:9px 18px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.note{border:1px dashed var(--line);border-radius:12px;background:transparent;padding:12px 16px;color:var(--dim);font-size:12.5px;margin-top:26px}
+.note a{color:var(--blue);text-decoration:none}
+/* 펼침(아코디언) — 클릭 시 하위 양식 표시 */
+.acc{border:1px solid #2b4b6f;border-radius:16px;background:var(--panel2);margin-bottom:13px;overflow:hidden}
+.acc-h{display:flex;align-items:center;gap:14px;padding:17px 20px;cursor:pointer;user-select:none}
+.acc-h:hover{background:rgba(88,166,255,.06)}
+.acc-h .ic{font-size:26px}
+.acc-h .t{font-size:17px;font-weight:800}
+.acc-h .t .en{font-family:var(--mono);font-size:11px;color:var(--faint);font-weight:600;margin-left:6px}
+.acc-h .d{font-size:12.5px;color:var(--dim);margin-top:3px}
+.acc-h .sw{margin-left:auto;display:flex;align-items:center;gap:9px;color:var(--faint);font-size:12px}
+.acc-h .track{width:44px;height:24px;border-radius:20px;background:#2a3441;position:relative;transition:.18s}
+.acc-h .track::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#8b949e;transition:.18s}
+.acc.open .acc-h .track{background:#1f6feb}
+.acc.open .acc-h .track::after{left:23px;background:#fff}
+.acc-body{display:none;padding:4px 16px 16px;border-top:1px solid var(--line)}
+.acc.open .acc-body{display:block}
+.acc-body .mh{font-size:11px;color:var(--faint);margin:12px 4px 6px;letter-spacing:.4px}
+.acc-body .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.acc-body a.sub{display:block;text-decoration:none;color:var(--txt);border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:10px 13px;font-size:13px}
+.acc-body a.sub:hover{border-color:var(--blue);color:var(--blue)}
+.acc-body a.sub.full{background:#13233a;border-color:#2b4b6f;font-weight:700}
+footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:center;margin-top:36px;border-top:1px solid var(--line);padding-top:18px}
+/* 신고 QR 뱃지 (SEUNGJEONG ERP 카드 우측 상단) */
+.main-wrap{position:relative}
+.qr-badge{position:absolute;top:20px;right:20px;z-index:3;background:#fff;border:1px solid #d6dbe0;border-radius:14px;padding:11px 11px 8px;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 6px 20px rgba(0,0,0,.32)}
+.qr-badge:hover{border-color:var(--blue);transform:translateY(-1px)}
+.qr-badge .qi{width:120px;height:120px}
+.qr-badge .qi svg{width:100%;height:100%;display:block}
+.qr-badge .ql{font-family:var(--kr);font-size:12px;font-weight:800;color:#c0392b;line-height:1.15;text-align:center}
+.qr-badge .ql small{display:block;color:#6e7681;font-weight:600;font-size:10px;margin-top:1px}
+.main-card .t,.main-card .d{padding-right:158px}
+@media(max-width:640px){
+  .qr-badge{top:12px;right:12px;padding:7px 7px 5px}
+  .qr-badge .qi{width:80px;height:80px}
+  .qr-badge .ql{font-size:10px} .qr-badge .ql small{display:none}
+  .main-card .t,.main-card .d{padding-right:100px}
+}
+</style></head><body><div class="wrap">
+<h1>승정 ERP <span class="rev">REV-0</span></h1>
+<div class="lead">복잡한 설정 없이 바로 쓰는 통합 앱 · 이 앱 하나로 전체 업무</div>
+
+<div class="main-wrap">
+<a class="main-card" href="legacy.html">
+ <div class="ic">🏭</div>
+ <div class="t">SEUNGJEONG ERP <span class="en">REV-0 · 실행 앱</span></div>
+ <div class="d">22개 대분류 · 전체 화면(생산·품질·자재·원가·안전·인사·회계 등)이 이 앱 하나에 들어있습니다. 별도 설정 없이 바로 사용하세요. (파일이 커서 첫 로딩 10~30초)</div>
+ <div class="go">앱 열기 →</div></a>
+<a class="qr-badge" href="sos.html" title="휴대폰으로 스캔하면 설비이상·안전·소방 신고 화면이 열립니다">
+ <div class="qi" id="hubqr"></div>
+ <div class="ql">📱 안전신고<small>스캔 / 클릭</small></div>
+</a>
+</div>
+
+<div class="sec">실행 · 본체</div>
+<div class="grid">
+ <a class="card cloud" href="app.html">
+  <div class="ic">🖥️</div>
+  <div class="t">REV-0 본체 <span class="en">app</span></div>
+  <div class="d">왼쪽 22 대분류 메뉴가 <b style="color:var(--blue)">구조도에서 자동</b> · 화면 클릭으로 열기.</div></a>
+</div>
+
+<div class="sec">설계 · 참고</div>
+<div class="grid">
+ <a class="card cloud" href="rev0-map.html">
+  <div class="ic">🗺️</div>
+  <div class="t">구조도 <span class="en">map · 편집 원본</span></div>
+  <div class="d">⭐ <b style="color:var(--blue)">여기서 편집·저장</b>하면 설계메뉴·그래프에 자동 반영. (단일 원본)</div></a>
+ <!-- [숨김·비활성 2026-07] 설계 메뉴 카드 — 파일(menu.html) 보존. 복구는 이 주석만 풀면 됨
+ <a class="card" href="menu.html">
+  <div class="ic">🌳</div>
+  <div class="t">설계 메뉴 <span class="en">menu</span></div>
+  <div class="d">대분류→중분류→소분류 트리 · 구조도 반영.</div></a>
+ -->
+ <a class="card" href="graph.html">
+  <div class="ic">🕸️</div>
+  <div class="t">설계 메뉴 <span class="en">graph</span></div>
+  <div class="d">대분류▸중분류▸소분류 3단 탐색 · 구조도 반영.</div></a>
+ <a class="card" href="obsidian.html">
+  <div class="ic">🪐</div>
+  <div class="t">설계 그래프 <span class="en">obsidian</span></div>
+  <div class="d">노드 네트워크 · 드래그·확대·호버 강조.</div></a>
+ <a class="card cloud" href="apps.html">
+  <div class="ic">📥</div>
+  <div class="t">앱 파일 삽입 <span class="en">apps</span></div>
+  <div class="d">HTML 앱 올리면 클라우드 저장 · 전 PC 공유.</div></a>
+</div>
+
+<div class="sec">클라우드 업무 (실데이터 · 전 PC 공유)</div>
+
+<div class="acc" id="accExec">
+ <div class="acc-h" onclick="toggleAcc('accExec')">
+  <span class="ic">📈</span>
+  <div style="flex:1"><div class="t">경영자 대시보드 <span class="en">전사·부서 KPI</span></div>
+   <div class="d">스위치를 켜면 하위 항목(전사지표·6개 부서·분석)이 펼쳐집니다 · 실데이터.</div></div>
+  <span class="sw"><span id="swTxt">펼치기</span><span class="track"></span></span>
+ </div>
+ <div class="acc-body">
+  <div class="sgrid">
+   <a class="sub full" href="exec-dashboard.html">🏠 대시보드 전체 열기</a>
+   <a class="sub" href="exec-dashboard.html#top">📌 전사 핵심 경영지표</a>
+   <a class="sub" href="exec-dashboard.html#reg">🧾 경영 요약·등록 현황</a>
+  </div>
+  <div class="mh">부서별 KPI 스코어카드</div>
+  <div class="sgrid">
+   <a class="sub" href="production.html">⚙️ 생산부 <span style="color:var(--green);font-size:11px">● 입력</span></a>
+   <a class="sub" href="exec-dashboard.html#dept">📋 품질부</a>
+   <a class="sub" href="exec-dashboard.html#dept">🛠️ 생산기술부</a>
+   <a class="sub" href="exec-dashboard.html#dept">🧮 원가관리부</a>
+   <a class="sub" href="exec-dashboard.html#dept">🧑‍💼 관리부</a>
+   <a class="sub" href="exec-dashboard.html#dept">🛡️ 안전·환경</a>
+  </div>
+  <div class="mh">분석 · 공유</div>
+  <div class="sgrid">
+   <a class="sub" href="exec-dashboard.html#ana">📊 경영 분석</a>
+   <a class="sub" href="exec-dashboard.html#due">🚚 납기 임박 수주</a>
+  </div>
+ </div>
+</div>
+
+<div class="grid">
+ <a class="card cloud" href="dashboard.html">
+  <div class="ic">🖥️</div>
+  <div class="t">종합대시보드(현장용) <span class="en">설비·라인 실시간</span></div>
+  <div class="d">설비 가동현황·라인별 생산·비가동 사유 등 현장 모니터링.</div></a>
+ <!-- [숨김·비활성 2026-07] 생산관리 카드 — 파일(production.html)은 보존. 다시 살리려면 이 주석만 풀면 됨
+ <a class="card cloud" href="production.html">
+  <div class="ic">⚙️</div>
+  <div class="t">생산관리 <span class="en">생산실적 입력·이력</span></div>
+  <div class="d">일자별 생산·목표·불량 입력 → 클라우드 저장 · 년도·월별 이력 조회.</div></a>
+ -->
+ <a class="card cloud" href="prod-report.html">
+  <div class="ic">📅</div>
+  <div class="t">월간 생산보고 <span class="en">v4 · 클라우드</span></div>
+  <div class="d">월간 생산보고서·OEE·잔업·CAPA · 저장을 클라우드로 연동(전 PC 공유).</div></a>
+ <a class="card cloud" href="생산계획현황.html">
+  <div class="ic">📊</div>
+  <div class="t">생산계획현황 <span class="en">plan · 7월 REV.1</span></div>
+  <div class="d">7월 생산계획 종합 — 종합현황·사출/조립 월계획·설비CAPA (전 PC 공유).</div></a>
+ <a class="card cloud" href="prod-plan.html">
+  <div class="ic">🗓️</div>
+  <div class="t">생산계획·실적 <span class="en">일일계획·생산일보</span></div>
+  <div class="d">일일 생산계획·생산일보·불량분석·품목·BOM · 클라우드 저장(전 PC 공유).</div></a>
+ <a class="card cloud" href="bom.html">
+  <div class="ic">📋</div>
+  <div class="t">BOM LIST <span class="en">bom</span></div>
+  <div class="d">부품표 조회·등록·편집 (실데이터).</div></a>
+ <a class="card cloud" href="itemmaster.html">
+  <div class="ic">📦</div>
+  <div class="t">품목 마스터 <span class="en">item</span></div>
+  <div class="d">품번 등록·관리.</div></a>
+ <a class="card cloud" href="완제품재고.html">
+  <div class="ic">🏷️</div>
+  <div class="t">완제품 재고·출고 <span class="en">stock</span></div>
+  <div class="d">완제품 입·출고·재고 (전 PC 공유).</div></a>
+</div>
+
+<div class="sec">영업 · 수주 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="수주관리.html">
+  <div class="ic">📝</div>
+  <div class="t">수주관리 <span class="en">PO 등록·변경</span></div>
+  <div class="d">수주(PO) 등록·변경·취소 관리.</div></a>
+ <a class="card cloud" href="수주잔량.html">
+  <div class="ic">📦</div>
+  <div class="t">수주잔량 <span class="en">backlog</span></div>
+  <div class="d">미납 수주잔량(Backlog) 관리.</div></a>
+ <a class="card cloud" href="긴급수주.html">
+  <div class="ic">🚨</div>
+  <div class="t">긴급수주 <span class="en">urgent</span></div>
+  <div class="d">긴급수주 수용 여부 판단.</div></a>
+ <a class="card cloud" href="수요예측.html">
+  <div class="ic">🔮</div>
+  <div class="t">수요예측 <span class="en">forecast</span></div>
+  <div class="d">수요예측(포캐스트) 관리.</div></a>
+</div>
+
+<div class="sec">판매 · 출하 · 매출 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="판매관리.html">
+  <div class="ic">🛒</div>
+  <div class="t">판매관리 <span class="en">sales</span></div>
+  <div class="d">판매 등록·관리.</div></a>
+ <a class="card cloud" href="매출관리.html">
+  <div class="ic">💰</div>
+  <div class="t">매출관리 <span class="en">revenue</span></div>
+  <div class="d">매출 집계·관리.</div></a>
+ <a class="card cloud" href="납품관리.html">
+  <div class="ic">🚚</div>
+  <div class="t">납품관리 <span class="en">delivery</span></div>
+  <div class="d">납품 등록·관리.</div></a>
+ <a class="card cloud" href="납품현황.html">
+  <div class="ic">📋</div>
+  <div class="t">납품현황 <span class="en">delivery view</span></div>
+  <div class="d">납품 현황 조회.</div></a>
+ <a class="card cloud" href="출하지시.html">
+  <div class="ic">📤</div>
+  <div class="t">출하지시 <span class="en">shipping</span></div>
+  <div class="d">출하 지시 연계.</div></a>
+</div>
+
+<div class="sec">품질 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="품질관리.html">
+  <div class="ic">✅</div>
+  <div class="t">품질관리 <span class="en">quality</span></div>
+  <div class="d">품질 관리 종합.</div></a>
+ <a class="card cloud" href="수입검사.html">
+  <div class="ic">🔍</div>
+  <div class="t">수입검사 <span class="en">incoming</span></div>
+  <div class="d">수입검사 관리.</div></a>
+ <a class="card cloud" href="수입검사절차서.html">
+  <div class="ic">📑</div>
+  <div class="t">수입검사 절차서 <span class="en">procedure</span></div>
+  <div class="d">수입검사 업무 절차서(편집형).</div></a>
+ <a class="card" href="SPC측정관리.html">
+  <div class="ic">📈</div>
+  <div class="t">SPC / CPK 측정 <span class="en">spc · 로컬</span></div>
+  <div class="d">SPC/CPK 측정·차트 (※ 현재 로컬 저장).</div></a>
+ <a class="card" href="IATF16949_requirements_요구사항-2.html">
+  <div class="ic">📗</div>
+  <div class="t">IATF 16949 요구사항 <span class="en">참조문서</span></div>
+  <div class="d">IATF 16949:2016 요구사항 원문 + 문서 관리대장(읽기용 참고).</div></a>
+ <a class="card cloud" href="문서관리대장.html">
+  <div class="ic">✎</div>
+  <div class="t">IATF 문서관리대장 <span class="en">2026 사후심사</span></div>
+  <div class="d">절차서 68종(조항·문서번호·Rev·제개정일) · 담당·상태·심사확인 수기 작성 · 전 PC 공유.</div></a>
+ <a class="card cloud" href="apqp.html">
+  <div class="ic">📋</div>
+  <div class="t">APQP·PPAP <span class="en">apqp</span></div>
+  <div class="d">사전품질기획 단계 + PPAP 18요소 제출 관리 · 전 PC 공유.</div></a>
+ <a class="card cloud" href="isir.html">
+  <div class="ic">🔬</div>
+  <div class="t">ISIR 초도품 검사 <span class="en">isir</span></div>
+  <div class="d">초도품 검사성적서 · 치수/사양 측정·합격판정 · 전 PC 공유.</div></a>
+ <a class="card cloud" href="imds.html">
+  <div class="ic">🧪</div>
+  <div class="t">IMDS 재료데이터 <span class="en">imds</span></div>
+  <div class="d">부품별 재료/물질 구성·함량·유해물질 관리 · 전 PC 공유.</div></a>
+</div>
+
+<div class="sec">인사 (실데이터 · 전 PC 공유)</div>
+<div class="grid">
+ <a class="card cloud" href="사원마스터.html">
+  <div class="ic">🧑‍💼</div>
+  <div class="t">사원 마스터 <span class="en">employee</span></div>
+  <div class="d">사원 등록·관리.</div></a>
+</div>
+
+<div class="sec">설비이상 · 안전 · 소방 (실데이터 · 휴대폰 연동)</div>
+<div class="grid">
+ <a class="card cloud" href="이상안전이력.html">
+  <div class="ic">🚨</div>
+  <div class="t">이상·안전·소방 이력 <span class="en">3분류 관리</span></div>
+  <div class="d">설비이상·안전·소방 3스위치 · 접수→조치→완료 추적 · 현장 신고 자동 반영.</div></a>
+ <a class="card cloud" href="이상안전신고.html">
+  <div class="ic">📱</div>
+  <div class="t">현장 신고 (휴대폰) <span class="en">6개 언어·사진</span></div>
+  <div class="d">휴대폰에서 즉시 신고 · 사진 첨부 · 한/영/베트남/태국/크메르/네팔 자동 → 클라우드.</div></a>
+ <a class="card cloud" href="신고QR포스터.html">
+  <div class="ic">🖨️</div>
+  <div class="t">신고 QR 포스터 <span class="en">인쇄용</span></div>
+  <div class="d">현장 부착용 A4 QR 포스터 인쇄 · 직원이 QR 찍으면 신고화면 자동 접속.</div></a>
+ <a class="card cloud" href="안전대시보드.html">
+  <div class="ic">📊</div>
+  <div class="t">설비·안전·소방 대시보드 <span class="en">종합</span></div>
+  <div class="d">신고·점검 통합 현황 · 월별 추이 곡선 차트 · 미조치/조치 필요 내역.</div></a>
+ <a class="card cloud" href="점검체크시트.html">
+  <div class="ic">📋</div>
+  <div class="t">정기점검 체크시트 <span class="en">설비/안전/소방</span></div>
+  <div class="d">구분별 점검항목 체크 · 발생위치 필터 · 공장 LAY-OUT 핀 · 조치 관리.</div></a>
+</div>
+
+<div class="sec">참고 · 옛 화면</div>
+<div class="grid">
+ <a class="card cloud" href="home.html">
+  <div class="ic">📘</div>
+  <div class="t">집·사무실 안내 <span class="en">home · 복사</span></div>
+  <div class="d">집↔사무실 공통 작업법 · 문장 복사 버튼 · SQL·주소 모음.</div></a>
+ <a class="card" href="guide.html">
+  <div class="ic">📖</div>
+  <div class="t">종합 안내서 <span class="en">guide</span></div>
+  <div class="d">계정·배포·협업·Supabase 초보자 안내.</div></a>
+ <a class="card" href="integrated.html">
+  <div class="ic">🧭</div>
+  <div class="t">통합설계 <span class="en">integrated</span></div>
+  <div class="d">메뉴+모듈 연계+BOM 한 화면(옛 버전).</div></a>
+ <a class="card" href="index.html">
+  <div class="ic">🏠</div>
+  <div class="t">옛 시작화면 <span class="en">index</span></div>
+  <div class="d">이전 메인 화면(참고용).</div></a>
+</div>
+
+<div class="sec">내 바로가기 <span style="text-transform:none;color:var(--faint)">· 원하는 화면을 직접 추가·저장(전 PC 공유)</span></div>
+<div class="grid" id="myLinks"></div>
+<div class="addrow">
+ <input id="ulName" placeholder="이름 (비우면 아래 선택 이름 사용)">
+ <select id="ulFile"></select>
+ <button onclick="ulAdd()">＋ 추가</button>
+</div>
+
+<div class="sec">현재 설계 구조 <span style="text-transform:none;color:var(--faint)">· 구조도 편집 자동 반영</span></div>
+<div id="structSummary" style="font-size:13px;color:var(--dim)">불러오는 중…</div>
+
+<div class="sec">BOM 현황 <span style="text-transform:none;color:var(--faint)">· 클라우드 실시간</span></div>
+<div id="bomSummary" style="font-size:13px;color:var(--dim)">불러오는 중…</div>
+
+<footer>승정 ERP · REV-0 간편 시작 · 클라우드 실데이터(전 PC 공유)</footer>
+
+<script src="supabase.js"></script>
+<script src="cloud.js"></script>
+<script>
+/* 펼침 스위치 (경영자 대시보드 하위 양식) */
+function toggleAcc(id){var e=document.getElementById(id);if(!e)return;e.classList.toggle("open");
+ var t=document.getElementById("swTxt");if(t)t.textContent=e.classList.contains("open")?"접기":"펼치기";}
+
+/* 설계 구조 요약 (localStorage → 클라우드 반영) */
+function renderStruct(d){
+ var el=document.getElementById("structSummary");if(!el)return;
+ if(!d||!d.length){el.innerHTML='아직 편집 내용이 없습니다 — <a href="rev0-map.html" style="color:var(--blue);text-decoration:none">구조도</a>에서 편집하면 자동 반영됩니다.';return;}
+ var scr=0,live=0;d.forEach(function(c){(c.mids||[]).forEach(function(m){(m.items||[]).forEach(function(it){scr++;if(it.st!=="todo")live++;});});});
+ var h='<div style="margin-bottom:8px;color:var(--txt)"><b>'+d.length+'</b> 대분류 · <b>'+scr+'</b> 화면 · 작동 '+live+'</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+ d.forEach(function(c){h+='<span style="border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:12px;background:var(--panel)"><span style="font-family:monospace;color:var(--faint)">'+(c.num||"")+'</span> '+((c.label||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"))+'</span>';});
+ el.innerHTML=h+'</div>';
+}
+(function(){var d=null;try{d=JSON.parse(localStorage.getItem("SJ_MAP_STRUCT"));}catch(e){}renderStruct(d);
+ if(window.Cloud){Cloud.get("map_struct").then(function(v){if(v&&v.length)renderStruct(v);});Cloud.on("map_struct",function(v){if(v&&v.length)renderStruct(v);});}})();
+
+/* BOM 현황 */
+(function(){var el=document.getElementById("bomSummary");if(!el||!window.SB)return;
+ window.SB.from("bom").select("lv").then(function(r){
+  if(r.error){el.innerHTML='BOM 클라우드 미연결 · <a href="bom.html" style="color:var(--blue)">BOM 열기</a>';return;}
+  var d=r.data||[],lv0=0;d.forEach(function(x){if((parseInt(x.lv,10)||0)===0)lv0++;});
+  el.innerHTML='<div style="color:var(--txt)"><b>'+lv0+'</b> 완제품 · <b>'+d.length+'</b> 총 항목 · <b>'+(d.length-lv0)+'</b> 부품 — <a href="bom.html" style="color:var(--blue)">BOM 열기 →</a></div>';
+ });})();
+
+/* 내 바로가기 (클라우드 app_state.user_links 저장) */
+(function(){
+ var FILES=[["exec-dashboard.html","📈 경영자 대시보드"],["dashboard.html","🖥️ 종합대시보드(현장용)"],["prod-report.html","📅 월간 생산보고"],["생산계획현황.html","📊 생산계획현황"],["prod-plan.html","🗓️ 생산계획·실적"],["production.html","⚙️ 생산관리(생산실적)"],["bom.html","📋 BOM LIST"],["itemmaster.html","📦 품목 마스터"],["완제품재고.html","🏷️ 완제품 재고·출고"],["수주관리.html","📝 수주관리"],["수주잔량.html","📦 수주잔량"],["긴급수주.html","🚨 긴급수주"],["수요예측.html","🔮 수요예측"],["판매관리.html","🛒 판매관리"],["매출관리.html","💰 매출관리"],["납품관리.html","🚚 납품관리"],["납품현황.html","📋 납품현황"],["출하지시.html","📤 출하지시"],["품질관리.html","✅ 품질관리"],["수입검사.html","🔍 수입검사"],["수입검사절차서.html","📑 수입검사 절차서"],["IATF16949_requirements_요구사항-2.html","📗 IATF 16949 요구사항"],["문서관리대장.html","✎ 문서 관리대장"],["apqp.html","📋 APQP·PPAP"],["isir.html","🔬 ISIR 초도품검사"],["imds.html","🧪 IMDS 재료데이터"],["SPC측정관리.html","📈 SPC/CPK 측정"],["사원마스터.html","🧑‍💼 사원 마스터"],["이상안전이력.html","🚨 이상·안전·소방 이력"],["이상안전신고.html","📱 현장 신고(휴대폰·6개국어)"],["신고QR포스터.html","🖨️ 신고 QR 포스터"],["안전대시보드.html","📊 설비·안전·소방 대시보드"],["점검체크시트.html","📋 정기점검 체크시트"],["app.html","🖥️ REV-0 본체"],["legacy.html","🏭 기존 큰 앱"],["rev0-map.html","🗺️ 구조도"],["graph.html","🕸️ 설계 그래프"],["obsidian.html","🪐 설계 그래프(obsidian)"],["apps.html","📥 앱 파일 삽입"],["home.html","📘 집·사무실 안내"],["guide.html","📖 안내서"],["integrated.html","🧭 통합설계"],["index.html","🏠 옛 시작화면"],["__custom__","✏️ 직접 주소 입력…"]];
+ var links=[];
+ function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+ var sel=document.getElementById("ulFile");
+ if(sel)sel.innerHTML=FILES.map(function(f){return '<option value="'+f[0]+'">'+f[1]+'</option>';}).join("");
+ function render(){var box=document.getElementById("myLinks");if(!box)return;
+  if(!links.length){box.innerHTML='<div style="color:var(--faint);font-size:12.5px;padding:6px 2px">아직 없음 — 아래에서 골라 <b>＋ 추가</b> 하세요.</div>';return;}
+  box.innerHTML=links.map(function(l,i){return '<div class="card" style="position:relative;cursor:pointer" onclick="location.href=&quot;'+esc(l.url)+'&quot;"><div class="ic">🔗</div><div class="t">'+esc(l.name)+'</div><div class="d">'+esc(l.url)+'</div><button title="삭제" onclick="event.stopPropagation();ulDel('+i+')" style="position:absolute;top:8px;right:8px;background:none;border:1px solid var(--line);color:var(--faint);border-radius:6px;width:22px;height:22px;cursor:pointer">✕</button></div>';}).join("");}
+ function save(){try{localStorage.setItem("SJ_USER_LINKS",JSON.stringify(links));}catch(e){} if(window.Cloud)Cloud.set("user_links",links);}
+ window.ulAdd=function(){var s=document.getElementById("ulFile"),url=s.value,nm=(document.getElementById("ulName").value||"").trim();
+  if(url==="__custom__"){url=prompt("주소나 파일명 입력 (예: bom.html 또는 https://…)");if(!url)return;if(!nm)nm=url;}
+  else if(!nm){nm=s.options[s.selectedIndex].text.replace(/^\S+\s/,"");}
+  links.push({name:nm,url:url});save();document.getElementById("ulName").value="";render();};
+ window.ulDel=function(i){if(!confirm("이 바로가기를 삭제할까요?"))return;links.splice(i,1);save();render();};
+ try{var r=localStorage.getItem("SJ_USER_LINKS");if(r)links=JSON.parse(r)||[];}catch(e){}
+ render();
+ if(window.Cloud){Cloud.get("user_links").then(function(v){if(v&&v.length){links=v;render();}});Cloud.on("user_links",function(v){if(v){links=v;render();}});}
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+(function(){
+ var box=document.getElementById('hubqr');if(!box)return;
+ var URL_='https://jachungu29.github.io/seungjeong-erp/sos.html';
+ try{
+  var qr=qrcode(0,'M');qr.addData(URL_);qr.make();
+  box.innerHTML=qr.createSvgTag({cellSize:4,margin:1,scalable:true});
+ }catch(e){
+  box.innerHTML='<div style="font-size:9px;color:#c0392b;text-align:center;padding:8px">QR 생성 실패<br>인터넷 확인</div>';
+ }
+})();
+</script>
+</div></body></html>

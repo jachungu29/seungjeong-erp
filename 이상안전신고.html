@@ -1,0 +1,432 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="승정 이상·안전·소방 신고">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c0392b">
+<link rel="apple-touch-icon" href="sj-icon.png">
+<link rel="icon" href="sj-icon.png">
+<title>㈜승정 · 설비이상·안전·소방 통합 신고</title>
+<style>
+:root{
+ --bg:#f0eee9;--card:#ffffff;--line:#e7e3db;--line2:#efece5;
+ --txt:#1d1f24;--dim:#8b8f96;--faint:#a7abb2;
+ --machine:#a9583e;--safety:#0071ce;--fire:#d64545;--blue:#2f6feb;--green:#2f9e44;
+ --kr:Pretendard,"Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:15px;line-height:1.5}
+.wrap{max-width:520px;margin:0 auto;padding:0 0 60px}
+.top{background:#1a1d22;color:#fff;padding:16px 18px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+.top .mk{width:34px;height:34px;border-radius:9px;background:#c0392b;display:flex;align-items:center;justify-content:center;font-weight:800}
+.top b{font-size:16px}.top .v{margin-left:auto;font-size:10px;opacity:.6}
+/* 언어 선택 */
+.langbar{display:flex;gap:6px;overflow-x:auto;padding:10px 12px 0;background:var(--bg);-webkit-overflow-scrolling:touch}
+.langbar button{flex:0 0 auto;border:1.5px solid var(--line);background:#fff;border-radius:22px;padding:8px 13px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;color:#555}
+.langbar button.on{background:#1a1d22;color:#fff;border-color:#1a1d22}
+.body{padding:14px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:13px}
+.card .t{font-size:14px;font-weight:800;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.card .t .n{width:24px;height:24px;border-radius:7px;background:#1a1d22;color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center}
+label{display:block;font-size:12px;color:var(--dim);margin:0 0 4px}
+select,input,textarea{width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 13px;color:var(--txt);font:inherit;font-size:15px}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--blue)}
+textarea{min-height:82px;resize:vertical}
+/* 양식 표 */
+table.form{width:100%;border-collapse:collapse;font-size:14px;background:#fff}
+table.form th{width:96px;text-align:left;vertical-align:middle;padding:10px 9px;background:#faf7f2;border:1px solid var(--line);color:#55595f;font-size:12.5px;font-weight:800;line-height:1.35}
+table.form td{padding:8px;border:1px solid var(--line);vertical-align:middle}
+table.form select,table.form input,table.form textarea{padding:10px 11px;font-size:14px;border-radius:9px}
+table.form textarea{min-height:70px}
+/* 유형 스위치 */
+.rtypes{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rt{border:2px solid var(--line);border-radius:12px;background:#fff;padding:10px 4px;text-align:center;cursor:pointer;font-weight:800;font-size:13px;transition:.12s}
+.rt .ic{font-size:22px;display:block;margin-bottom:3px}
+.rt.on[data-rt="설비이상"]{border-color:var(--machine);background:#fbeee9;color:var(--machine)}
+.rt.on[data-rt="안전"]{border-color:var(--safety);background:#e9f2fb;color:var(--safety)}
+.rt.on[data-rt="소방"]{border-color:var(--fire);background:#fdecec;color:var(--fire)}
+.rt.on[data-rt="불량발생"]{border-color:#7c3aed;background:#f1ebfb;color:#7c3aed}
+.urg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.urg .u{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 4px;text-align:center;font-weight:800;font-size:13px;cursor:pointer}
+.urg .u.on{color:#fff}.urg .u.on[data-u="긴급"]{background:var(--fire);border-color:var(--fire)}
+.urg .u.on[data-u="보통"]{background:var(--safety);border-color:var(--safety)}.urg .u.on[data-u="낮음"]{background:var(--dim);border-color:var(--dim)}
+/* 사진 첨부 */
+.photorow{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.photobtn{width:100%;background:#eef2f7;border:1.5px dashed #b3c1d1;border-radius:10px;padding:15px 10px;font:inherit;font-size:15px;font-weight:800;color:#2f6feb;cursor:pointer}
+.photobtn.cam{background:#2f6feb;color:#fff;border:1.5px solid #2f6feb}
+.photobtn.alb{background:#eef2f7;color:#2f6feb;border:1.5px dashed #b3c1d1}
+.photobtn:active{opacity:.82}
+.pthumb{margin-top:8px}
+.pthumb img{width:100%;max-height:240px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#f4f2ee;display:block}
+.pdel{margin-top:6px;width:100%;background:#fff;border:1px solid var(--fire);color:var(--fire);border-radius:9px;padding:8px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.phint{font-size:11px;color:var(--faint);margin-top:6px}
+.pbusy{font-size:12px;color:var(--blue);margin-top:6px;font-weight:700}
+/* 화면 내장 카메라 */
+.cammodal{position:fixed;inset:0;background:#000;z-index:100;display:none;flex-direction:column}
+.cammodal.on{display:flex}
+.cammodal video{flex:1;width:100%;min-height:0;object-fit:cover;background:#000}
+.camx{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);color:#fff;border:0;font-size:20px;width:46px;height:46px;border-radius:50%;cursor:pointer}
+.camtip{position:absolute;top:16px;left:0;right:0;text-align:center;color:#fff;font-size:14px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.cambar{display:flex;gap:14px;padding:18px;background:#000;justify-content:center;align-items:center}
+.camshot{width:72px;height:72px;border-radius:50%;background:#fff;border:6px solid #c0392b;cursor:pointer;box-shadow:0 0 0 3px #fff}
+.camshot:active{transform:scale(.94)}
+.installbtn{width:100%;background:#123a52;color:#fff;border:0;border-radius:12px;padding:14px;font:inherit;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:12px;box-shadow:0 2px 8px rgba(18,58,82,.25)}
+.installbtn:active{opacity:.85}
+.submit{width:100%;background:#c0392b;color:#fff;border:none;border-radius:13px;padding:17px;font:inherit;font-size:18px;font-weight:800;cursor:pointer;margin-top:4px}
+.submit:active{opacity:.85}
+.st{font-size:11px;text-align:center;color:var(--dim);margin-top:8px}
+.mine{margin-top:8px}
+.mine h3{font-size:13px;font-weight:800;margin:18px 4px 8px}
+.rep{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px}
+.rep .rr{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--dim)}
+.badge{font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px}
+.b-설비이상{background:#fbeee9;color:var(--machine)}.b-안전{background:#e9f2fb;color:var(--safety)}.b-소방{background:#fdecec;color:var(--fire)}.b-불량발생{background:#f1ebfb;color:#7c3aed}
+.stt{margin-left:auto;font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px}
+.s-접수{background:#eef0f3;color:#6b7280}.s-조치중{background:rgba(208,135,0,.16);color:#d08700}.s-완료{background:rgba(47,158,68,.14);color:var(--green)}
+.rep .rc{font-size:14px;font-weight:700;margin-top:5px}
+.rep .rthumb{margin-top:6px}.rep .rthumb img{max-width:120px;max-height:100px;border-radius:8px;border:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1a1d22;color:#fff;padding:13px 20px;border-radius:12px;font-size:14px;font-weight:700;opacity:0;transition:.2s;z-index:20;max-width:90%}
+.toast.on{opacity:1}
+.link{display:block;text-align:center;font-size:12px;color:var(--blue);text-decoration:none;margin-top:14px}
+</style></head><body>
+<div class="wrap">
+ <div class="top"><div class="mk" style="background:#fff;padding:0;overflow:hidden"><img src="sj-icon.png" alt="승정 SJ" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></div><b id="hdrTitle">이상·안전·소방 신고</b><span class="v" id="st">…</span></div>
+
+ <div class="langbar" id="langbar"></div>
+
+ <div class="body">
+  <button type="button" id="installBtn" class="installbtn" style="display:none" onclick="doInstall()">📲 홈 화면에 추가</button>
+  <div class="card">
+   <div class="t"><span class="n">📝</span><span data-k="formTitle">비상신고서</span></div>
+   <table class="form">
+    <tr><th data-k="thType">신고유형</th><td>
+     <div class="rtypes" id="rtypes">
+      <div class="rt on" data-rt="설비이상"><span class="ic">🔧</span><span class="lb"></span></div>
+      <div class="rt" data-rt="안전"><span class="ic">🦺</span><span class="lb"></span></div>
+      <div class="rt" data-rt="소방"><span class="ic">🧯</span><span class="lb"></span></div>
+      <div class="rt" data-rt="불량발생"><span class="ic">🚫</span><span class="lb"></span></div>
+     </div></td></tr>
+    <tr><th data-k="thCat">대분류</th><td><select id="f_cat" onchange="onCat()"></select></td></tr>
+    <tr><th data-k="thSub">세부항목</th><td><select id="f_sub"></select></td></tr>
+    <tr><th data-k="thContent">현상·내용</th><td><textarea id="f_content"></textarea></td></tr>
+    <tr><th data-k="thLoc">위치·설비</th><td><input id="f_loc"></td></tr>
+    <tr><th data-k="thUrg">긴급도</th><td>
+     <div class="urg" id="urg">
+      <div class="u" data-u="긴급"><span class="ue">🔴</span> <span class="ul"></span></div>
+      <div class="u on" data-u="보통"><span class="ue">🔵</span> <span class="ul"></span></div>
+      <div class="u" data-u="낮음"><span class="ue">⚪</span> <span class="ul"></span></div>
+     </div></td></tr>
+    <tr><th data-k="thPhoto">사진 첨부</th><td>
+     <input type="file" id="f_photo_cam" accept="image/*" capture="environment" style="display:none" onchange="onPhoto(this)">
+     <input type="file" id="f_photo_alb" accept="image/*" style="display:none" onchange="onPhoto(this)">
+     <div class="photorow">
+      <button type="button" class="photobtn cam" id="photoCamBtn" onclick="openCamera()">📷 사진 촬영</button>
+      <button type="button" class="photobtn alb" id="photoAlbBtn" onclick="document.getElementById('f_photo_alb').click()">🖼️ 앨범</button>
+     </div>
+     <div class="pbusy" id="photoBusy" style="display:none">…</div>
+     <div id="photoPrev"></div>
+     <div class="phint" id="photoHint"></div>
+    </td></tr>
+    <tr><th data-k="thReporter">신고자</th><td><input id="f_reporter"></td></tr>
+    <tr><th data-k="thAt">발생일시</th><td><input type="datetime-local" id="f_at"></td></tr>
+   </table>
+  </div>
+
+  <button class="submit" id="submitBtn" onclick="submitReport()">🚨 신고하기</button>
+  <div class="st" id="submitSt"></div>
+
+  <div class="mine">
+   <h3 id="myTitle">📋 내가 신고한 내역</h3>
+   <div id="myList"></div>
+  </div>
+
+  <a class="link" id="adminLink" href="이상안전이력.html">🖥️ 관리자 이력 화면 열기 →</a>
+ </div>
+</div>
+<div class="cammodal" id="cammodal">
+ <div class="camtip" id="camtip">📷</div>
+ <video id="camvideo" playsinline autoplay muted></video>
+ <button class="camx" onclick="closeCamera()">✕</button>
+ <div class="cambar"><button class="camshot" id="camshot" onclick="capturePhoto()" title="촬영"></button></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="supabase.js"></script>
+<script src="cloud.js"></script>
+<script>
+/* ===== 다국어(6) ===== 저장은 항상 한국어 값으로, 화면만 번역 ===== */
+var LANGS=[['ko','🇰🇷 한국어'],['en','🇬🇧 English'],['vi','🇻🇳 Tiếng Việt'],['th','🇹🇭 ไทย'],['km','🇰🇭 ខ្មែរ'],['ne','🇳🇵 नेपाली']];
+var T={
+ title:{ko:'이상·안전·소방 신고',en:'Equipment·Safety·Fire Report',vi:'Báo cáo Thiết bị·An toàn·PCCC',th:'แจ้งเหตุ อุปกรณ์·ความปลอดภัย·อัคคีภัย',km:'រាយការណ៍ ឧបករណ៍·សុវត្ថិភាព·អគ្គិភ័យ',ne:'उपकरण·सुरक्षा·अग्नि रिपोर्ट'},
+ formTitle:{ko:'비상신고서',en:'Emergency Report',vi:'Phiếu báo khẩn cấp',th:'แบบฟอร์มแจ้งเหตุฉุกเฉิน',km:'ទម្រង់រាយការណ៍បន្ទាន់',ne:'आपतकालीन रिपोर्ट'},
+ thType:{ko:'신고유형',en:'Type',vi:'Loại',th:'ประเภท',km:'ប្រភេទ',ne:'प्रकार'},
+ thCat:{ko:'대분류',en:'Category',vi:'Nhóm',th:'หมวด',km:'ប្រភេទធំ',ne:'वर्ग'},
+ thSub:{ko:'세부항목',en:'Detail',vi:'Chi tiết',th:'รายละเอียด',km:'លម្អិត',ne:'विवरण'},
+ thContent:{ko:'현상·내용',en:'Description',vi:'Mô tả',th:'รายละเอียดปัญหา',km:'ការពិពណ៌នា',ne:'विवरण'},
+ thLoc:{ko:'위치·설비',en:'Location',vi:'Vị trí',th:'ตำแหน่ง',km:'ទីតាំង',ne:'स्थान'},
+ thUrg:{ko:'긴급도',en:'Urgency',vi:'Mức khẩn',th:'ความเร่งด่วน',km:'ភាពបន្ទាន់',ne:'अत्यावश्यकता'},
+ thPhoto:{ko:'사진 첨부',en:'Photo',vi:'Ảnh',th:'รูปภาพ',km:'រូបភាព',ne:'फोटो'},
+ thReporter:{ko:'신고자',en:'Reporter',vi:'Người báo',th:'ผู้แจ้ง',km:'អ្នករាយការណ៍',ne:'रिपोर्टकर्ता'},
+ thAt:{ko:'발생일시',en:'Date·Time',vi:'Thời gian',th:'วันเวลา',km:'ពេលវេលា',ne:'मिति·समय'},
+ tyMachine:{ko:'설비이상',en:'Equipment',vi:'Thiết bị',th:'อุปกรณ์',km:'ឧបករណ៍',ne:'उपकरण'},
+ tySafety:{ko:'안전',en:'Safety',vi:'An toàn',th:'ปลอดภัย',km:'សុវត្ថិភាព',ne:'सुरक्षा'},
+ tyFire:{ko:'소방',en:'Fire',vi:'PCCC',th:'อัคคีภัย',km:'អគ្គិភ័យ',ne:'अग्नि'},
+ tyDefect:{ko:'불량발생',en:'Defect',vi:'Lỗi',th:'ของเสีย',km:'ខូច',ne:'त्रुटि'},
+ uHigh:{ko:'긴급',en:'Urgent',vi:'Khẩn',th:'ด่วน',km:'បន្ទាន់',ne:'जरुरी'},
+ uMid:{ko:'보통',en:'Normal',vi:'Thường',th:'ปกติ',km:'ធម្មតា',ne:'सामान्य'},
+ uLow:{ko:'낮음',en:'Low',vi:'Thấp',th:'ต่ำ',km:'ទាប',ne:'कम'},
+ photoCam:{ko:'📷 사진 촬영',en:'📷 Take Photo',vi:'📷 Chụp ảnh',th:'📷 ถ่ายรูป',km:'📷 ថតរូប',ne:'📷 फोटो खिच्ने'},
+ photoAlbum:{ko:'🖼️ 앨범',en:'🖼️ Album',vi:'🖼️ Thư viện',th:'🖼️ อัลบั้ม',km:'🖼️ អាល់ប៊ុម',ne:'🖼️ एल्बम'},
+ camTip:{ko:'현장을 비추고 아래 버튼을 누르세요',en:'Aim at the scene, press the button',vi:'Hướng vào hiện trường, nhấn nút',th:'เล็งไปที่จุดเกิดเหตุ กดปุ่ม',km:'តម្រង់ទៅកន្លែង ចុចប៊ូតុង',ne:'दृश्यमा तेर्स्याएर बटन थिच्नुहोस्'},
+ camFail:{ko:'카메라를 열 수 없어 파일 선택으로 전환합니다',en:'Camera unavailable — using file picker',vi:'Không mở được camera — chọn tệp',th:'เปิดกล้องไม่ได้ — เลือกไฟล์',km:'មិនអាចបើកកាមេរ៉ា — ជ្រើសឯកសារ',ne:'क्यामेरा खुलेन — फाइल छान्नुहोस्'},
+ installBtn:{ko:'📲 홈 화면에 추가 (앱처럼 사용)',en:'📲 Add to Home Screen',vi:'📲 Thêm vào màn hình chính',th:'📲 เพิ่มลงหน้าจอหลัก',km:'📲 បន្ថែមទៅអេក្រង់ដើម',ne:'📲 होम स्क्रिनमा थप्नुहोस्'},
+ installIOS:{ko:'아이폰: 하단 공유버튼(⬆️)을 누른 뒤 "홈 화면에 추가"를 선택하세요.',en:'iPhone: tap Share (⬆️) then "Add to Home Screen".',vi:'iPhone: nhấn Chia sẻ (⬆️) rồi "Thêm vào màn hình chính".',th:'iPhone: กดปุ่มแชร์ (⬆️) แล้วเลือก "เพิ่มลงหน้าจอหลัก"',km:'iPhone: ចុចប៊ូតុងចែករំលែក (⬆️) រួចជ្រើស "បន្ថែមទៅអេក្រង់ដើម"',ne:'iPhone: सेयर बटन (⬆️) थिचेर "Add to Home Screen" रोज्नुहोस्।'},
+ installAndroid:{ko:'브라우저 메뉴(⋮)를 누른 뒤 "홈 화면에 추가"를 선택하세요.',en:'Browser menu (⋮) then "Add to Home Screen".',vi:'Menu trình duyệt (⋮) rồi "Thêm vào màn hình chính".',th:'เมนูเบราว์เซอร์ (⋮) แล้วเลือก "เพิ่มลงหน้าจอหลัก"',km:'ម៉ឺនុយកម្មវិធីរុករក (⋮) រួចជ្រើស "បន្ថែមទៅអេក្រង់ដើម"',ne:'ब्राउजर मेनु (⋮) मा गएर "Add to Home Screen" रोज्नुहोस्।'},
+ photoHint:{ko:'휴대폰 카메라로 촬영하거나 앨범에서 선택 · 자동 저장',en:'Take a photo or pick from album · saved automatically',vi:'Chụp ảnh hoặc chọn từ album · tự lưu',th:'ถ่ายรูปหรือเลือกจากอัลบั้ม · บันทึกอัตโนมัติ',km:'ថតរូប ឬជ្រើសពីអាល់ប៊ុម · រក្សាទុកស្វ័យប្រវត្តិ',ne:'फोटो खिच्नुहोस् वा एल्बमबाट रोज्नुहोस् · स्वतः सेभ'},
+ photoBusy:{ko:'사진 처리 중…',en:'Processing…',vi:'Đang xử lý…',th:'กำลังประมวลผล…',km:'កំពុងដំណើរការ…',ne:'प्रशोधन हुँदै…'},
+ contentPh:{ko:'무엇이 어떻게 이상한지 적어주세요',en:'Describe what is wrong',vi:'Mô tả sự cố',th:'อธิบายปัญหา',km:'ពិពណ៌នាបញ្ហា',ne:'के बिग्रियो लेख्नुहोस्'},
+ locPh:{ko:'예: 수직사출 3호기 / 조립라인',en:'e.g. Machine #3 / Assembly',vi:'VD: Máy #3 / Dây chuyền',th:'เช่น เครื่อง #3',km:'ឧ. ម៉ាស៊ីន #3',ne:'जस्तै: मेसिन #3'},
+ reporterPh:{ko:'이름',en:'Name',vi:'Tên',th:'ชื่อ',km:'ឈ្មោះ',ne:'नाम'},
+ selectPh:{ko:'선택',en:'Select',vi:'Chọn',th:'เลือก',km:'ជ្រើសរើស',ne:'छान्नुहोस्'},
+ submit:{ko:'🚨 신고하기',en:'🚨 Submit Report',vi:'🚨 Gửi báo cáo',th:'🚨 ส่งแจ้งเหตุ',km:'🚨 ដាក់ស្នើ',ne:'🚨 पेश गर्नुहोस्'},
+ myTitle:{ko:'📋 내가 신고한 내역',en:'📋 My Reports',vi:'📋 Báo cáo của tôi',th:'📋 รายการของฉัน',km:'📋 របាយការណ៍របស់ខ្ញុំ',ne:'📋 मेरा रिपोर्ट'},
+ myEmpty:{ko:'아직 신고 내역이 없습니다.',en:'No reports yet.',vi:'Chưa có báo cáo.',th:'ยังไม่มีรายการ',km:'មិនទាន់មានរបាយការណ៍',ne:'अहिलेसम्म रिपोर्ट छैन।'},
+ adminLink:{ko:'🖥️ 관리자 이력 화면 열기 →',en:'🖥️ Admin history →',vi:'🖥️ Trang quản lý →',th:'🖥️ หน้าผู้ดูแล →',km:'🖥️ ទំព័រអ្នកគ្រប់គ្រង →',ne:'🖥️ प्रशासक इतिहास →'},
+ needContent:{ko:'현상·내용을 입력하세요',en:'Please enter a description',vi:'Vui lòng nhập mô tả',th:'กรุณากรอกรายละเอียด',km:'សូមបញ្ចូលការពិពណ៌នា',ne:'कृपया विवरण लेख्नुहोस्'},
+ needReporter:{ko:'신고자 이름을 입력하세요',en:'Please enter your name',vi:'Vui lòng nhập tên',th:'กรุณากรอกชื่อ',km:'សូមបញ្ចូលឈ្មោះ',ne:'कृपया नाम लेख्नुहोस्'},
+ noCloud:{ko:'⚠️ 클라우드 미연결 — 이 기기에만 저장',en:'⚠️ Offline — saved on this device only',vi:'⚠️ Ngoại tuyến — chỉ lưu máy này',th:'⚠️ ออฟไลน์ — บันทึกเฉพาะเครื่องนี้',km:'⚠️ គ្មានអ៊ីនធឺណិត — រក្សាទុកតែឧបករណ៍នេះ',ne:'⚠️ अफलाइन — यही यन्त्रमा मात्र सेभ'},
+ submitted:{ko:'✅ 신고 접수됨 — 관리자에게 전달',en:'✅ Report submitted — sent to admin',vi:'✅ Đã gửi — chuyển tới quản lý',th:'✅ ส่งแล้ว — ถึงผู้ดูแล',km:'✅ បានដាក់ស្នើ — ផ្ញើទៅអ្នកគ្រប់គ្រង',ne:'✅ पेश भयो — प्रशासकलाई पठाइयो'},
+ sendFail:{ko:'전송 실패, 다시 시도',en:'Send failed, try again',vi:'Gửi lỗi, thử lại',th:'ส่งไม่สำเร็จ ลองใหม่',km:'ផ្ញើបរាជ័យ សាកម្តងទៀត',ne:'पठाउन असफल, फेरि प्रयास'},
+ photoFail:{ko:'사진을 불러오지 못했습니다',en:'Could not load photo',vi:'Không tải được ảnh',th:'โหลดรูปไม่ได้',km:'មិនអាចផ្ទុករូប',ne:'फोटो लोड भएन'},
+ sending:{ko:'전송 중…',en:'Sending…',vi:'Đang gửi…',th:'กำลังส่ง…',km:'កំពុងផ្ញើ…',ne:'पठाउँदै…'},
+ receiptNo:{ko:'접수번호 ',en:'Receipt No. ',vi:'Mã số ',th:'เลขที่ ',km:'លេខ ',ne:'नं. '},
+ cloudOk:{ko:'클라우드 연결됨 ✓',en:'Connected ✓',vi:'Đã kết nối ✓',th:'เชื่อมต่อ ✓',km:'បានភ្ជាប់ ✓',ne:'जडान ✓'},
+ localMode:{ko:'로컬 모드',en:'Offline',vi:'Ngoại tuyến',th:'ออฟไลน์',km:'គ្មានអ៊ីនធឺណិត',ne:'अफलाइन'},
+ delPhoto:{ko:'✕ 사진 삭제',en:'✕ Remove',vi:'✕ Xóa ảnh',th:'✕ ลบรูป',km:'✕ លុប',ne:'✕ हटाउनुहोस्'},
+ photoTag:{ko:'📷 사진첨부',en:'📷 Photo',vi:'📷 Ảnh',th:'📷 รูป',km:'📷 រូបភាព',ne:'📷 फोटो'}
+};
+var STT={'접수':{ko:'접수',en:'Received',vi:'Đã nhận',th:'รับแล้ว',km:'បានទទួល',ne:'प्राप्त'},
+ '조치중':{ko:'조치중',en:'In progress',vi:'Đang xử lý',th:'ดำเนินการ',km:'កំពុងដោះស្រាយ',ne:'प्रगतिमा'},
+ '완료':{ko:'완료',en:'Done',vi:'Hoàn tất',th:'เสร็จ',km:'រួចរាល់',ne:'सम्पन्न'}};
+/* 대분류 번역 (값은 한국어로 저장) */
+var CATL={
+ '설비':{en:'Equipment',vi:'Thiết bị',th:'อุปกรณ์',km:'ឧបករណ៍',ne:'उपकरण'},
+ '금형':{en:'Mold',vi:'Khuôn',th:'แม่พิมพ์',km:'ផ្សិត',ne:'मोल्ड'},
+ '자재/재료':{en:'Material',vi:'Vật tư',th:'วัสดุ',km:'សម្ភារៈ',ne:'सामग्री'},
+ '작업방법/사람':{en:'Method/People',vi:'Cách/Người',th:'วิธี/คน',km:'វិធី/មនុស្ស',ne:'विधि/मानिस'},
+ '계측/품질':{en:'Measure/Quality',vi:'Đo/Chất lượng',th:'วัด/คุณภาพ',km:'វាស់/គុណភាព',ne:'मापन/गुणस्तर'},
+ '외관 불량':{en:'Appearance',vi:'Ngoại quan',th:'ผิวภายนอก',km:'រូបរាង',ne:'बाह्य दोष'},
+ '치수 불량':{en:'Dimension',vi:'Kích thước',th:'ขนาด',km:'ទំហំ',ne:'आयाम दोष'},
+ '성형 불량':{en:'Molding',vi:'Ép/Đúc',th:'การขึ้นรูป',km:'ចាក់ផ្សិត',ne:'मोल्डिङ दोष'},
+ '기능 불량':{en:'Function',vi:'Chức năng',th:'การทำงาน',km:'មុខងារ',ne:'कार्य दोष'},
+ '기타 불량':{en:'Other defect',vi:'Lỗi khác',th:'อื่นๆ',km:'ផ្សេងទៀត',ne:'अन्य दोष'},
+ '시설·설비안전':{en:'Facility safety',vi:'An toàn cơ sở',th:'ความปลอดภัยสถานที่',km:'សុវត្ថិភាពទីតាំង',ne:'सुविधा सुरक्षा'},
+ '기계·기구안전':{en:'Machine safety',vi:'An toàn máy',th:'ความปลอดภัยเครื่องจักร',km:'សុវត្ថិភាពម៉ាស៊ីន',ne:'मेसिन सुरक्षा'},
+ '전기안전':{en:'Electrical safety',vi:'An toàn điện',th:'ความปลอดภัยไฟฟ้า',km:'សុវត្ថិភាពអគ្គិសនី',ne:'विद्युत सुरक्षा'},
+ '화학물질·유해인자':{en:'Chemical/Hazard',vi:'Hóa chất/Độc hại',th:'สารเคมี/อันตราย',km:'គីមី/គ្រោះថ្នាក់',ne:'रसायन/खतरा'},
+ '작업환경·인간공학':{en:'Ergonomics',vi:'Môi trường LV',th:'สภาพแวดล้อม',km:'បរិស្ថានការងារ',ne:'कार्य वातावरण'},
+ '복지·보건위생':{en:'Health/Hygiene',vi:'Sức khỏe/Vệ sinh',th:'สุขอนามัย',km:'សុខភាព/អនាម័យ',ne:'स्वास्थ्य/सरसफाइ'},
+ '개인보호구':{en:'PPE',vi:'Bảo hộ',th:'อุปกรณ์ป้องกัน',km:'សម្ភារៈការពារ',ne:'सुरक्षा उपकरण'},
+ '소화설비':{en:'Fire extinguishing',vi:'Chữa cháy',th:'ระบบดับเพลิง',km:'ពន្លត់អគ្គិភ័យ',ne:'आगो निभाउने'},
+ '경보설비':{en:'Alarm',vi:'Báo động',th:'ระบบเตือนภัย',km:'ប្រព័ន្ធជូនដំណឹង',ne:'अलार्म'},
+ '피난·유도설비':{en:'Evacuation',vi:'Thoát hiểm',th:'ทางหนีไฟ',km:'ភៀសខ្លួន',ne:'निकास'},
+ '화재·폭발위험':{en:'Fire/Explosion',vi:'Cháy/Nổ',th:'ไฟไหม้/ระเบิด',km:'អគ្គិភ័យ/ផ្ទុះ',ne:'आगो/विस्फोट'},
+ '소방점검·교육':{en:'Fire drill/Edu',vi:'Kiểm tra PCCC',th:'ตรวจ/อบรมดับเพลิง',km:'ត្រួតពិនិត្យ/បណ្តុះបណ្តាល',ne:'अग्नि जाँच/तालिम'}
+};
+/* 분류 데이터: 대분류→[{k:한국어값, e:영어표시}] */
+var CATS={'설비이상':['설비','금형','자재/재료','작업방법/사람','계측/품질'],
+ '불량발생':['외관 불량','치수 불량','성형 불량','기능 불량','기타 불량'],
+ '안전':['시설·설비안전','기계·기구안전','전기안전','화학물질·유해인자','작업환경·인간공학','복지·보건위생','개인보호구'],
+ '소방':['소화설비','경보설비','피난·유도설비','화재·폭발위험','소방점검·교육']};
+var SUBS={
+ '외관 불량':[['스크래치·찍힘','Scratch/Dent'],['이물·오염','Contamination'],['색상·광택 불량','Color/Gloss'],['웰드라인·플로우마크','Weld/Flow mark'],['기타 외관','Other']],
+ '치수 불량':[['규격 초과','Over spec'],['규격 미달','Under spec'],['휨·변형','Warp/Deform'],['기타 치수','Other']],
+ '성형 불량':[['미성형·쇼트','Short shot'],['버·플래시','Burr/Flash'],['싱크마크','Sink mark'],['기포·보이드','Void/Bubble'],['기타 성형','Other']],
+ '기능 불량':[['조립 불가','Assembly fail'],['작동 불량','Malfunction'],['누설·리크','Leak'],['강도 부족','Weak strength'],['기타 기능','Other']],
+ '기타 불량':[['기타 불량','Other defect']],
+ '설비':[['가동 이상·정지','Operation fault/stop'],['이상소음·진동','Abnormal noise/vibration'],['누유·누수','Oil/water leak'],['과열·온도이상','Overheat'],['센서·전장 이상','Sensor/electrical'],['기타 설비','Other equipment']],
+ '금형':[['파손·크랙','Broken/crack'],['마모·치수 이상','Wear/dimension'],['냉각·히터 이상','Cooling/heater'],['기타 금형','Other mold']],
+ '자재/재료':[['자재 부족','Shortage'],['규격 불일치','Spec mismatch'],['오염·변질','Contamination'],['기타 자재','Other material']],
+ '작업방법/사람':[['작업표준 미준수','Standard not followed'],['교육 미흡','Training gap'],['인원 부족','Manpower shortage'],['기타','Other']],
+ '계측/품질':[['측정기 이상','Gauge fault'],['불량 발생','Defect'],['기타 품질','Other quality']],
+ '시설·설비안전':[['방호장치 이상','Guard fault'],['끼임·협착 위험','Pinch/entrapment'],['넘어짐·미끄럼','Slip/trip'],['기타 시설','Other facility']],
+ '기계·기구안전':[['비상정지 불량','E-stop fault'],['회전체 노출','Exposed rotating part'],['수공구 불량','Hand tool defect'],['기타 기계','Other machine']],
+ '전기안전':[['누전·감전 위험','Leakage/shock'],['접지 불량','Poor grounding'],['배선 손상','Wiring damage'],['기타 전기','Other electrical']],
+ '화학물질·유해인자':[['MSDS 미비','MSDS missing'],['누출·유증기','Leak/vapor'],['소음·분진','Noise/dust'],['기타 유해','Other hazard']],
+ '작업환경·인간공학':[['조명·환기 불량','Light/ventilation'],['중량물 취급','Heavy lifting'],['반복작업','Repetitive work'],['기타 환경','Other environment']],
+ '복지·보건위생':[['위생 불량','Poor hygiene'],['휴게·급수','Rest/water'],['기타 보건','Other health']],
+ '개인보호구':[['미착용','Not worn'],['손상·불량','Damaged'],['지급 부족','Not enough'],['기타 보호구','Other PPE']],
+ '소화설비':[['소화기 부족·미점검','Extinguisher issue'],['소화전 적치·불량','Hydrant issue'],['스프링클러 이상','Sprinkler fault'],['기타 소화','Other']],
+ '경보설비':[['화재감지기 이상','Detector fault'],['수신기 경보','Panel alarm'],['비상방송 이상','PA fault'],['기타 경보','Other alarm']],
+ '피난·유도설비':[['유도등 소등','Exit light off'],['피난통로 적치','Blocked route'],['비상구 잠김','Exit locked'],['기타 피난','Other']],
+ '화재·폭발위험':[['가연물 방치','Combustibles left'],['발화원 노출','Ignition source'],['환기 불량','Poor ventilation'],['기타 위험','Other risk']],
+ '소방점검·교육':[['정기점검 미실시','No inspection'],['소방교육 미이수','Training missed'],['기타','Other']]
+};
+var KEY='safety_reports', TYPE='설비이상', URG='보통', PHOTO='', LANG='ko';
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function tr(k){var o=T[k];return (o&&(o[LANG]||o.ko))||k;}
+function catName(k){if(LANG==='ko')return k;var m=CATL[k];return (m&&m[LANG])?m[LANG]:k;}
+function setSt(t,c){var e=document.getElementById("st");e.textContent=t;e.style.color=c||"#9aa0a8";}
+function nowLocal(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16);}
+document.getElementById("f_at").value=nowLocal();
+
+/* ===== 언어 ===== */
+function detectLang(){try{var s=localStorage.getItem('SJ_LANG');if(s)return s;
+ var n=(navigator.language||'ko').slice(0,2).toLowerCase();
+ var set=['ko','en','vi','th','km','ne'];
+ if(n==='km'||n==='kh')return 'km';
+ return set.indexOf(n)>=0?n:'ko';}catch(e){return 'ko';}}
+function buildLangBar(){document.getElementById('langbar').innerHTML=LANGS.map(function(l){
+ return '<button data-l="'+l[0]+'" class="'+(l[0]===LANG?'on':'')+'" onclick="setLang(\''+l[0]+'\')">'+l[1]+'</button>';}).join('');}
+function setLang(l){LANG=l;try{localStorage.setItem('SJ_LANG',l);}catch(e){}
+ document.documentElement.lang=l;buildLangBar();applyLang();}
+function applyLang(){
+ document.getElementById('hdrTitle').textContent=tr('title');
+ [].forEach.call(document.querySelectorAll('[data-k]'),function(el){el.textContent=tr(el.getAttribute('data-k'));});
+ var rts=document.querySelectorAll('#rtypes .rt .lb');rts[0].textContent=tr('tyMachine');rts[1].textContent=tr('tySafety');rts[2].textContent=tr('tyFire');if(rts[3])rts[3].textContent=tr('tyDefect');
+ var uls=document.querySelectorAll('#urg .ul');uls[0].textContent=tr('uHigh');uls[1].textContent=tr('uMid');uls[2].textContent=tr('uLow');
+ document.getElementById('photoCamBtn').textContent=tr('photoCam');
+ document.getElementById('photoAlbBtn').textContent=tr('photoAlbum');
+ document.getElementById('photoHint').textContent=tr('photoHint');
+ document.getElementById('photoBusy').textContent=tr('photoBusy');
+ document.getElementById('f_content').placeholder=tr('contentPh');
+ document.getElementById('f_loc').placeholder=tr('locPh');
+ document.getElementById('f_reporter').placeholder=tr('reporterPh');
+ document.getElementById('submitBtn').textContent=tr('submit');
+ document.getElementById('myTitle').textContent=tr('myTitle');
+ document.getElementById('adminLink').textContent=tr('adminLink');
+ document.getElementById('installBtn').textContent=tr('installBtn');
+ fillCats(); renderPhotoPrev(); renderMy();
+ setSt(window.__cloudOk?tr('cloudOk'):tr('localMode'), window.__cloudOk?'#2f9e44':'#d64545');
+}
+
+function fillCats(){var cur=document.getElementById("f_cat").value;
+ var s=document.getElementById("f_cat");
+ s.innerHTML=(CATS[TYPE]||[]).map(function(c){return '<option value="'+esc(c)+'">'+esc(catName(c))+'</option>';}).join("");
+ if(cur&&(CATS[TYPE]||[]).indexOf(cur)>=0)s.value=cur; onCat();}
+function onCat(){var c=document.getElementById("f_cat").value,s=document.getElementById("f_sub");
+ s.innerHTML='<option value="">'+esc(tr('selectPh'))+'</option>'+((SUBS[c]||[]).map(function(x){
+  return '<option value="'+esc(x[0])+'">'+esc(LANG==='ko'?x[0]:x[1])+'</option>';}).join(""));}
+document.getElementById("rtypes").addEventListener("click",function(e){var b=e.target.closest(".rt");if(!b)return;
+ TYPE=b.dataset.rt;[].forEach.call(this.children,function(x){x.classList.toggle("on",x===b);});fillCats();});
+document.getElementById("urg").addEventListener("click",function(e){var b=e.target.closest(".u");if(!b)return;
+ URG=b.dataset.u;[].forEach.call(this.children,function(x){x.classList.toggle("on",x===b);});});
+
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on");},2400);}
+
+/* 사진: 촬영/선택 → 압축(최대1024px, JPEG) → base64 */
+function compressImage(file,maxDim,quality){return new Promise(function(resolve){
+ var rd=new FileReader();
+ rd.onload=function(){var img=new Image();
+  img.onload=function(){var w=img.width,h=img.height;
+   if(w>h){if(w>maxDim){h=Math.round(h*maxDim/w);w=maxDim;}}else{if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim;}}
+   var cv=document.createElement('canvas');cv.width=w;cv.height=h;
+   try{cv.getContext('2d').drawImage(img,0,0,w,h);resolve(cv.toDataURL('image/jpeg',quality));}catch(e){resolve('');}};
+  img.onerror=function(){resolve('');};img.src=rd.result;};
+ rd.onerror=function(){resolve('');};rd.readAsDataURL(file);});}
+/* 화면 내장 카메라: 버튼 클릭 → 라이브 미리보기 → 촬영 → 압축 → 저장 */
+var CAMSTREAM=null;
+function openCamera(){
+ var md=navigator.mediaDevices;
+ if(!md||!md.getUserMedia){document.getElementById('f_photo_cam').click();return;} /* 구형: 기본 카메라 */
+ document.getElementById('camtip').textContent=tr('camTip');
+ md.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(stream){
+  CAMSTREAM=stream;var v=document.getElementById('camvideo');v.srcObject=stream;
+  var p=v.play();if(p&&p.catch)p.catch(function(){});
+  document.getElementById('cammodal').classList.add('on');
+ }).catch(function(err){
+  /* 권한 거부/카메라 없음 → 기본 카메라·파일선택으로 폴백 */
+  toast(tr('camFail'));document.getElementById('f_photo_cam').click();
+ });
+}
+function stopCam(){if(CAMSTREAM){try{CAMSTREAM.getTracks().forEach(function(t){t.stop();});}catch(e){}CAMSTREAM=null;}}
+function closeCamera(){stopCam();document.getElementById('cammodal').classList.remove('on');var v=document.getElementById('camvideo');try{v.pause();}catch(e){}v.srcObject=null;}
+function capturePhoto(){
+ var v=document.getElementById('camvideo');var w=v.videoWidth,h=v.videoHeight;
+ if(!w||!h){toast(tr('photoFail'));return;}
+ var maxDim=1024;if(w>h){if(w>maxDim){h=Math.round(h*maxDim/w);w=maxDim;}}else{if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim;}}
+ var cv=document.createElement('canvas');cv.width=w;cv.height=h;
+ try{cv.getContext('2d').drawImage(v,0,0,w,h);PHOTO=cv.toDataURL('image/jpeg',0.7);}catch(e){PHOTO='';}
+ closeCamera();
+ if(PHOTO)renderPhotoPrev();else toast(tr('photoFail'));
+}
+async function onPhoto(inp){var f=inp.files&&inp.files[0];if(!f)return;
+ document.getElementById('photoBusy').style.display='block';
+ PHOTO=await compressImage(f,1024,0.7);
+ document.getElementById('photoBusy').style.display='none';
+ if(!PHOTO){toast(tr('photoFail'));return;}
+ renderPhotoPrev();}
+function renderPhotoPrev(){var box=document.getElementById('photoPrev');
+ box.innerHTML=PHOTO?('<div class="pthumb"><img src="'+PHOTO+'" alt="photo"><button type="button" class="pdel" onclick="clearPhoto()">'+esc(tr('delPhoto'))+'</button></div>'):'';}
+function clearPhoto(){PHOTO='';['f_photo_cam','f_photo_alb'].forEach(function(id){var i=document.getElementById(id);if(i)i.value='';});renderPhotoPrev();}
+
+/* 내 신고(이 기기) */
+function myReps(){try{return JSON.parse(localStorage.getItem("SJ_MY_SAFETY")||"[]");}catch(e){return[];}}
+function saveMy(a){try{localStorage.setItem("SJ_MY_SAFETY",JSON.stringify(a.slice(-20)));}catch(e){}}
+function renderMy(){var a=myReps().slice().reverse(),box=document.getElementById("myList");
+ if(!a.length){box.innerHTML='<div style="color:var(--faint);font-size:12.5px;padding:6px 4px">'+esc(tr('myEmpty'))+'</div>';return;}
+ box.innerHTML=a.map(function(r){var stK=r.status||"접수";var stTxt=(STT[stK]&&(STT[stK][LANG]||STT[stK].ko))||stK;
+  var ph=(r.hasPhoto||r.photo)?' · '+tr('photoTag'):'';
+  return '<div class="rep"><div class="rr"><span class="badge b-'+esc(r.type)+'">'+esc(r.type)+'</span><span>'+esc(catName(r.cat)||"")+'</span><span class="stt s-'+esc(stK)+'">'+esc(stTxt)+'</span></div><div class="rc">'+esc(r.content||"")+'</div><div class="rr" style="margin-top:4px">'+esc(r.loc||"")+' · '+esc((r.at||"").replace("T"," "))+ph+'</div></div>';}).join("");}
+
+async function readAll(){ if(!window.SB)return null;
+ try{var r=await window.SB.from("app_state").select("value").eq("key",KEY).maybeSingle();
+  return (r.error)?null:((r.data&&r.data.value)||[]);}catch(e){return null;} }
+
+async function submitReport(){
+ var content=document.getElementById("f_content").value.trim();
+ var cat=document.getElementById("f_cat").value, sub=document.getElementById("f_sub").value;
+ var loc=document.getElementById("f_loc").value.trim(), reporter=document.getElementById("f_reporter").value.trim();
+ var at=document.getElementById("f_at").value||nowLocal();
+ if(!content){toast(tr('needContent'));return;}
+ if(!reporter){toast(tr('needReporter'));return;}
+ var rec={id:"R"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+  type:TYPE,cat:cat,sub:sub,content:content,loc:loc,urg:URG,reporter:reporter,at:at,
+  photo:PHOTO||"",
+  status:"접수",action:"",mgr:"",createdAt:new Date().toISOString(),src:(window.__CID||"")};
+ document.getElementById("submitSt").textContent=tr('sending');
+ var arr=await readAll();
+ if(arr===null){ toast(tr('noCloud')); }
+ else { arr.push(rec);
+  try{ await window.SB.from("app_state").upsert({key:KEY,value:arr,src:(window.__CID||""),updated_at:new Date().toISOString()});
+   toast(tr('submitted')); }catch(e){ toast(tr('sendFail')); document.getElementById("submitSt").textContent=""; return; } }
+ var recL=Object.assign({},rec); delete recL.photo; recL.hasPhoto=!!rec.photo;
+ var my=myReps(); my.push(recL); saveMy(my); renderMy();
+ document.getElementById("f_content").value=""; document.getElementById("f_loc").value="";
+ document.getElementById("f_at").value=nowLocal();
+ clearPhoto();
+ document.getElementById("submitSt").textContent=tr('receiptNo')+rec.id;
+}
+
+async function refreshStatus(){
+ var arr=await readAll();
+ if(arr===null){window.__cloudOk=false;setSt(tr('localMode'),"#d64545");return;}
+ window.__cloudOk=true;setSt(tr('cloudOk'),"#2f9e44");
+ var my=myReps(); if(my.length){var map={};arr.forEach(function(r){map[r.id]=r;});
+  my=my.map(function(r){var c=map[r.id];if(!c)return r;var m=Object.assign({},c);delete m.photo;m.hasPhoto=!!c.photo;return m;}); saveMy(my);}
+ renderMy();
+}
+
+/* PWA: 홈 화면에 추가(앱 설치) */
+var deferredPrompt=null;
+function isStandalone(){try{return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}catch(e){return false;}}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;var b=document.getElementById('installBtn');if(b&&!isStandalone())b.style.display='block';});
+window.addEventListener('appinstalled',function(){deferredPrompt=null;var b=document.getElementById('installBtn');if(b)b.style.display='none';});
+function doInstall(){
+ if(deferredPrompt){deferredPrompt.prompt();try{deferredPrompt.userChoice.finally(function(){deferredPrompt=null;document.getElementById('installBtn').style.display='none';});}catch(e){}return;}
+ var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+ toast(tr(ios?'installIOS':'installAndroid'));
+}
+function initInstallBtn(){var b=document.getElementById('installBtn');if(!b)return;
+ if(isStandalone()){b.style.display='none';return;}
+ /* 모바일이면 항상 노출(안드로이드는 위 이벤트로 기능, iOS는 안내) */
+ if(/iphone|ipad|ipod|android/i.test(navigator.userAgent))b.style.display='block';}
+
+/* init */
+LANG=detectLang();document.documentElement.lang=LANG;
+buildLangBar(); applyLang(); initInstallBtn(); renderMy(); refreshStatus();
+try{ if(window.SB) window.SB.channel("safety_rt_m")
+  .on("postgres_changes",{event:"*",schema:"public",table:"app_state",filter:"key=eq."+KEY},refreshStatus).subscribe(); }catch(e){}
+</script>
+</body></html>

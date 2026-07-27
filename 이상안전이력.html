@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>설비이상·안전·소방 통합 이력·관리</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<style>
+:root{
+ --bg:#f0eee9;--card:#ffffff;--line:#e7e3db;--line2:#efece5;
+ --txt:#1d1f24;--dim:#8b8f96;--faint:#a7abb2;
+ --machine:#a9583e;--safety:#0071ce;--fire:#d64545;--blue:#2f6feb;--green:#2f9e44;--amber:#d08700;
+ --kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px;line-height:1.45}
+.topbar{height:6px;background:#111318}
+.wrap{max-width:1280px;margin:0 auto;padding:18px 20px 90px}
+.hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hd .ic{font-size:24px}.hd h1{font-size:20px;font-weight:800;margin:0}.hd .sub{font-size:12px;color:var(--dim)}
+.hd .r{margin-left:auto;display:flex;gap:7px;align-items:center}
+.btn{font-size:12px;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--txt);cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.st{font-size:11.5px;font-family:var(--mono)}
+/* 3 스위치 */
+.switches{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin-top:15px}
+.sw{border:2px solid var(--line);border-radius:14px;background:#fff;padding:15px 16px;cursor:pointer;transition:.12s}
+.sw .ic{font-size:22px}.sw .nm{font-size:15px;font-weight:800;margin-top:5px}
+.sw .cnt{font-size:12px;color:var(--dim);margin-top:3px}
+.sw .cnt b{font-size:19px}
+.sw.on[data-t="설비이상"]{border-color:var(--machine);background:#fbeee9}
+.sw.on[data-t="안전"]{border-color:var(--safety);background:#e9f2fb}
+.sw.on[data-t="소방"]{border-color:var(--fire);background:#fdecec}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 15px;min-width:92px}
+.kpi .l{font-size:11px;color:var(--dim)}.kpi .v{font-size:19px;font-weight:800;margin-top:1px}
+.filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.filter input,.filter select{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px;color:var(--txt);font:inherit;font-size:13px}
+.filter input.search{flex:1;min-width:160px}
+.filter .cnt{margin-left:auto;font-size:12.5px;color:var(--dim);font-weight:700}
+.tblwrap{background:var(--card);border:1px solid var(--line);border-radius:13px;margin-top:12px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line2);text-align:left;vertical-align:top}
+th{color:var(--dim);font-size:11px;position:sticky;top:0;background:#faf8f4;z-index:1;white-space:nowrap}
+tbody tr:hover{background:#f7fbff}
+.badge{font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px;white-space:nowrap}
+.b-설비이상{background:#fbeee9;color:var(--machine)}.b-안전{background:#e9f2fb;color:var(--safety)}.b-소방{background:#fdecec;color:var(--fire)}
+.u-긴급{color:var(--fire);font-weight:800}.u-보통{color:var(--safety)}.u-낮음{color:var(--dim)}
+.pill{font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px}
+.s-접수{background:#eef0f3;color:#6b7280}.s-조치중{background:rgba(208,135,0,.16);color:var(--amber)}.s-완료{background:rgba(47,158,68,.14);color:var(--green)}
+.mini{font-size:11.5px;padding:4px 7px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.mini:hover{border-color:var(--blue);color:var(--blue)}
+.empty{color:var(--faint);text-align:center;padding:26px}
+.edit{background:#fffdf7;border:1px solid #f0d9a8;border-radius:12px;padding:13px 15px;margin-top:12px;display:none}
+.edit.on{display:block}
+.edit .row{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:9px;align-items:end}
+@media(max-width:760px){.edit .row{grid-template-columns:1fr 1fr}}
+.edit label{font-size:11px;color:var(--dim)}
+.edit select,.edit input{width:100%;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font:inherit;font-size:13.5px}
+.savebtn{background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
+</style></head><body>
+<div class="topbar"></div>
+<div class="wrap">
+ <div class="hd">
+  <span class="ic">🚨</span>
+  <div><h1>설비이상 · 안전 · 소방 통합 이력</h1><div class="sub">휴대폰 현장 신고 → 클라우드 이력 · 3분류 스위치 · 접수→조치중→완료 추적</div></div>
+  <div class="r"><span class="st" id="st">클라우드 …</span>
+   <a class="btn" href="이상안전신고.html" target="_blank">📱 휴대폰 신고</a>
+   <button class="btn" onclick="exportCsv()">📄 CSV</button>
+   <a class="btn" href="index2.html">← 메인</a></div>
+ </div>
+
+ <div class="switches" id="switches">
+  <div class="sw on" data-t="설비이상"><div class="ic">🔧</div><div class="nm">설비이상</div><div class="cnt"><b id="c_설비이상">0</b> 건 · 미조치 <span id="o_설비이상">0</span></div></div>
+  <div class="sw" data-t="안전"><div class="ic">🦺</div><div class="nm">안전</div><div class="cnt"><b id="c_안전">0</b> 건 · 미조치 <span id="o_안전">0</span></div></div>
+  <div class="sw" data-t="소방"><div class="ic">🧯</div><div class="nm">소방</div><div class="cnt"><b id="c_소방">0</b> 건 · 미조치 <span id="o_소방">0</span></div></div>
+ </div>
+
+ <div class="kpis" id="kpis"></div>
+
+ <div class="filter">
+  <input class="search" id="fSearch" placeholder="🔍 현상·위치·신고자·분류 검색" oninput="render()">
+  <select id="fCat" onchange="render()"><option value="">대분류 전체</option></select>
+  <select id="fStatus" onchange="render()"><option value="">상태 전체</option><option>접수</option><option>조치중</option><option>완료</option></select>
+  <select id="fUrg" onchange="render()"><option value="">긴급도 전체</option><option>긴급</option><option>보통</option><option>낮음</option></select>
+  <span class="cnt" id="cnt"></span>
+ </div>
+
+ <div class="edit" id="editCard">
+  <div style="font-size:13px;font-weight:800;margin-bottom:9px" id="editTitle">조치 입력</div>
+  <div class="row">
+   <div><label>상태</label><select id="e_status"><option>접수</option><option>조치중</option><option>완료</option></select></div>
+   <div><label>담당</label><input id="e_mgr" placeholder="조치 담당자"></div>
+   <div><label>조치 내용</label><input id="e_action" placeholder="조치 사항 입력"></div>
+   <div style="display:flex;gap:7px"><button class="savebtn" onclick="saveEdit()">저장</button><button class="btn" onclick="closeEdit()">취소</button></div>
+  </div>
+ </div>
+
+ <div class="tblwrap">
+  <table><thead><tr>
+   <th>접수번호</th><th>대분류</th><th>세부/현상</th><th>위치/공정</th><th>긴급</th><th>상태</th><th>조치</th><th>담당</th><th>신고자</th><th>발생일시</th><th></th>
+  </tr></thead><tbody id="rows"><tr><td colspan="11" class="empty">불러오는 중…</td></tr></tbody></table>
+ </div>
+</div>
+
+<script src="supabase.js"></script>
+<script src="cloud.js"></script>
+<script>
+var KEY='safety_reports', ALL=[], TAB='설비이상', EDIT=null;
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function setSt(t,c){var e=document.getElementById("st");e.textContent=t;e.style.color=(c==="g"?"#2f9e44":c==="r"?"#d64545":"#8b8f96");}
+
+document.getElementById("switches").addEventListener("click",function(e){var b=e.target.closest(".sw");if(!b)return;
+ TAB=b.dataset.t;[].forEach.call(this.children,function(x){x.classList.toggle("on",x===b);});
+ document.getElementById("fCat").value="";render();});
+
+function ofTab(){return ALL.filter(function(r){return r.type===TAB;});}
+function isOpen(r){return (r.status||"접수")!=="완료";}
+function fillCounts(){
+ ["설비이상","안전","소방"].forEach(function(t){
+  var list=ALL.filter(function(r){return r.type===t;});
+  document.getElementById("c_"+t).textContent=list.length;
+  document.getElementById("o_"+t).textContent=list.filter(isOpen).length;
+ });
+}
+function fillCatOptions(){
+ var set={}; ofTab().forEach(function(r){if(r.cat)set[r.cat]=1;});
+ var sel=document.getElementById("fCat"),cur=sel.value;
+ sel.innerHTML='<option value="">대분류 전체</option>'+Object.keys(set).sort().map(function(c){return '<option>'+esc(c)+'</option>';}).join("");
+ sel.value=cur;
+}
+function fillKpis(){
+ var list=ofTab(),tot=list.length,done=list.filter(function(r){return r.status==="완료";}).length;
+ var ing=list.filter(function(r){return r.status==="조치중";}).length, urg=list.filter(function(r){return r.urg==="긴급"&&isOpen(r);}).length;
+ var K=[["전체",tot,""],["접수",tot-done-ing,"#6b7280"],["조치중",ing,"var(--amber)"],["완료",done,"var(--green)"],["긴급 미조치",urg,"var(--fire)"]];
+ document.getElementById("kpis").innerHTML=K.map(function(k){return '<div class="kpi"><div class="l">'+k[0]+'</div><div class="v"'+(k[2]?' style="color:'+k[2]+'"':'')+'>'+k[1]+'</div></div>';}).join("");
+}
+function filtered(){
+ var q=(document.getElementById("fSearch").value||"").toLowerCase();
+ var ca=document.getElementById("fCat").value, stt=document.getElementById("fStatus").value, ur=document.getElementById("fUrg").value;
+ return ofTab().filter(function(r){
+  if(ca&&r.cat!==ca)return false;
+  if(stt&&(r.status||"접수")!==stt)return false;
+  if(ur&&(r.urg||"")!==ur)return false;
+  if(q){var hay=(r.content+" "+r.loc+" "+r.reporter+" "+r.cat+" "+r.sub+" "+r.id).toLowerCase();if(hay.indexOf(q)<0)return false;}
+  return true;
+ }).sort(function(a,b){return (b.at||"").localeCompare(a.at||"");});
+}
+function render(){
+ fillCounts();fillCatOptions();fillKpis();
+ var list=filtered(),box=document.getElementById("rows");
+ document.getElementById("cnt").textContent=TAB+" · 표시 "+list.length;
+ if(!list.length){box.innerHTML='<tr><td colspan="11" class="empty">'+TAB+' 신고 내역이 없습니다. (휴대폰 신고 시 자동으로 쌓입니다)</td></tr>';return;}
+ box.innerHTML=list.map(function(r){var s=r.status||"접수";
+  return '<tr><td style="font-family:var(--mono);font-size:11px;color:var(--faint)">'+esc(r.id)+'</td>'+
+   '<td><span class="badge b-'+esc(r.type)+'">'+esc(r.cat||"")+'</span></td>'+
+   '<td>'+esc(r.sub||"")+'<div style="font-size:11px;color:var(--dim)">'+esc(r.content||"")+'</div></td>'+
+   '<td>'+esc(r.loc||"")+'</td>'+
+   '<td class="u-'+esc(r.urg||"보통")+'">'+esc(r.urg||"")+'</td>'+
+   '<td><span class="pill s-'+esc(s)+'">'+esc(s)+'</span></td>'+
+   '<td>'+esc(r.action||"")+'</td><td>'+esc(r.mgr||"")+'</td><td>'+esc(r.reporter||"")+'</td>'+
+   '<td style="font-size:11px;white-space:nowrap">'+esc((r.at||"").replace("T"," "))+'</td>'+
+   '<td><button class="mini" onclick="openEdit(&quot;'+esc(r.id)+'&quot;)">조치</button></td></tr>';
+ }).join("");
+}
+
+function openEdit(id){var r=ALL.filter(function(x){return x.id===id;})[0];if(!r)return;EDIT=id;
+ document.getElementById("editTitle").textContent="조치 입력 · "+id+" ("+(r.cat||"")+" / "+(r.sub||"")+")";
+ document.getElementById("e_status").value=r.status||"접수";
+ document.getElementById("e_mgr").value=r.mgr||"";
+ document.getElementById("e_action").value=r.action||"";
+ document.getElementById("editCard").classList.add("on");
+ document.getElementById("editCard").scrollIntoView({behavior:"smooth",block:"center"});}
+function closeEdit(){document.getElementById("editCard").classList.remove("on");EDIT=null;}
+async function saveEdit(){
+ if(EDIT===null)return;
+ var i=-1;for(var k=0;k<ALL.length;k++){if(ALL[k].id===EDIT){i=k;break;}}
+ if(i<0)return;
+ ALL[i].status=document.getElementById("e_status").value;
+ ALL[i].mgr=document.getElementById("e_mgr").value.trim();
+ ALL[i].action=document.getElementById("e_action").value.trim();
+ ALL[i].updatedAt=new Date().toISOString();
+ await saveCloud(); closeEdit(); render();
+}
+
+async function saveCloud(){
+ if(!window.SB)return;
+ try{ await window.SB.from("app_state").upsert({key:KEY,value:ALL,src:(window.__CID||""),updated_at:new Date().toISOString()});
+  setSt("클라우드 저장됨 ✓","g"); }catch(e){ setSt("저장 실패","r"); }
+}
+async function load(){
+ if(!window.SB){setSt("로컬 모드 — 미연결","r");ALL=[];render();return;}
+ setSt("불러오는 중…");
+ try{var r=await window.SB.from("app_state").select("value").eq("key",KEY).maybeSingle();
+  if(r.error){setSt("연결 확인 필요","r");ALL=[];render();return;}
+  ALL=(r.data&&r.data.value)||[]; setSt("클라우드 연결됨 ✓","g"); render();
+ }catch(e){setSt("연결 확인 필요","r");ALL=[];render();}
+}
+function exportCsv(){
+ var head=["접수번호","유형","대분류","세부","현상","위치","긴급","상태","조치","담당","신고자","발생일시"];
+ var lines=[head.join(",")];
+ ALL.forEach(function(r){var row=[r.id,r.type,r.cat,r.sub,r.content,r.loc,r.urg,r.status,r.action,r.mgr,r.reporter,r.at].map(function(v){
+  v=(v==null?"":String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;});lines.push(row.join(","));});
+ var blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+ var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="이상안전소방_이력.csv";a.click();
+}
+(function(){var h=decodeURIComponent((location.hash||"").replace("#",""));
+ if(["설비이상","안전","소방"].indexOf(h)>=0){TAB=h;
+  [].forEach.call(document.getElementById("switches").children,function(x){x.classList.toggle("on",x.dataset.t===h);});}})();
+load();
+try{ if(window.SB) window.SB.channel("safety_rt_h")
+  .on("postgres_changes",{event:"*",schema:"public",table:"app_state",filter:"key=eq."+KEY},function(p){
+   var row=(p&&p.new)||{}; if(row.src===window.__CID)return; if(row.value){ALL=row.value;render();setSt("실시간 갱신 ✓","g");}
+  }).subscribe(); }catch(e){}
+</script>
+</body></html>

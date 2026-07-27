@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>품번 마스터 (클라우드)</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<style>
+:root{--bg:#eef1f6;--card:#fff;--line:#e4e8f0;--tx:#1f2937;--dim:#6b7480;--faint:#9aa2af;--blue:#2563eb;--orange:#e8622a;--mono:"JetBrains Mono",Consolas,monospace;--kr:Pretendard,"Malgun Gothic",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--kr);font-size:13.5px}
+.wrap{max-width:1200px;margin:0 auto;padding:16px 16px 60px}
+.hdrow{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+h1{font-size:20px;font-weight:800;margin:0}
+.rev{font-family:var(--mono);font-size:11px;background:var(--blue);color:#fff;padding:2px 8px;border-radius:6px}
+.status{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+.kpi .lab{font-size:12px;color:var(--dim)}
+.kpi .v{font-size:26px;font-weight:800;margin-top:4px}
+.kpi .v small{font-size:13px;font-weight:600;color:var(--dim);margin-left:3px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.sbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.sw{flex:1;position:relative}
+.sbar input{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 14px 10px 34px;font:inherit;font-size:13.5px;background:#f8fafc}
+.sbar input:focus{outline:2px solid #bcd4f6;border-color:var(--blue);background:#fff}
+.ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.addb{background:var(--orange);color:#fff;border:none;border-radius:10px;padding:10px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.addb:hover{background:#cf541f}
+.toolr{display:flex;gap:8px;margin-bottom:12px}
+.tbtn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:#475569}
+.tbtn:hover{border-color:var(--blue);color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--dim);font-weight:700;font-size:12px;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid #eef1f6;vertical-align:middle}
+tbody tr:hover td{background:#f8fbff}
+.ct{text-align:center}.rt{text-align:right}.nowrap{white-space:nowrap}
+.pno{font-family:var(--mono);font-size:11.5px;color:var(--blue)}
+.cb{font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;white-space:nowrap}
+.cb-완제품{background:#dcfce7;color:#15803d}.cb-반제품{background:#dbeafe;color:#1d4ed8}.cb-부품{background:#f3e8ff;color:#7c3aed}.cb-원자재{background:#fef3c7;color:#b45309}.cb-저장품{background:#e2e8f0;color:#475569}.cb-기타{background:#f1f5f9;color:#64748b}
+.mb{border:1px solid var(--line);background:#fff;border-radius:6px;padding:3px 8px;font-size:11.5px;cursor:pointer;color:#475569;margin-left:3px}
+.mb:hover{border-color:var(--blue);color:var(--blue)}.mb.d:hover{border-color:#dc2626;color:#dc2626}.mb.save{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ei{border:1px solid #c7d3e6;border-radius:6px;padding:5px 7px;font:inherit;font-size:12.5px;width:100%;min-width:56px}
+.ei:focus{outline:2px solid #bcd4f6;border-color:var(--blue)}
+tr.editing td{background:#eff6ff}
+.empty{padding:40px;text-align:center;color:var(--faint)}
+.warn{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:10px;padding:12px 16px;margin-bottom:12px;font-size:13px;display:none}
+.warn.on{display:block}
+</style></head><body><div class="wrap">
+<div class="hdrow"><h1>품번 마스터</h1><span class="rev">☁ 클라우드</span><span class="status" id="st">연결 준비 중…</span></div>
+<div class="warn" id="warn"></div>
+<div class="kpis">
+ <div class="kpi"><div class="lab">총 품번</div><div class="v"><span id="k_tot">0</span><small>개</small></div></div>
+ <div class="kpi"><div class="lab">완제품</div><div class="v" id="k_fp">0</div></div>
+ <div class="kpi"><div class="lab">반제품</div><div class="v" id="k_sp">0</div></div>
+ <div class="kpi"><div class="lab">부품</div><div class="v" id="k_pt">0</div></div>
+ <div class="kpi"><div class="lab">원자재</div><div class="v" id="k_rm">0</div></div>
+</div>
+<div class="panel">
+ <div class="sbar">
+  <div class="sw"><span class="ico">🔍</span><input id="q" placeholder="품번·품명·규격·재질·공급처 검색" oninput="render()"></div>
+  <span class="status" id="cntinfo"></span>
+  <button class="addb" onclick="addRow()">＋ 품번 추가</button>
+ </div>
+ <div class="toolr"><button class="tbtn" onclick="exportCSV()">CSV 내보내기</button><button class="tbtn" onclick="reload()">↻ 새로고침</button></div>
+ <div id="body"></div>
+</div>
+</div>
+<script src="supabase.js"></script>
+<script>
+var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
+var COLS=["pno","name","cat","spec","mat","price","unit","sup","remark"];
+var CATS=["완제품","반제품","부품","원자재","저장품","기타"];
+var ROWS=[], EDIT=null, EBUF={};
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function eatt(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/"/g,"&quot;");}
+function st(t,c){var s=document.getElementById("st");if(s){s.textContent=t;s.style.color=(c==="g"?"#16a34a":(c==="r"?"#dc2626":"#9aa2af"));}}
+function _f(id){for(var i=0;i<ROWS.length;i++)if(ROWS[i].id===id)return ROWS[i];return null;}
+async function _fetch(){return await sb.from("item_master").select("*").order("id");}
+async function boot(){st("연결 중…");var r=await _fetch();
+ if(r.error){document.getElementById("warn").classList.add("on");document.getElementById("warn").innerHTML='⚠ <b>품번 마스터 표(item_master)가 아직 없습니다.</b> Supabase SQL Editor에서 아래를 실행하세요:<br><code style="display:block;background:#fff;border:1px solid #eee;border-radius:8px;padding:8px;margin-top:8px;font-family:monospace;font-size:12px;white-space:pre-wrap">create table if not exists item_master (id bigserial primary key, pno text, name text, cat text, spec text, mat text, price text, unit text, sup text, remark text, updated_at timestamptz default now());\nalter table item_master enable row level security;\ncreate policy "allow all" on item_master for all to anon using(true) with check(true);</code>';st("표 없음 — SQL 필요","r");return;}
+ ROWS=r.data||[];st("클라우드 연결됨 ✓","g");render();}
+async function reload(){var r=await _fetch();if(r.error)return;ROWS=r.data||[];render();}
+function filtered(){var q=(document.getElementById("q").value||"").trim().toLowerCase();if(!q)return ROWS;return ROWS.filter(function(r){return ((r.pno||"")+" "+(r.name||"")+" "+(r.spec||"")+" "+(r.mat||"")+" "+(r.sup||"")).toLowerCase().indexOf(q)>=0;});}
+function render(){
+ var c={};ROWS.forEach(function(r){var k=r.cat||"기타";c[k]=(c[k]||0)+1;});
+ document.getElementById("k_tot").textContent=ROWS.length;
+ document.getElementById("k_fp").textContent=c["완제품"]||0;document.getElementById("k_sp").textContent=c["반제품"]||0;
+ document.getElementById("k_pt").textContent=c["부품"]||0;document.getElementById("k_rm").textContent=c["원자재"]||0;
+ var list=filtered();document.getElementById("cntinfo").textContent=list.length+" / "+ROWS.length+" 품번";
+ var h='<table><thead><tr><th>품번</th><th>품명</th><th class="ct">구분</th><th>규격</th><th>재질</th><th class="rt">단가</th><th class="ct">단위</th><th>공급처</th><th>비고</th><th class="ct">관리</th></tr></thead><tbody>';
+ list.forEach(function(r){
+  if(EDIT===r.id){h+=erow(r);return;}
+  var cat=r.cat||"기타";
+  h+='<tr data-id="'+r.id+'"><td class="pno">'+esc(r.pno)+'</td><td><b>'+esc(r.name)+'</b></td><td class="ct"><span class="cb cb-'+cat+'">'+cat+'</span></td><td>'+esc(r.spec)+'</td><td>'+esc(r.mat)+'</td><td class="rt">'+esc(r.price)+'</td><td class="ct">'+(esc(r.unit)||"·")+'</td><td>'+esc(r.sup)+'</td><td>'+esc(r.remark)+'</td><td class="ct nowrap"><button class="mb" onclick="startEdit('+r.id+')">편집</button><button class="mb d" onclick="delRow('+r.id+')">삭제</button></td></tr>';
+ });
+ h+='</tbody></table>';if(!list.length)h='<div class="empty">품번이 없습니다. <b>＋ 품번 추가</b>로 등록하세요.</div>';
+ document.getElementById("body").innerHTML=h;
+}
+function erow(r){
+ function inp(k,ph){return '<input class="ei" value="'+eatt(EBUF[k])+'" oninput="EBUF[\''+k+'\']=this.value" placeholder="'+(ph||"")+'">';}
+ var cs='<select class="ei" onchange="EBUF.cat=this.value">';CATS.forEach(function(x){cs+='<option'+((EBUF.cat||"")===x?" selected":"")+'>'+x+'</option>';});cs+='</select>';
+ return '<tr class="editing"><td>'+inp("pno","품번")+'</td><td>'+inp("name","품명 *")+'</td><td>'+cs+'</td><td>'+inp("spec")+'</td><td>'+inp("mat")+'</td><td>'+inp("price")+'</td><td>'+inp("unit")+'</td><td>'+inp("sup")+'</td><td>'+inp("remark")+'</td><td class="ct nowrap"><button class="mb save" onclick="saveEdit()">저장</button><button class="mb" onclick="cancelEdit()">취소</button></td></tr>';
+}
+function startEdit(id){var r=_f(id);if(!r)return;EDIT=id;EBUF={};COLS.forEach(function(k){EBUF[k]=r[k];});if(!EBUF.cat)EBUF.cat="완제품";render();}
+function cancelEdit(){EDIT=null;EBUF={};render();}
+async function saveEdit(){
+ if(!EBUF.name||!String(EBUF.name).trim()){alert("품명은 필수입니다.");return;}
+ var rec={};COLS.forEach(function(k){rec[k]=(EBUF[k]==null?"":String(EBUF[k]).trim());});
+ st("저장 중…");var res=await sb.from("item_master").update(rec).eq("id",EDIT);
+ if(res.error){st("저장 실패","r");alert("저장 실패: "+res.error.message);return;}
+ var r=_f(EDIT);if(r)for(var k in rec)r[k]=rec[k];EDIT=null;EBUF={};st("저장됨 ✓","g");render();
+}
+async function addRow(){
+ st("추가 중…");var res=await sb.from("item_master").insert({name:"새 품번",cat:"완제품"}).select();
+ if(res.error){st("추가 실패","r");alert("추가 실패: "+res.error.message);return;}
+ ROWS.push(res.data[0]);st("추가됨 ✓","g");render();startEdit(res.data[0].id);
+}
+async function delRow(id){var r=_f(id);if(!confirm("삭제할까요?"+(r?("\n"+(r.name||"")):"")))return;st("삭제 중…");var res=await sb.from("item_master").delete().eq("id",id);if(res.error){st("삭제 실패","r");return;}ROWS=ROWS.filter(function(x){return x.id!==id;});st("삭제됨 ✓","g");render();}
+function exportCSV(){var lines=[COLS.join(",")];ROWS.forEach(function(r){lines.push(COLS.map(function(k){var s=String(r[k]==null?"":r[k]);if(/[",\n]/.test(s))s='"'+s.replace(/"/g,'""')+'"';return s;}).join(","));});var b=new Blob(["﻿"+lines.join("\n")],{type:"text/csv"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="승정_품번마스터.csv";a.click();}
+boot();
+</script>
+</body></html>

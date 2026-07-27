@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>수입검사 업무 절차서 (편집형)</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<style>
+:root{--navy:#003D54;--teal:#006E8A;--gold:#F5A623;--bg:#eef1f6;--line:#cdd6df}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:#1c2430;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:13px}
+header{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--navy),var(--teal));color:#fff;padding:9px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+header h1{margin:0;font-size:16px;font-weight:800}
+.spacer{flex:1}
+.btn{border:0;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit}
+.btn.edit{background:#fff;color:var(--navy)}.btn.edit.on{background:#22c55e;color:#fff}
+.btn.save{background:var(--gold);color:#3a2a00}.btn.prn{background:#fff;color:var(--navy)}.btn.rst{background:rgba(255,255,255,.15);color:#fff}
+.st{font-size:11.5px;opacity:.95;margin-left:6px}
+.tip{background:#eef6ff;border:1px solid #cfe0f5;border-radius:8px;padding:8px 12px;margin:10px auto;max-width:1240px;font-size:12px;color:#345}
+.tip b{color:var(--navy)}
+.wrap{padding:12px}
+#doc{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px;max-width:1264px;margin:0 auto}
+[data-txt]{outline:none}
+body.editing [data-txt],body.editing .rc{outline:1px dotted #f0b84a;outline-offset:1px;border-radius:3px}
+body.editing [data-txt]:hover,body.editing .rc:hover{outline:2px solid #f59e0b;background:rgba(255,244,214,.35)}
+body.editing .repl{outline:2px dashed #f59e0b;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1e293b;color:#fff;padding:11px 22px;border-radius:24px;font-size:14px;font-weight:800;box-shadow:0 4px 16px rgba(0,0,0,.3);display:none;z-index:99}
+/* ===== 상단 ===== */
+.headrow{display:flex;align-items:stretch;border:1px solid #333;margin-bottom:10px}
+.revwrap{position:relative;border-right:1px solid #333;display:flex;flex-direction:column}
+.revtbl{border-collapse:collapse}
+.revtbl td{border:1px solid #333;padding:4px 8px;font-size:13px;text-align:center}
+.rev-h{background:#eaeefb;font-weight:800;font-size:12px}
+.rc{background:#fffdf3;min-width:80px}
+.addrev{display:none;margin:3px;padding:5px;font-size:12px;font-weight:800;color:#0b4a86;background:#eaf2fb;border:1px dashed #7fa8d0;border-radius:5px;cursor:pointer;font-family:inherit}
+body.editing .addrev{display:block}
+.titleblock{flex:1;display:flex;flex-direction:column}
+.tt{background:#29a3dd;color:#fff;font-size:22px;font-weight:800;text-align:center;padding:12px 6px;letter-spacing:1px;white-space:nowrap}
+.tt2{flex:1;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;background:#fbf7ea;padding:8px}
+/* ★ 결재란: 늘어나지 않게 상단 고정 */
+.apprtbl{align-self:flex-start;border-collapse:collapse}
+.apprtbl td{border:1px solid #333;font-size:13px;text-align:center;padding:4px 6px}
+.apprtbl .gl{width:24px;background:#eaeefb;font-weight:800}
+.apprtbl .appr-h{background:#eaeefb;font-weight:800;width:66px}
+.apprtbl .asg{height:54px}
+/* ===== 캔버스 ===== */
+.cvwrap{overflow-x:auto}
+#cvscale{transform-origin:top left}
+.canvas{position:relative;width:1200px;height:775px;background:#fff}
+.lane{position:absolute;top:0;height:775px;border-right:1px dashed #cfd8e2}
+.lanehdr{position:absolute;top:0;height:34px;line-height:34px;text-align:center;color:#fff;font-weight:800;font-size:15px;background:#2f6db5;border:1px solid #b9c9dd}
+.steplab{position:absolute;left:0;width:66px;background:#e2f0d9;color:#2f7d32;font-weight:800;text-align:center;display:flex;align-items:center;justify-content:center;border:1px solid #cfe0c5;font-size:15px}
+.arrows{position:absolute;left:0;top:0;width:1200px;height:775px;z-index:2;pointer-events:none}
+.node{position:absolute;z-index:3}
+.proc,.ell{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;gap:0}
+.proc{border:2.4px solid #5a6b7b;background:#fff;border-radius:6px;padding:3px 5px}
+.proc.grey{background:#eef1f4}
+.ell{border:2.4px solid #4f86b3;background:#fbf1e2;border-radius:50%;padding:3px}
+.ico{font-size:21px;line-height:1.05}
+.lbl{font-size:13px;font-weight:700}
+.dia{transform:rotate(45deg);border:3px solid #4f86b3;background:#eaf2fb;display:flex;align-items:center;justify-content:center}
+.dia .t{transform:rotate(-45deg);font-weight:800;color:#0b4a86;white-space:nowrap;text-align:center;line-height:1.1}
+.dia .t .ico{font-size:20px;display:block}
+.dia .t .lbl{font-size:14px}
+.note{border:1.8px dashed #d33;background:#fff;font-size:12px;color:#222;line-height:1.5;padding:6px 8px}
+.note .r{color:#c62828;font-weight:800}.note .b{color:#0b4a86;font-weight:800}
+.repl{border:1px solid #dfe5ea;border-radius:4px;object-fit:cover;background:#f4f6f8}
+.albl{position:absolute;z-index:4;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.9);padding:0 4px;border-radius:3px}
+.albl.pass{color:#1565c0}.albl.fail{color:#c62828}
+.stepno{position:absolute;z-index:6;width:27px;height:27px;border-radius:50%;background:#f5a623;color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.35);border:2px solid #fff}
+/* 하단 */
+.bottombox{border:2px solid #e08a3c;border-radius:8px;padding:9px 13px;margin-top:12px;display:flex;gap:14px;align-items:flex-start}
+.bottombox .lbl{color:#c62828;font-weight:800;font-size:17px;white-space:nowrap;text-align:center;line-height:1.3}
+.bottombox ol{margin:0;padding-left:20px}
+.bottombox li{font-size:13px;line-height:1.75;margin-bottom:3px}
+.hi{color:#c62828;font-weight:800}
+@media print{
+ @page{size:A4 landscape;margin:6mm}
+ header,.tip,.addrev{display:none!important}
+ .wrap{padding:0}#doc{border:0;max-width:none;padding:0}
+ body.editing [data-txt],body.editing .rc{outline:none}
+ .cvwrap{overflow:visible}
+}
+</style></head><body>
+<header>
+ <h1>📋 수입검사 업무 절차서</h1>
+ <button class="btn edit" id="editBtn" onclick="toggleEdit()">✏️ 편집 모드</button>
+ <button class="btn save" onclick="save()">💾 저장</button>
+ <button class="btn prn" onclick="window.print()">🖨️ 인쇄</button>
+ <button class="btn rst" onclick="restore()">↺ 원본복원</button>
+ <span class="st" id="st"></span><span class="spacer"></span>
+</header>
+<div class="tip">✏️ <b>편집 모드</b>: 글자 클릭 수정 · 사진 클릭 교체 · <b>＋개정이력 추가</b>. 도형·화살표·번호는 절차 흐름대로 고정. 수정 후 <b>💾 저장</b>(전 PC 공유).</div>
+<div class="wrap"><div id="doc">
+
+ <div class="headrow">
+  <div class="revwrap">
+   <table class="revtbl"><tbody id="revbody">
+    <tr><td class="rev-h">개정이력</td><td class="rev-h">개정일자</td><td class="rev-h">개정사유</td></tr>
+    <tr><td class="rc">Rev.0</td><td class="rc">2019.03.20</td><td class="rc">신규 제정</td></tr>
+    <tr><td class="rc">Rev.1</td><td class="rc">2023.04.17</td><td class="rc">합격도장 추가</td></tr>
+    <tr><td class="rc">Rev.2</td><td class="rc">2025.01.01</td><td class="rc">부적합격리절차추가</td></tr>
+   </tbody></table>
+   <button class="addrev" onclick="addRev()">＋ 개정이력 추가</button>
+  </div>
+  <div class="titleblock">
+   <div class="tt" data-txt="title">수입검사 업무 절차도</div>
+   <div class="tt2" data-txt="sub">📋 수입검사 업무 FLOW CHART</div>
+  </div>
+  <table class="apprtbl">
+   <tr><td class="gl" rowspan="2">결<br>재</td><td class="appr-h">작성</td><td class="appr-h">검토</td><td class="appr-h">승인</td></tr>
+   <tr><td class="asg"></td><td class="asg"></td><td class="asg"></td></tr>
+  </table>
+ </div>
+
+ <div class="cvwrap"><div id="cvscale"><div class="canvas" id="canvas">
+  <div class="lane" style="left:66px;width:184px;background:#fafcff"></div>
+  <div class="lane" style="left:250px;width:310px;background:#f6faff"></div>
+  <div class="lane" style="left:560px;width:260px;background:#fafcff"></div>
+  <div class="lane" style="left:820px;width:150px;background:#f6faff"></div>
+  <div class="lane" style="left:970px;width:230px;background:#fafcff"></div>
+  <div class="steplab" style="top:0;height:34px;background:#f4a83a;color:#fff;border-color:#d88f22"><span data-txt="h_step">단계</span></div>
+  <div class="lanehdr" style="left:66px;width:184px"><span data-txt="h1">🏢 협력업체</span></div>
+  <div class="lanehdr" style="left:250px;width:310px"><span data-txt="h2">🔬 품질팀</span></div>
+  <div class="lanehdr" style="left:560px;width:260px"><span data-txt="h3">📦 자재/영업</span></div>
+  <div class="lanehdr" style="left:820px;width:150px"><span data-txt="h4">🏭 생산</span></div>
+  <div class="lanehdr" style="left:970px;width:230px"><span data-txt="h5">🗄️ 관리</span></div>
+  <div class="steplab" style="top:34px;height:191px"><span data-txt="s1">입고</span></div>
+  <div class="steplab" style="top:225px;height:435px"><span data-txt="s2">수입<br>검사</span></div>
+  <div class="steplab" style="top:660px;height:115px"><span data-txt="s3">부적<br>합품<br>관리</span></div>
+
+  <svg class="arrows" viewBox="0 0 1200 775">
+   <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2f6db5"/></marker>
+    <marker id="ahr" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c62828"/></marker>
+   </defs>
+   <g fill="none" stroke="#2f6db5" stroke-width="2.6" marker-end="url(#ah)">
+    <polyline points="220,74 340,73"/>
+    <polyline points="406,102 406,143"/>
+    <polyline points="406,189 406,272 461,272 461,318"/>
+    <polyline points="504,361 566,361 566,164 626,164"/>
+    <polyline points="694,193 694,318"/>
+    <polyline points="691,406 693,453"/>
+    <polyline points="734,361 905,361 905,150 968,150"/>
+    <polyline points="760,483 800,483 800,374 834,374"/>
+    <polyline points="158,415 158,676"/>
+   </g>
+   <g fill="none" stroke="#c62828" stroke-width="2.8" marker-end="url(#ahr)">
+    <polyline points="418,363 300,363 300,385 220,385"/>
+    <polyline points="662,318 662,214"/>
+   </g>
+  </svg>
+
+  <div class="albl pass" style="left:512px;top:338px"><span data-txt="lb1">✅ 합격 ★도장·식별표</span></div>
+  <div class="albl fail" style="left:300px;top:340px"><span data-txt="lb2">❌ 불합격(식별표시)</span></div>
+  <div class="albl pass" style="left:702px;top:420px"><span data-txt="lb3">✅ 합격</span></div>
+  <div class="albl fail" style="left:668px;top:250px"><span data-txt="lb4">❌ 불합격</span></div>
+
+  <!-- 입고 -->
+  <div class="node proc" style="left:100px;top:50px;width:120px;height:48px"><span class="ico">📦</span><span class="lbl" data-txt="n_napum">납 품</span></div>
+  <img class="node repl" data-img="i_napum" style="left:100px;top:104px;width:120px;height:58px" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='58'><rect width='120' height='58' fill='%23eaf4ff' rx='5'/><rect x='10' y='20' width='52' height='24' rx='2' fill='%233b82f6'/><rect x='62' y='27' width='26' height='17' rx='2' fill='%2360a5fa'/><rect x='66' y='30' width='16' height='9' fill='%23dbeafe'/><circle cx='27' cy='47' r='6.5' fill='%23374151'/><circle cx='74' cy='47' r='6.5' fill='%23374151'/><text x='36' y='36' font-size='11' fill='%23fff' text-anchor='middle' font-weight='bold'>납품</text></svg>" alt="납품 차량">
+  <div class="node ell" style="left:340px;top:44px;width:132px;height:58px"><span class="ico">📋</span><span class="lbl" data-txt="n_recv1">거래명세표<br>접수/확인</span></div>
+  <div class="node proc grey" style="left:340px;top:145px;width:132px;height:44px"><span class="lbl" data-txt="n_level">🗂️ 검사수준 분류</span></div>
+  <div class="node note" style="left:580px;top:42px;width:215px;height:80px"><b class="b" data-txt="note1t">📥 [입고시 점검항목]</b><br><span data-txt="note1b">-. 지정된 용기 확인<br>-. 지정된 수량 확인<br>-. 부품식별표 확인</span></div>
+  <div class="node ell" style="left:628px;top:135px;width:132px;height:58px"><span class="ico">📋</span><span class="lbl" data-txt="n_recv2">거래명세표<br>접수/확인</span></div>
+  <div class="node ell" style="left:985px;top:120px;width:140px;height:58px"><span class="ico">💻</span><span class="lbl" data-txt="n_erp">거래명세표<br>전산등록</span></div>
+  <!-- 수입검사 -->
+  <div class="node ell" style="left:98px;top:355px;width:120px;height:60px"><span class="ico">📢</span><span class="lbl" data-txt="n_notify">부적합품 통보</span></div>
+  <img class="node repl" data-img="i_defect" style="left:265px;top:300px;width:140px;height:74px" src="iip_image5.png" alt="불량 식별표" onerror="this.style.opacity=.3">
+  <div class="node dia" style="left:418px;top:320px;width:86px;height:86px"><span class="t"><span class="ico">🔍</span><span class="lbl" data-txt="n_insp">검사</span></span></div>
+  <div class="node note" style="left:290px;top:460px;width:258px;height:94px"><b class="r" data-txt="note2t">🏷️ 부적합 식별표(TAG) 작성/부착시 주의사항</b><br><span data-txt="note2b">→ 식별 내용 명확하고 선명하게 작성<br>→ 식별 위치는 발견이 용이한 위치/부위<br>→ 쉽게 파손·삭제되지 않도록 함</span></div>
+  <img class="node repl" data-img="i_tag" style="left:352px;top:560px;width:98px;height:90px" src="iip_image6.png" alt="부적합 TAG 예시" onerror="this.style.opacity=.3">
+  <div class="node dia" style="left:648px;top:320px;width:86px;height:86px"><span class="t"><span class="ico">🔎</span><span class="lbl" data-txt="n_verify">검수</span></span></div>
+  <div class="node ell" style="left:626px;top:455px;width:134px;height:56px"><span class="ico">🏭</span><span class="lbl" data-txt="n_store">입고(지정된 위치)</span></div>
+  <img class="node repl" data-img="i_pass" style="left:596px;top:525px;width:188px;height:92px" src="iip_image8.png" alt="합격 식별표" onerror="this.style.opacity=.3">
+  <div class="node ell" style="left:836px;top:345px;width:116px;height:58px"><span class="ico">🚚</span><span class="lbl" data-txt="n_use">불출/사용</span></div>
+  <div class="node note" style="left:982px;top:300px;width:206px;height:84px"><b class="r" data-txt="note3t">🚫 부적합 제품 격리 방법</b><br><span data-txt="note3b">→ 부적합품 보관장소 설정<br>→ 부적합 명판(라벨) 부착<br>→ 붉은색 영역표기 또는 BOX 사용</span></div>
+  <img class="node repl" data-img="i_iso" style="left:982px;top:392px;width:206px;height:96px" src="iip_image7.png" alt="부적합 격리 영역" onerror="this.style.opacity=.3">
+  <!-- 부적합품 관리 -->
+  <div class="node proc" style="left:98px;top:678px;width:735px;height:46px;background:#fdf6e3;border-color:#e0b062;color:#8a5000;flex-direction:row;justify-content:flex-start;padding-left:14px;font-size:15px"><span data-txt="n_dispose">⚠️ <b>부적합품 처리</b> &nbsp;(격리 조치후 자재팀에 통보하여 선별, 재작업 또는 반송처리)</span></div>
+  <!-- 순서 번호 -->
+  <div class="stepno" style="left:86px;top:44px">1</div>
+  <div class="stepno" style="left:326px;top:38px">2</div>
+  <div class="stepno" style="left:326px;top:139px">3</div>
+  <div class="stepno" style="left:404px;top:314px">4</div>
+  <div class="stepno" style="left:614px;top:129px">5</div>
+  <div class="stepno" style="left:634px;top:314px">6</div>
+  <div class="stepno" style="left:612px;top:449px">7</div>
+  <div class="stepno" style="left:824px;top:339px">8</div>
+ </div></div></div>
+
+ <div class="bottombox">
+  <div class="lbl"><span data-txt="blbl">🚨 부적합품<br>식별/격리</span></div>
+  <ol>
+   <li><span data-txt="d1">수입검사 담당자는 부품식별표 및 제품 확인후 적합할시 부품식별표에 <span class="hi">＂합격＂</span> 표시를 하여야 하며, <span class="hi">부적합</span>일 경우에는 <span class="hi">식별</span> 표시 및 <span class="hi">격리</span> 조치후 자재팀으로 통보하여, <span class="hi">선별/재작업/반송처리</span> 여부를 결정, 협력업체 통보하여 즉시 조치한다.</span></li>
+   <li><span data-txt="d2"><span class="hi">부적합</span> 제품에 식별표(TAG) 부착시 <span class="hi">부적합</span> 내용은 명확하고 선명하게 작성을 하며, 쉽게 파손되거나 지워지지 않도록 주의하여야 한다. 또한 식별표 위치는 누구나 식별(발견)이 용이한 위치에 부착한다.</span></li>
+   <li><span data-txt="d3"><span class="hi">부적합품</span>을 양품과 혼용되거나 공정에 투입되는 것을 방지하기 위해 제품內 <span class="hi">불량 식별표 부착</span> 또는 부적합 보관장소(<span class="hi">붉은색 영역표시</span>)&amp; 부적합 전용 <span class="hi">박스(BOX)</span>를 이용하여 격리조치 한다.</span></li>
+  </ol>
+ </div>
+</div></div>
+<div id="toast"></div>
+<script src="supabase.js"></script>
+<script>
+const KEY="iip_doc_v5", CKEY="iip_doc_v5";
+const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
+const el=id=>document.getElementById(id);
+let EDIT=false, dirty=false, DEF={};
+function stat(m){el('st').textContent=m;}
+function toast(m){var t=el('toast');if(!t)return;t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none';},2200);}
+function eachTxt(fn){document.querySelectorAll('[data-txt]').forEach(fn);}
+function eachImg(fn){document.querySelectorAll('[data-img]').forEach(fn);}
+function eachRc(fn){document.querySelectorAll('#revbody .rc').forEach(fn);}
+function applyEditable(){eachTxt(e=>e.contentEditable=EDIT);eachRc(e=>e.contentEditable=EDIT);}
+function toggleEdit(){EDIT=!EDIT;applyEditable();document.body.classList.toggle('editing',EDIT);el('editBtn').classList.toggle('on',EDIT);stat(EDIT?'✏️ 편집 ON — 글자 클릭 수정 · 사진 클릭 교체 · ＋개정이력 추가':'보기 모드');}
+document.addEventListener('click',function(e){if(!EDIT)return;var img=e.target.closest('img.repl');if(img){pickImage(img);}});
+function pickImage(img){var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=function(){var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){img.src=rd.result;img.style.opacity=1;dirty=true;stat('🖼️ 사진 교체됨 · 저장 필요');};rd.readAsDataURL(f);};inp.click();}
+document.addEventListener('input',function(){if(EDIT){dirty=true;stat('✏️ 수정됨 · 저장 필요');}});
+function addRev(){var tb=el('revbody');var n=tb.rows.length-1;var tr=tb.insertRow();['Rev.'+n,'YYYY.MM.DD','개정 내용 입력'].forEach(function(t){var td=tr.insertCell();td.className='rc';td.contentEditable=EDIT;td.textContent=t;});dirty=true;stat('개정이력 행 추가됨(Rev.'+n+') · 내용 입력 후 저장');}
+function snapshot(){var d={t:{},i:{},rev:''};eachTxt(e=>d.t[e.dataset.txt]=e.innerHTML);eachImg(e=>d.i[e.dataset.img]=e.getAttribute('src'));d.rev=el('revbody').innerHTML;return d;}
+function applySnap(d){if(!d)return;eachTxt(e=>{if(d.t&&d.t[e.dataset.txt]!=null)e.innerHTML=d.t[e.dataset.txt];});eachImg(e=>{if(d.i&&d.i[e.dataset.img]!=null){e.setAttribute('src',d.i[e.dataset.img]);e.style.opacity=1;}});if(d.rev)el('revbody').innerHTML=d.rev;applyEditable();}
+async function save(){
+ var d=snapshot();
+ try{localStorage.setItem(KEY,JSON.stringify(d));}catch(e){}
+ var ok=false;
+ if(sb){try{var r=await sb.from('app_state').upsert({key:CKEY,value:d,updated_at:new Date().toISOString()});ok=!(r&&r.error);}catch(e){}}
+ dirty=false;var msg=ok?'✅ 저장됨 (전 PC 공유)':'💾 저장됨 (이 PC)';stat(msg);toast(msg);
+}
+function restore(){if(!confirm('편집 내용을 버리고 원본 절차서로 되돌릴까요?'))return;applySnap(DEF);dirty=true;stat('원본으로 복원됨 · 저장하면 원본이 저장됩니다');}
+function fitScale(){var wrap=document.querySelector('.cvwrap');var sc=el('cvscale');var w=wrap.clientWidth;var s=Math.min(1,w/1200);sc.style.transform='scale('+s+')';sc.style.height=(775*s)+'px';}
+async function boot(){
+ DEF=snapshot();
+ window.addEventListener('resize',fitScale);fitScale();
+ try{var s=localStorage.getItem(KEY);if(s)applySnap(JSON.parse(s));}catch(e){}
+ stat('준비됨');fitScale();
+ if(!sb)return;
+ try{var probe=await sb.from('app_state').select('key').limit(1);if(probe&&probe.error)return;
+  var r=await sb.from('app_state').select('value').eq('key',CKEY).maybeSingle();
+  if(r&&r.data&&r.data.value&&!dirty){applySnap(r.data.value);stat('☁️ 클라우드에서 불러옴');}
+ }catch(e){}
+}
+window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
+boot();
+</script>
+</body></html>

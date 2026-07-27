@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IATF 16949 문서관리대장 · 2026 사후심사</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<style>
+:root{
+ --bg:#f0eee9;--card:#ffffff;--line:#e7e3db;--line2:#efece5;--chip:#f7f5f0;
+ --txt:#1d1f24;--dim:#8b8f96;--faint:#a7abb2;
+ --blue:#2f6feb;--green:#2f9e44;--amber:#d08700;--red:#d64545;--gray:#9aa0a8;
+ --kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px;line-height:1.45}
+.topbar{height:6px;background:#111318}
+.wrap{max-width:1320px;margin:0 auto;padding:18px 20px 90px}
+.hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hd .ic{font-size:24px}
+.hd h1{font-size:20px;font-weight:800;margin:0}
+.hd .sub{font-size:12px;color:var(--dim)}
+.hd .r{margin-left:auto;display:flex;gap:7px;align-items:center}
+.btn{font-size:12px;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--txt);cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.st{font-size:11.5px;font-family:var(--mono)}
+.banner{margin:14px 0 0;border:1px solid #d9e6f7;background:#f2f7fe;border-radius:11px;padding:10px 14px;font-size:12.5px;color:#2c5a9e}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 15px;min-width:96px}
+.kpi .l{font-size:11px;color:var(--dim)} .kpi .v{font-size:19px;font-weight:800;margin-top:2px}
+.filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.filter input,.filter select{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px;color:var(--txt);font:inherit;font-size:13px}
+.filter input.search{flex:1;min-width:180px}
+.filter .cnt{margin-left:auto;font-size:12.5px;color:var(--dim);font-weight:700}
+.addbtn{background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:9px 15px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.editcard{background:#fffdf7;border:1px solid #f0d9a8;border-radius:13px;padding:15px 17px;margin-top:14px;display:none}
+.editcard.on{display:block}
+.editcard h3{margin:0 0 11px;font-size:14px;font-weight:800;color:#8a5a00}
+.form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:820px){.form{grid-template-columns:repeat(2,1fr)}}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld.wide{grid-column:span 2}
+.fld label{font-size:11px;color:var(--dim)}
+.fld input,.fld select{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--txt);font:inherit;font-size:13.5px}
+.frow{display:flex;gap:9px;margin-top:12px}
+.save{background:#1f6feb;color:#fff;border:none;border-radius:9px;padding:10px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
+.clr{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 16px;font:inherit;font-size:13px;cursor:pointer}
+.tblwrap{background:var(--card);border:1px solid var(--line);border-radius:13px;margin-top:14px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 9px;border-bottom:1px solid var(--line2);text-align:left;white-space:nowrap;vertical-align:top}
+th{color:var(--dim);font-size:11px;position:sticky;top:0;background:#faf8f4;z-index:1}
+tbody tr:hover{background:#f7fbff}
+td .code{font-family:var(--mono);font-size:11.5px;color:var(--blue)}
+td .refbadge{font-size:9.5px;font-weight:700;background:#eef0f3;color:var(--dim);border-radius:20px;padding:1px 7px;margin-left:5px}
+td .file{font-size:10px;color:var(--faint)}
+.pill{font-size:10.5px;font-weight:700;border-radius:20px;padding:1px 8px;white-space:nowrap}
+.s-유효{background:rgba(47,158,68,.14);color:var(--green)}.s-개정중{background:rgba(208,135,0,.16);color:var(--amber)}
+.s-폐기{background:rgba(214,69,69,.14);color:var(--red)}.s-구버전{background:#eef0f3;color:var(--gray)}
+.a-확인{background:rgba(47,158,68,.14);color:var(--green)}.a-보완필요{background:rgba(214,69,69,.14);color:var(--red)}.a-해당없음{background:#eef0f3;color:var(--gray)}
+.act button{background:none;border:1px solid var(--line);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px;color:var(--faint);margin-left:3px}
+.act button:hover{border-color:var(--blue);color:var(--blue)}
+.act button.del:hover{border-color:var(--red);color:var(--red)}
+.empty{color:var(--faint);text-align:center;padding:24px}
+</style></head><body>
+<div class="topbar"></div>
+<div class="wrap">
+ <div class="hd">
+  <span class="ic">📗</span>
+  <div><h1>IATF 16949 문서관리대장 <span style="font-size:12px;color:var(--red);font-weight:700">· 2026 사후심사</span></h1>
+   <div class="sub">㈜승정 QMS 절차서 문서체계(IATF16949절차서_2026) · 수기 작성·심사확인 · 클라우드 저장(전 PC 공유)</div></div>
+  <div class="r"><span class="st" id="st">클라우드 …</span>
+   <a class="btn" href="IATF16949_requirements_요구사항-2.html">📗 요구사항</a><a class="btn" href="index2.html">← 메인</a></div>
+ </div>
+
+ <div class="banner">📡 <b>실데이터·표준</b> — 사내 <b>IATF16949절차서_2026</b> 폴더의 절차서 문서체계를 그대로 반영했습니다. 각 문서의 <b>담당·상태·심사확인·보관위치·비고</b>를 직접 수기 작성하세요. 저장은 자동으로 클라우드(전 PC 공유)에 반영됩니다.</div>
+
+ <div class="kpis" id="kpis"></div>
+
+ <div class="filter">
+  <input class="search" id="fSearch" placeholder="🔍 조항·문서번호·문서명 검색" oninput="render()">
+  <select id="fMajor" onchange="render()"><option value="">조항 전체</option><option value="공통">0·1 공통</option>
+   <option value="4">4 조직상황</option><option value="5">5 리더십</option><option value="6">6 기획</option><option value="7">7 지원</option>
+   <option value="8">8 운용</option><option value="9">9 성과평가</option><option value="10">10 개선</option></select>
+  <select id="fStatus" onchange="render()"><option value="">상태 전체</option><option>유효</option><option>개정중</option><option>폐기</option><option>구버전</option></select>
+  <select id="fAudit" onchange="render()"><option value="">심사확인 전체</option><option>확인</option><option>보완필요</option><option>해당없음</option><option value="__none">미확인</option></select>
+  <button class="addbtn" onclick="newRow()">＋ 문서 추가</button>
+  <button class="btn" onclick="exportCsv()">📄 엑셀(CSV)</button>
+  <span class="cnt" id="cnt"></span>
+ </div>
+
+ <div class="editcard" id="editCard">
+  <h3 id="editTitle">＋ 문서 추가</h3>
+  <div class="form">
+   <div class="fld"><label>조항</label><input id="e_clause" placeholder="예: 8.18"></div>
+   <div class="fld"><label>문서번호</label><input id="e_code" placeholder="예: SJQP-8018"></div>
+   <div class="fld wide"><label>문서명</label><input id="e_name" placeholder="예: 검사업무 프로세스"></div>
+   <div class="fld"><label>Rev</label><input id="e_rev" placeholder="예: 2"></div>
+   <div class="fld"><label>제·개정일</label><input type="date" id="e_date"></div>
+   <div class="fld"><label>담당</label><input id="e_mgr" placeholder="담당자"></div>
+   <div class="fld"><label>상태</label><select id="e_status"><option value="">-</option><option>유효</option><option>개정중</option><option>폐기</option><option>구버전</option></select></div>
+   <div class="fld"><label>심사확인</label><select id="e_audit"><option value="">-</option><option>확인</option><option>보완필요</option><option>해당없음</option></select></div>
+   <div class="fld"><label>보관위치</label><input id="e_loc" placeholder="예: 품질기획부 / 서버"></div>
+   <div class="fld wide"><label>원본 파일명</label><input id="e_file" placeholder="원본 엑셀/문서 파일명"></div>
+   <div class="fld wide"><label>비고</label><input id="e_note" placeholder="선택 입력"></div>
+  </div>
+  <div class="frow"><button class="save" onclick="saveForm()">저장</button><button class="clr" onclick="closeForm()">취소</button></div>
+ </div>
+
+ <div class="tblwrap">
+  <table><thead><tr>
+   <th>조항</th><th>문서번호</th><th>문서명</th><th>Rev</th><th>제·개정일</th><th>담당</th><th>상태</th><th>심사확인</th><th>보관위치</th><th>비고</th><th></th>
+  </tr></thead><tbody id="rows"><tr><td colspan="11" class="empty">불러오는 중…</td></tr></tbody></table>
+ </div>
+</div>
+
+<script src="supabase.js"></script>
+<script src="cloud.js"></script>
+<script>
+const SEED_DOCS = [{"clause": "0","code": "","name": "IATF16949 문서관리 대장","rev": "0","date": "2018-04-01","ext": "xlsx","note": "","file": "0. IATF16949 문서관리 대장_Rev.0_180401.xlsx"},{"clause": "1","code": "SJQM-IATF-001","name": "품질경영시스템매뉴얼","rev": "2","date": "2018-04-30","ext": "xls","note": "","file": "1. SJQM-IATF-001.품질경영시스템매뉴얼_Rev.2_180430.xls"},{"clause": "1-2","code": "","name": "Process Map","rev": "0","date": "2017-06-23","ext": "xls","note": "","file": "1-2. Process Map_Rev.0_170623.xls"},{"clause": "1-2","code": "","name": "Process Map","rev": "","date": "","ext": "xls","note": "구버젼 구버전","file": "1-2. Process Map_구버젼.xls"},{"clause": "4.1","code": "SJQD-4001","name": "작업자 제안제도 및 포상절차서","rev": "","date": "2024-08-30","ext": "xls","note": "","file": "4.1. (SJQD-4001) .작업자 제안제도 및 포상절차서_240830.xls"},{"clause": "4.1","code": "SJQD-4001","name": "조직의 상황관리 절차","rev": "1","date": "2018-03-13","ext": "xls","note": "","file": "4.1. (SJQD-4001) 조직의 상황관리 절차_Rev.1_180313.xls"},{"clause": "4.2","code": "SJQD-4002","name": "사업계획 수립절차","rev": "1","date": "2018-03-13","ext": "xls","note": "","file": "4.2. (SJQD-4002) 사업계획 수립절차_Rev.1_180313.xls"},{"clause": "5.1","code": "SJQD-5001","name": "다기능팀운영절차","rev": "1","date": "2018-03-13","ext": "xls","note": "","file": "5.1. (SJQD-5001) 다기능팀운영절차_Rev.1_180313.xls"},{"clause": "5.2","code": "SJQP-5002","name": "품질방침및목표관리프로세스","rev": "1","date": "2018-03-14","ext": "xls","note": "","file": "5.2. (SJQP-5002) 품질방침및목표관리프로세스_Rev.1_180314.xls"},{"clause": "5.3","code": "SJQP-5003","name": "조직및업무분장프로세스","rev": "2","date": "2018-04-29","ext": "xls","note": "","file": "5.3. (SJQP-5003) 조직및업무분장프로세스_Rev.2_180429.xls"},{"clause": "5.4","code": "SJQD-5004","name": "프로세스 운영관리 절차","rev": "1","date": "2018-03-13","ext": "xls","note": "","file": "5.4. (SJQD-5004) 프로세스 운영관리 절차_Rev.1_180313.xls"},{"clause": "6.1","code": "SJQP-6001","name": "리스크관리 프로세스","rev": "1","date": "2018-03-14","ext": "xlsx","note": "구버전","file": "6.1. (SJQP-6001) 리스크관리 프로세스_Rev.1_180314.xlsx"},{"clause": "6.1","code": "SJQP-6001","name": "리스크관리 프로세스","rev": "2","date": "2021-03-15","ext": "xlsx","note": "구버전","file": "6.1. (SJQP-6001) 리스크관리 프로세스_Rev.2_210315.xlsx"},{"clause": "6.1","code": "SJQP-6001","name": "리스크관리 프로세스","rev": "2","date": "2022-03-15","ext": "xlsx","note": "","file": "6.1. (SJQP-6001) 리스크관리 프로세스_Rev.2_220315.xlsx"},{"clause": "6.2","code": "SJQD-6002","name": "변경관리 절차","rev": "2","date": "2018-04-29","ext": "xls","note": "","file": "6.2. (SJQD-6002) 변경관리 절차_Rev.2_180429.xls"},{"clause": "6.3","code": "","name": "비상사태 운영계획","rev": "","date": "","ext": "ppt","note": "추가","file": "6.3 비상사태 운영계획_추가.ppt"},{"clause": "6.3","code": "SJQD-6003","name": "비상대비 및 대응 프로세스","rev": "1","date": "2022-04-01","ext": "xls","note": "추가중 추가","file": "6.3. (SJQD-6003) 비상대비 및 대응 프로세스_Rev.1_220401(추가중).xls"},{"clause": "6.4","code": "SJQD-6004","name": "안전관리 프로세스","rev": "1","date": "2021-03-18","ext": "xls","note": "","file": "6.4. (SJQD-6004) 안전관리 프로세스_Rev.1_210318.xls"},{"clause": "7.1","code": "SJQP-7001","name": "제조설비관리프로세스","rev": "1","date": "2018-03-13","ext": "xls","note": "손상 구버전","file": "7.1. (SJQP-7001) 제조설비관리프로세스_Rev.1_180313(손상).xls"},{"clause": "7.1","code": "SJQP-7001","name": "제조설비관리프로세스","rev": "2","date": "2021-03-25","ext": "xls","note": "손상","file": "7.1. (SJQP-7001) 제조설비관리프로세스_Rev.2_210325(손상).xls"},{"clause": "7.2","code": "SJQP-7002","name": "청정활동 프로세스","rev": "1","date": "2018-03-14","ext": "xlsx","note": "구버전","file": "7.2. (SJQP-7002) 청정활동 프로세스_Rev.1_180314.xlsx"},{"clause": "7.2","code": "SJQP-7002","name": "청정활동 프로세스","rev": "2","date": "2025-01-10","ext": "xlsx","note": "","file": "7.2. (SJQP-7002) 청정활동 프로세스_Rev.2_250110.xlsx"},{"clause": "7.3","code": "SJQD-7003","name": "측정 시스템 운영 절차","rev": "1","date": "2018-03-14","ext": "xls","note": "구버전","file": "7.3. (SJQD-7003) 측정 시스템 운영 절차_Rev.1_180314.xls"},{"clause": "7.3","code": "SJQD-7003","name": "측정 시스템 운영 절차","rev": "2","date": "2022-04-28","ext": "xls","note": "","file": "7.3. (SJQD-7003) 측정 시스템 운영 절차_Rev.2_220428.xls"},{"clause": "7.4","code": "SJQP-7004","name": "계측기 관리프로세스","rev": "2","date": "2018-04-29","ext": "xlsx","note": "구버전","file": "7.4. (SJQP-7004) 계측기 관리프로세스_Rev.2_180429.xlsx"},{"clause": "7.4","code": "SJQP-7004","name": "계측기 관리프로세스","rev": "3","date": "2025-11-05","ext": "xlsx","note": "","file": "7.4. (SJQP-7004) 계측기 관리프로세스_Rev.3_20251105.xlsx"},{"clause": "7.5","code": "SJQD-7005","name": "실험실 운영절차","rev": "1","date": "2018-04-09","ext": "xlsx","note": "","file": "7.5. (SJQD-7005) 실험실 운영절차_Rev.1_180409.xlsx"},{"clause": "7.6","code": "SJQP-7006","name": "교육훈련 프로세스","rev": "1","date": "2018-03-14","ext": "xlsx","note": "","file": "7.6. (SJQP-7006) 교육훈련 프로세스_Rev.1_180314.xlsx"},{"clause": "7.7","code": "SJQD-7007","name": "자격관리절차","rev": "2","date": "2018-04-29","ext": "xlsx","note": "구버전","file": "7.7. (SJQD-7007) 자격관리절차_Rev.2_180429.xlsx"},{"clause": "7.7","code": "SJQD-7007","name": "자격관리절차","rev": "3","date": "2018-05-18","ext": "xlsx","note": "","file": "7.7. (SJQD-7007) 자격관리절차_Rev.3_180518.xlsx"},{"clause": "7.8","code": "SJQD-7008","name": "문서화 정보관리 절차","rev": "1","date": "2018-03-14","ext": "xls","note": "","file": "7.8. (SJQD-7008) 문서화 정보관리 절차_Rev.1_180314.xls"},{"clause": "7.9","code": "SJQD-7009","name": "문서관리절차","rev": "2","date": "2018-04-29","ext": "xls","note": "","file": "7.9. (SJQD-7009) 문서관리절차_Rev.2_180429.xls"},{"clause": "7.10","code": "SJQD-7010","name": "기록관리절차","rev": "2","date": "2018-04-29","ext": "xls","note": "","file": "7.10. (SJQD-7010) 기록관리절차_Rev.2_180429.xls"},{"clause": "7.11","code": "SJQP-7011","name": "4M변경 관리 프로세스","rev": "1","date": "2018-03-14","ext": "xls","note": "","file": "7.11. (SJQP-7011) 4M변경 관리 프로세스_Rev.1_180314.xls"},{"clause": "8.1","code": "SJQP-8001","name": "영업관리프로세스","rev": "2","date": "2018-04-29","ext": "xlsx","note": "","file": "8.1. (SJQP-8001) 영업관리프로세스_Rev.2_180429.xlsx"},{"clause": "8.2","code": "SJQP-8002","name": "고객관리 프로세스","rev": "1","date": "2018-03-20","ext": "xlsx","note": "","file": "8.2. (SJQP-8002) 고객관리 프로세스_Rev.1_180320.xlsx"},{"clause": "8.3","code": "SJQP-8003","name": "구매업무 프로세스","rev": "1","date": "2018-03-20","ext": "xls","note": "","file": "8.3. (SJQP-8003) 구매업무 프로세스_Rev.1_180320.xls"},{"clause": "8.4","code": "SJQP-8004","name": "협력업체 평가 프로세스","rev": "2","date": "2018-04-29","ext": "xls","note": "","file": "8.4. (SJQP-8004) 협력업체 평가 프로세스_Rev.2_180429.xls"},{"clause": "8.5","code": "SJQD-8005","name": "양산제품승인업무절차","rev": "1","date": "2018-03-20","ext": "xls","note": "","file": "8.5. (SJQD-8005) 양산제품승인업무절차_Rev.1_180320.xls"},{"clause": "8.6","code": "SJQD-8006","name": "사전제품품질기획절차","rev": "1","date": "2018-03-20","ext": "xlsx","note": "","file": "8.6. (SJQD-8006) 사전제품품질기획절차_Rev.1_180320.xlsx"},{"clause": "8.7","code": "SJQD-8007","name": "FMEA운영절차","rev": "1","date": "2018-03-20","ext": "xls","note": "","file": "8.7. (SJQD-8007) FMEA운영절차_Rev.1_180320.xls"},{"clause": "8.8","code": "SJQP-8008","name": "공정관리 프로세스","rev": "2","date": "2018-04-29","ext": "xlsx","note": "","file": "8.8. (SJQP-8008) 공정관리 프로세스_Rev.2_180429.xlsx"},{"clause": "8.9","code": "SJQP-8009","name": "생산관리 프로세스","rev": "1","date": "2018-03-22","ext": "xls","note": "","file": "8.9. (SJQP-8009) 생산관리 프로세스_Rev.1_180322.xls"},{"clause": "8.10","code": "SJQD-8010","name": "관리계획서 운영절차","rev": "1","date": "2018-03-20","ext": "xls","note": "","file": "8.10. (SJQD-8010) 관리계획서 운영절차_Rev.1_180320.xls"},{"clause": "8.11","code": "SJQD-8011","name": "작업표준 관리절차","rev": "1","date": "2018-03-20","ext": "xlsx","note": "구버전","file": "8.11. (SJQD-8011) 작업표준 관리절차_Rev.1_180320.xlsx"},{"clause": "8.11","code": "SJQD-8011","name": "작업표준 관리절차","rev": "2","date": "2021-03-12","ext": "xlsx","note": "","file": "8.11. (SJQD-8011) 작업표준 관리절차_Rev.2_210312.xlsx"},{"clause": "8.12","code": "SJQD-8012","name": "금형관리 절차","rev": "1","date": "2018-04-29","ext": "xls","note": "구버전","file": "8.12. (SJQD-8012) 금형관리 절차_Rev.1_180429.xls"},{"clause": "8.12","code": "SJQD-8012","name": "금형관리 절차","rev": "1","date": "2026-01-06","ext": "xls","note": "","file": "8.12. (SJQD-8012) 금형관리 절차_Rev.1_20260106.xls"},{"clause": "8.13","code": "SJQD-8013","name": "용기관리 절차","rev": "1","date": "2018-04-01","ext": "xlsx","note": "","file": "8.13. (SJQD-8013) 용기관리 절차_Rev.1_180401.xlsx"},{"clause": "8.14","code": "SJQP-8014","name": "식별 및 추적성 관리 프로세스","rev": "1","date": "2018-03-22","ext": "xls","note": "","file": "8.14. (SJQP-8014) 식별 및 추적성 관리 프로세스_Rev.1_180322.xls"},{"clause": "8.15","code": "SJQD-8015","name": "고객 자산관리 절차","rev": "1","date": "2018-03-20","ext": "xlsx","note": "","file": "8.15. (SJQD-8015) 고객 자산관리 절차_Rev.1_180320.xlsx"},{"clause": "8.16","code": "SJQP-8016","name": "자재관리 프로세스","rev": "1","date": "2018-03-22","ext": "xls","note": "","file": "8.16. (SJQP-8016) 자재관리 프로세스_Rev.1_180322.xls"},{"clause": "8.17","code": "SJQP-8017","name": "제품관리 프로세스","rev": "2","date": "2018-04-29","ext": "xls","note": "","file": "8.17. (SJQP-8017) 제품관리 프로세스_Rev.2_180429.xls"},{"clause": "8.18","code": "SJQP-8018","name": "검사업무 프로세스","rev": "1","date": "2018-04-01","ext": "xlsx","note": "구버전","file": "8.18. (SJQP-8018) 검사업무 프로세스_Rev.1_180401.xlsx"},{"clause": "8.18","code": "SJQP-8018","name": "검사업무 프로세스","rev": "2","date": "2021-03-02","ext": "xlsx","note": "","file": "8.18. (SJQP-8018) 검사업무 프로세스_Rev.2_210302.xlsx"},{"clause": "8.19","code": "SJQD-8019","name": "부적합품 관리절차","rev": "1","date": "2018-03-20","ext": "xlsx","note": "","file": "8.19. (SJQD-8019) 부적합품 관리절차_Rev.1_180320.xlsx"},{"clause": "9.1","code": "SJQP-9001","name": "지속적개선 프로세스","rev": "3","date": "2018-04-29","ext": "xlsx","note": "","file": "9.1. (SJQP-9001) 지속적개선 프로세스_Rev.3_180429.xlsx"},{"clause": "9.2","code": "SJQD-9002","name": "고객만족조사 절차","rev": "2","date": "2018-04-29","ext": "xls","note": "구버전","file": "9.2. (SJQD-9002) 고객만족조사 절차_Rev.2_180429.xls"},{"clause": "9.2","code": "SJQD-9002","name": "고객만족조사 절차","rev": "3","date": "2022-04-28","ext": "xls","note": "","file": "9.2. (SJQD-9002) 고객만족조사 절차_Rev.3_220428.xls"},{"clause": "9.3","code": "SJQD-9003","name": "내부심사 절차","rev": "2","date": "2018-04-29","ext": "xlsx","note": "구버전","file": "9.3. (SJQD-9003) 내부심사 절차_Rev.2_180429.xlsx"},{"clause": "9.3","code": "SJQD-9003","name": "내부심사 절차","rev": "3","date": "2021-03-02","ext": "xlsx","note": "","file": "9.3. (SJQD-9003) 내부심사 절차_Rev.3_210302.xlsx"},{"clause": "9.4","code": "SJQP-9004","name": "경영검토 프로세스","rev": "1","date": "2018-03-28","ext": "xlsx","note": "","file": "9.4. (SJQP-9004) 경영검토 프로세스_Rev.1_180328.xlsx"},{"clause": "9.5","code": "SJQD-9005","name": "품질 비용절차","rev": "2","date": "2018-04-29","ext": "xlsx","note": "","file": "9.5. (SJQD-9005) 품질 비용절차_Rev.2_180429.xlsx"},{"clause": "9.6","code": "SJQP-9006","name": "시정 및 예방조치 프로세스","rev": "1","date": "2018-03-28","ext": "xlsx","note": "","file": "9.6. (SJQP-9006) 시정 및 예방조치 프로세스_Rev.1_180328.xlsx"},{"clause": "9.7","code": "SJQD-9007","name": "실수방지절차","rev": "1","date": "2018-04-01","ext": "xls","note": "","file": "9.7. (SJQD-9007) 실수방지절차_Rev.1_180401.xls"},{"clause": "9.8","code": "SJQP-9008","name": "도면부품 일치성 프로세스","rev": "2","date": "2018-04-29","ext": "xls","note": "","file": "9.8. (SJQP-9008) 도면부품 일치성 프로세스_Rev.2_180429.xls"},{"clause": "","code": "","name": "다기능평가시스템","rev": "","date": "2026-04-20","ext": "xlsx","note": "","file": "다기능평가시스템_20260420.xlsx"},{"clause": "","code": "","name": "품질측정실_운영방안","rev": "","date": "2026-04-20","ext": "xlsx","note": "","file": "품질측정실_운영방안_20260420.xlsx"}];
+
+var ROWS=[], KEY='iatf_docs_2026', EDIT=-1;
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function setSt(t,c){var e=document.getElementById("st");e.textContent=t;e.style.color=(c==="g"?"#2f9e44":c==="r"?"#d64545":"#8b8f96");}
+
+/* 씨앗(절차서 폴더) → 행 */
+function seedRows(){
+ return (typeof SEED_DOCS!=="undefined"?SEED_DOCS:[]).map(function(d){
+  var nt=((d.note||"").replace("구버젼","구버전").replace(/\s+/g," ").trim());
+  var st=/구버전/.test(nt)?"구버전":"";
+  return {clause:d.clause||"",code:d.code||"",name:d.name||"",rev:d.rev||"",date:d.date||"",
+    mgr:"",status:st,audit:"",loc:"",note:nt,file:d.file||"",ext:d.ext||""};
+ });
+}
+function major(cl){ if(!cl)return"공통"; var h=String(cl).split(/[.\-]/)[0]; if(h==="0"||h==="1")return"공통"; return h; }
+
+function fillKpis(){
+ var tot=ROWS.length, chk=0, gu=0, need=0;
+ ROWS.forEach(function(r){ if(r.audit==="확인")chk++; if(r.status==="구버전")gu++; if(r.audit==="보완필요")need++; });
+ var K=[["총 문서",tot,""],["심사확인",chk,"var(--green)"],["보완필요",need,"var(--red)"],["구버전",gu,"var(--gray)"],["미확인",tot-chk-need,"var(--amber)"]];
+ document.getElementById("kpis").innerHTML=K.map(function(k){return '<div class="kpi"><div class="l">'+k[0]+'</div><div class="v"'+(k[2]?' style="color:'+k[2]+'"':'')+'>'+k[1]+'</div></div>';}).join("");
+}
+function filtered(){
+ var q=(document.getElementById("fSearch").value||"").toLowerCase();
+ var mj=document.getElementById("fMajor").value, stt=document.getElementById("fStatus").value, au=document.getElementById("fAudit").value;
+ return ROWS.map(function(r,i){return{r:r,i:i};}).filter(function(o){var r=o.r;
+  if(mj&&major(r.clause)!==mj)return false;
+  if(stt&&(r.status||"")!==stt)return false;
+  if(au==="__none"){ if(r.audit)return false; } else if(au&&(r.audit||"")!==au)return false;
+  if(q){var hay=(r.clause+" "+r.code+" "+r.name+" "+r.mgr+" "+r.note).toLowerCase();if(hay.indexOf(q)<0)return false;}
+  return true;
+ });
+}
+function render(){
+ var box=document.getElementById("rows"); fillKpis();
+ var list=filtered();
+ document.getElementById("cnt").textContent="총 "+ROWS.length+"건 · 표시 "+list.length;
+ if(!list.length){box.innerHTML='<tr><td colspan="11" class="empty">해당하는 문서가 없습니다.</td></tr>';return;}
+ box.innerHTML=list.map(function(o){var r=o.r,i=o.i;
+  return '<tr><td><b>'+esc(r.clause)+'</b></td>'+
+   '<td><span class="code">'+esc(r.code||"-")+'</span></td>'+
+   '<td>'+esc(r.name)+(r.file?'<div class="file">'+esc(r.file)+'</div>':'')+'</td>'+
+   '<td>'+esc(r.rev?("Rev."+r.rev):"")+'</td><td>'+esc(r.date)+'</td>'+
+   '<td>'+esc(r.mgr)+'</td>'+
+   '<td>'+(r.status?'<span class="pill s-'+esc(r.status)+'">'+esc(r.status)+'</span>':'')+'</td>'+
+   '<td>'+(r.audit?'<span class="pill a-'+esc(r.audit)+'">'+esc(r.audit)+'</span>':'')+'</td>'+
+   '<td>'+esc(r.loc)+'</td><td>'+esc(r.note)+'</td>'+
+   '<td class="act" style="text-align:right;white-space:nowrap"><button onclick="editRow('+i+')">편집</button><button class="del" onclick="delRow('+i+')">✕</button></td></tr>';
+ }).join("");
+}
+
+function openForm(t){document.getElementById("editTitle").textContent=t;document.getElementById("editCard").classList.add("on");}
+function closeForm(){document.getElementById("editCard").classList.remove("on");EDIT=-1;}
+function setF(id,v){document.getElementById(id).value=v==null?"":v;}
+function getF(id){return(document.getElementById(id).value||"").trim();}
+function newRow(){EDIT=-1;["e_clause","e_code","e_name","e_rev","e_date","e_mgr","e_loc","e_file","e_note"].forEach(function(id){setF(id,"");});setF("e_status","");setF("e_audit","");openForm("＋ 문서 추가");window.scrollTo({top:0,behavior:"smooth"});}
+function editRow(i){var r=ROWS[i];if(!r)return;EDIT=i;
+ setF("e_clause",r.clause);setF("e_code",r.code);setF("e_name",r.name);setF("e_rev",r.rev);setF("e_date",r.date);
+ setF("e_mgr",r.mgr);setF("e_status",r.status);setF("e_audit",r.audit);setF("e_loc",r.loc);setF("e_file",r.file);setF("e_note",r.note);
+ openForm("✏️ 문서 편집");window.scrollTo({top:0,behavior:"smooth"});}
+function saveForm(){
+ var rec={clause:getF("e_clause"),code:getF("e_code"),name:getF("e_name"),rev:getF("e_rev"),date:getF("e_date"),
+  mgr:getF("e_mgr"),status:getF("e_status"),audit:getF("e_audit"),loc:getF("e_loc"),file:getF("e_file"),note:getF("e_note")};
+ if(!rec.name&&!rec.code){alert("문서번호 또는 문서명 중 하나는 입력하세요.");return;}
+ if(EDIT>=0)ROWS[EDIT]=rec; else ROWS.push(rec);
+ closeForm();saveCloud();render();
+}
+function delRow(i){if(!confirm("이 문서를 대장에서 삭제할까요?"))return;ROWS.splice(i,1);saveCloud();render();}
+
+function exportCsv(){
+ var head=["조항","문서번호","문서명","Rev","제개정일","담당","상태","심사확인","보관위치","비고","원본파일"];
+ var lines=[head.join(",")];
+ ROWS.forEach(function(r){
+  var row=[r.clause,r.code,r.name,r.rev,r.date,r.mgr,r.status,r.audit,r.loc,r.note,r.file].map(function(v){
+   v=(v==null?"":String(v)); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; });
+  lines.push(row.join(","));
+ });
+ var blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+ var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="IATF16949_문서관리대장_2026.csv";a.click();
+}
+
+/* 클라우드 (app_state 키 iatf_docs_2026) */
+var _saveT=null;
+function saveCloud(){
+ if(!window.SB)return;
+ clearTimeout(_saveT);
+ _saveT=setTimeout(function(){
+  window.SB.from("app_state").upsert({key:KEY,value:ROWS,src:(window.__CID||""),updated_at:new Date().toISOString()})
+   .then(function(r){ setSt(r&&r.error?"저장 실패":"클라우드 저장됨 ✓", r&&r.error?"r":"g"); })
+   .catch(function(){setSt("저장 실패","r");});
+ },400);
+}
+async function load(){
+ if(!window.SB){setSt("로컬 모드 — 미연결","r");ROWS=seedRows();render();return;}
+ setSt("불러오는 중…");
+ try{
+  var r=await window.SB.from("app_state").select("value").eq("key",KEY).maybeSingle();
+  if(r.error){ setSt("연결 확인 필요","r"); ROWS=seedRows(); render(); return; }
+  if(r.data&&r.data.value&&r.data.value.length){ ROWS=r.data.value; setSt("클라우드 연결됨 ✓","g"); render(); }
+  else { ROWS=seedRows(); setSt("기본 대장 저장 중…"); saveCloud(); render(); setSt("클라우드 연결됨 ✓","g"); }
+ }catch(e){ setSt("연결 확인 필요","r"); ROWS=seedRows(); render(); }
+}
+load();
+try{ if(window.SB) window.SB.channel("iatf_docs_rt")
+  .on("postgres_changes",{event:"*",schema:"public",table:"app_state",filter:"key=eq."+KEY},function(p){
+    var row=(p&&p.new)||{}; if(row.src===window.__CID)return; if(row.value){ROWS=row.value;render();}
+  }).subscribe(); }catch(e){}
+</script>
+</body></html>

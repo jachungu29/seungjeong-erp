@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도면관리 시스템 | Drawing Management System</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080c14;
+  --bg2: #0d1424;
+  --bg3: #111a2e;
+  --bg4: #162038;
+  --sidebar: #091220;
+  --card: #111a2e;
+  --card2: #162038;
+  --border: #1e2d4a;
+  --border2: #243558;
+  --cyan: #00c8ff;
+  --cyan2: #00a8d4;
+  --cyan-dim: rgba(0,200,255,0.12);
+  --cyan-glow: rgba(0,200,255,0.25);
+  --green: #00e5a0;
+  --yellow: #f5c842;
+  --orange: #ff8c42;
+  --red: #ff4d6d;
+  --purple: #a855f7;
+  --text: #e8edf5;
+  --text2: #9ab0cc;
+  --text3: #5a7494;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Noto Sans KR', sans-serif;
+  --radius: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+/* Layout */
+#app { display: flex; height: 100vh; overflow: hidden; }
+/* Sidebar */
+#sidebar {
+  width: 220px; min-width: 220px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-logo {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-main {
+  font-size: 13px; font-weight: 700; color: var(--cyan);
+  letter-spacing: 0.5px; line-height: 1.3;
+}
+.logo-sub {
+  font-size: 10px; color: var(--text3); margin-top: 2px;
+  font-family: var(--mono); letter-spacing: 0.3px;
+}
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 10px 8px; }
+.nav-section-label {
+  font-size: 9px; font-weight: 600; color: var(--text3);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 10px 8px 5px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 6px; cursor: pointer;
+  color: var(--text2); font-size: 12.5px; font-weight: 500;
+  margin-bottom: 1px; transition: all 0.15s; border: 1px solid transparent;
+  white-space: nowrap; overflow: hidden;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active {
+  background: var(--cyan-dim); color: var(--cyan);
+  border-color: rgba(0,200,255,0.2);
+}
+.nav-item .nav-icon { font-size: 14px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto; background: var(--bg4);
+  color: var(--text3); font-size: 10px;
+  padding: 1px 6px; border-radius: 10px;
+  font-family: var(--mono); flex-shrink: 0;
+}
+.nav-item.active .nav-badge { background: rgba(0,200,255,0.15); color: var(--cyan); }
+.sidebar-bottom {
+  padding: 10px 8px;
+  border-top: 1px solid var(--border);
+}
+.btn-io {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 8px 10px; border-radius: 6px;
+  font-size: 12px; font-family: var(--sans); font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border2); margin-bottom: 6px;
+  background: var(--bg3); color: var(--text2); transition: all 0.15s;
+}
+.btn-io:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+/* Main */
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+/* Header */
+#header {
+  height: 52px; min-height: 52px;
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 14px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.header-title {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.header-title span { color: var(--cyan); }
+.search-wrap {
+  flex: 1; max-width: 380px;
+  position: relative; margin-left: 10px;
+}
+.search-wrap input {
+  width: 100%; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 6px;
+  padding: 7px 12px 7px 34px;
+  color: var(--text); font-family: var(--sans); font-size: 12.5px;
+  outline: none; transition: border-color 0.15s;
+}
+.search-wrap input:focus { border-color: var(--cyan); }
+.search-wrap .search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--text3); font-size: 13px;
+}
+.header-filters { display: flex; gap: 6px; margin-left: 6px; }
+.filter-chip {
+  padding: 5px 11px; border-radius: 5px; font-size: 11.5px;
+  border: 1px solid var(--border2); background: var(--bg3);
+  color: var(--text2); cursor: pointer; transition: all 0.15s;
+  font-family: var(--sans); white-space: nowrap;
+}
+.filter-chip:hover { border-color: var(--cyan); color: var(--cyan); }
+.filter-chip.active { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+.header-right { margin-left: auto; display: flex; gap: 8px; }
+.btn-primary {
+  padding: 7px 14px; border-radius: 6px;
+  background: var(--cyan); color: #000;
+  border: none; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; font-family: var(--sans);
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-primary:hover { background: var(--cyan2); }
+/* Content */
+#content { flex: 1; overflow-y: auto; padding: 16px 20px; }
+/* Stats cards */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px;
+  position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.stat-card.cyan::before { background: var(--cyan); }
+.stat-card.green::before { background: var(--green); }
+.stat-card.yellow::before { background: var(--yellow); }
+.stat-card.purple::before { background: var(--purple); }
+.stat-label { font-size: 10px; color: var(--text3); font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; }
+.stat-value { font-size: 26px; font-weight: 700; font-family: var(--mono); margin: 4px 0 2px; }
+.stat-card.cyan .stat-value { color: var(--cyan); }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.yellow .stat-value { color: var(--yellow); }
+.stat-card.purple .stat-value { color: var(--purple); }
+.stat-sub { font-size: 10.5px; color: var(--text3); }
+/* Table */
+.table-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.table-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  background: var(--card2);
+}
+.table-title { font-size: 12px; font-weight: 600; color: var(--text2); display: flex; align-items: center; gap: 8px; }
+.count-badge {
+  background: var(--bg); border: 1px solid var(--border2);
+  color: var(--text3); font-size: 10.5px; font-family: var(--mono);
+  padding: 1px 7px; border-radius: 10px;
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 9px 12px;
+  background: var(--bg); color: var(--text3);
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+td {
+  padding: 9px 12px; border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--text2); vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.tr-clickable { cursor: pointer; }
+.tr-clickable:hover td { background: rgba(0,200,255,0.04) !important; }
+.partno {
+  font-family: var(--mono); font-size: 11.5px;
+  color: var(--cyan); font-weight: 500;
+}
+.partname { font-weight: 500; color: var(--text); }
+.type-badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 10.5px; font-weight: 600; white-space: nowrap;
+}
+.type-완제품 { background: rgba(0,200,255,0.12); color: var(--cyan); border: 1px solid rgba(0,200,255,0.25); }
+.type-반제품 { background: rgba(0,229,160,0.10); color: var(--green); border: 1px solid rgba(0,229,160,0.25); }
+.type-원부자재 { background: rgba(245,200,66,0.10); color: var(--yellow); border: 1px solid rgba(245,200,66,0.25); }
+.type-미매핑 { background: rgba(255,77,109,0.10); color: var(--red); border: 1px solid rgba(255,77,109,0.25); }
+.rev-badge {
+  display: inline-flex; align-items: center;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 4px;
+  background: rgba(168,85,247,0.12); color: var(--purple);
+  border: 1px solid rgba(168,85,247,0.25);
+}
+.has-drawing { color: var(--cyan); }
+.no-drawing { color: var(--text3); }
+.action-btn {
+  padding: 4px 9px; border-radius: 4px; font-size: 11px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text2); cursor: pointer; font-family: var(--sans);
+  transition: all 0.12s; display: inline-flex; align-items: center; gap: 4px;
+}
+.action-btn:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+.action-btn.danger:hover { border-color: var(--red); color: var(--red); background: rgba(255,77,109,0.08); }
+/* BOM tree */
+.bom-tree { padding: 12px; }
+.bom-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 5px; margin-bottom: 2px;
+  border: 1px solid transparent; transition: all 0.12s;
+}
+.bom-row:hover { background: rgba(255,255,255,0.03); border-color: var(--border); }
+.bom-indent { display: flex; align-items: center; gap: 0; }
+.bom-line { width: 20px; height: 20px; flex-shrink: 0; position: relative; }
+.bom-level-0 .bom-partno { color: var(--cyan); font-size: 12.5px; }
+.bom-level-1 .bom-partno { color: var(--green); }
+.bom-level-2 .bom-partno { color: var(--yellow); }
+.bom-level-3 .bom-partno { color: var(--orange); }
+.bom-partno { font-family: var(--mono); font-size: 11.5px; font-weight: 500; min-width: 170px; }
+.bom-partname { font-size: 12px; color: var(--text); min-width: 200px; }
+.bom-spec { font-size: 11px; color: var(--text3); min-width: 140px; }
+.bom-qty { font-family: var(--mono); font-size: 11.5px; color: var(--text2); min-width: 50px; text-align: right; }
+.bom-supplier { font-size: 11px; color: var(--text3); min-width: 110px; }
+.bom-price { font-family: var(--mono); font-size: 11.5px; color: var(--text2); min-width: 70px; text-align: right; }
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 12px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  max-height: 90vh; width: 900px; max-width: 100%;
+  overflow: hidden;
+}
+.modal-lg { width: 1100px; }
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 14px;
+  flex-shrink: 0;
+}
+.modal-title-area { flex: 1; }
+.modal-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.modal-subtitle { font-size: 11px; color: var(--text3); margin-top: 3px; font-family: var(--mono); }
+.modal-close {
+  background: none; border: none; color: var(--text3);
+  font-size: 20px; cursor: pointer; padding: 2px;
+  transition: color 0.12s; line-height: 1; flex-shrink: 0;
+}
+.modal-close:hover { color: var(--text); }
+.modal-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px; flex-shrink: 0;
+  background: var(--sidebar);
+}
+.modal-tab {
+  padding: 10px 16px; font-size: 12px; font-weight: 500;
+  color: var(--text3); cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: all 0.15s; white-space: nowrap;
+}
+.modal-tab:hover { color: var(--text); }
+.modal-tab.active { color: var(--cyan); border-color: var(--cyan); }
+.modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+.modal-footer {
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;
+}
+/* Form */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label {
+  font-size: 10.5px; font-weight: 600; color: var(--text3);
+  letter-spacing: 0.6px; text-transform: uppercase;
+}
+.form-label .req { color: var(--red); margin-left: 3px; }
+.form-input, .form-select, .form-textarea {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 8px 11px;
+  color: var(--text); font-family: var(--sans); font-size: 12.5px;
+  outline: none; transition: border-color 0.15s; width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--cyan); }
+.form-select { cursor: pointer; appearance: none; }
+.form-textarea { resize: vertical; min-height: 70px; }
+.form-input.mono { font-family: var(--mono); }
+/* Drawing upload area */
+.drawing-drop {
+  border: 2px dashed var(--border2); border-radius: 8px;
+  padding: 32px; text-align: center; cursor: pointer;
+  transition: all 0.15s; position: relative;
+}
+.drawing-drop:hover, .drawing-drop.dragover {
+  border-color: var(--cyan); background: var(--cyan-dim);
+}
+.drawing-drop input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.drop-icon { font-size: 32px; margin-bottom: 8px; }
+.drop-text { font-size: 12.5px; color: var(--text2); }
+.drop-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+/* Drawing preview */
+.drawing-preview-wrap {
+  background: var(--bg3); border-radius: 8px;
+  overflow: hidden; position: relative; min-height: 300px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
+}
+.drawing-preview-wrap img {
+  max-width: 100%; max-height: 450px;
+  object-fit: contain; display: block;
+}
+.drawing-preview-wrap iframe {
+  width: 100%; height: 450px; border: none;
+}
+/* Rev history */
+.rev-timeline { display: flex; flex-direction: column; gap: 0; }
+.rev-item {
+  display: flex; gap: 14px; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.rev-item:last-child { border-bottom: none; }
+.rev-dot-wrap { display: flex; flex-direction: column; align-items: center; padding-top: 3px; }
+.rev-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--purple); color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-family: var(--mono);
+}
+.rev-dot.latest { background: var(--cyan); color: #000; }
+.rev-line { flex: 1; width: 1px; background: var(--border); margin-top: 4px; }
+.rev-content { flex: 1; }
+.rev-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.rev-tag { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--purple); }
+.rev-tag.latest { color: var(--cyan); }
+.rev-date { font-size: 11px; color: var(--text3); }
+.rev-latest-badge {
+  font-size: 9px; padding: 1px 6px; border-radius: 3px;
+  background: rgba(0,200,255,0.15); color: var(--cyan);
+  font-weight: 600; letter-spacing: 0.5px;
+}
+.rev-note { font-size: 12px; color: var(--text2); }
+.rev-file { font-size: 11px; color: var(--text3); margin-top: 3px; display: flex; align-items: center; gap: 5px; }
+/* Parent product list */
+.parent-list { display: flex; flex-direction: column; gap: 8px; }
+.parent-card {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 7px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: all 0.15s;
+}
+.parent-card:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+.parent-partno { font-family: var(--mono); font-size: 12px; color: var(--cyan); font-weight: 500; min-width: 160px; }
+.parent-name { font-size: 12.5px; color: var(--text); font-weight: 500; flex: 1; }
+.parent-model { font-size: 11px; color: var(--text3); }
+.parent-customer { font-size: 11px; color: var(--text3); }
+/* Multi-select checkbox list */
+.checkbox-list {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 6px; max-height: 200px; overflow-y: auto; padding: 6px;
+}
+.checkbox-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 4px; cursor: pointer; transition: background 0.12s;
+}
+.checkbox-item:hover { background: rgba(255,255,255,0.04); }
+.checkbox-item input[type=checkbox] { accent-color: var(--cyan); width: 14px; height: 14px; flex-shrink: 0; }
+.checkbox-label { font-size: 12px; color: var(--text2); }
+.checkbox-sub { font-size: 10.5px; color: var(--text3); }
+/* Info row */
+.info-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-bottom: 16px;
+}
+.info-item { display: flex; flex-direction: column; gap: 2px; }
+.info-label { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; }
+.info-value { font-size: 12.5px; color: var(--text); font-weight: 500; }
+.info-value.mono { font-family: var(--mono); color: var(--cyan); }
+/* Section header */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 12px; font-weight: 600; color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-line {
+  flex: 1; height: 1px; background: var(--border); margin-left: 10px;
+}
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 48px 20px;
+  color: var(--text3); font-size: 13px;
+}
+.empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.5; }
+/* BOM tree header row */
+.bom-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; margin-bottom: 4px;
+  font-size: 10.5px; color: var(--text3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+/* Loading */
+.loading { display: flex; align-items: center; justify-content: center; height: 200px; gap: 10px; color: var(--text3); }
+/* Notification */
+#notif {
+  position: fixed; top: 16px; right: 16px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.notif-item {
+  background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 12px 16px;
+  font-size: 12.5px; color: var(--text); min-width: 260px;
+  box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px;
+  animation: slideIn 0.2s ease;
+}
+.notif-item.success { border-left: 3px solid var(--green); }
+.notif-item.error { border-left: 3px solid var(--red); }
+.notif-item.info { border-left: 3px solid var(--cyan); }
+@keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+/* Responsive override for content dividers */
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+.flex-row { display: flex; align-items: center; gap: 10px; }
+.flex-1 { flex: 1; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.mt-12 { margin-top: 12px; }
+.btn-ghost {
+  padding: 7px 14px; border-radius: 6px;
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2); font-size: 12px;
+  cursor: pointer; transition: all 0.15s; font-family: var(--sans);
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.btn-ghost:hover { border-color: var(--text2); color: var(--text); }
+.btn-danger {
+  padding: 7px 14px; border-radius: 6px;
+  background: transparent; color: var(--red);
+  border: 1px solid rgba(255,77,109,0.3); font-size: 12px;
+  cursor: pointer; transition: all 0.15s; font-family: var(--sans);
+}
+.btn-danger:hover { background: rgba(255,77,109,0.1); }
+.tag-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px;
+  background: var(--bg4); color: var(--text3); border: 1px solid var(--border);
+}
+.drawing-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
+/* tooltip */
+[title] { cursor: help; }
+.used-in-badges { display: flex; flex-wrap: wrap; gap: 4px; }
+.used-badge {
+  font-family: var(--mono); font-size: 9.5px; padding: 2px 6px;
+  border-radius: 3px; background: rgba(0,200,255,0.08);
+  color: var(--cyan); border: 1px solid rgba(0,200,255,0.15);
+  white-space: nowrap;
+}
+.price-cell { font-family: var(--mono); font-size: 11.5px; color: var(--text2); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+</style>
+<script src="supabase.js"></script>
+<style id="SJ-HORIZONTAL-NAV">
+/* ===== 승정: 좌측 세로 사이드바 → 상단 가로 메뉴바 ===== */
+#app{ flex-direction:column !important; }
+#sidebar{
+  width:100% !important; min-width:0 !important; height:auto !important;
+  flex-direction:row !important; align-items:center !important; flex-wrap:nowrap !important;
+  overflow-x:auto !important; overflow-y:hidden !important;
+  border-right:0 !important; border-bottom:1px solid var(--border) !important;
+  gap:12px !important; padding:6px 16px !important; box-sizing:border-box !important;
+}
+.sidebar-logo{ order:1; flex:0 0 auto !important; padding:0 8px 0 0 !important; border-bottom:0 !important; }
+.sidebar-logo .logo-sub{ font-size:9px !important; opacity:.6 !important; }
+.sidebar-nav{ order:2; flex:0 1 auto !important; display:flex !important; flex-direction:row !important;
+  align-items:center !important; gap:4px !important; overflow-x:auto !important; overflow-y:hidden !important; padding:0 !important; }
+.nav-section-label{ display:none !important; }
+.nav-item{ flex:0 0 auto !important; white-space:nowrap !important; padding:8px 13px !important; margin:0 !important;
+  border-radius:8px 8px 0 0 !important; }
+.nav-item.active{ box-shadow:inset 0 -3px 0 var(--cyan) !important; }
+.nav-badge{ margin-left:6px !important; }
+.sidebar-bottom{ order:3; margin-left:auto !important; display:flex !important; flex-direction:row !important;
+  align-items:center !important; gap:8px !important; flex:0 0 auto !important; padding:0 !important; border-top:0 !important; }
+.sidebar-bottom > #storageStats{ padding:0 4px !important; white-space:nowrap !important; }
+main{ flex:1 1 auto !important; min-height:0 !important; }
+</style></head>
+<body>
+<div id="app">
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-main">⚙ 도면관리 시스템</div>
+      <div class="logo-sub">Drawing Management v1.0</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">메뉴</div>
+      <div class="nav-item active" onclick="setView('dashboard')" id="nav-dashboard">
+        <span class="nav-icon">📊</span> 대시보드
+      </div>
+      <div class="nav-item" onclick="setView('all')" id="nav-all">
+        <span class="nav-icon">📋</span> 전체 도면
+        <span class="nav-badge" id="badge-all">0</span>
+      </div>
+      <div class="nav-section-label">품목 유형</div>
+      <div class="nav-item" onclick="setView('finished')" id="nav-finished">
+        <span class="nav-icon">🏭</span> 완제품
+        <span class="nav-badge" id="badge-finished">0</span>
+      </div>
+      <div class="nav-item" onclick="setView('semi')" id="nav-semi">
+        <span class="nav-icon">🔩</span> 반제품
+        <span class="nav-badge" id="badge-semi">0</span>
+      </div>
+      <div class="nav-item" onclick="setView('material')" id="nav-material">
+        <span class="nav-icon">📦</span> 원부자재
+        <span class="nav-badge" id="badge-material">0</span>
+      </div>
+      <div class="nav-section-label">관리</div>
+      <div class="nav-item" onclick="setView('register')" id="nav-register">
+        <span class="nav-icon">➕</span> 도면 등록
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div id="storageStats" style="font-size:10.5px;color:var(--text3);padding:4px 8px 8px;"></div>
+      <button class="btn-io" onclick="exportJSON()">📤 JSON 내보내기</button>
+      <button class="btn-io" onclick="document.getElementById('importFile').click()">📥 JSON 불러오기</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+      <button class="btn-io" onclick="showStorageManager()" style="margin-top:4px;border-color:var(--border)">🗄 저장소 관리</button>
+    </div>
+  </aside>
+  <!-- Main -->
+  <main id="main">
+    <div id="header">
+      <div class="header-title" id="headerTitle">📊 <span>대시보드</span></div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="품번, 품명 검색..." oninput="onSearch(this.value)">
+      </div>
+      <div class="header-filters" id="typeFilters" style="display:none">
+        <button class="filter-chip active" onclick="setTypeFilter('all',this)">전체</button>
+        <button class="filter-chip" onclick="setTypeFilter('완제품',this)">완제품</button>
+        <button class="filter-chip" onclick="setTypeFilter('반제품',this)">반제품</button>
+        <button class="filter-chip" onclick="setTypeFilter('원부자재',this)">원부자재</button>
+      </div>
+      <div class="header-right">
+        <button class="btn-primary" onclick="setView('register')">＋ 도면 등록</button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+
+<!-- Modals -->
+<div id="notif"></div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detailModal" style="display:none" onclick="if(event.target===this)closeModal('detailModal')">
+  <div class="modal modal-lg" id="detailModalBox">
+    <div class="modal-header">
+      <div class="modal-title-area">
+        <div class="modal-title" id="dModalTitle">품목 상세</div>
+        <div class="modal-subtitle" id="dModalSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+    </div>
+    <div class="modal-tabs" id="dModalTabs">
+      <div class="modal-tab active" onclick="switchModalTab(this,'dtab-info')">기본정보</div>
+      <div class="modal-tab" onclick="switchModalTab(this,'dtab-bom')" id="dtab-bom-trigger">BOM 구성</div>
+      <div class="modal-tab" onclick="switchModalTab(this,'dtab-parents')" id="dtab-parents-trigger">상위품목</div>
+      <div class="modal-tab" onclick="switchModalTab(this,'dtab-drawing')">도면</div>
+      <div class="modal-tab" onclick="switchModalTab(this,'dtab-rev')">개정이력</div>
+    </div>
+    <div class="modal-body">
+      <div id="dtab-info" class="tab-content active"></div>
+      <div id="dtab-bom" class="tab-content"></div>
+      <div id="dtab-parents" class="tab-content"></div>
+      <div id="dtab-drawing" class="tab-content"></div>
+      <div id="dtab-rev" class="tab-content"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('detailModal')">닫기</button>
+      <button class="btn-primary" onclick="openEditFromDetail()">✏ 편집</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit / Register Modal -->
+<div class="modal-overlay" id="editModal" style="display:none" onclick="if(event.target===this)closeModal('editModal')">
+  <div class="modal" id="editModalBox">
+    <div class="modal-header">
+      <div class="modal-title-area">
+        <div class="modal-title" id="eModalTitle">도면 등록</div>
+        <div class="modal-subtitle" id="eModalSub">신규 품목 도면 등록</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <div class="modal-tab active" onclick="switchModalTab(this,'etab-info')">기본정보</div>
+      <div class="modal-tab" onclick="switchModalTab(this,'etab-drawing')">도면 업로드</div>
+      <div class="modal-tab" onclick="switchModalTab(this,'etab-rev')">개정 추가</div>
+    </div>
+    <div class="modal-body">
+      <div id="etab-info" class="tab-content active">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">품번 <span class="req">*</span></label>
+            <input class="form-input mono" id="e_partNo" placeholder="예: 1107-L71540-11">
+          </div>
+          <div class="form-group">
+            <label class="form-label">품명 <span class="req">*</span></label>
+            <input class="form-input" id="e_partName" placeholder="품명 입력">
+          </div>
+          <div class="form-group">
+            <label class="form-label">종류</label>
+            <select class="form-select" id="e_type">
+              <option value="완제품">완제품</option>
+              <option value="반제품-조립">반제품-조립</option>
+              <option value="반제품-사출">반제품-사출</option>
+              <option value="원부자재">원부자재</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">규격</label>
+            <input class="form-input mono" id="e_spec" placeholder="예: Φ10*185mm">
+          </div>
+          <div class="form-group">
+            <label class="form-label">공급처</label>
+            <input class="form-input" id="e_supplier" placeholder="공급처명">
+          </div>
+          <div class="form-group">
+            <label class="form-label">단가 (원)</label>
+            <input class="form-input mono" id="e_unitPrice" type="number" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">호기/설비</label>
+            <input class="form-input" id="e_equipment" placeholder="예: 조립1호기">
+          </div>
+          <div class="form-group">
+            <label class="form-label">안전재고</label>
+            <input class="form-input mono" id="e_safetyStock" type="number" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">차종</label>
+            <input class="form-input" id="e_carModel" placeholder="예: JK1, MQ4">
+          </div>
+          <div class="form-group">
+            <label class="form-label">고객사</label>
+            <input class="form-input" id="e_customer" placeholder="고객사명">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">비고</label>
+            <input class="form-input" id="e_note" placeholder="포장단위 등">
+          </div>
+          <div class="form-group form-full" id="e_usedInWrap">
+            <label class="form-label">사용 완제품 <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(복수선택 가능)</span></label>
+            <div class="checkbox-list" id="e_usedIn"></div>
+          </div>
+        </div>
+      </div>
+      <div id="etab-drawing" class="tab-content">
+        <div class="form-group" style="margin-bottom:14px">
+          <label class="form-label">현재 Rev</label>
+          <input class="form-input mono" id="e_currentRev" placeholder="예: A, B, 01, 02" style="max-width:120px">
+        </div>
+        <div class="drawing-drop" id="drawingDrop" onclick="document.getElementById('drawingFileInput').click()">
+          <input type="file" id="drawingFileInput" accept=".pdf,.png,.jpg,.jpeg,.dwg,.dxf,.tif,.tiff,.svg" onchange="onDrawingFile(event)" style="display:none">
+          <div class="drop-icon">📄</div>
+          <div class="drop-text">도면 파일을 클릭하여 선택</div>
+          <div class="drop-sub">PDF, PNG, JPG, DWG, DXF 지원</div>
+        </div>
+        <div id="drawingPreviewWrap" style="display:none;margin-top:14px">
+          <div class="drawing-preview-wrap" id="drawingPreview"></div>
+          <div class="drawing-actions">
+            <button class="action-btn" onclick="downloadCurrentDrawing()">⬇ 다운로드</button>
+            <button class="action-btn danger" onclick="removeDrawing()">✕ 삭제</button>
+          </div>
+        </div>
+      </div>
+      <div id="etab-rev" class="tab-content">
+        <p style="color:var(--text3);font-size:12px;margin-bottom:14px">새 개정본을 추가합니다. 기존 도면은 이력에 보존됩니다.</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">새 Rev 번호</label>
+            <input class="form-input mono" id="e_newRev" placeholder="예: B, C, 02">
+          </div>
+          <div class="form-group">
+            <label class="form-label">개정일</label>
+            <input class="form-input" id="e_revDate" type="date">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">개정 내용</label>
+            <textarea class="form-textarea" id="e_revNote" placeholder="변경 사항 기술"></textarea>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">새 도면 파일 (선택)</label>
+            <div class="drawing-drop" onclick="document.getElementById('revFileInput').click()" style="padding:20px">
+              <input type="file" id="revFileInput" accept=".pdf,.png,.jpg,.jpeg,.dwg,.dxf" onchange="onRevFile(event)" style="display:none">
+              <div style="font-size:13px;color:var(--text3)">📎 개정 도면 선택 (선택사항)</div>
+            </div>
+            <div id="revFileName" style="font-size:11px;color:var(--cyan);margin-top:6px;display:none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('editModal')">취소</button>
+      <button class="btn-primary" onclick="saveItem()">💾 저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================== DATA INITIALIZATION ========================
+const BOM_ITEMS_RAW = [{"partNo":"1107-L71540-11","partName":"HOSE ASSY(JK1 GSL)","spec":"HOSE Φ10*185mm","type":"완제품","supplier":"자사 조립","unitPrice":816.0,"equipment":"조립1호기","safetyStock":2000,"note":"400EA/봉","usedInFinished":["1107-L71540-11"],"customers":["현담산업㈜ 경주"],"carModels":["JK1"]},{"partNo":"1106-K40700","partName":"CAP VALVE BLUE 열코킹","spec":"","type":"반제품-조립","supplier":"자사 조립","unitPrice":300.0,"equipment":"조립3호기","safetyStock":0,"note":"1000EA/봉","usedInFinished":["1107-K41600-11","1107-L71540-11","1107-M31660-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["DN8","JK1","KA4"]},{"partNo":"1242-K40690","partName":"CAP VALVE BLUE","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":90.0,"equipment":"수평2호기","safetyStock":0,"note":"2100EA/봉","usedInFinished":["1107-K41600-11","1107-L71540-11","1107-M31660-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["DN8","JK1","KA4"]},{"partNo":"9000-500100-50","partName":"POM(F10-03H NAT)","spec":"25kg / pack","type":"원부자재","supplier":"(주)오방","unitPrice":1760.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-D30820-11","1107-K41600-11","1107-K41610-11","1107-K41620-11","1107-L71540-11","1107-L71560-11","1107-M31650-10","1107-M31660-10","1107-M31750-10","1107-M31960-10","1107-M41670-10","1107-M51780-10","1107-M61950-10","1107-P61990-11","1107-P90110-10","1241-K40100-11","1242-K40710-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["BR178","DN8","DN8 HEV","GL3","GN7 HEV","JK1","JK1 DSL","KA4","KA4 BD30","KA4 DSL","MQ4","MQ4 DSL","NX4 PHEV","TM PE BD30","X100"]},{"partNo":"9000-90010-50","partName":"POM  Master Batch(Blue)","spec":"25kg / pack","type":"원부자재","supplier":"","unitPrice":9500.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-K41600-11","1107-L71540-11","1107-M31660-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["DN8","JK1","KA4"]},{"partNo":"2331-910050-50","partName":"CHECK VALVE(HFP3)","spec":"","type":"원부자재","supplier":"(주)삼주기업","unitPrice":47.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-K41600-11","1107-L71540-11","1107-M31660-10","1107-M51820-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["DN8","JK1","KA4","NX4"]},{"partNo":"1233-K42170-50","partName":"SPRING(VALVE)","spec":"","type":"원부자재","supplier":"(주)건영테크","unitPrice":12.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-K41600-11","1107-L71540-11","1107-M31660-10","1107-M51820-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["DN8","JK1","KA4","NX4"]},{"partNo":"2332-910020-50","partName":"GUIDE-C/V(HFP3 L300)","spec":"","type":"원부자재","supplier":"(주)ATS진천","unitPrice":55.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-K41600-11","1107-L71540-11","1107-M31660-10","1107-M51820-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["DN8","JK1","KA4","NX4"]},{"partNo":"1204-K92120-50","partName":"HOSE (FEED)185mm","spec":"Φ10*185mm","type":"원부자재","supplier":"(주)동남테크","unitPrice":354.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-L71540-11"],"customers":["현담산업㈜ 경주"],"carModels":["JK1"]},{"partNo":"1107-M41670-10","partName":"HOSE ASSY (FEED)","spec":"HOSE Φ13*250mm","type":"완제품","supplier":"자사 조립","unitPrice":887.0,"equipment":"조립1호기","safetyStock":0,"note":"400EA/봉","usedInFinished":["1107-M41670-10"],"customers":["현담산업㈜ 경주"],"carModels":["JK1 DSL"]},{"partNo":"1242-K40710","partName":"CAP NAT","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":90.0,"equipment":"수평2호기","safetyStock":0,"note":"2100EA/봉","usedInFinished":["1107-K41600-11","1107-K41610-11","1107-K41620-11","1107-L71560-11","1107-M31650-10","1107-M31750-10","1107-M31960-10","1107-M41670-10","1107-M51780-10","1107-M61950-10","1107-P61990-11","1107-P90110-10","1242-K40710-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["BR178","DN8","DN8 HEV","GL3","GN7 HEV","JK1 DSL","KA4 BD30","KA4 DSL","MQ4","MQ4 DSL","NX4 PHEV","TM PE BD30"]},{"partNo":"1204-M42420-50","partName":"HOSE 250mm","spec":"Φ13*250mm","type":"원부자재","supplier":"(주)동남테크","unitPrice":690.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-M41670-10"],"customers":["현담산업㈜ 경주"],"carModels":["JK1 DSL"]},{"partNo":"1107-M51820-10","partName":"HOSE ASSY(NX4 DSL)","spec":"HOSE 듀얼 Φ13*125(투) Φ10*132(투)","type":"완제품","supplier":"자사 조립","unitPrice":1271.0,"equipment":"조립1호기","safetyStock":800,"note":"200EA/봉","usedInFinished":["1107-M51820-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4"]},{"partNo":"1106-M52810","partName":"HOSE 듀얼1차","spec":"","type":"반제품-조립","supplier":"자사 조립","unitPrice":350.0,"equipment":"조립1호기","safetyStock":0,"note":"1000EA/봉","usedInFinished":["1107-M51820-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4"]},{"partNo":"1242-C20520-50","partName":"CAP(SUCTION)","spec":"","type":"원부자재","supplier":"영일산업㈜","unitPrice":120.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-M51820-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4"]},{"partNo":"1106-K40800","partName":"CAP 듀얼 열코킹","spec":"","type":"반제품-조립","supplier":"자사 조립","unitPrice":400.0,"equipment":"조립3호기","safetyStock":0,"note":"1000EA/봉","usedInFinished":["1107-M51820-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4"]},{"partNo":"1242-M50800-50","partName":"NX4 CAP 흰색(더블)","spec":"","type":"원부자재","supplier":"영일산업㈜","unitPrice":224.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-M51820-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4"]},{"partNo":"HOSE (투명 ) 125mm","partName":"","spec":"","type":"미매핑","supplier":"","unitPrice":0.0,"equipment":"","safetyStock":0,"note":"확인필요","usedInFinished":["1107-M51820-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4"]},{"partNo":"1107-D30820-11","partName":"HOSE ASSY(X100)","spec":"HOSE Φ*10*125mm","type":"완제품","supplier":"자사 조립","unitPrice":474.0,"equipment":"조립1호기","safetyStock":3000,"note":"400EA/봉","usedInFinished":["1107-D30820-11"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산"],"carModels":["X100"]},{"partNo":"1242-D00550","partName":"CAP YP","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":90.0,"equipment":"수평2호기","safetyStock":0,"note":"2100EA/봉","usedInFinished":["1107-D30820-11"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산"],"carModels":["X100"]},{"partNo":"1204-941450-50","partName":"HOSE-BLACK 125mm","spec":"Φ10*125mm","type":"원부자재","supplier":"현담산업㈜ 아산","unitPrice":274.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-D30820-11"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산"],"carModels":["X100"]},{"partNo":"1107-L71560-11","partName":"HOSE ASSY (KA4 DSL)","spec":"HOSE Φ13*190mm","type":"완제품","supplier":"자사 조립","unitPrice":819.0,"equipment":"조립1호기","safetyStock":2000,"note":"400EA/봉","usedInFinished":["1107-L71560-11"],"customers":["현담산업㈜ 아산"],"carModels":["KA4 DSL"]},{"partNo":"1204-L72290-50","partName":"HOSE(FEED) 190mm","spec":"Φ13*190mm","type":"원부자재","supplier":"(주)동남테크","unitPrice":616.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-L71560-11"],"customers":["현담산업㈜ 아산"],"carModels":["KA4 DSL"]},{"partNo":"1107-M31650-10","partName":"HOSE ASSY (MQ4 FEED)","spec":"HOSE Φ10*170mm","type":"완제품","supplier":"자사 조립","unitPrice":498.0,"equipment":"조립1호기","safetyStock":4000,"note":"400EA/봉","usedInFinished":["1107-M31650-10"],"customers":["현담산업㈜ 아산"],"carModels":["MQ4"]},{"partNo":"1204-821520-50","partName":"HOSE  170mm","spec":"Φ10*170mm","type":"원부자재","supplier":"현담산업㈜ 아산","unitPrice":299.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-K41620-11","1107-M31650-10","1107-M31660-10","1107-P61990-11"],"customers":["현담산업㈜ 아산","현담테크㈜"],"carModels":["DN8 HEV","GN7 HEV","KA4","MQ4"]},{"partNo":"1107-M31660-10","partName":"HOSE ASSY (KA4 FEED VALVE)","spec":"HOSE Φ10*170mm","type":"완제품","supplier":"자사 조립","unitPrice":775.0,"equipment":"조립1호기","safetyStock":2400,"note":"400EA/봉","usedInFinished":["1107-M31660-10"],"customers":["현담산업㈜ 아산"],"carModels":["KA4"]},{"partNo":"1107-M31750-10","partName":"HOSE ASSY(MQ4 DSL)","spec":"HOSE  Φ13*145mm","type":"완제품","supplier":"자사 조립","unitPrice":587.0,"equipment":"조립1호기","safetyStock":1200,"note":"400EA/봉","usedInFinished":["1107-M31750-10"],"customers":["현담산업㈜ 아산"],"carModels":["MQ4 DSL"]},{"partNo":"1204-C31790-50","partName":"HOSE(FEED) 145mm","spec":"Φ13*145mm","type":"원부자재","supplier":"현담산업㈜ 아산","unitPrice":386.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-M31750-10"],"customers":["현담산업㈜ 아산"],"carModels":["MQ4 DSL"]},{"partNo":"1107-M61950-10","partName":"HOSE ASSY (FEED)","spec":"HOSE 190mm","type":"완제품","supplier":"자사 조립","unitPrice":878.0,"equipment":"조립1호기","safetyStock":400,"note":"400EA/봉","usedInFinished":["1107-M61950-10"],"customers":["현담산업㈜ 아산"],"carModels":["KA4 BD30"]},{"partNo":"1204-M62800-10","partName":"HOSE 190mm","spec":"투명","type":"원부자재","supplier":"(주)동남테크","unitPrice":616.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-M61950-10"],"customers":["현담산업㈜ 아산"],"carModels":["KA4 BD30"]},{"partNo":"1107-M31960-10","partName":"TM PE BD30 HOSE","spec":"HOSE 166mm","type":"완제품","supplier":"자사 조립","unitPrice":692.0,"equipment":"조립1호기","safetyStock":400,"note":"400EA/봉","usedInFinished":["1107-M31960-10"],"customers":["현담산업㈜ 아산"],"carModels":["TM PE BD30"]},{"partNo":"1204-K92110-10","partName":"HOSE 166mm","spec":"","type":"원부자재","supplier":"(주)동남테크","unitPrice":518.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-M31960-10"],"customers":["현담산업㈜ 아산"],"carModels":["TM PE BD30"]},{"partNo":"1107-P90110-10","partName":"HOSE ASSY(BR178)","spec":"HOSE 110mm","type":"완제품","supplier":"자사 조립","unitPrice":390.0,"equipment":"조립1호기","safetyStock":500,"note":"500EA/봉","usedInFinished":["1107-P90110-10"],"customers":["현담테크㈜"],"carModels":["BR178"]},{"partNo":"1204-F31850-10","partName":"HOSE 110mm","spec":"","type":"원부자재","supplier":"(주)동남테크","unitPrice":225.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-P90110-10"],"customers":["현담테크㈜"],"carModels":["BR178"]},{"partNo":"1107-M51780-10","partName":"HOSE ASSY(NX4 PHEV)","spec":"HOSE Φ10*200mm","type":"완제품","supplier":"자사 조립","unitPrice":593.0,"equipment":"조립1호기","safetyStock":0,"note":"400EA/봉","usedInFinished":["1107-M51780-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4 PHEV"]},{"partNo":"1204-941490-50","partName":"HOSE  200mm","spec":"Φ10*200mm","type":"원부자재","supplier":"현담산업㈜ 아산","unitPrice":400.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-M51780-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4 PHEV"]},{"partNo":"1107-K41610-11","partName":"HOSE ASSY (FEED)","spec":"HOSE 150mm","type":"완제품","supplier":"자사 조립","unitPrice":626.0,"equipment":"조립2호기","safetyStock":2100,"note":"400EA/봉","usedInFinished":["1107-K41610-11"],"customers":["현담산업㈜ 경주"],"carModels":["GL3"]},{"partNo":"1204-971460-50","partName":"HOSE 150MM","spec":"Φ10*150mm","type":"원부자재","supplier":"현담산업㈜ 아산","unitPrice":296.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1107-K41600-11","1107-K41610-11"],"customers":["현담산업㈜ 경주","현담테크㈜"],"carModels":["DN8","GL3"]},{"partNo":"1107-K41600-11","partName":"HOSE ASSY(DN8 VALVE)","spec":"HOSE 150mm","type":"완제품","supplier":"자사 조립","unitPrice":920.0,"equipment":"조립2호기","safetyStock":2100,"note":"300EA/봉","usedInFinished":["1107-K41600-11"],"customers":["현담테크㈜"],"carModels":["DN8"]},{"partNo":"1107-K41620-11","partName":"HOSE ASSY(DN8 HEV)","spec":"HOSE Φ10*170mm","type":"완제품","supplier":"자사 조립","unitPrice":638.0,"equipment":"조립2호기","safetyStock":2100,"note":"300EA/봉","usedInFinished":["1107-K41620-11"],"customers":["현담테크㈜"],"carModels":["DN8 HEV"]},{"partNo":"1107-P61990-11","partName":"HOSE ASSY(GN7 HEV)","spec":"HOSE Φ10*170mm","type":"완제품","supplier":"자사 조립","unitPrice":638.0,"equipment":"조립2호기","safetyStock":2100,"note":"300EA/봉","usedInFinished":["1107-P61990-11"],"customers":["현담테크㈜"],"carModels":["GN7 HEV"]},{"partNo":"1058-K40220-10","partName":"ASSIST PUMP ASSY-SUB(NX4e)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":386.0,"equipment":"조립4호기","safetyStock":6000,"note":"500EA/봉","usedInFinished":["1058-K40220-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4e"]},{"partNo":"1211-K47560","partName":"BODY NX4","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":150.0,"equipment":"수평1호기","safetyStock":0,"note":"900EA/봉","usedInFinished":["1058-K40220-10"],"customers":["현담산업㈜ 아산"],"carModels":["NX4e"]},{"partNo":"9000-110020-50","partName":"POM(F25-03 NAT)","spec":"25kg / pack","type":"원부자재","supplier":"(주)오방","unitPrice":1600.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1058-K40210-10","1058-K40220-10","1058-N90260-10","1117-M31020-10","1210-A50060-11","1211-B81710-10","1211-K98180-10"],"customers":["현담산업㈜ 경주","현담산업㈜ 아산","현담테크㈜"],"carModels":["AX","KA4","MQ4","MQ4 DSL","NX4e","RG3","UM DSL"]},{"partNo":"9001-940070-50","partName":"BALL STEEL","spec":"Φ4.5 SUS304","type":"원부자재","supplier":"한국정밀강구주식회사","unitPrice":12.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1058-K40210-10","1058-K40220-10","1058-N90260-10"],"customers":["현담산업㈜ 아산","현담테크㈜"],"carModels":["AX","KA4","NX4e"]},{"partNo":"1228-C70470-50","partName":"O-RING","spec":"Φ24*Φ21*1.5T","type":"원부자재","supplier":"","unitPrice":70.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1058-K40210-10","1058-K40220-10","1058-N90260-10","1117-M31020-10"],"customers":["현담산업㈜ 아산","현담테크㈜"],"carModels":["AX","KA4","MQ4 DSL","NX4e"]},{"partNo":"1058-K40210-10","partName":"A/PUMP ASSY(NX4a 수출용)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":375.0,"equipment":"조립4호기","safetyStock":8000,"note":"500EA/봉","usedInFinished":["1058-K40210-10","1058-M10270-10"],"customers":["현담테크㈜"],"carModels":["GL3 람다","KA4"]},{"partNo":"1211-K48070","partName":"BODY KA4","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":150.0,"equipment":"수평3호기","safetyStock":0,"note":"900EA/봉","usedInFinished":["1058-K40210-10"],"customers":["현담테크㈜"],"carModels":["KA4"]},{"partNo":"9000-90011-50","partName":"POM Master Batch(Gray)","spec":"25kg / pack","type":"원부자재","supplier":"","unitPrice":9500.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1058-K40210-10","1211-K98180-10"],"customers":["현담테크㈜"],"carModels":["KA4","RG3"]},{"partNo":"1117-M31020-10","partName":"A/PUMP ASSY SUB(MQ4 DSL)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":319.0,"equipment":"조립5호기","safetyStock":5000,"note":"400EA/봉","usedInFinished":["1117-M31020-10"],"customers":["현담테크㈜"],"carModels":["MQ4 DSL"]},{"partNo":"1211-M38020","partName":"BODY MQ4","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":150.0,"equipment":"수평3호기","safetyStock":0,"note":"800EA/봉","usedInFinished":["1117-M31020-10"],"customers":["현담테크㈜"],"carModels":["MQ4 DSL"]},{"partNo":"1058-N90260-10","partName":"A/PUMP ASSY(AX)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":421.0,"equipment":"조립5호기","safetyStock":1000,"note":"500EA/봉","usedInFinished":["1058-N90260-10"],"customers":["현담테크㈜"],"carModels":["AX"]},{"partNo":"1211-N98160","partName":"BODY AX","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":150.0,"equipment":"수평3호기","safetyStock":0,"note":"900EA/봉","usedInFinished":["1058-N90260-10"],"customers":["현담테크㈜"],"carModels":["AX"]},{"partNo":"1058-M10270-10","partName":"A/PUMP ASSY(GL3 람다)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":706.0,"equipment":"조립6호기","safetyStock":0,"note":"500EA/봉","usedInFinished":["1058-M10270-10"],"customers":["현담테크㈜"],"carModels":["GL3 람다"]},{"partNo":"1204-M12790-10","partName":"HOSE","spec":"람다","type":"원부자재","supplier":"","unitPrice":204.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1058-M10270-10"],"customers":["현담테크㈜"],"carModels":["GL3 람다"]},{"partNo":"1223-M10490-10","partName":"GL3람다 CLIP","spec":"","type":"원부자재","supplier":"현담테크㈜","unitPrice":24.39,"equipment":"","safetyStock":0,"note":"","usedInFinished":["1058-M10270-10"],"customers":["현담테크㈜"],"carModels":["GL3 람다"]},{"partNo":"1241-K40100-11","partName":"CLIP (PIPE)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":20.0,"equipment":"수평사출2호기","safetyStock":20000,"note":"20000EA/봉","usedInFinished":["1241-K40100-11"],"customers":["현담산업㈜ 아산"],"carModels":["MQ4"]},{"partNo":"2134-330200-11","partName":"ARMATURE ASSY-INSULATION(HFP2用)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":910.0,"equipment":"수직사출4호기","safetyStock":5600,"note":"70EA/봉","usedInFinished":["2134-330200-11"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"9000-710180-50","partName":"PA66(KN3311BL)","spec":"25kg / pack","type":"원부자재","supplier":"코오롱이앤피㈜","unitPrice":4900.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["2134-330200-11","2134-350250-10","2134-710170-10","2134-840240-10","2134-840240-11"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2136-330100-50","partName":"CORE / HFP1.2/2/L200","spec":"Φ25.88*26.5T","type":"원부자재","supplier":"㈜바엠씨","unitPrice":261.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["2134-330200-11","2134-350250-10","2134-840240-10","2134-840240-11"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2316-710120-50","partName":"SHAFT / HFP1","spec":"Φ5*63.42L","type":"원부자재","supplier":"㈜지에스아이","unitPrice":379.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["2134-330200-11","2134-710170-10"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2134-840240-10","partName":"ARMATURE ASSY-INSULATION(HFP1.2)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":945.0,"equipment":"수직사출2호기","safetyStock":14000,"note":"70EA/봉","usedInFinished":["2134-840240-10"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2316-840170-50","partName":"SHAFT / HFP1.2","spec":"Φ5*73L","type":"원부자재","supplier":"㈜지에스아이","unitPrice":450.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["2134-840240-10","2134-840240-11"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2134-840240-11","partName":"ARMATURE ASSY-INSULATION(HFP1.2)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":945.0,"equipment":"수직사출3호기","safetyStock":14000,"note":"96EA/봉","usedInFinished":["2134-840240-11"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2134-350250-10","partName":"ARMATURE ASSY-INSULATION(HFP2.1 L200)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":935.0,"equipment":"수직사출4호기","safetyStock":0,"note":"70EA/봉","usedInFinished":["2134-350250-10"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2316-350180-50","partName":"SHAFT / HFP2 L200","spec":"Φ5*76.5L","type":"원부자재","supplier":"㈜지에스아이","unitPrice":440.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["2134-350250-10"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2134-710170-10","partName":"ARMATURE ASSY-INSULATION(HFP1用)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":809.0,"equipment":"수직사출2호기","safetyStock":0,"note":"96EA/봉","usedInFinished":["2134-710170-10"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"2136-710090-50","partName":"CORE /  HFP1","spec":"Φ25.88* 20.5T","type":"원부자재","supplier":"㈜바엠씨","unitPrice":202.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["2134-710170-10"],"customers":["현담산업㈜ 아산"],"carModels":["HFP"]},{"partNo":"1211-K98180-10","partName":"A/PUMP ASSY(RS4)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":274.0,"equipment":"수평사출3호기","safetyStock":6000,"note":"200EA/봉","usedInFinished":["1211-K98180-10"],"customers":["현담테크㈜"],"carModels":["RG3"]},{"partNo":"1242-K40710-10","partName":"CAP(NX4 DSL)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":88.0,"equipment":"수평사출2호기","safetyStock":2000,"note":"1000EA/봉","usedInFinished":["1242-K40710-10"],"customers":["현담테크㈜"],"carModels":["MQ4"]},{"partNo":"1210-A50060-11","partName":"SPACER(Gde_승정)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":31.0,"equipment":"수평사출2호기","safetyStock":50000,"note":"5000EA/봉","usedInFinished":["1210-A50060-11"],"customers":["현담테크㈜"],"carModels":["MQ4"]},{"partNo":"1211-B81710-10","partName":"BODY(UM DSL)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":197.0,"equipment":"수평사출4호기","safetyStock":3000,"note":"400EA/봉","usedInFinished":["1211-B81710-10"],"customers":["현담산업㈜ 경주"],"carModels":["UM DSL"]},{"partNo":"연3D-TB-160427C","partName":"AMB SENSOR","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":141.0,"equipment":"수직사출6호기","safetyStock":0,"note":"1500EA/봉","usedInFinished":["연3D-TB-160427C"],"customers":["쌍신전자통신주식회사"],"carModels":["AMB"]},{"partNo":"9000-10010-50","partName":"POM F20-03BBK","spec":"","type":"원부자재","supplier":"","unitPrice":3200.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["연3D-TB-160427C"],"customers":["쌍신전자통신주식회사"],"carModels":["AMB"]},{"partNo":"8000-10010-10","partName":"OS AMB","spec":"","type":"원부자재","supplier":"","unitPrice":0.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["연3D-TB-160427C"],"customers":["쌍신전자통신주식회사"],"carModels":["AMB"]},{"partNo":"SD-DC-2312110B","partName":"SU2i BRACKET","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":494.0,"equipment":"수평사출5호기","safetyStock":0,"note":"200EA/봉","usedInFinished":["SD-DC-2312110B"],"customers":["쌍신전자통신주식회사"],"carModels":["SU2i"]},{"partNo":"9000-30012-50","partName":"PBT GP2156FL- KA34P","spec":"","type":"원부자재","supplier":"","unitPrice":6500.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["SD-DC-2312110B","SD-DC-2405160A"],"customers":["쌍신전자통신주식회사"],"carModels":["QU2","SU2i"]},{"partNo":"SD-DC-2405160A","partName":"QU2 BRACKET","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":494.0,"equipment":"수평사출5호기","safetyStock":0,"note":"200EA/봉","usedInFinished":["SD-DC-2405160A"],"customers":["쌍신전자통신주식회사"],"carModels":["QU2"]},{"partNo":"A3204-BC301","partName":"SUB MOLD-BC3","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3307.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-BC301"],"customers":["티에스모스트주식회사"],"carModels":["BC3"]},{"partNo":"9000-30010-50","partName":"PBT GF30 1500G30BK 1269A","spec":"","type":"원부자재","supplier":"","unitPrice":4200.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-11101","A3204-16101","A3204-AC301","A3204-BC301","A3204-BI300","A3204-BI301","A3204-HB600","A3204-JK101","A3204-KA401","A3204-KAH00","A3204-MQ401","A3204-MQ412"],"customers":["티에스모스트주식회사"],"carModels":["AC3","BC3","BI3","BI3_PE","CK","HB PE","JK1","KA4","KA4_HEV","MQ4","MQ4 HEV","SK EV"]},{"partNo":"B3202-10050-01","partName":"IBS BONE ASSY-BC3","spec":"","type":"원부자재","supplier":"","unitPrice":2808.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-BC301"],"customers":["티에스모스트주식회사"],"carModels":["BC3"]},{"partNo":"MA2001-3W110","partName":"TERMINAL CONNECTOR A","spec":"","type":"원부자재","supplier":"","unitPrice":26.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-11101","A3204-16101","A3204-BC301","A3204-BI300","A3204-BI301","A3204-HB600","A3204-JK101","A3204-KA401","A3204-KAH00","A3204-MQ401","A3204-MQ412"],"customers":["티에스모스트주식회사"],"carModels":["BC3","BI3","BI3_PE","CK","HB PE","JK1","KA4","KA4_HEV","MQ4","MQ4 HEV","SK EV"]},{"partNo":"MA2001-3W120","partName":"TERMINAL CONNECTOR B","spec":"","type":"원부자재","supplier":"","unitPrice":23.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-11101","A3204-16101","A3204-BC301","A3204-BI300","A3204-BI301","A3204-HB600","A3204-JK101","A3204-KA401","A3204-KAH00","A3204-MQ401","A3204-MQ412"],"customers":["티에스모스트주식회사"],"carModels":["BC3","BI3","BI3_PE","CK","HB PE","JK1","KA4","KA4_HEV","MQ4","MQ4 HEV","SK EV"]},{"partNo":"A3204-BI300","partName":"SUB MOLD-BI3","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3261.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-BI300"],"customers":["티에스모스트주식회사"],"carModels":["BI3"]},{"partNo":"B3202-30100-01","partName":"IBS BONE ASSY-QXi","spec":"","type":"원부자재","supplier":"","unitPrice":2763.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-BI300"],"customers":["티에스모스트주식회사"],"carModels":["BI3"]},{"partNo":"A3204-BI301","partName":"SUB MOLD-BI3_PE","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3261.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-BI301"],"customers":["티에스모스트주식회사"],"carModels":["BI3_PE"]},{"partNo":"B3202-30100-02","partName":"IBS BONE ASSY-BI3_PE","spec":"","type":"원부자재","supplier":"","unitPrice":2763.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-BI301"],"customers":["티에스모스트주식회사"],"carModels":["BI3_PE"]},{"partNo":"A3204-JK101","partName":"SUB MOLD-JK1","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":4031.0,"equipment":"수직사출1호기","safetyStock":0,"note":"16EA/봉","usedInFinished":["A3204-JK101"],"customers":["티에스모스트주식회사"],"carModels":["JK1"]},{"partNo":"B3202-JK102-01","partName":"IBS BONE ASSY-JK1","spec":"","type":"원부자재","supplier":"","unitPrice":3525.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-JK101"],"customers":["티에스모스트주식회사"],"carModels":["JK1"]},{"partNo":"A3204-KA401","partName":"SUB MOLD-KA4","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3326.0,"equipment":"수직사출1호기","safetyStock":0,"note":"16EA/봉","usedInFinished":["A3204-KA401"],"customers":["티에스모스트주식회사"],"carModels":["KA4"]},{"partNo":"B3202-KA402-01","partName":"IBS BONE ASSY-KA4","spec":"","type":"원부자재","supplier":"","unitPrice":2827.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-KA401"],"customers":["티에스모스트주식회사"],"carModels":["KA4"]},{"partNo":"A3204-KAH00","partName":"SUB MOLD-KA4_HEV","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3326.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-KAH00"],"customers":["티에스모스트주식회사"],"carModels":["KA4_HEV"]},{"partNo":"B3202-KAH00-00","partName":"IBS BONE ASSY-KA4_HEV","spec":"","type":"원부자재","supplier":"","unitPrice":2655.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-KAH00"],"customers":["티에스모스트주식회사"],"carModels":["KA4_HEV"]},{"partNo":"A3204-MQ401","partName":"SUB MOLD-MQ4","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3882.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-MQ401"],"customers":["티에스모스트주식회사"],"carModels":["MQ4"]},{"partNo":"B3202-CN700-01","partName":"IBS BONE ASSY-CN7","spec":"","type":"원부자재","supplier":"","unitPrice":3378.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-MQ401"],"customers":["티에스모스트주식회사"],"carModels":["MQ4"]},{"partNo":"A3204-MQ412","partName":"SUB MOLD-MQ4 HEV","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3152.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-MQ412"],"customers":["티에스모스트주식회사"],"carModels":["MQ4 HEV"]},{"partNo":"B3202-MQ402-01","partName":"IBS BONE ASSY-MQ4 HEV","spec":"","type":"원부자재","supplier":"","unitPrice":2655.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-MQ412"],"customers":["티에스모스트주식회사"],"carModels":["MQ4 HEV"]},{"partNo":"A3204-AC301","partName":"SUB MOLD-AC3","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3306.0,"equipment":"수직사출1호기","safetyStock":0,"note":"16EA/봉","usedInFinished":["A3204-AC301"],"customers":["티에스모스트주식회사"],"carModels":["AC3"]},{"partNo":"B3202-AC310-01","partName":"IBS BONE ASSY-AC3","spec":"","type":"원부자재","supplier":"","unitPrice":2763.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-AC301"],"customers":["티에스모스트주식회사"],"carModels":["AC3"]},{"partNo":"MA2001-AC310","partName":"TERMINAL CONNECTOR A ®","spec":"","type":"원부자재","supplier":"","unitPrice":46.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-AC301"],"customers":["티에스모스트주식회사"],"carModels":["AC3"]},{"partNo":"MA2001-AC320","partName":"TERMINAL CONNECTOR B","spec":"","type":"원부자재","supplier":"","unitPrice":47.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-AC301"],"customers":["티에스모스트주식회사"],"carModels":["AC3"]},{"partNo":"A3204-HB600","partName":"SUB MOLD - HB PE","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3362.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-HB600"],"customers":["티에스모스트주식회사"],"carModels":["HB PE"]},{"partNo":"B3202-00151-00","partName":"IBS BONE ASSY-HB","spec":"","type":"원부자재","supplier":"","unitPrice":2863.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-HB600"],"customers":["티에스모스트주식회사"],"carModels":["HB PE"]},{"partNo":"A3204-11101","partName":"SUB MOLD - CK","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3362.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-11101"],"customers":["티에스모스트주식회사"],"carModels":["CK"]},{"partNo":"B3202-11000-01","partName":"IBS BONE ASSY-CK","spec":"","type":"원부자재","supplier":"","unitPrice":2863.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-11101"],"customers":["티에스모스트주식회사"],"carModels":["CK"]},{"partNo":"A3204-16101","partName":"SUB MOLD-SK EV","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":3820.0,"equipment":"수직사출1호기","safetyStock":0,"note":"32EA/봉","usedInFinished":["A3204-16101"],"customers":["티에스모스트주식회사"],"carModels":["SK EV"]},{"partNo":"B3202-16000-01","partName":"IBS BONE ASSY-SK EV","spec":"","type":"원부자재","supplier":"","unitPrice":3238.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3204-16101"],"customers":["티에스모스트주식회사"],"carModels":["SK EV"]},{"partNo":"A3013-AAB01","partName":"SG2 EV 1000A CORRENT SENSOR PCB COVER","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":190.0,"equipment":"수평사출8호기","safetyStock":2000,"note":"1600EA/봉","usedInFinished":["A3013-AAB01"],"customers":["티에스모스트주식회사"],"carModels":["SG2 EV"]},{"partNo":"9000-30011-50","partName":"PBT GP2300 - KA08P","spec":"","type":"원부자재","supplier":"","unitPrice":3550.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A0908-MQ402","A0908-NE106","A0908-NE200","A0908-NE300","A0908-NX407","A0908-NX410","A3001-AAB03","A3012-AAB01","A3013-AAB01"],"customers":["티에스모스트주식회사"],"carModels":["MQ4 PHEV","NE EV","NX4 HEV","SG2 EV"]},{"partNo":"A3012-AAB01","partName":"SG2 EV 1000A CORRENT SENSOR CORE COVER","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":193.0,"equipment":"수평사출8호기","safetyStock":2000,"note":"960EA/봉","usedInFinished":["A3012-AAB01"],"customers":["티에스모스트주식회사"],"carModels":["SG2 EV"]},{"partNo":"A3001-AAB03","partName":"SG2 EV 1000A CORRENT SENSOR HOUSING","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":421.0,"equipment":"수평사출7호기","safetyStock":2000,"note":"300EA/봉","usedInFinished":["A3001-AAB03"],"customers":["티에스모스트주식회사"],"carModels":["SG2 EV"]},{"partNo":"A0302-NE100","partName":"BUSHING","spec":"","type":"원부자재","supplier":"","unitPrice":35.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A0908-NE106","A3001-AAB03"],"customers":["티에스모스트주식회사"],"carModels":["NE EV","SG2 EV"]},{"partNo":"A0908-NE106","partName":"NE EV 500A CURRENT SENSOR HOUSING","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":362.0,"equipment":"수평사출7호기","safetyStock":4000,"note":"300EA/봉","usedInFinished":["A0908-NE106"],"customers":["티에스모스트주식회사"],"carModels":["NE EV"]},{"partNo":"A3052-AAB04","partName":"SG2 EV 1000A CORRENT SENSOR T/MOLD","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":240.0,"equipment":"수직사출6호기","safetyStock":2000,"note":"5000EA/봉","usedInFinished":["A3052-AAB04"],"customers":["티에스모스트주식회사"],"carModels":["SG2 EV"]},{"partNo":"9000-40010-50","partName":"PA66 G30  KN333G30BL","spec":"","type":"원부자재","supplier":"","unitPrice":4792.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3001-AAN02","A3052-AAB04"],"customers":["티에스모스트주식회사"],"carModels":["NQ5PE","SG2 EV"]},{"partNo":"MA3051-AAB02","partName":"SG2 EV 1000A CURRENT SENSOR TERMINAL","spec":"C2680 1/2H","type":"원부자재","supplier":"","unitPrice":116.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3052-AAB04"],"customers":["티에스모스트주식회사"],"carModels":["SG2 EV"]},{"partNo":"A0908-MQ402","partName":"MQ4 PHEV CURRENT SENSOR HOUSING","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":400.0,"equipment":"수직사출5호기","safetyStock":2000,"note":"400EA/봉","usedInFinished":["A0908-MQ402"],"customers":["티에스모스트주식회사"],"carModels":["MQ4 PHEV"]},{"partNo":"A2009-NQ400","partName":"MQ4 HOUSING TERMINAL","spec":"","type":"원부자재","supplier":"","unitPrice":17.3,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A0908-MQ402"],"customers":["티에스모스트주식회사"],"carModels":["MQ4 PHEV"]},{"partNo":"A0908-NX407","partName":"NX4 HEV SENSOR HOUSING","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":400.0,"equipment":"수직사출5호기","safetyStock":2000,"note":"400EA/봉","usedInFinished":["A0908-NX407"],"customers":["티에스모스트주식회사"],"carModels":["NX4 HEV"]},{"partNo":"A2009-NX400","partName":"NX4 HOUSING TERMINAL","spec":"","type":"원부자재","supplier":"","unitPrice":19.6,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A0908-NX407"],"customers":["티에스모스트주식회사"],"carModels":["NX4 HEV"]},{"partNo":"A0908-NE300","partName":"NE EV 500A INV CURRENT SENSOR PCB COVER","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":150.0,"equipment":"수평사출8호기","safetyStock":4000,"note":"1600EA/봉","usedInFinished":["A0908-NE300"],"customers":["티에스모스트주식회사"],"carModels":["NE EV"]},{"partNo":"A0908-NE200","partName":"NE EV 500A INV CURRENT SENSOR CORE COVER","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":190.0,"equipment":"수평사출8호기","safetyStock":4000,"note":"960EA/봉","usedInFinished":["A0908-NE200"],"customers":["티에스모스트주식회사"],"carModels":["NE EV"]},{"partNo":"A0908-NX410","partName":"NX4 HEV SENSOR COVER","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":120.0,"equipment":"수평사출8호기","safetyStock":2000,"note":"3000EA/봉","usedInFinished":["A0908-NX410"],"customers":["티에스모스트주식회사"],"carModels":["NX4 HEV"]},{"partNo":"A3001-AAN02","partName":"NQ5PE HOUSING_POSITION SENSOR","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":472.0,"equipment":"수직사출7호기","safetyStock":3000,"note":"600EA/봉","usedInFinished":["A3001-AAN02"],"customers":["티에스모스트주식회사"],"carModels":["NQ5PE"]},{"partNo":"9000-30013-50","partName":"PBT + PET G30  SG5300H-KA02P","spec":"","type":"원부자재","supplier":"","unitPrice":4500.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3001-AAN02"],"customers":["티에스모스트주식회사"],"carModels":["NQ5PE"]},{"partNo":"A2001-AAN01","partName":"NQ5PE T/MOLD","spec":"","type":"반제품-사출","supplier":"자사 생산","unitPrice":120.0,"equipment":"수직6호기","safetyStock":0,"note":"1000EA/봉","usedInFinished":["A3001-AAN02"],"customers":["티에스모스트주식회사"],"carModels":["NQ5PE"]},{"partNo":"A2009-NQ500","partName":"NQ5PE  TERMINAL","spec":"","type":"원부자재","supplier":"","unitPrice":70.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["A3001-AAN02"],"customers":["티에스모스트주식회사"],"carModels":["NQ5PE"]},{"partNo":"86681-N1000","partName":"HOLDER-RR ULTRASONIC-A R1 = #5","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":153.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"300EA/봉","usedInFinished":["86681-N1000"],"customers":["금문산업㈜"],"carModels":["GN7"]},{"partNo":"9000-20011-50","partName":"MR71N","spec":"TPO","type":"원부자재","supplier":"","unitPrice":2403.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["86681-N1000","86682-N1000","86683-N1000","86684-N1000","86685-N1000","86686-N1000"],"customers":["금문산업㈜"],"carModels":["GN7"]},{"partNo":"86684-N1000","partName":"HOLDER-RR ULTRASONIC-A R4 = #2","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":153.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"300EA/봉","usedInFinished":["86684-N1000"],"customers":["금문산업㈜"],"carModels":["GN7"]},{"partNo":"86682-N1000","partName":"HOLDER-RR ULTRASONIC-B R2 = #4","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":152.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"300EA/봉","usedInFinished":["86682-N1000"],"customers":["금문산업㈜"],"carModels":["GN7"]},{"partNo":"86683-N1000","partName":"HOLDER-RR ULTRASONIC-B R3 = #3","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":152.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"300EA/봉","usedInFinished":["86683-N1000"],"customers":["금문산업㈜"],"carModels":["GN7"]},{"partNo":"86685-N1000","partName":"HOLDER-RR ULTRASONIC-C R5 = #6","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":160.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"200EA/봉","usedInFinished":["86685-N1000"],"customers":["금문산업㈜"],"carModels":["GN7"]},{"partNo":"86686-N1000","partName":"HOLDER-RR ULTRASONIC-C R6 = #1","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":160.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"200EA/봉","usedInFinished":["86686-N1000"],"customers":["금문산업㈜"],"carModels":["GN7"]},{"partNo":"86555-L1500","partName":"REINF-FR BUMPER SIDE NO.1(LH)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":240.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"75EA/봉","usedInFinished":["86555-L1500"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"9000-20010-50","partName":"HG42BK","spec":"PP GF20","type":"원부자재","supplier":"","unitPrice":2398.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["86555-L1500","86555-L1700","86556-L1500","86556-L1700"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"86556-L1500","partName":"REINF-FR BUMPER SIDE NO.2(RH)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":240.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"75EA/봉","usedInFinished":["86556-L1500"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"86555-L1700","partName":"REINF-FR BUMPER SIDE NO.1(LH)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":240.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"60EA/봉","usedInFinished":["86555-L1700"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"86556-L1700","partName":"REINF-FR BUMPER SIDE NO.2(RH)","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":240.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"60EA/봉","usedInFinished":["86556-L1700"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"86581-L1550","partName":"HOLDER-P.D.W-F NO.1 (PAINT)_FRT","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":140.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"700EA/봉","usedInFinished":["86581-L1550"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"9000-20012-50","partName":"SRX373-1405G","spec":"DN8PE 도장용","type":"원부자재","supplier":"","unitPrice":2292.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["86581-L1550","86584-L1550"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"86584-L1550","partName":"HOLDER-P.D.W-F NO.4 (PAINT)_FRT","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":140.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"700EA/봉","usedInFinished":["86584-L1550"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"86581-L1500","partName":"HOLDER-P.D.W-F NO.1 (EMBO)_FRT","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":140.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"200EA/봉","usedInFinished":["86581-L1500"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"9000-20013-50","partName":"MR71S","spec":"DN8PE 엠보","type":"원부자재","supplier":"","unitPrice":1900.0,"equipment":"","safetyStock":0,"note":"","usedInFinished":["86581-L1500","86584-L1500"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]},{"partNo":"86584-L1500","partName":"HOLDER-P.D.W-F NO.4 (EMBO)_FRT","spec":"","type":"완제품","supplier":"자사 조립","unitPrice":140.0,"equipment":"수평사출5호기","safetyStock":2000,"note":"200EA/봉","usedInFinished":["86584-L1500"],"customers":["금문산업㈜"],"carModels":["DN8 PE"]}];
+const BOM_LINKS_RAW = [{"finishedPartNo":"1107-L71540-11","level":0,"partNo":"1107-L71540-11","parentPartNo":null,"qty":1.0,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":1,"partNo":"1106-K40700","parentPartNo":"1107-L71540-11","qty":1.0,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":2,"partNo":"1242-K40690","parentPartNo":"1106-K40700","qty":1.0,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":3,"partNo":"9000-500100-50","parentPartNo":"1242-K40690","qty":3.9,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":3,"partNo":"9000-90010-50","parentPartNo":"1242-K40690","qty":0.0585,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":2,"partNo":"2331-910050-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":2,"partNo":"1233-K42170-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":2,"partNo":"2332-910020-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71540-11","level":1,"partNo":"1204-K92120-50","parentPartNo":"1107-L71540-11","qty":1.0,"carModel":"JK1","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-M41670-10","level":0,"partNo":"1107-M41670-10","parentPartNo":null,"qty":1.0,"carModel":"JK1 DSL","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-M41670-10","level":1,"partNo":"1242-K40710","parentPartNo":"1107-M41670-10","qty":1.0,"carModel":"JK1 DSL","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-M41670-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"JK1 DSL","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-M41670-10","level":1,"partNo":"1204-M42420-50","parentPartNo":"1107-M41670-10","qty":1.0,"carModel":"JK1 DSL","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-M51820-10","level":0,"partNo":"1107-M51820-10","parentPartNo":null,"qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":1,"partNo":"1106-M52810","parentPartNo":"1107-M51820-10","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":2,"partNo":"1242-C20520-50","parentPartNo":"1106-M52810","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":2,"partNo":"1242-C20520-50","parentPartNo":"1106-M52810","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":1,"partNo":"1106-K40800","parentPartNo":"1107-M51820-10","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":2,"partNo":"1242-M50800-50","parentPartNo":"1106-K40800","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":2,"partNo":"2331-910050-50","parentPartNo":"1106-K40800","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":2,"partNo":"1233-K42170-50","parentPartNo":"1106-K40800","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":2,"partNo":"2332-910020-50","parentPartNo":"1106-K40800","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51820-10","level":1,"partNo":"HOSE (투명 ) 125mm","parentPartNo":"1107-M51820-10","qty":1.0,"carModel":"NX4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-D30820-11","level":0,"partNo":"1107-D30820-11","parentPartNo":null,"qty":1.0,"carModel":"X100","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-D30820-11","level":1,"partNo":"1242-D00550","parentPartNo":"1107-D30820-11","qty":1.0,"carModel":"X100","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-D30820-11","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-D00550","qty":3.9,"carModel":"X100","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-D30820-11","level":1,"partNo":"1204-941450-50","parentPartNo":"1107-D30820-11","qty":1.0,"carModel":"X100","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-D30820-11","level":0,"partNo":"1107-D30820-11","parentPartNo":null,"qty":1.0,"carModel":"X100","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-D30820-11","level":1,"partNo":"1242-D00550","parentPartNo":"1107-D30820-11","qty":1.0,"carModel":"X100","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-D30820-11","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-D00550","qty":3.9,"carModel":"X100","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-D30820-11","level":1,"partNo":"1204-941450-50","parentPartNo":"1107-D30820-11","qty":1.0,"carModel":"X100","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-L71560-11","level":0,"partNo":"1107-L71560-11","parentPartNo":null,"qty":1.0,"carModel":"KA4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-L71560-11","level":1,"partNo":"1242-K40710","parentPartNo":"1107-L71560-11","qty":1.0,"carModel":"KA4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-L71560-11","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"KA4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-L71560-11","level":1,"partNo":"1204-L72290-50","parentPartNo":"1107-L71560-11","qty":1.0,"carModel":"KA4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31650-10","level":0,"partNo":"1107-M31650-10","parentPartNo":null,"qty":1.0,"carModel":"MQ4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31650-10","level":1,"partNo":"1242-K40710","parentPartNo":"1107-M31650-10","qty":1.0,"carModel":"MQ4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31650-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"MQ4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31650-10","level":1,"partNo":"1204-821520-50","parentPartNo":"1107-M31650-10","qty":1.0,"carModel":"MQ4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":0,"partNo":"1107-M31660-10","parentPartNo":null,"qty":1.0,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":1,"partNo":"1106-K40700","parentPartNo":"1107-M31660-10","qty":1.0,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":2,"partNo":"1242-K40690","parentPartNo":"1106-K40700","qty":1.0,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":3,"partNo":"9000-500100-50","parentPartNo":"1242-K40690","qty":3.9,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":3,"partNo":"9000-90010-50","parentPartNo":"1242-K40690","qty":0.0585,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":2,"partNo":"2331-910050-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":2,"partNo":"1233-K42170-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":2,"partNo":"2332-910020-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31660-10","level":1,"partNo":"1204-821520-50","parentPartNo":"1107-M31660-10","qty":1.0,"carModel":"KA4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31750-10","level":0,"partNo":"1107-M31750-10","parentPartNo":null,"qty":1.0,"carModel":"MQ4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31750-10","level":1,"partNo":"1242-K40710","parentPartNo":"1107-M31750-10","qty":1.0,"carModel":"MQ4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31750-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"MQ4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31750-10","level":1,"partNo":"1204-C31790-50","parentPartNo":"1107-M31750-10","qty":1.0,"carModel":"MQ4 DSL","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M61950-10","level":0,"partNo":"1107-M61950-10","parentPartNo":null,"qty":1.0,"carModel":"KA4 BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M61950-10","level":1,"partNo":"1242-K40710","parentPartNo":"1107-M61950-10","qty":1.0,"carModel":"KA4 BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M61950-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"KA4 BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M61950-10","level":1,"partNo":"1204-M62800-10","parentPartNo":"1107-M61950-10","qty":1.0,"carModel":"KA4 BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31960-10","level":0,"partNo":"1107-M31960-10","parentPartNo":null,"qty":1.0,"carModel":"TM PE BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31960-10","level":1,"partNo":"1242-K40710","parentPartNo":"1107-M31960-10","qty":1.0,"carModel":"TM PE BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31960-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"TM PE BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M31960-10","level":1,"partNo":"1204-K92110-10","parentPartNo":"1107-M31960-10","qty":1.0,"carModel":"TM PE BD30","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-P90110-10","level":0,"partNo":"1107-P90110-10","parentPartNo":null,"qty":1.0,"carModel":"BR178","customer":"현담테크㈜"},{"finishedPartNo":"1107-P90110-10","level":1,"partNo":"1242-K40710","parentPartNo":"1107-P90110-10","qty":1.0,"carModel":"BR178","customer":"현담테크㈜"},{"finishedPartNo":"1107-P90110-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"BR178","customer":"현담테크㈜"},{"finishedPartNo":"1107-P90110-10","level":1,"partNo":"1204-F31850-10","parentPartNo":"1107-P90110-10","qty":1.0,"carModel":"BR178","customer":"현담테크㈜"},{"finishedPartNo":"1107-M51780-10","level":0,"partNo":"1107-M51780-10","parentPartNo":null,"qty":1.0,"carModel":"NX4 PHEV","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51780-10","level":1,"partNo":"1242-K40710","parentPartNo":"1107-M51780-10","qty":1.0,"carModel":"NX4 PHEV","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51780-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"NX4 PHEV","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-M51780-10","level":1,"partNo":"1204-941490-50","parentPartNo":"1107-M51780-10","qty":1.0,"carModel":"NX4 PHEV","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1107-K41610-11","level":0,"partNo":"1107-K41610-11","parentPartNo":null,"qty":1.0,"carModel":"GL3","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-K41610-11","level":1,"partNo":"1242-K40710","parentPartNo":"1107-K41610-11","qty":2.0,"carModel":"GL3","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-K41610-11","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"GL3","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-K41610-11","level":1,"partNo":"1204-971460-50","parentPartNo":"1107-K41610-11","qty":1.0,"carModel":"GL3","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1107-K41600-11","level":0,"partNo":"1107-K41600-11","parentPartNo":null,"qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":1,"partNo":"1242-K40710","parentPartNo":"1107-K41600-11","qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":1,"partNo":"1106-K40700","parentPartNo":"1107-K41600-11","qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":2,"partNo":"1242-K40690","parentPartNo":"1106-K40700","qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":3,"partNo":"9000-500100-50","parentPartNo":"1242-K40690","qty":3.9,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":3,"partNo":"9000-90010-50","parentPartNo":"1242-K40690","qty":0.0585,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":2,"partNo":"2331-910050-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":2,"partNo":"1233-K42170-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":2,"partNo":"2332-910020-50","parentPartNo":"1106-K40700","qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41600-11","level":1,"partNo":"1204-971460-50","parentPartNo":"1107-K41600-11","qty":1.0,"carModel":"DN8","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41620-11","level":0,"partNo":"1107-K41620-11","parentPartNo":null,"qty":1.0,"carModel":"DN8 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41620-11","level":1,"partNo":"1242-K40710","parentPartNo":"1107-K41620-11","qty":2.0,"carModel":"DN8 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41620-11","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"DN8 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1107-K41620-11","level":1,"partNo":"1204-821520-50","parentPartNo":"1107-K41620-11","qty":1.0,"carModel":"DN8 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1107-P61990-11","level":0,"partNo":"1107-P61990-11","parentPartNo":null,"qty":1.0,"carModel":"GN7 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1107-P61990-11","level":1,"partNo":"1242-K40710","parentPartNo":"1107-P61990-11","qty":2.0,"carModel":"GN7 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1107-P61990-11","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"GN7 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1107-P61990-11","level":1,"partNo":"1204-821520-50","parentPartNo":"1107-P61990-11","qty":1.0,"carModel":"GN7 HEV","customer":"현담테크㈜"},{"finishedPartNo":"1058-K40220-10","level":0,"partNo":"1058-K40220-10","parentPartNo":null,"qty":1.0,"carModel":"NX4e","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1058-K40220-10","level":1,"partNo":"1211-K47560","parentPartNo":"1058-K40220-10","qty":1.0,"carModel":"NX4e","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1058-K40220-10","level":2,"partNo":"9000-110020-50","parentPartNo":"1211-K47560","qty":7.4,"carModel":"NX4e","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1058-K40220-10","level":1,"partNo":"9001-940070-50","parentPartNo":"1058-K40220-10","qty":1.0,"carModel":"NX4e","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1058-K40220-10","level":1,"partNo":"1228-C70470-50","parentPartNo":"1058-K40220-10","qty":1.0,"carModel":"NX4e","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1058-K40210-10","level":0,"partNo":"1058-K40210-10","parentPartNo":null,"qty":1.0,"carModel":"KA4","customer":"현담테크㈜"},{"finishedPartNo":"1058-K40210-10","level":1,"partNo":"1211-K48070","parentPartNo":"1058-K40210-10","qty":1.0,"carModel":"KA4","customer":"현담테크㈜"},{"finishedPartNo":"1058-K40210-10","level":2,"partNo":"9000-110020-50","parentPartNo":"1211-K48070","qty":7.6,"carModel":"KA4","customer":"현담테크㈜"},{"finishedPartNo":"1058-K40210-10","level":2,"partNo":"9000-90011-50","parentPartNo":"1211-K48070","qty":0.228,"carModel":"KA4","customer":"현담테크㈜"},{"finishedPartNo":"1058-K40210-10","level":1,"partNo":"9001-940070-50","parentPartNo":"1058-K40210-10","qty":1.0,"carModel":"KA4","customer":"현담테크㈜"},{"finishedPartNo":"1058-K40210-10","level":1,"partNo":"1228-C70470-50","parentPartNo":"1058-K40210-10","qty":1.0,"carModel":"KA4","customer":"현담테크㈜"},{"finishedPartNo":"1117-M31020-10","level":0,"partNo":"1117-M31020-10","parentPartNo":null,"qty":1.0,"carModel":"MQ4 DSL","customer":"현담테크㈜"},{"finishedPartNo":"1117-M31020-10","level":1,"partNo":"1211-M38020","parentPartNo":"1117-M31020-10","qty":1.0,"carModel":"MQ4 DSL","customer":"현담테크㈜"},{"finishedPartNo":"1117-M31020-10","level":2,"partNo":"9000-110020-50","parentPartNo":"1211-M38020","qty":9.5,"carModel":"MQ4 DSL","customer":"현담테크㈜"},{"finishedPartNo":"1117-M31020-10","level":1,"partNo":"1228-C70470-50","parentPartNo":"1117-M31020-10","qty":1.0,"carModel":"MQ4 DSL","customer":"현담테크㈜"},{"finishedPartNo":"1058-N90260-10","level":0,"partNo":"1058-N90260-10","parentPartNo":null,"qty":1.0,"carModel":"AX","customer":"현담테크㈜"},{"finishedPartNo":"1058-N90260-10","level":1,"partNo":"1211-N98160","parentPartNo":"1058-N90260-10","qty":1.0,"carModel":"AX","customer":"현담테크㈜"},{"finishedPartNo":"1058-N90260-10","level":2,"partNo":"9000-110020-50","parentPartNo":"1211-N98160","qty":6.9,"carModel":"AX","customer":"현담테크㈜"},{"finishedPartNo":"1058-N90260-10","level":1,"partNo":"9001-940070-50","parentPartNo":"1058-N90260-10","qty":1.0,"carModel":"AX","customer":"현담테크㈜"},{"finishedPartNo":"1058-N90260-10","level":1,"partNo":"1228-C70470-50","parentPartNo":"1058-N90260-10","qty":1.0,"carModel":"AX","customer":"현담테크㈜"},{"finishedPartNo":"1058-M10270-10","level":0,"partNo":"1058-M10270-10","parentPartNo":null,"qty":1.0,"carModel":"GL3 람다","customer":"현담테크㈜"},{"finishedPartNo":"1058-M10270-10","level":1,"partNo":"1058-K40210-10","parentPartNo":"1058-M10270-10","qty":1.0,"carModel":"GL3 람다","customer":"현담테크㈜"},{"finishedPartNo":"1058-M10270-10","level":1,"partNo":"1204-M12790-10","parentPartNo":"1058-M10270-10","qty":1.0,"carModel":"GL3 람다","customer":"현담테크㈜"},{"finishedPartNo":"1058-M10270-10","level":1,"partNo":"1223-M10490-10","parentPartNo":"1058-M10270-10","qty":1.0,"carModel":"GL3 람다","customer":"현담테크㈜"},{"finishedPartNo":"1241-K40100-11","level":0,"partNo":"1241-K40100-11","parentPartNo":null,"qty":1.0,"carModel":"MQ4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1241-K40100-11","level":1,"partNo":"9000-500100-50","parentPartNo":"1241-K40100-11","qty":0.15,"carModel":"MQ4","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-330200-11","level":0,"partNo":"2134-330200-11","parentPartNo":null,"qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-330200-11","level":1,"partNo":"9000-710180-50","parentPartNo":"2134-330200-11","qty":2.6,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-330200-11","level":1,"partNo":"2136-330100-50","parentPartNo":"2134-330200-11","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-330200-11","level":1,"partNo":"2316-710120-50","parentPartNo":"2134-330200-11","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-10","level":0,"partNo":"2134-840240-10","parentPartNo":null,"qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-10","level":1,"partNo":"9000-710180-50","parentPartNo":"2134-840240-10","qty":2.3,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-10","level":1,"partNo":"2136-330100-50","parentPartNo":"2134-840240-10","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-10","level":1,"partNo":"2316-840170-50","parentPartNo":"2134-840240-10","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-11","level":0,"partNo":"2134-840240-11","parentPartNo":null,"qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-11","level":1,"partNo":"9000-710180-50","parentPartNo":"2134-840240-11","qty":2.3,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-11","level":1,"partNo":"2136-330100-50","parentPartNo":"2134-840240-11","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-840240-11","level":1,"partNo":"2316-840170-50","parentPartNo":"2134-840240-11","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-350250-10","level":0,"partNo":"2134-350250-10","parentPartNo":null,"qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-350250-10","level":1,"partNo":"9000-710180-50","parentPartNo":"2134-350250-10","qty":2.6,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-350250-10","level":1,"partNo":"2136-330100-50","parentPartNo":"2134-350250-10","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-350250-10","level":1,"partNo":"2316-350180-50","parentPartNo":"2134-350250-10","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-710170-10","level":0,"partNo":"2134-710170-10","parentPartNo":null,"qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-710170-10","level":1,"partNo":"9000-710180-50","parentPartNo":"2134-710170-10","qty":2.6,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-710170-10","level":1,"partNo":"2136-710090-50","parentPartNo":"2134-710170-10","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"2134-710170-10","level":1,"partNo":"2316-710120-50","parentPartNo":"2134-710170-10","qty":1.0,"carModel":"HFP","customer":"현담산업㈜ 아산"},{"finishedPartNo":"1211-K98180-10","level":0,"partNo":"1211-K98180-10","parentPartNo":null,"qty":1.0,"carModel":"RG3","customer":"현담테크㈜"},{"finishedPartNo":"1211-K98180-10","level":1,"partNo":"9000-110020-50","parentPartNo":"1211-K98180-10","qty":12.8,"carModel":"RG3","customer":"현담테크㈜"},{"finishedPartNo":"1211-K98180-10","level":1,"partNo":"9000-90011-50","parentPartNo":"1211-K98180-10","qty":0.384,"carModel":"RG3","customer":"현담테크㈜"},{"finishedPartNo":"1242-K40710-10","level":0,"partNo":"1242-K40710-10","parentPartNo":null,"qty":1.0,"carModel":"MQ4","customer":"현담테크㈜"},{"finishedPartNo":"1242-K40710-10","level":1,"partNo":"1242-K40710","parentPartNo":"1242-K40710-10","qty":1.0,"carModel":"MQ4","customer":"현담테크㈜"},{"finishedPartNo":"1242-K40710-10","level":2,"partNo":"9000-500100-50","parentPartNo":"1242-K40710","qty":4.0,"carModel":"MQ4","customer":"현담테크㈜"},{"finishedPartNo":"1210-A50060-11","level":0,"partNo":"1210-A50060-11","parentPartNo":null,"qty":1.0,"carModel":"MQ4","customer":"현담테크㈜"},{"finishedPartNo":"1210-A50060-11","level":1,"partNo":"9000-110020-50","parentPartNo":"1210-A50060-11","qty":0.9,"carModel":"MQ4","customer":"현담테크㈜"},{"finishedPartNo":"1211-B81710-10","level":0,"partNo":"1211-B81710-10","parentPartNo":null,"qty":1.0,"carModel":"UM DSL","customer":"현담산업㈜ 경주"},{"finishedPartNo":"1211-B81710-10","level":1,"partNo":"9000-110020-50","parentPartNo":"1211-B81710-10","qty":9.5,"carModel":"UM DSL","customer":"현담산업㈜ 경주"},{"finishedPartNo":"연3D-TB-160427C","level":0,"partNo":"연3D-TB-160427C","parentPartNo":null,"qty":1.0,"carModel":"AMB","customer":"쌍신전자통신주식회사"},{"finishedPartNo":"연3D-TB-160427C","level":1,"partNo":"9000-10010-50","parentPartNo":"연3D-TB-160427C","qty":3.1,"carModel":"AMB","customer":"쌍신전자통신주식회사"},{"finishedPartNo":"연3D-TB-160427C","level":1,"partNo":"8000-10010-10","parentPartNo":"연3D-TB-160427C","qty":1.0,"carModel":"AMB","customer":"쌍신전자통신주식회사"},{"finishedPartNo":"SD-DC-2312110B","level":0,"partNo":"SD-DC-2312110B","parentPartNo":null,"qty":1.0,"carModel":"SU2i","customer":"쌍신전자통신주식회사"},{"finishedPartNo":"SD-DC-2312110B","level":1,"partNo":"9000-30012-50","parentPartNo":"SD-DC-2312110B","qty":32.065,"carModel":"SU2i","customer":"쌍신전자통신주식회사"},{"finishedPartNo":"SD-DC-2405160A","level":0,"partNo":"SD-DC-2405160A","parentPartNo":null,"qty":1.0,"carModel":"QU2","customer":"쌍신전자통신주식회사"},{"finishedPartNo":"SD-DC-2405160A","level":1,"partNo":"9000-30012-50","parentPartNo":"SD-DC-2405160A","qty":32.065,"carModel":"QU2","customer":"쌍신전자통신주식회사"},{"finishedPartNo":"A3204-BC301","level":0,"partNo":"A3204-BC301","parentPartNo":null,"qty":1.0,"carModel":"BC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BC301","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-BC301","qty":14.3,"carModel":"BC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BC301","level":1,"partNo":"B3202-10050-01","parentPartNo":"A3204-BC301","qty":1.0,"carModel":"BC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BC301","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-BC301","qty":1.0,"carModel":"BC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BC301","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-BC301","qty":1.0,"carModel":"BC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI300","level":0,"partNo":"A3204-BI300","parentPartNo":null,"qty":1.0,"carModel":"BI3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI300","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-BI300","qty":14.3,"carModel":"BI3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI300","level":1,"partNo":"B3202-30100-01","parentPartNo":"A3204-BI300","qty":1.0,"carModel":"BI3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI300","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-BI300","qty":1.0,"carModel":"BI3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI300","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-BI300","qty":1.0,"carModel":"BI3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI301","level":0,"partNo":"A3204-BI301","parentPartNo":null,"qty":1.0,"carModel":"BI3_PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI301","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-BI301","qty":14.3,"carModel":"BI3_PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI301","level":1,"partNo":"B3202-30100-02","parentPartNo":"A3204-BI301","qty":1.0,"carModel":"BI3_PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI301","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-BI301","qty":1.0,"carModel":"BI3_PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-BI301","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-BI301","qty":1.0,"carModel":"BI3_PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-JK101","level":0,"partNo":"A3204-JK101","parentPartNo":null,"qty":1.0,"carModel":"JK1","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-JK101","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-JK101","qty":14.3,"carModel":"JK1","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-JK101","level":1,"partNo":"B3202-JK102-01","parentPartNo":"A3204-JK101","qty":1.0,"carModel":"JK1","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-JK101","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-JK101","qty":1.0,"carModel":"JK1","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-JK101","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-JK101","qty":1.0,"carModel":"JK1","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KA401","level":0,"partNo":"A3204-KA401","parentPartNo":null,"qty":1.0,"carModel":"KA4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KA401","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-KA401","qty":14.3,"carModel":"KA4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KA401","level":1,"partNo":"B3202-KA402-01","parentPartNo":"A3204-KA401","qty":1.0,"carModel":"KA4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KA401","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-KA401","qty":1.0,"carModel":"KA4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KA401","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-KA401","qty":1.0,"carModel":"KA4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KAH00","level":0,"partNo":"A3204-KAH00","parentPartNo":null,"qty":1.0,"carModel":"KA4_HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KAH00","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-KAH00","qty":14.3,"carModel":"KA4_HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KAH00","level":1,"partNo":"B3202-KAH00-00","parentPartNo":"A3204-KAH00","qty":1.0,"carModel":"KA4_HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KAH00","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-KAH00","qty":1.0,"carModel":"KA4_HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-KAH00","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-KAH00","qty":1.0,"carModel":"KA4_HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ401","level":0,"partNo":"A3204-MQ401","parentPartNo":null,"qty":1.0,"carModel":"MQ4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ401","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-MQ401","qty":14.3,"carModel":"MQ4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ401","level":1,"partNo":"B3202-CN700-01","parentPartNo":"A3204-MQ401","qty":1.0,"carModel":"MQ4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ401","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-MQ401","qty":1.0,"carModel":"MQ4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ401","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-MQ401","qty":1.0,"carModel":"MQ4","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ412","level":0,"partNo":"A3204-MQ412","parentPartNo":null,"qty":1.0,"carModel":"MQ4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ412","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-MQ412","qty":14.3,"carModel":"MQ4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ412","level":1,"partNo":"B3202-MQ402-01","parentPartNo":"A3204-MQ412","qty":1.0,"carModel":"MQ4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ412","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-MQ412","qty":1.0,"carModel":"MQ4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-MQ412","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-MQ412","qty":1.0,"carModel":"MQ4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-AC301","level":0,"partNo":"A3204-AC301","parentPartNo":null,"qty":1.0,"carModel":"AC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-AC301","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-AC301","qty":14.3,"carModel":"AC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-AC301","level":1,"partNo":"B3202-AC310-01","parentPartNo":"A3204-AC301","qty":1.0,"carModel":"AC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-AC301","level":1,"partNo":"MA2001-AC310","parentPartNo":"A3204-AC301","qty":1.0,"carModel":"AC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-AC301","level":1,"partNo":"MA2001-AC320","parentPartNo":"A3204-AC301","qty":1.0,"carModel":"AC3","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-HB600","level":0,"partNo":"A3204-HB600","parentPartNo":null,"qty":1.0,"carModel":"HB PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-HB600","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-HB600","qty":14.3,"carModel":"HB PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-HB600","level":1,"partNo":"B3202-00151-00","parentPartNo":"A3204-HB600","qty":1.0,"carModel":"HB PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-HB600","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-HB600","qty":1.0,"carModel":"HB PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-HB600","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-HB600","qty":1.0,"carModel":"HB PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-11101","level":0,"partNo":"A3204-11101","parentPartNo":null,"qty":1.0,"carModel":"CK","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-11101","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-11101","qty":14.3,"carModel":"CK","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-11101","level":1,"partNo":"B3202-11000-01","parentPartNo":"A3204-11101","qty":1.0,"carModel":"CK","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-11101","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-11101","qty":1.0,"carModel":"CK","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-11101","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-11101","qty":1.0,"carModel":"CK","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-16101","level":0,"partNo":"A3204-16101","parentPartNo":null,"qty":1.0,"carModel":"SK EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-16101","level":1,"partNo":"9000-30010-50","parentPartNo":"A3204-16101","qty":14.3,"carModel":"SK EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-16101","level":1,"partNo":"B3202-16000-01","parentPartNo":"A3204-16101","qty":1.0,"carModel":"SK EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-16101","level":1,"partNo":"MA2001-3W110","parentPartNo":"A3204-16101","qty":1.0,"carModel":"SK EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3204-16101","level":1,"partNo":"MA2001-3W120","parentPartNo":"A3204-16101","qty":1.0,"carModel":"SK EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3013-AAB01","level":0,"partNo":"A3013-AAB01","parentPartNo":null,"qty":1.0,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3013-AAB01","level":1,"partNo":"9000-30011-50","parentPartNo":"A3013-AAB01","qty":3.3,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3012-AAB01","level":0,"partNo":"A3012-AAB01","parentPartNo":null,"qty":1.0,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3012-AAB01","level":1,"partNo":"9000-30011-50","parentPartNo":"A3012-AAB01","qty":7.8,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAB03","level":0,"partNo":"A3001-AAB03","parentPartNo":null,"qty":1.0,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAB03","level":1,"partNo":"9000-30011-50","parentPartNo":"A3001-AAB03","qty":21.5,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAB03","level":1,"partNo":"A0302-NE100","parentPartNo":"A3001-AAB03","qty":2.0,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NE106","level":0,"partNo":"A0908-NE106","parentPartNo":null,"qty":1.0,"carModel":"NE EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NE106","level":1,"partNo":"9000-30011-50","parentPartNo":"A0908-NE106","qty":24.3,"carModel":"NE EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NE106","level":1,"partNo":"A0302-NE100","parentPartNo":"A0908-NE106","qty":2.0,"carModel":"NE EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3052-AAB04","level":0,"partNo":"A3052-AAB04","parentPartNo":null,"qty":1.0,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3052-AAB04","level":1,"partNo":"9000-40010-50","parentPartNo":"A3052-AAB04","qty":3.3,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3052-AAB04","level":1,"partNo":"MA3051-AAB02","parentPartNo":"A3052-AAB04","qty":1.0,"carModel":"SG2 EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-MQ402","level":0,"partNo":"A0908-MQ402","parentPartNo":null,"qty":1.0,"carModel":"MQ4 PHEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-MQ402","level":1,"partNo":"9000-30011-50","parentPartNo":"A0908-MQ402","qty":17.8,"carModel":"MQ4 PHEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-MQ402","level":1,"partNo":"A2009-NQ400","parentPartNo":"A0908-MQ402","qty":4.0,"carModel":"MQ4 PHEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NX407","level":0,"partNo":"A0908-NX407","parentPartNo":null,"qty":1.0,"carModel":"NX4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NX407","level":1,"partNo":"9000-30011-50","parentPartNo":"A0908-NX407","qty":13.8,"carModel":"NX4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NX407","level":1,"partNo":"A2009-NX400","parentPartNo":"A0908-NX407","qty":4.0,"carModel":"NX4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NE300","level":0,"partNo":"A0908-NE300","parentPartNo":null,"qty":1.0,"carModel":"NE EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NE300","level":1,"partNo":"9000-30011-50","parentPartNo":"A0908-NE300","qty":2.5,"carModel":"NE EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NE200","level":0,"partNo":"A0908-NE200","parentPartNo":null,"qty":1.0,"carModel":"NE EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NE200","level":1,"partNo":"9000-30011-50","parentPartNo":"A0908-NE200","qty":7.8,"carModel":"NE EV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NX410","level":0,"partNo":"A0908-NX410","parentPartNo":null,"qty":1.0,"carModel":"NX4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A0908-NX410","level":1,"partNo":"9000-30011-50","parentPartNo":"A0908-NX410","qty":3.2,"carModel":"NX4 HEV","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAN02","level":0,"partNo":"A3001-AAN02","parentPartNo":null,"qty":1.0,"carModel":"NQ5PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAN02","level":1,"partNo":"9000-30013-50","parentPartNo":"A3001-AAN02","qty":6.84,"carModel":"NQ5PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAN02","level":1,"partNo":"A2001-AAN01","parentPartNo":"A3001-AAN02","qty":1.0,"carModel":"NQ5PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAN02","level":2,"partNo":"9000-40010-50","parentPartNo":"A2001-AAN01","qty":1.63,"carModel":"NQ5PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"A3001-AAN02","level":2,"partNo":"A2009-NQ500","parentPartNo":"A2001-AAN01","qty":1.0,"carModel":"NQ5PE","customer":"티에스모스트주식회사"},{"finishedPartNo":"86681-N1000","level":0,"partNo":"86681-N1000","parentPartNo":null,"qty":1.0,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86681-N1000","level":1,"partNo":"9000-20011-50","parentPartNo":"86681-N1000","qty":7.9,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86684-N1000","level":0,"partNo":"86684-N1000","parentPartNo":null,"qty":1.0,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86684-N1000","level":1,"partNo":"9000-20011-50","parentPartNo":"86684-N1000","qty":7.9,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86682-N1000","level":0,"partNo":"86682-N1000","parentPartNo":null,"qty":1.0,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86682-N1000","level":1,"partNo":"9000-20011-50","parentPartNo":"86682-N1000","qty":7.5,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86683-N1000","level":0,"partNo":"86683-N1000","parentPartNo":null,"qty":1.0,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86683-N1000","level":1,"partNo":"9000-20011-50","parentPartNo":"86683-N1000","qty":7.5,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86685-N1000","level":0,"partNo":"86685-N1000","parentPartNo":null,"qty":1.0,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86685-N1000","level":1,"partNo":"9000-20011-50","parentPartNo":"86685-N1000","qty":9.9,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86686-N1000","level":0,"partNo":"86686-N1000","parentPartNo":null,"qty":1.0,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86686-N1000","level":1,"partNo":"9000-20011-50","parentPartNo":"86686-N1000","qty":9.9,"carModel":"GN7","customer":"금문산업㈜"},{"finishedPartNo":"86555-L1500","level":0,"partNo":"86555-L1500","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86555-L1500","level":1,"partNo":"9000-20010-50","parentPartNo":"86555-L1500","qty":43.9,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86556-L1500","level":0,"partNo":"86556-L1500","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86556-L1500","level":1,"partNo":"9000-20010-50","parentPartNo":"86556-L1500","qty":43.9,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86555-L1700","level":0,"partNo":"86555-L1700","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86555-L1700","level":1,"partNo":"9000-20010-50","parentPartNo":"86555-L1700","qty":48.7,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86556-L1700","level":0,"partNo":"86556-L1700","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86556-L1700","level":1,"partNo":"9000-20010-50","parentPartNo":"86556-L1700","qty":48.7,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86581-L1550","level":0,"partNo":"86581-L1550","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86581-L1550","level":1,"partNo":"9000-20012-50","parentPartNo":"86581-L1550","qty":8.4,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86584-L1550","level":0,"partNo":"86584-L1550","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86584-L1550","level":1,"partNo":"9000-20012-50","parentPartNo":"86584-L1550","qty":8.4,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86581-L1500","level":0,"partNo":"86581-L1500","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86581-L1500","level":1,"partNo":"9000-20013-50","parentPartNo":"86581-L1500","qty":8.5,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86584-L1500","level":0,"partNo":"86584-L1500","parentPartNo":null,"qty":1.0,"carModel":"DN8 PE","customer":"금문산업㈜"},{"finishedPartNo":"86584-L1500","level":1,"partNo":"9000-20013-50","parentPartNo":"86584-L1500","qty":8.5,"carModel":"DN8 PE","customer":"금문산업㈜"}];
+
+let state = {
+  items: {},        // partNo -> item (BOM embedded + userItems)
+  bomLinks: [],     // BOM hierarchy links
+  drawings: {},     // partNo -> {revHistory:[{rev,date,note,fileName,fileType,fileHash}]}
+  fileStore: {},    // fileHash -> fileData (dedup, content-addressed)
+  userItems: {},    // user-added/modified items only (exported in JSON)
+  view: 'dashboard',
+  search: '',
+  typeFilter: 'all',
+  editingPartNo: null,
+  tempDrawingData: null,  // {fileName,fileData,fileType}
+  tempRevFileData: null,
+};
+
+function initData() {
+  // Load items from BOM raw data
+  BOM_ITEMS_RAW.forEach(item => {
+    state.items[item.partNo] = {
+      ...item,
+      id: item.partNo,
+    };
+  });
+  state.bomLinks = BOM_LINKS_RAW;
+  
+  // Load saved data from localStorage (v2 format preferred)
+  const savedV2 = localStorage.getItem('drawingMgmt_v2');
+  const savedV1 = localStorage.getItem('drawingMgmt_v1');
+  const saved = savedV2 || savedV1;
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (savedV2) {
+        // v2: drawings + fileStore + userItems
+        if (parsed.drawings) state.drawings = parsed.drawings;
+        if (parsed.fileStore) state.fileStore = parsed.fileStore;
+        if (parsed.userItems) {
+          state.userItems = parsed.userItems;
+          Object.assign(state.items, parsed.userItems);
+        }
+      } else {
+        // v1 legacy: had inline fileData in revHistory
+        if (parsed.drawings) state.drawings = parsed.drawings;
+        if (parsed.items) {
+          Object.entries(parsed.items).forEach(([k,v]) => {
+            if (!state.items[k]) { state.items[k]=v; state.userItems[k]=v; }
+            else state.items[k] = {...state.items[k], ...v};
+          });
+        }
+        // Migrate inline fileData to fileStore
+        migrateToFileStore();
+        saveToStorage(); // resave in v2 format
+      }
+    } catch(e) { console.warn('Storage load error:', e); }
+  }
+  updateBadges();
+  setTimeout(updateStorageStats, 100);
+}
+
+// ======================== STORAGE OPTIMIZATION ========================
+// fileStore: hash -> fileData (dedup across revisions)
+// drawings: partNo -> {revHistory:[{rev,date,note,fileName,fileType,fileHash}]}
+
+function hashStr(str) {
+  // Fast 53-bit hash (cyrb53)
+  let h1=0xdeadbeef^0, h2=0x41c6ce57^0;
+  for(let i=0,ch;i<str.length;i++){
+    ch=str.charCodeAt(i);
+    h1=Math.imul(h1^ch,2654435761);
+    h2=Math.imul(h2^ch,1597334677);
+  }
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);
+}
+
+function addToFileStore(fileData) {
+  if (!fileData) return null;
+  const h = hashStr(fileData);
+  if (!state.fileStore[h]) state.fileStore[h] = fileData;
+  return h;
+}
+
+function getFromFileStore(fileHash) {
+  return state.fileStore[fileHash] || null;
+}
+
+function migrateToFileStore() {
+  // Migrate old format: move fileData from rev entries to fileStore
+  let migrated = 0;
+  Object.values(state.drawings).forEach(d => {
+    (d.revHistory||[]).forEach(r => {
+      if (r.fileData && !r.fileHash) {
+        r.fileHash = addToFileStore(r.fileData);
+        delete r.fileData;
+        migrated++;
+      }
+    });
+  });
+  if (migrated > 0) console.log(`Migrated ${migrated} file entries to fileStore`);
+}
+
+function getStorageStats() {
+  const fileStoreSize = Object.values(state.fileStore).reduce((a,v)=>a+v.length,0);
+  const itemsSize = JSON.stringify(state.userItems||{}).length;
+  const drawingsSize = JSON.stringify(state.drawings||{}).length;
+  const totalKB = (fileStoreSize + itemsSize + drawingsSize) / 1024;
+  return {
+    fileCount: Object.keys(state.fileStore).length,
+    fileStoreKB: Math.round(fileStoreSize/1024),
+    totalKB: Math.round(totalKB),
+  };
+}
+
+function saveToStorage() {
+  try {
+    const payload = JSON.stringify({
+      drawings: state.drawings,
+      fileStore: state.fileStore,
+      userItems: state.userItems || {},
+    });
+    localStorage.setItem('drawingMgmt_v2', payload);
+    // Clear old format key if present
+    localStorage.removeItem('drawingMgmt_v1');
+    updateStorageStats();
+  } catch(e) {
+    notify('로컬 저장 실패 (용량 초과) — JSON 내보내기로 보관하세요', 'error');
+  }
+  _cloudSave(); // 클라우드 저장(전 PC 공유)
+}
+
+function updateStorageStats() {
+  const el = document.getElementById('storageStats');
+  if (!el) return;
+  const s = getStorageStats();
+  el.textContent = `💾 ${s.totalKB} KB (파일 ${s.fileCount}개)`;
+  el.style.color = s.totalKB > 3000 ? 'var(--red)' : s.totalKB > 1500 ? 'var(--yellow)' : 'var(--text3)';
+}
+
+// ======================== VIEWS ========================
+function setView(v) {
+  state.view = v;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const nav = document.getElementById('nav-' + v);
+  if (nav) nav.classList.add('active');
+  
+  const titles = {
+    dashboard:'📊 대시보드', all:'📋 전체 도면', finished:'🏭 완제품',
+    semi:'🔩 반제품', material:'📦 원부자재', register:'➕ 도면 등록'
+  };
+  const header = document.getElementById('headerTitle');
+  header.innerHTML = titles[v] ? `<span>${titles[v]}</span>` : v;
+  
+  const showFilters = ['all','finished','semi','material'].includes(v);
+  document.getElementById('typeFilters').style.display = showFilters ? 'flex' : 'none';
+  
+  render();
+}
+
+function render() {
+  const c = document.getElementById('content');
+  switch(state.view) {
+    case 'dashboard': c.innerHTML = renderDashboard(); break;
+    case 'all': c.innerHTML = renderAll(); break;
+    case 'finished': c.innerHTML = renderFinished(); break;
+    case 'semi': c.innerHTML = renderSemi(); break;
+    case 'material': c.innerHTML = renderMaterial(); break;
+    case 'register': openEditModal(null); setView('all'); break;
+    default: c.innerHTML = renderDashboard();
+  }
+}
+
+function getItems(typeFilter) {
+  let items = Object.values(state.items);
+  if (typeFilter && typeFilter !== 'all') {
+    if (typeFilter === '반제품') items = items.filter(i => i.type.startsWith('반제품'));
+    else items = items.filter(i => i.type === typeFilter);
+  }
+  if (state.typeFilter && state.typeFilter !== 'all' && !typeFilter) {
+    if (state.typeFilter === '반제품') items = items.filter(i => i.type.startsWith('반제품'));
+    else items = items.filter(i => i.type === state.typeFilter);
+  }
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    items = items.filter(i => 
+      i.partNo.toLowerCase().includes(q) ||
+      i.partName.toLowerCase().includes(q) ||
+      (i.spec||'').toLowerCase().includes(q) ||
+      (i.supplier||'').toLowerCase().includes(q)
+    );
+  }
+  return items.sort((a,b) => a.partNo.localeCompare(b.partNo));
+}
+
+function getDrawingInfo(partNo) {
+  return state.drawings[partNo] || null;
+}
+
+function hasDrawing(partNo) {
+  const d = getDrawingInfo(partNo);
+  if (!d || !d.revHistory || !d.revHistory.length) return false;
+  return d.revHistory.some(r => r.fileHash || r.fileData);
+}
+
+function getCurrentRev(partNo) {
+  const d = getDrawingInfo(partNo);
+  if (!d || !d.revHistory || !d.revHistory.length) return '-';
+  return d.revHistory[d.revHistory.length-1].rev || '-';
+}
+
+function typeClass(type) {
+  if (type === '완제품') return 'type-완제품';
+  if (type.startsWith('반제품')) return 'type-반제품';
+  if (type === '원부자재') return 'type-원부자재';
+  return 'type-미매핑';
+}
+function typeLabel(type) {
+  if (type.startsWith('반제품')) return type;
+  return type;
+}
+
+// ======================== DASHBOARD ========================
+function renderDashboard() {
+  const all = Object.values(state.items);
+  const finished = all.filter(i => i.type === '완제품');
+  const semi = all.filter(i => i.type.startsWith('반제품'));
+  const materials = all.filter(i => i.type === '원부자재');
+  const withDrawing = all.filter(i => hasDrawing(i.partNo));
+  
+  const recentRevs = Object.entries(state.drawings)
+    .flatMap(([pNo, d]) => (d.revHistory||[]).map(r => ({partNo:pNo, partName:state.items[pNo]?.partName||'', ...r})))
+    .sort((a,b) => (b.date||'').localeCompare(a.date||''))
+    .slice(0,8);
+
+  // Multi-use materials (used in 2+ finished products)
+  const multiUse = materials.filter(i => i.usedInFinished && i.usedInFinished.length >= 2)
+    .sort((a,b) => b.usedInFinished.length - a.usedInFinished.length).slice(0,5);
+
+  return `
+  <div class="stats-row">
+    <div class="stat-card cyan">
+      <div class="stat-label">완제품</div>
+      <div class="stat-value">${finished.length}</div>
+      <div class="stat-sub">Finished Products</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">반제품</div>
+      <div class="stat-value">${semi.length}</div>
+      <div class="stat-sub">Semi-finished</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-label">원부자재</div>
+      <div class="stat-value">${materials.length}</div>
+      <div class="stat-sub">Raw Materials</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">도면 등록</div>
+      <div class="stat-value">${withDrawing.length}</div>
+      <div class="stat-sub">/ ${all.length} 품목 등록률 ${all.length?Math.round(withDrawing.length/all.length*100):0}%</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">⏱ 최근 개정 이력 <span class="count-badge">${recentRevs.length}</span></div>
+      </div>
+      ${recentRevs.length ? `
+      <table><thead><tr>
+        <th>품번</th><th>품명</th><th>Rev</th><th>개정일</th>
+      </tr></thead><tbody>
+      ${recentRevs.map(r=>`<tr class="tr-clickable" onclick="openDetail('${r.partNo}')">
+        <td><span class="partno">${r.partNo}</span></td>
+        <td>${r.partName}</td>
+        <td><span class="rev-badge">${r.rev}</span></td>
+        <td style="color:var(--text3);font-size:11px">${r.date||'-'}</td>
+      </tr>`).join('')}
+      </tbody></table>
+      ` : `<div class="empty-state"><div class="empty-icon">📋</div><div>개정 이력이 없습니다</div></div>`}
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">🔗 공용 자재 현황 <span class="count-badge">${multiUse.length}</span></div>
+        <div style="font-size:10.5px;color:var(--text3)">2개 이상 완제품에 사용</div>
+      </div>
+      ${multiUse.length ? `
+      <table><thead><tr>
+        <th>품번</th><th>품명</th><th>사용처</th>
+      </tr></thead><tbody>
+      ${multiUse.map(i=>`<tr class="tr-clickable" onclick="openDetail('${i.partNo}')">
+        <td><span class="partno">${i.partNo}</span></td>
+        <td>${i.partName}</td>
+        <td>
+          <div class="used-in-badges">
+            ${(i.usedInFinished||[]).map(f=>`<span class="used-badge" title="${state.items[f]?.partName||f}">${f}</span>`).join('')}
+          </div>
+        </td>
+      </tr>`).join('')}
+      </tbody></table>
+      ` : `<div class="empty-state"><div class="empty-icon">🔗</div><div>공용 자재 없음</div></div>`}
+    </div>
+  </div>`;
+}
+
+// ======================== ALL DRAWINGS ========================
+function renderAll() {
+  const items = getItems();
+  return `
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="table-title">📋 전체 도면 목록 <span class="count-badge">${items.length}</span></div>
+      <div style="display:flex;gap:8px">
+        <button class="action-btn" onclick="openEditModal(null)">＋ 신규 등록</button>
+      </div>
+    </div>
+    <table><thead><tr>
+      <th>품번</th><th>품명</th><th>종류</th><th>규격</th>
+      <th>공급처</th><th>단가</th><th>Rev</th><th>도면</th><th>조작</th>
+    </tr></thead><tbody>
+    ${items.map(i=>`<tr class="tr-clickable" onclick="openDetail('${i.partNo}')">
+      <td><span class="partno">${i.partNo}</span></td>
+      <td class="partname">${i.partName}</td>
+      <td><span class="type-badge ${typeClass(i.type)}">${typeLabel(i.type)}</span></td>
+      <td style="color:var(--text3);font-size:11.5px">${i.spec||'-'}</td>
+      <td style="font-size:11.5px">${i.supplier||'-'}</td>
+      <td class="price-cell">${i.unitPrice?i.unitPrice.toLocaleString()+'원':'-'}</td>
+      <td>${hasDrawing(i.partNo)?`<span class="rev-badge">${getCurrentRev(i.partNo)}</span>`:'<span style="color:var(--text3);font-size:11px">미등록</span>'}</td>
+      <td>${hasDrawing(i.partNo)?'<span class="has-drawing" title="도면 있음">📄</span>':'<span class="no-drawing">—</span>'}</td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;gap:5px">
+          <button class="action-btn" onclick="openEditModal('${i.partNo}')">✏</button>
+          ${hasDrawing(i.partNo)?`<button class="action-btn" onclick="downloadDrawing('${i.partNo}')">⬇</button>`:''}
+        </div>
+      </td>
+    </tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+
+// ======================== FINISHED PRODUCTS ========================
+function renderFinished() {
+  const items = getItems('완제품');
+  return `
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="table-title">🏭 완제품 목록 <span class="count-badge">${items.length}</span></div>
+    </div>
+    <table><thead><tr>
+      <th>품번</th><th>품명</th><th>규격</th><th>차종</th><th>고객사</th>
+      <th>단가</th><th>안전재고</th><th>Rev</th><th>도면</th>
+    </tr></thead><tbody>
+    ${items.map(i=>`<tr class="tr-clickable" onclick="openDetail('${i.partNo}')">
+      <td><span class="partno">${i.partNo}</span></td>
+      <td class="partname">${i.partName}</td>
+      <td style="color:var(--text3);font-size:11.5px">${i.spec||'-'}</td>
+      <td><div class="tag-list">${(i.carModels||[]).map(m=>`<span class="tag">${m}</span>`).join('')}</div></td>
+      <td style="font-size:11.5px">${(i.customers||[]).join(', ')||'-'}</td>
+      <td class="price-cell">${i.unitPrice?i.unitPrice.toLocaleString()+'원':'-'}</td>
+      <td class="price-cell">${i.safetyStock?i.safetyStock.toLocaleString():'-'}</td>
+      <td>${hasDrawing(i.partNo)?`<span class="rev-badge">${getCurrentRev(i.partNo)}</span>`:'<span style="color:var(--text3);font-size:11px">미등록</span>'}</td>
+      <td>${hasDrawing(i.partNo)?'<span class="has-drawing">📄</span>':'<span class="no-drawing">—</span>'}</td>
+    </tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+
+// ======================== SEMI-FINISHED ========================
+function renderSemi() {
+  const items = getItems('반제품');
+  return `
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="table-title">🔩 반제품 목록 <span class="count-badge">${items.length}</span></div>
+    </div>
+    <table><thead><tr>
+      <th>품번</th><th>품명</th><th>종류</th><th>규격</th>
+      <th>설비</th><th>단가</th><th>사용 완제품</th><th>Rev</th><th>도면</th>
+    </tr></thead><tbody>
+    ${items.map(i=>`<tr class="tr-clickable" onclick="openDetail('${i.partNo}')">
+      <td><span class="partno">${i.partNo}</span></td>
+      <td class="partname">${i.partName}</td>
+      <td><span class="type-badge ${typeClass(i.type)}">${typeLabel(i.type)}</span></td>
+      <td style="font-size:11.5px;color:var(--text3)">${i.spec||'-'}</td>
+      <td style="font-size:11.5px">${i.equipment||'-'}</td>
+      <td class="price-cell">${i.unitPrice?i.unitPrice.toLocaleString()+'원':'-'}</td>
+      <td>
+        <div class="used-in-badges">
+          ${(i.usedInFinished||[]).slice(0,3).map(f=>`<span class="used-badge" title="${state.items[f]?.partName||f}">${f}</span>`).join('')}
+          ${(i.usedInFinished||[]).length>3?`<span class="used-badge">+${(i.usedInFinished||[]).length-3}</span>`:''}
+        </div>
+      </td>
+      <td>${hasDrawing(i.partNo)?`<span class="rev-badge">${getCurrentRev(i.partNo)}</span>`:'<span style="color:var(--text3);font-size:11px">미등록</span>'}</td>
+      <td>${hasDrawing(i.partNo)?'<span class="has-drawing">📄</span>':'<span class="no-drawing">—</span>'}</td>
+    </tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+
+// ======================== MATERIALS ========================
+function renderMaterial() {
+  const items = getItems('원부자재');
+  return `
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="table-title">📦 원부자재 목록 <span class="count-badge">${items.length}</span></div>
+    </div>
+    <table><thead><tr>
+      <th>품번</th><th>품명</th><th>규격</th><th>공급처</th>
+      <th>단가</th><th>사용 완제품 수</th><th>Rev</th><th>도면</th>
+    </tr></thead><tbody>
+    ${items.map(i=>`<tr class="tr-clickable" onclick="openDetail('${i.partNo}')">
+      <td><span class="partno">${i.partNo}</span></td>
+      <td class="partname">${i.partName}</td>
+      <td style="font-size:11.5px;color:var(--text3)">${i.spec||'-'}</td>
+      <td style="font-size:11.5px">${i.supplier||'-'}</td>
+      <td class="price-cell">${i.unitPrice?i.unitPrice.toLocaleString()+'원':'-'}</td>
+      <td>
+        <span style="font-family:var(--mono);font-size:12px;color:${(i.usedInFinished||[]).length>=2?'var(--cyan)':'var(--text2)'}">
+          ${(i.usedInFinished||[]).length}개
+        </span>
+        ${(i.usedInFinished||[]).length>=2?'<span style="font-size:10px;color:var(--cyan);margin-left:4px">공용</span>':''}
+      </td>
+      <td>${hasDrawing(i.partNo)?`<span class="rev-badge">${getCurrentRev(i.partNo)}</span>`:'<span style="color:var(--text3);font-size:11px">미등록</span>'}</td>
+      <td>${hasDrawing(i.partNo)?'<span class="has-drawing">📄</span>':'<span class="no-drawing">—</span>'}</td>
+    </tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+
+// ======================== DETAIL MODAL ========================
+let currentDetailPartNo = null;
+
+function openDetail(partNo) {
+  const item = state.items[partNo];
+  if (!item) return;
+  currentDetailPartNo = partNo;
+  
+  document.getElementById('dModalTitle').textContent = item.partName;
+  document.getElementById('dModalSub').textContent = item.partNo + ' | ' + (item.type||'');
+  
+  // Show/hide BOM / parents tabs based on type
+  const isFinished = item.type === '완제품';
+  const isSemiOrMat = !isFinished;
+  document.getElementById('dtab-bom-trigger').style.display = isFinished ? '' : 'none';
+  document.getElementById('dtab-parents-trigger').style.display = isSemiOrMat ? '' : 'none';
+  
+  // Info tab
+  document.getElementById('dtab-info').innerHTML = renderDetailInfo(item);
+  // BOM tab (finished only)
+  document.getElementById('dtab-bom').innerHTML = isFinished ? renderBOMTree(partNo) : '';
+  // Parents tab (non-finished)
+  document.getElementById('dtab-parents').innerHTML = isSemiOrMat ? renderParents(partNo) : '';
+  // Drawing tab
+  document.getElementById('dtab-drawing').innerHTML = renderDrawingTab(partNo);
+  // Rev tab
+  document.getElementById('dtab-rev').innerHTML = renderRevTab(partNo);
+  
+  // Reset to info tab
+  document.querySelectorAll('#dModalTabs .modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#dModalTabs .modal-tab')[0].classList.add('active');
+  document.querySelectorAll('#detailModal .tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('dtab-info').classList.add('active');
+  
+  document.getElementById('detailModal').style.display = 'flex';
+}
+
+function renderDetailInfo(item) {
+  const drawInfo = getDrawingInfo(item.partNo);
+  const latestRev = drawInfo?.revHistory?.slice(-1)[0];
+  return `
+  <div class="info-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+    <div class="info-item"><div class="info-label">품번</div><div class="info-value mono">${item.partNo}</div></div>
+    <div class="info-item"><div class="info-label">품명</div><div class="info-value">${item.partName}</div></div>
+    <div class="info-item"><div class="info-label">종류</div><div class="info-value"><span class="type-badge ${typeClass(item.type)}">${typeLabel(item.type)}</span></div></div>
+    <div class="info-item"><div class="info-label">현재 Rev</div><div class="info-value">${latestRev?`<span class="rev-badge">${latestRev.rev}</span>`:'<span style="color:var(--text3)">미등록</span>'}</div></div>
+    <div class="info-item"><div class="info-label">규격</div><div class="info-value" style="font-family:var(--mono);font-size:12px">${item.spec||'-'}</div></div>
+    <div class="info-item"><div class="info-label">공급처</div><div class="info-value">${item.supplier||'-'}</div></div>
+    <div class="info-item"><div class="info-label">단가</div><div class="info-value" style="font-family:var(--mono)">${item.unitPrice?item.unitPrice.toLocaleString()+'원':'-'}</div></div>
+    <div class="info-item"><div class="info-label">호기/설비</div><div class="info-value">${item.equipment||'-'}</div></div>
+    <div class="info-item"><div class="info-label">안전재고</div><div class="info-value" style="font-family:var(--mono)">${item.safetyStock||'-'}</div></div>
+    <div class="info-item"><div class="info-label">차종</div><div class="info-value">${(item.carModels||[]).join(', ')||'-'}</div></div>
+    <div class="info-item"><div class="info-label">고객사</div><div class="info-value">${(item.customers||[]).join(', ')||'-'}</div></div>
+    <div class="info-item"><div class="info-label">비고</div><div class="info-value">${item.note||'-'}</div></div>
+  </div>
+  ${(item.usedInFinished||[]).length > 0 && item.type !== '완제품' ? `
+  <div class="divider"></div>
+  <div class="section-title" style="margin-bottom:10px">사용 완제품 (${item.usedInFinished.length}개)</div>
+  <div class="used-in-badges">
+    ${item.usedInFinished.map(f=>`<span class="used-badge" style="font-size:11px;padding:3px 9px;cursor:pointer" onclick="closeModal('detailModal');openDetail('${f}')">${f}<br><span style="font-weight:400;opacity:0.7">${state.items[f]?.partName||''}</span></span>`).join('')}
+  </div>` : ''}`;
+}
+
+function renderBOMTree(finishedPartNo) {
+  const rows = state.bomLinks.filter(b => b.finishedPartNo === finishedPartNo)
+    .sort((a,b) => a.level - b.level);
+  if (!rows.length) return `<div class="empty-state"><div class="empty-icon">🔩</div><div>BOM 구성이 없습니다</div></div>`;
+  
+  // Group by unique display (de-dup same partNo at same level)
+  const seen = new Set();
+  const unique = rows.filter(r => {
+    const key = r.level + '_' + r.partNo + '_' + (r.parentPartNo||'');
+    if (seen.has(key)) return false;
+    seen.add(key); return true;
+  });
+  
+  return `
+  <div style="overflow-x:auto">
+  <div class="bom-header" style="padding-left:8px">
+    <div style="min-width:${4*20+180}px">품번 (계층구조)</div>
+    <div style="min-width:200px">품명</div>
+    <div style="min-width:140px">규격</div>
+    <div style="min-width:80px;text-align:center">종류</div>
+    <div style="min-width:55px;text-align:right">소요량</div>
+    <div style="min-width:110px">공급처</div>
+    <div style="min-width:80px;text-align:right">단가</div>
+  </div>
+  <div class="bom-tree">
+  ${unique.map(r => {
+    const indent = r.level * 20;
+    const item = state.items[r.partNo];
+    const levelColors = ['var(--cyan)','var(--green)','var(--yellow)','var(--orange)'];
+    const color = levelColors[r.level] || 'var(--text2)';
+    const prefix = r.level === 0 ? '' : '└─ ';
+    return `<div class="bom-row tr-clickable" onclick="openDetail('${r.partNo}')" style="cursor:pointer">
+      <div style="display:flex;align-items:center;gap:0;min-width:${4*20+180}px">
+        <div style="width:${indent}px;flex-shrink:0"></div>
+        <div style="color:var(--text3);font-size:11px;margin-right:4px;flex-shrink:0">${prefix}</div>
+        <div class="bom-partno" style="color:${color}">${r.partNo}</div>
+      </div>
+      <div class="bom-partname">${r.partName||item?.partName||''}</div>
+      <div class="bom-spec">${item?.spec||'-'}</div>
+      <div style="min-width:80px"><span class="type-badge ${item?typeClass(item.type):''}${!item?' type-미매핑':''}" style="font-size:10px">${item?.type||'?'}</span></div>
+      <div class="bom-qty">${r.qty||1}</div>
+      <div class="bom-supplier">${item?.supplier||'-'}</div>
+      <div class="bom-price">${item?.unitPrice?item.unitPrice.toLocaleString()+'원':'-'}</div>
+    </div>`;
+  }).join('')}
+  </div></div>
+  <div style="margin-top:12px;padding:10px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--text3)">
+    💡 항목 클릭 시 해당 품목의 상세 정보를 확인할 수 있습니다.
+  </div>`;
+}
+
+function renderParents(partNo) {
+  const item = state.items[partNo];
+  const parentPartNos = item?.usedInFinished || [];
+  if (!parentPartNos.length) return `<div class="empty-state"><div class="empty-icon">🏭</div><div>상위 완제품 정보가 없습니다</div></div>`;
+  
+  return `
+  <div class="section-header">
+    <div class="section-title">🏭 상위 완제품 목록 <span class="count-badge">${parentPartNos.length}</span></div>
+  </div>
+  <div class="parent-list">
+  ${parentPartNos.map(f => {
+    const p = state.items[f];
+    if (!p) return `<div class="parent-card"><span class="parent-partno">${f}</span><span class="parent-name">-</span></div>`;
+    return `<div class="parent-card" onclick="closeModal('detailModal');openDetail('${f}')">
+      <span class="parent-partno">${f}</span>
+      <span class="parent-name">${p.partName}</span>
+      <span class="parent-model">${(p.carModels||[]).join(', ')||''}</span>
+      <span class="parent-customer">${(p.customers||[]).join(' / ')||''}</span>
+      ${hasDrawing(f)?`<span class="rev-badge">${getCurrentRev(f)}</span>`:''}
+    </div>`;
+  }).join('')}
+  </div>
+  <div style="margin-top:14px;padding:10px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--text3)">
+    💡 카드 클릭 시 해당 완제품의 상세 BOM을 확인할 수 있습니다.
+  </div>`;
+}
+
+function renderDrawingTab(partNo) {
+  const drawInfo = getDrawingInfo(partNo);
+  const latest = drawInfo?.revHistory?.slice(-1)[0];
+  const fileData = latest?.fileHash ? getFromFileStore(latest.fileHash) : (latest?.fileData||null);
+  if (!latest || !fileData) return `
+  <div class="empty-state">
+    <div class="empty-icon">📄</div>
+    <div style="margin-bottom:14px">등록된 도면이 없습니다</div>
+    <button class="btn-primary" onclick="closeModal('detailModal');openEditModal('${partNo}')">도면 등록하기</button>
+  </div>`;
+
+  const isImg = (latest.fileType||'').startsWith('image/');
+  const isPDF = (latest.fileType||'').includes('pdf');
+  const sizeKB = Math.round(fileData.length/1024);
+  return `
+  <div style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:12px;color:var(--text2)">
+      최신 도면 <span class="rev-badge" style="margin-left:8px">${latest.rev}</span>
+      <span style="margin-left:8px;color:var(--text3);font-size:11px">${latest.date||''}</span>
+      <span style="margin-left:8px;color:var(--text3);font-size:11px">📦 ${sizeKB.toLocaleString()} KB</span>
+    </div>
+    <button class="action-btn" onclick="downloadDrawing('${partNo}')">⬇ 다운로드</button>
+  </div>
+  <div class="drawing-preview-wrap">
+    ${isImg ? `<img src="${fileData}" alt="도면">` :
+      isPDF ? `<iframe src="${fileData}" title="도면 미리보기"></iframe>` :
+      `<div style="text-align:center;color:var(--text3)">
+        <div style="font-size:32px;margin-bottom:10px">📎</div>
+        <div>${latest.fileName||'도면 파일'}</div>
+        <div style="font-size:11px;margin-top:6px">미리보기 미지원 형식</div>
+        <button class="action-btn" style="margin-top:12px" onclick="downloadDrawing('${partNo}')">⬇ 다운로드</button>
+      </div>`}
+  </div>`;
+}
+
+function renderRevTab(partNo) {
+  const drawInfo = getDrawingInfo(partNo);
+  const revs = drawInfo?.revHistory || [];
+  if (!revs.length) return `<div class="empty-state"><div class="empty-icon">📋</div><div>개정 이력이 없습니다</div></div>`;
+  
+  const sorted = [...revs].reverse();
+  return `<div class="rev-timeline">
+  ${sorted.map((r, i) => `
+    <div class="rev-item">
+      <div class="rev-dot-wrap">
+        <div class="rev-dot ${i===0?'latest':''}">${r.rev}</div>
+        ${i < sorted.length-1 ? `<div class="rev-line"></div>` : ''}
+      </div>
+      <div class="rev-content">
+        <div class="rev-meta">
+          <span class="rev-tag ${i===0?'latest':''}">${r.rev}</span>
+          <span class="rev-date">${r.date||'-'}</span>
+          ${i===0?`<span class="rev-latest-badge">최신본</span>`:''}
+        </div>
+        <div class="rev-note">${r.note||'(개정 내용 없음)'}</div>
+        ${r.fileName?`<div class="rev-file">📎 ${r.fileName}
+          ${(r.fileHash||r.fileData)?`<button class="action-btn" style="padding:2px 7px;font-size:10px" onclick="downloadRevDrawing('${partNo}','${r.rev}')">⬇</button>`:''}
+        </div>`:''}
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function openEditFromDetail() {
+  if (currentDetailPartNo) {
+    closeModal('detailModal');
+    openEditModal(currentDetailPartNo);
+  }
+}
+
+// ======================== EDIT MODAL ========================
+let tempRevFile = null;
+let tempDrawFile = null;
+
+function openEditModal(partNo) {
+  state.editingPartNo = partNo;
+  const item = partNo ? state.items[partNo] : null;
+  
+  document.getElementById('eModalTitle').textContent = item ? '도면 편집' : '도면 등록';
+  document.getElementById('eModalSub').textContent = item ? item.partNo + ' - ' + item.partName : '신규 품목 도면 등록';
+  
+  // Fill form
+  document.getElementById('e_partNo').value = item?.partNo || '';
+  document.getElementById('e_partNo').disabled = !!item;
+  document.getElementById('e_partName').value = item?.partName || '';
+  document.getElementById('e_type').value = item?.type || '완제품';
+  document.getElementById('e_spec').value = item?.spec || '';
+  document.getElementById('e_supplier').value = item?.supplier || '';
+  document.getElementById('e_unitPrice').value = item?.unitPrice || '';
+  document.getElementById('e_equipment').value = item?.equipment || '';
+  document.getElementById('e_safetyStock').value = item?.safetyStock || '';
+  document.getElementById('e_carModel').value = (item?.carModels||[]).join(', ');
+  document.getElementById('e_customer').value = (item?.customers||[]).join(', ');
+  document.getElementById('e_note').value = item?.note || '';
+  document.getElementById('e_currentRev').value = item ? (getCurrentRev(item.partNo) !== '-' ? getCurrentRev(item.partNo) : '') : 'A';
+  
+  // Populate usedIn checkboxes (for non-finished)
+  const type = item?.type || '완제품';
+  buildUsedInCheckboxes(item?.usedInFinished || [], type);
+  
+  // Drawing preview
+  tempDrawFile = null;
+  tempRevFile = null;
+  document.getElementById('drawingPreviewWrap').style.display = 'none';
+  document.getElementById('drawingPreview').innerHTML = '';
+  document.getElementById('revFileName').style.display = 'none';
+  document.getElementById('e_newRev').value = '';
+  document.getElementById('e_revDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('e_revNote').value = '';
+  
+  // Reset tabs
+  document.querySelectorAll('#editModal .modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#editModal .modal-tab')[0].classList.add('active');
+  document.querySelectorAll('#editModal .tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('etab-info').classList.add('active');
+  
+  document.getElementById('editModal').style.display = 'flex';
+}
+
+function buildUsedInCheckboxes(selected, type) {
+  const wrap = document.getElementById('e_usedInWrap');
+  const el = document.getElementById('e_usedIn');
+  if (type === '완제품') { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  
+  const finished = Object.values(state.items).filter(i => i.type === '완제품')
+    .sort((a,b) => a.partNo.localeCompare(b.partNo));
+  el.innerHTML = finished.map(f => `
+    <label class="checkbox-item">
+      <input type="checkbox" value="${f.partNo}" ${selected.includes(f.partNo)?'checked':''}>
+      <div>
+        <div class="checkbox-label">${f.partNo}</div>
+        <div class="checkbox-sub">${f.partName}</div>
+      </div>
+    </label>`).join('');
+}
+
+function onDrawingFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const sizeKB = (file.size / 1024).toFixed(1);
+  tempDrawFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = e.target.result;
+    const preview = document.getElementById('drawingPreview');
+    const wrap = document.getElementById('drawingPreviewWrap');
+    wrap.style.display = 'block';
+    if (file.type.startsWith('image/')) {
+      preview.innerHTML = `<img src="${data}" alt="도면 미리보기">`;
+    } else if (file.type.includes('pdf')) {
+      preview.innerHTML = `<iframe src="${data}" title="PDF 미리보기"></iframe>`;
+    } else {
+      preview.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3)">
+        <div style="font-size:28px">📎</div><div>${file.name}</div>
+        <div style="font-size:11px;margin-top:4px">${sizeKB} KB</div>
+      </div>`;
+    }
+    state.tempDrawingData = {fileName: file.name, fileData: data, fileType: file.type};
+    notify(`파일 선택됨: ${file.name} (${sizeKB} KB)`, 'info');
+  };
+  reader.readAsDataURL(file);
+}
+
+function onRevFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    state.tempRevFileData = {fileName: file.name, fileData: e.target.result, fileType: file.type};
+    const div = document.getElementById('revFileName');
+    div.style.display = 'block';
+    div.textContent = '📎 ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeDrawing() {
+  state.tempDrawingData = null;
+  document.getElementById('drawingPreviewWrap').style.display = 'none';
+  document.getElementById('drawingPreview').innerHTML = '';
+  document.getElementById('drawingFileInput').value = '';
+}
+
+function saveItem() {
+  const partNo = state.editingPartNo || document.getElementById('e_partNo').value.trim();
+  if (!partNo) { notify('품번을 입력해주세요', 'error'); return; }
+  const partName = document.getElementById('e_partName').value.trim();
+  if (!partName) { notify('품명을 입력해주세요', 'error'); return; }
+  
+  // Collect usedIn
+  const usedIn = Array.from(document.querySelectorAll('#e_usedIn input:checked')).map(c => c.value);
+  const carModels = document.getElementById('e_carModel').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const customers = document.getElementById('e_customer').value.split(',').map(s=>s.trim()).filter(Boolean);
+  
+  const type = document.getElementById('e_type').value;
+  
+  // Create/update item
+  if (!state.items[partNo]) {
+    state.items[partNo] = { partNo, partName, type, spec:'', supplier:'', unitPrice:0, equipment:'', safetyStock:0, note:'', usedInFinished:[], customers:[], carModels:[] };
+  }
+  state.items[partNo] = {
+    ...state.items[partNo],
+    partName,
+    type,
+    spec: document.getElementById('e_spec').value.trim(),
+    supplier: document.getElementById('e_supplier').value.trim(),
+    unitPrice: parseFloat(document.getElementById('e_unitPrice').value)||0,
+    equipment: document.getElementById('e_equipment').value.trim(),
+    safetyStock: parseInt(document.getElementById('e_safetyStock').value)||0,
+    carModels: carModels.length ? carModels : state.items[partNo].carModels,
+    customers: customers.length ? customers : state.items[partNo].customers,
+    note: document.getElementById('e_note').value.trim(),
+    usedInFinished: type === '완제품' ? [partNo] : (usedIn.length ? usedIn : state.items[partNo].usedInFinished),
+  };
+  
+  // ── 도면 파일 처리 규칙 ──
+  // 최신 Rev 파일 1개만 fileStore에 유지.
+  // 새 파일이 등록되면 이전 Rev 파일을 fileStore에서 제거(메타 이력은 보존).
+  function replaceLatestFile(partNo, newHash) {
+    const revs = state.drawings[partNo]?.revHistory || [];
+    // 현재 파일이 있는 모든 이전 Rev의 fileHash 제거 (fileStore에서도 삭제)
+    revs.forEach(r => {
+      if (r.fileHash && r.fileHash !== newHash) {
+        // 다른 품목이 같은 파일을 공유하는지 확인 후 삭제
+        const usedElsewhere = Object.entries(state.drawings).some(([pNo, d]) =>
+          pNo !== partNo && (d.revHistory||[]).some(rv => rv.fileHash === r.fileHash)
+        );
+        if (!usedElsewhere) delete state.fileStore[r.fileHash];
+        delete r.fileHash; // revHistory 항목에서 파일 참조 제거 (메타는 유지)
+      }
+    });
+  }
+
+  // 초기 도면 등록 (도면 탭에서 업로드)
+  if (state.tempDrawingData) {
+    const rev = document.getElementById('e_currentRev').value.trim() || 'A';
+    if (!state.drawings[partNo]) state.drawings[partNo] = { revHistory: [] };
+    const fileHash = addToFileStore(state.tempDrawingData.fileData);
+    replaceLatestFile(partNo, fileHash); // 이전 파일 제거
+    const existing = state.drawings[partNo].revHistory.find(r => r.rev === rev);
+    if (!existing) {
+      state.drawings[partNo].revHistory.push({
+        rev, date: new Date().toISOString().slice(0,10),
+        note: '최초 등록', fileName: state.tempDrawingData.fileName,
+        fileType: state.tempDrawingData.fileType, fileHash,
+      });
+    } else {
+      existing.fileHash = fileHash;
+      existing.fileType = state.tempDrawingData.fileType;
+      existing.fileName = state.tempDrawingData.fileName;
+    }
+    state.tempDrawingData = null;
+  }
+
+  // 개정 추가 (개정 탭) — 새 파일 있으면 이전 Rev 파일 삭제, 이력 메타는 보존
+  const newRev = document.getElementById('e_newRev').value.trim();
+  if (newRev) {
+    const revNote = document.getElementById('e_revNote').value.trim();
+    const revDate = document.getElementById('e_revDate').value;
+    if (!state.drawings[partNo]) state.drawings[partNo] = { revHistory: [] };
+    let fileHash = '';
+    if (state.tempRevFileData?.fileData) {
+      fileHash = addToFileStore(state.tempRevFileData.fileData);
+      replaceLatestFile(partNo, fileHash); // 새 파일로 교체 — 이전 파일 제거
+    }
+    const existing = state.drawings[partNo].revHistory.find(r => r.rev === newRev);
+    const revEntry = {
+      rev: newRev, date: revDate, note: revNote,
+      fileName: state.tempRevFileData?.fileName || (existing?.fileName||''),
+      fileType: state.tempRevFileData?.fileType || (existing?.fileType||''),
+      ...(fileHash ? { fileHash } : {}),
+    };
+    if (!existing) state.drawings[partNo].revHistory.push(revEntry);
+    else Object.assign(existing, revEntry);
+    state.tempRevFileData = null;
+  }
+  
+  saveToStorage();
+  updateBadges();
+  closeModal('editModal');
+  notify('저장되었습니다: ' + partNo, 'success');
+  render();
+}
+
+// ======================== DOWNLOAD ========================
+function downloadDrawing(partNo) {
+  const drawInfo = getDrawingInfo(partNo);
+  const latest = drawInfo?.revHistory?.slice(-1)[0];
+  const fd = latest?.fileHash ? getFromFileStore(latest.fileHash) : latest?.fileData;
+  if (!fd) { notify('등록된 도면이 없습니다', 'error'); return; }
+  downloadFile(fd, latest.fileName || partNo + '_drawing');
+}
+
+function downloadRevDrawing(partNo, rev) {
+  const drawInfo = getDrawingInfo(partNo);
+  const r = drawInfo?.revHistory?.find(h => h.rev === rev);
+  const fd = r?.fileHash ? getFromFileStore(r.fileHash) : r?.fileData;
+  if (!fd) { notify('파일을 찾을 수 없습니다', 'error'); return; }
+  downloadFile(fd, r.fileName || partNo + '_' + rev);
+}
+
+function downloadCurrentDrawing() {
+  if (state.tempDrawingData) {
+    downloadFile(state.tempDrawingData.fileData, state.tempDrawingData.fileName);
+  }
+}
+
+function downloadFile(dataUrl, filename) {
+  const a = document.createElement('a');
+  a.href = dataUrl; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// ======================== JSON EXPORT/IMPORT ========================
+function exportJSON() {
+  // Export v2: only drawings + fileStore + user-added items (NOT embedded BOM data)
+  const data = {
+    version: 2,
+    exportDate: new Date().toISOString(),
+    drawings: state.drawings,
+    fileStore: state.fileStore,
+    userItems: state.userItems || {},
+  };
+  const jsonStr = JSON.stringify(data);
+  const stats = getStorageStats();
+  const blob = new Blob([jsonStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'drawing_management_' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  const sizeKB = Math.round(jsonStr.length / 1024);
+  notify(`JSON 내보내기 완료 (${sizeKB.toLocaleString()} KB)`, 'success');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      const ver = data.version || 1;
+
+      if (ver >= 2) {
+        // v2 format: drawings + fileStore + userItems only
+        if (data.drawings) Object.assign(state.drawings, data.drawings);
+        if (data.fileStore) Object.assign(state.fileStore, data.fileStore);
+        if (data.userItems) {
+          state.userItems = state.userItems || {};
+          Object.assign(state.userItems, data.userItems);
+          Object.assign(state.items, data.userItems);
+        }
+      } else {
+        // v1 legacy format: had full items+bomLinks+drawings with inline fileData
+        if (data.items) {
+          // Only merge user-created items (not BOM items that are already embedded)
+          Object.entries(data.items).forEach(([k,v]) => {
+            if (!state.items[k]) { state.items[k]=v; state.userItems=state.userItems||{}; state.userItems[k]=v; }
+          });
+        }
+        if (data.drawings) Object.assign(state.drawings, data.drawings);
+        // Migrate inline fileData -> fileStore
+        migrateToFileStore();
+      }
+
+      saveToStorage();
+      updateBadges();
+      render();
+      const sizeKB = Math.round(e.target.result.length/1024);
+      notify(`불러오기 완료 (v${ver} 형식, ${sizeKB.toLocaleString()} KB)`, 'success');
+    } catch(err) { notify('파일 형식 오류: ' + err.message, 'error'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ======================== UTILITIES ========================
+function updateBadges() {
+  const items = Object.values(state.items);
+  document.getElementById('badge-all').textContent = items.length;
+  document.getElementById('badge-finished').textContent = items.filter(i=>i.type==='완제품').length;
+  document.getElementById('badge-semi').textContent = items.filter(i=>i.type.startsWith('반제품')).length;
+  document.getElementById('badge-material').textContent = items.filter(i=>i.type==='원부자재').length;
+}
+
+function onSearch(val) {
+  state.search = val;
+  if (['all','finished','semi','material'].includes(state.view)) render();
+}
+
+function setTypeFilter(type, btn) {
+  state.typeFilter = type;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function switchModalTab(btn, targetId) {
+  const modal = btn.closest('.modal');
+  modal.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  modal.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById(targetId).classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+function notify(msg, type='info') {
+  const div = document.createElement('div');
+  div.className = `notif-item ${type}`;
+  div.innerHTML = `<span>${type==='success'?'✓':type==='error'?'✕':'ℹ'}</span><span>${msg}</span>`;
+  document.getElementById('notif').appendChild(div);
+  setTimeout(()=>div.remove(), 3500);
+}
+
+// Drag and drop for drawing
+document.addEventListener('DOMContentLoaded', () => {
+  const drop = document.getElementById('drawingDrop');
+  if (drop) {
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+    drop.addEventListener('drop', e => {
+      e.preventDefault(); drop.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) { const inp = document.getElementById('drawingFileInput'); inp.files = e.dataTransfer.files; onDrawingFile({target:inp}); }
+    });
+  }
+});
+
+// ======================== STORAGE MANAGER ========================
+function showStorageManager() {
+  const s = getStorageStats();
+  const fileEntries = Object.entries(state.fileStore);
+  
+  // Build usage by partNo
+  const usage = {};
+  Object.entries(state.drawings).forEach(([partNo, d]) => {
+    (d.revHistory||[]).forEach(r => {
+      if (r.fileHash) {
+        const fd = state.fileStore[r.fileHash];
+        const kb = fd ? Math.round(fd.length/1024) : 0;
+        if (!usage[partNo]) usage[partNo] = {partNo, name: state.items[partNo]?.partName||'', files:[], totalKB:0};
+        usage[partNo].files.push({rev:r.rev, kb, hash:r.fileHash, fileName:r.fileName||''});
+        usage[partNo].totalKB += kb;
+      }
+    });
+  });
+  
+  const usageRows = Object.values(usage).sort((a,b)=>b.totalKB-a.totalKB);
+  const orphans = fileEntries.filter(([h]) => {
+    return !Object.values(state.drawings).some(d => (d.revHistory||[]).some(r=>r.fileHash===h));
+  });
+  
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.display = 'flex';
+  overlay.innerHTML = `
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <div class="modal-title-area">
+        <div class="modal-title">🗄 저장소 관리</div>
+        <div class="modal-subtitle">총 ${s.totalKB.toLocaleString()} KB | 파일 ${s.fileCount}개 (중복제거 적용)</div>
+      </div>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px">저장된 파일</div>
+            <div style="font-size:20px;font-weight:700;color:var(--cyan);font-family:var(--mono)">${s.fileCount}</div></div>
+          <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px">파일 용량</div>
+            <div style="font-size:20px;font-weight:700;color:var(--green);font-family:var(--mono)">${s.fileStoreKB.toLocaleString()} KB</div></div>
+          <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px">고아 파일</div>
+            <div style="font-size:20px;font-weight:700;color:${orphans.length?'var(--yellow)':'var(--text3)'};font-family:var(--mono)">${orphans.length}</div></div>
+        </div>
+      </div>
+      ${orphans.length ? `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:11.5px;color:var(--yellow)">⚠ 미사용 파일 ${orphans.length}개 발견 — 삭제하면 용량을 절약할 수 있습니다</div>
+        <button class="action-btn danger" onclick="cleanOrphanFiles(this)">🗑 정리</button>
+      </div>` : ''}
+      <div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px">품목별 도면 용량</div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr>
+          <th style="text-align:left;padding:6px 8px;font-size:10px;color:var(--text3);border-bottom:1px solid var(--border)">품번</th>
+          <th style="padding:6px 8px;font-size:10px;color:var(--text3);border-bottom:1px solid var(--border)">Rev수</th>
+          <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);border-bottom:1px solid var(--border)">용량</th>
+        </tr></thead><tbody>
+        ${usageRows.map(u=>`<tr>
+          <td style="padding:6px 8px;font-size:11.5px;"><span style="font-family:var(--mono);color:var(--cyan);font-size:11px">${u.partNo}</span> <span style="color:var(--text3)">${u.name}</span></td>
+          <td style="padding:6px 8px;text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--text2)">${u.files.length}</td>
+          <td style="padding:6px 8px;text-align:right;font-family:var(--mono);font-size:11.5px;color:${u.totalKB>500?'var(--yellow)':'var(--text2)'}">${u.totalKB.toLocaleString()} KB</td>
+        </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="this.closest('.modal-overlay').remove()">닫기</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target===overlay) overlay.remove(); });
+}
+
+function cleanOrphanFiles(btn) {
+  const drawings = state.drawings;
+  const usedHashes = new Set();
+  Object.values(drawings).forEach(d => {
+    (d.revHistory||[]).forEach(r => { if (r.fileHash) usedHashes.add(r.fileHash); });
+  });
+  let removed = 0;
+  Object.keys(state.fileStore).forEach(h => {
+    if (!usedHashes.has(h)) { delete state.fileStore[h]; removed++; }
+  });
+  saveToStorage();
+  notify(`고아 파일 ${removed}개 정리 완료`, 'success');
+  btn.closest('.modal-overlay').remove();
+  showStorageManager();
+}
+
+// ======================== CLOUD (Supabase · 전 PC 공유) ========================
+const _SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", _SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const _CKEY="quality_drawing_v2";
+let _sb=null; try{ if(window.supabase) _sb=window.supabase.createClient(_SB_URL,_SB_KEY); }catch(e){}
+let _cloudSaving=false;
+function _cloudBadge(txt,col){ var el=document.getElementById('storageStats'); if(el){ el.textContent=txt; el.style.color=col||''; } }
+async function _cloudLoad(){
+  if(!_sb) return null;
+  try{ const r=await _sb.from('app_state').select('value').eq('key',_CKEY).maybeSingle();
+    if(r.error||!r.data) return null; return r.data.value||null; }catch(e){ return null; }
+}
+async function _cloudSave(){
+  if(!_sb) return;
+  const obj={ drawings: state.drawings, fileStore: state.fileStore, userItems: state.userItems||{} };
+  const kb=Math.round(JSON.stringify(obj).length/1024);
+  if(kb>4500){ notify('클라우드 저장 보류: 데이터가 너무 큼('+kb+'KB). 오래된 파일 정리 후 저장하세요','error'); return; }
+  _cloudSaving=true;
+  try{ await _sb.from('app_state').upsert({key:_CKEY,value:obj,updated_at:new Date().toISOString()});
+    notify('☁ 클라우드 저장됨 ('+kb+'KB)','success'); }
+  catch(e){ notify('클라우드 저장 실패 — 로컬엔 저장됨','error'); }
+  setTimeout(function(){_cloudSaving=false;},400);
+}
+async function _cloudReload(){
+  if(_cloudSaving) return;
+  const cloud=await _cloudLoad(); if(!cloud) return;
+  if(cloud.drawings) state.drawings=cloud.drawings;
+  if(cloud.fileStore) state.fileStore=cloud.fileStore;
+  if(cloud.userItems){ state.userItems=cloud.userItems; Object.assign(state.items, cloud.userItems); }
+  try{ localStorage.setItem('drawingMgmt_v2', JSON.stringify(cloud)); }catch(e){}
+  try{ updateBadges(); setView(state.view||'dashboard'); }catch(e){}
+  notify('☁ 다른 PC의 최신 도면 데이터를 반영했습니다','info');
+}
+
+// ======================== INIT ========================
+(async function(){
+  let fromCloud=false;
+  const cloud = await _cloudLoad();
+  if(cloud){ try{ localStorage.setItem('drawingMgmt_v2', JSON.stringify(cloud)); fromCloud=true; }catch(e){} }
+  initData();
+  setView('dashboard');
+  if(_sb){ notify(fromCloud?'☁ 클라우드 연결됨 — 전 PC 공유':'☁ 클라우드 연결됨 (첫 데이터)','success'); }
+  else { notify('⚠ 클라우드 미연결 — 이 PC에만 저장됩니다','error'); }
+  try{ if(_sb) _sb.channel('dwg_rt2').on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+_CKEY}, _cloudReload).subscribe(); }catch(e){}
+})();
+</script>
+</body>
+</html>
