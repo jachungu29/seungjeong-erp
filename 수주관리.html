@@ -65,11 +65,17 @@ tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);bord
 .usage b{color:var(--teal)}
 .prnbtn{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-right:8px}
 .prnbtn:hover{background:#eef4f8}
+.filterbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:7px 12px;margin-bottom:10px}
+.filterbar .fl{font-size:11px;color:var(--mut);font-weight:600}
+.fb{padding:5px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:11.5px;font-family:inherit;background:#fff;color:var(--text)}
+.fb:focus{outline:none;border-color:var(--teal)}
+.csvbtn{background:#fff;color:#0d7a52;border:1px solid #9ccbb4;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.csvbtn:hover{background:#eefaf3}
 .printhead{display:none}
 @media print{
  @page{size:A4 landscape;margin:10mm}
  body{background:#fff}
- header,.usage,.strip,.acctsum,.savebtn,.prnbtn,.addbtn,.segtog,.cloud,.status,.hint,.psub{display:none!important}
+ header,.usage,.strip,.acctsum,.filterbar,.savebtn,.prnbtn,.addbtn,.segtog,.cloud,.status,.hint,.psub{display:none!important}
  .wrap{padding:0}
  /* ===== 대표이사 보고서 머리 ===== */
  .printhead{display:block;position:relative;margin-bottom:10px}
@@ -131,6 +137,15 @@ tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);bord
   <div class="kpi"><div class="l">진행중 / 완료</div><div class="v" id="k-prog">0 / 0</div><div class="u">건</div></div>
  </div>
  <div class="acctsum" id="acctsum"></div>
+ <div class="filterbar">
+  <span class="fl">🔎 조회</span>
+  <span class="fl">수주일</span><input class="fb" type="date" id="fFrom" onchange="applyF()"><span class="fl">~</span><input class="fb" type="date" id="fTo" onchange="applyF()">
+  <select class="fb" id="fStatus" onchange="applyF()"><option value="">상태 전체</option><option>접수</option><option>생산중</option><option>납품완료</option><option>변경</option><option>취소</option></select>
+  <input class="fb" id="fQ" placeholder="🔍 거래처·품번·품명 검색" oninput="applyF()" style="min-width:190px">
+  <button class="segbtn" onclick="resetF()">초기화</button>
+  <span class="spacer" style="flex:1"></span>
+  <button class="csvbtn" onclick="exportCsv()">📄 CSV 내보내기</button>
+ </div>
  <div class="card">
   <div class="phead"><span class="ptitle">수주 목록</span><span class="segtog" id="segtog"></span><span class="spacer"></span><button class="addbtn" onclick="addRow()">＋ 신규 수주</button></div>
   <div class="tbl-wrap"><table id="tbl"></table></div>
@@ -158,6 +173,25 @@ const LSKEY="sales_po_v1", CKEY="sales_po_v1";
 const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 let ROWS=[], dirty=false, FILTER='전체';
+let F_FROM='',F_TO='',F_STATUS='',F_Q='';
+function matchF(r){
+ if(F_STATUS && (r.status||'')!==F_STATUS)return false;
+ if(F_FROM && (r.date||'')<F_FROM)return false;
+ if(F_TO && (r.date||'')>F_TO)return false;
+ if(F_Q){var q=F_Q.toLowerCase(),hay=((r.cust||'')+' '+(r.pno||'')+' '+(r.name||'')+' '+(r.no||'')+' '+(r.eq||'')).toLowerCase();if(hay.indexOf(q)<0)return false;}
+ return true;
+}
+function applyF(){F_FROM=el('fFrom').value;F_TO=el('fTo').value;F_STATUS=el('fStatus').value;F_Q=(el('fQ').value||'').trim();render();}
+function resetF(){F_FROM=F_TO=F_STATUS=F_Q='';el('fFrom').value='';el('fTo').value='';el('fStatus').value='';el('fQ').value='';render();}
+function exportCsv(){
+ var head=['수주번호','수주일자','거래처','설비명','품번','품명','수량','단가','금액','납기일','진행상태','구분'];
+ var rows=ROWS.filter(function(r){return (FILTER==='전체'||(r.acct||'')===FILTER)&&matchF(r);});
+ var lines=[head.join(',')];
+ rows.forEach(function(r){var arr=[r.no,r.date,r.cust,r.eq,r.pno,r.name,r.qty,r.price,Math.round(amtOf(r)),r.due,r.status,r.acct];
+  lines.push(arr.map(function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(','));});
+ var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+ var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='수주현황_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
 const el=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const cm=n=>{n=Math.round(+n||0);return n.toLocaleString('en-US');};
@@ -177,7 +211,7 @@ function render(){
  const cnt={'전체':ROWS.length}; ACCTS.forEach(a=>cnt[a]=ROWS.filter(r=>(r.acct||'')===a).length);
  el('segtog').innerHTML=['전체'].concat(ACCTS).map(f=>`<button class="segbtn${FILTER===f?' on':''}" onclick="setFilter('${f}')">${f}<span class="sgc">${cnt[f]||0}</span></button>`).join('');
  let h=`<tr><th style="width:26px">#</th><th style="width:56px">수주번호</th><th style="width:84px">수주일자</th><th style="width:100px">거래처</th><th style="width:106px">설비명</th><th style="width:108px">품번(BOM)</th><th style="width:240px">품명</th><th style="width:64px">수량</th><th style="width:58px">단가</th><th style="width:96px">금액</th><th style="width:84px">납기일</th><th style="width:76px">진행상태</th></tr>`;
- const vis=[]; ROWS.forEach((r,i)=>{if(FILTER==='전체'||(r.acct||'')===FILTER)vis.push({r:r,i:i});});
+ const vis=[]; ROWS.forEach((r,i)=>{if((FILTER==='전체'||(r.acct||'')===FILTER)&&matchF(r))vis.push({r:r,i:i});});
  if(!vis.length)h+=`<tr><td colspan="12" class="empty">${ROWS.length?('“'+FILTER+'” 구분의 수주가 없습니다.'):'등록된 수주가 없습니다. ＋신규 수주를 눌러 입력하세요.'}</td></tr>`;
  let tq=0,ta=0,dc=0;
  vis.forEach(function(o){var r=o.r,i=o.i,a=amtOf(r);tq+=(parseFloat(r.qty)||0);ta+=a;dc++;

@@ -260,7 +260,7 @@ footer{color:var(--gray3);font-size:11px;text-align:center;margin:26px 0 12px}
  <div class="app-logo"><div class="app-logo-icon" style="background:#fff;overflow:hidden"><img src="sj-icon.png" alt="승정" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block"></div>
   <div><div class="app-title">생산계획현황 <span class="rev">REV.1</span></div>
   <div class="app-subtitle">㈜승정 · 사출 월생산계획 (수직·수평·이중사출) · 월/주/일 계획</div></div></div>
- <div class="prnbar no-print"><button class="prnbtn" onclick="doPreview()">🖨️ 인쇄 미리보기</button></div>
+ <div class="prnbar no-print"><button class="prnbtn" onclick="doPreview()">🖨️ 인쇄 미리보기</button><button class="prnbtn" onclick="exportCsvView()">📄 CSV</button></div>
  <div class="header-date" id="hdrDate"></div>
 </header>
 <nav class="main-nav">
@@ -308,6 +308,26 @@ function printHeadHTML(){
   +'<tr><td class="gj-v" rowspan="2">결<br>재</td><td class="gj-h">담당</td><td class="gj-h">부서장</td><td class="gj-h">대표이사</td></tr>'
   +'<tr><td class="gj-c"></td><td class="gj-c"></td><td class="gj-c"></td></tr>'
   +'</tbody></table></div>';
+}
+function exportCsvView(){
+ var a=document.querySelector('.view.active')||document;
+ var tables=a.querySelectorAll('table');
+ if(!tables.length){alert('현재 탭에 내보낼 표가 없습니다.');return;}
+ var lines=[];
+ tables.forEach(function(t,ti){ if(ti)lines.push('');
+  t.querySelectorAll('tr').forEach(function(tr){
+   var cells=[];
+   tr.querySelectorAll('th,td').forEach(function(c){
+    var inp=c.querySelector('input,select,textarea');
+    var v=inp?(inp.value==null?'':inp.value):(c.innerText||c.textContent||'');
+    v=String(v).replace(/\s+/g,' ').trim();
+    cells.push(/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v);
+   });
+   if(cells.join('').length)lines.push(cells.join(','));
+  });
+ });
+ var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+ var dl=document.createElement('a');dl.href=URL.createObjectURL(blob);dl.download='생산계획현황_'+new Date().toISOString().slice(0,10)+'.csv';dl.click();
 }
 function doPreview(){ensurePrevModal();var a=document.querySelector('.view.active');var b=el('prnPrevBody');if(b)b.innerHTML=printHeadHTML()+(a?a.innerHTML:'');var ori=(el('prnOri')||{}).value||'landscape';if(b)b.className='prnprev-sheet '+ori;el('prnPrev').classList.add('on');document.body.classList.add('previewing');}
 function closePreview(){var p=el('prnPrev');if(p)p.classList.remove('on');document.body.classList.remove('previewing');}
