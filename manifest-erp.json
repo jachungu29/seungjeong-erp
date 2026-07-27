@@ -1,0 +1,15 @@
+{
+  "name": "승정 ERP",
+  "short_name": "승정ERP",
+  "description": "㈜승정 통합 관리 시스템 (ERP·MES)",
+  "start_url": "start.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#081722",
+  "theme_color": "#003D54",
+  "lang": "ko",
+  "icons": [
+    { "src": "sj-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "sj-icon-mask.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
