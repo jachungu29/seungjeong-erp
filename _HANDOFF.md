@@ -1,5 +1,11 @@
 # 승정 ERP · 작업 인수인계 (HANDOFF)
 
+> ⚠️ **2026-07-14 저장소 경량화 (중요)**: 용량 2.5GB→185MB 로 줄이려고 **전체 git 이력을 1커밋으로 압축(force-push)** 했습니다.
+> - **다른 PC(집 등)는 반드시 "새로 내려받기(재클론)"** 하세요. 일반 pull 하면 충돌납니다.
+>   방법: 기존 `C:\ERP\seungjeong-erp` 폴더를 지우거나 이름 바꾼 뒤, `jachungu29/seungjeong-erp` 를 다시 clone.
+> - **ISIR PDF 18개(445MB)** 는 저장소에서 빼서 `C:\ERP\_ARCHIVE_isir_pdf` 에 보관. `.gitignore` 로 `isir_pdf/`·`*.pdf` 재추가 차단. (isir.html 의 PDF 링크는 웹에서 안 열림 — 필요시 링크 정리)
+
+
 > 집·사무실 어디서든 이 파일을 읽고 **이어서 작업**하기 위한 메모.
 > 집에서 Claude Code에게: **"이 저장소의 `_HANDOFF.md` 읽고 이어서 해줘"** 라고 하면 됩니다.
 
