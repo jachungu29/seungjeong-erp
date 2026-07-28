@@ -23,11 +23,12 @@ window.addEventListener("resize",resize);resize();
 var N=[],E=[],showLeaf=true,alpha=1,view={x:W/2,y:H/2,z:.5},q="";
 function build(){var S=getStruct();N=[];E=[];var idx=0;
  function add(o){o.i=idx++;o.x=(o.x||W/2)+(Math.random()-.5)*40;o.y=(o.y||H/2)+(Math.random()-.5)*40;o.vx=0;o.vy=0;o.deg=0;N.push(o);return o;}
+ function addSubs(subs,parent,lv,col){(subs||[]).forEach(function(s){var n=add({label:s.name||s.label||"",lv:lv,col:col,todo:stColor(s.st)});E.push([parent.i,n.i]);if(s.subs&&s.subs.length)addSubs(s.subs,n,lv+1,col);});}
  var root=add({label:"승정 ERP",lv:0,col:"#58a6ff"});
  S.forEach(function(g){var col=g.color||"#58a6ff";
   var n1=add({label:g.label,lv:1,col:col,num:g.num});E.push([root.i,n1.i]);
   (g.mids||[]).forEach(function(m){var n2=add({label:m.hdr||"",lv:2,col:col});E.push([n1.i,n2.i]);
-   (m.items||[]).forEach(function(it){var n3=add({label:it.name||it.label||"",lv:3,col:col,todo:stColor(it.st)});E.push([n2.i,n3.i]);});});});
+   (m.items||[]).forEach(function(it){var n3=add({label:it.name||it.label||"",lv:3,col:col,todo:stColor(it.st)});E.push([n2.i,n3.i]);addSubs(it.subs,n3,4,col);});});});
  E.forEach(function(e){N[e[0]].deg++;N[e[1]].deg++;});
  document.getElementById("stat").innerHTML=(S.length)+" 대분류 · "+N.length+" 노드 · "+E.length+" 링크 · "+(window._SRC==="edit"?"구조도 반영중":"기본구조");
  alpha=1;
