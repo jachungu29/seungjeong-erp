@@ -18,7 +18,7 @@ html,body{margin:0;padding:0;height:100%;background:#eef1f6;color:#1c2430;font-f
 <div id="load"><div class="sp"></div><div class="t">클라우드에서 생산계획현황을 불러오는 중…</div><div class="s" id="st">연결 중</div></div>
 <div id="err"><div style="font-size:40px">📥</div><h2>업로드된 생산계획 자료가 없습니다</h2><p id="emsg">먼저 생산계획 HTML을 클라우드에 올려주세요.</p><a href="apps.html">＋ 앱 파일 삽입 화면 열기</a></div>
 <iframe id="frame"></iframe>
-<script src="supabase.js"></script>
+<script src="_lib/supabase.js"></script>
 <script>
 var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
 function st(t){var e=document.getElementById("st");if(e)e.textContent=t;}

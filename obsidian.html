@@ -80,7 +80,7 @@ window.addEventListener("focus",function(){build();});
  function apply(v){try{if(!v||!v.length)return;var js=JSON.stringify(v);if(js!==localStorage.getItem("SJ_MAP_STRUCT")){localStorage.setItem("SJ_MAP_STRUCT",js);try{build();view={x:W/2,y:H/2,z:.5};}catch(e){}}}catch(e){}}
  function wire(){if(!window.Cloud)return false;try{Cloud.get("map_struct").then(apply);if(Cloud.on)Cloud.on("map_struct",apply);}catch(e){}return true;}
  function ld(src,cb){var s=document.createElement("script");s.src=src;s.onload=cb;s.onerror=cb;document.head.appendChild(s);}
- ld("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",function(){ld("cloud.js",function(){var t=0,iv=setInterval(function(){if(wire()||++t>40)clearInterval(iv);},150);});});
+ ld("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",function(){ld("_lib/cloud.js",function(){var t=0,iv=setInterval(function(){if(wire()||++t>40)clearInterval(iv);},150);});});
 })();
 build();loop();
 </script></body></html>

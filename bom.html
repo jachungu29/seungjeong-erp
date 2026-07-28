@@ -18,7 +18,7 @@ html,body{margin:0;padding:0;height:100%;background:#0d1117;color:#e6edf3;font-f
 <div id="load"><div class="sp"></div><div class="t">클라우드에서 BOM 앱을 불러오는 중…</div><div class="s" id="st">연결 중</div></div>
 <div id="err"><div style="font-size:40px">📥</div><h2>업로드된 BOM 앱이 없습니다</h2><p id="emsg">먼저 앱 파일을 클라우드에 올려주세요. 올린 뒤 이 화면을 새로고침하면 여기에 그대로 나타납니다.</p><a href="apps.html">＋ 앱 파일 삽입 화면 열기</a></div>
 <iframe id="frame"></iframe>
-<script src="supabase.js"></script>
+<script src="_lib/supabase.js"></script>
 <script>
 var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
 function st(t){var e=document.getElementById("st");if(e)e.textContent=t;}

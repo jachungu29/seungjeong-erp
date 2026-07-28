@@ -3,7 +3,7 @@
    ★ 준비확인(probe): app_state 테이블이 있어야만 클라우드로 동작.
      없으면(=SQL 미실행) "같은 PC(로컬)" 모드로만 동작(에러 없음).
    사용: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-         <script src="cloud.js"></script>
+         <script src="_lib/cloud.js"></script>
      · Cloud.get(key) → Promise(value|null)
      · Cloud.set(key, value)
      · Cloud.on(key, cb)

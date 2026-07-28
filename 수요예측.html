@@ -190,7 +190,7 @@ tr.total td{background:#eef4f8 !important;font-weight:800;color:var(--navy);bord
 <datalist id="pnodl"></datalist>
 <datalist id="eqdl2"></datalist>
 
-<script src="supabase.js"></script>
+<script src="_lib/supabase.js"></script>
 <script>
 const ACCTS=["수직사출","수평사출","이중사출","조립"];
 const METHODS=["가중평균","단순평균","성장추세","고객내시","수동"];
@@ -392,5 +392,5 @@ async function boot(){
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 boot();
 </script>
- <script src="sj-sheet.js"></script>
+ <script src="_lib/sj-sheet.js"></script>
 </body></html>
