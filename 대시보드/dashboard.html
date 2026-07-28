@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>승정 ERP · 종합대시보드 (현장용)</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<style>
+:root{
+ --bg:#f0eee9;--card:#ffffff;--line:#e7e3db;--line2:#efece5;--chip:#f7f5f0;
+ --txt:#1d1f24;--dim:#8b8f96;--faint:#a7abb2;--track:#e6e2da;
+ --blue:#2f6feb;--green:#2f9e44;--amber:#d08700;--red:#d64545;--purple:#7c5cff;--gray:#9aa0a8;
+ --kr:Pretendard,"Malgun Gothic",sans-serif;--mono:"JetBrains Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);font-size:14px;line-height:1.45}
+.topbar{height:6px;background:#111318}
+.wrap{max-width:1560px;margin:0 auto;padding:18px 22px 80px}
+.btn{font-size:12px;padding:7px 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--txt);cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.hd{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.hd .clk{display:flex;align-items:center;gap:14px}
+.hd .ic{font-size:26px}
+.hd .time{font-family:var(--mono);font-size:34px;font-weight:800;letter-spacing:1px;line-height:1}
+.hd .date{font-size:13px;color:var(--dim);margin-top:4px}
+.hd .shift{display:flex;align-items:center;gap:9px;margin-top:8px}
+.hd .shift .lab{font-size:11px;background:#e9f5ec;color:var(--green);border-radius:20px;padding:2px 9px;font-weight:700}
+.hd .shift .tr{width:150px;height:8px;background:var(--track);border-radius:6px;overflow:hidden}
+.hd .shift .fl{height:100%;background:var(--green);border-radius:6px}
+.hd .shift .pc{font-size:11.5px;color:var(--dim);font-family:var(--mono)}
+.hd .chips{margin-left:auto;display:flex;gap:9px;flex-wrap:wrap}
+.chip{background:var(--chip);border:1px solid var(--line);border-radius:11px;padding:9px 14px;text-align:center;min-width:78px}
+.chip .cl{font-size:11px;color:var(--dim)}
+.chip .cv{font-size:20px;font-weight:800;margin-top:2px;color:var(--faint)}
+.chip .cu{font-size:10px;color:var(--faint)}
+.hd .act{margin-left:8px;display:flex;gap:7px}
+.banner{margin:14px 0 4px;border:1px solid #d9e6f7;background:#f2f7fe;border-radius:11px;padding:11px 15px;font-size:12.5px;color:#2c5a9e}
+.banner b{color:#1d4e8f}
+.sec{display:flex;align-items:center;gap:10px;margin:24px 0 11px}
+.sec h2{font-size:15px;font-weight:800;margin:0}
+.sec .link{margin-left:auto;font-size:12px;color:var(--blue);text-decoration:none;font-weight:700}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 17px}
+.emptybox{border:1px dashed var(--line);border-radius:11px;background:#fbfaf7;padding:34px 14px;text-align:center;color:var(--faint)}
+.emptybox .ei{font-size:28px;opacity:.6}.emptybox .et{font-size:13px;margin-top:8px;color:var(--dim)}
+.emptybox .es{font-size:11.5px;margin-top:4px;color:var(--faint)}
+.emptybox.ok .ei{opacity:1}.emptybox.ok .et{color:var(--green)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.row2{grid-template-columns:1fr}}
+.panel .ph{display:flex;align-items:baseline;margin-bottom:10px}
+.panel .ph b{font-size:14px}.panel .ph a{margin-left:auto;font-size:11.5px;color:var(--blue);text-decoration:none}
+</style></head><body>
+<div class="topbar"></div>
+<div class="wrap">
+
+ <div class="hd">
+  <div class="clk">
+   <div class="ic">🖥️</div>
+   <div>
+    <div class="time" id="clk">--:--:--</div>
+    <div class="date" id="today">----</div>
+    <div class="shift"><span class="lab">주간 07:00~19:00</span>
+     <span class="tr"><span class="fl" id="shFl" style="width:0%"></span></span>
+     <span class="pc" id="shPc">0%</span></div>
+   </div>
+  </div>
+  <div class="chips">
+   <div class="chip"><div class="cl">금일 총 생산</div><div class="cv">–</div><div class="cu">EA</div></div>
+   <div class="chip"><div class="cl">불량 수량</div><div class="cv">–</div><div class="cu">EA</div></div>
+   <div class="chip"><div class="cl">PPM</div><div class="cv">–</div><div class="cu">&nbsp;</div></div>
+   <div class="chip"><div class="cl">가동 설비</div><div class="cv">–</div><div class="cu">/–</div></div>
+   <div class="chip"><div class="cl">고장</div><div class="cv">–</div><div class="cu">&nbsp;</div></div>
+   <div class="chip"><div class="cl">점검</div><div class="cv">–</div><div class="cu">&nbsp;</div></div>
+  </div>
+  <div class="act"><a class="btn" href="index2.html">← 메인</a></div>
+ </div>
+
+ <div class="banner">📡 <b>실데이터 연동 모드</b> — 이 화면은 <b>현장(MES) 설비·생산 데이터 연동용</b>입니다. 아직 설비 가동·생산실적을 저장하는 클라우드 표가 없어 값이 비어 있습니다. (시계·교대 진행률만 실시간)</div>
+
+ <div class="sec"><h2>설비 가동현황</h2></div>
+ <div class="panel"><div class="emptybox"><div class="ei">⚙️</div>
+  <div class="et">등록된 설비 데이터 없음</div>
+  <div class="es">설비별 가동률·생산량·상태를 저장할 클라우드 표가 연결되면 여기에 설비 카드가 자동으로 채워집니다.</div></div></div>
+
+ <div class="sec"><h2>라인별 생산현황 <span style="font-weight:400;color:var(--faint);font-size:12px">(금일 목표 대비)</span></h2></div>
+ <div class="panel"><div class="emptybox"><div class="ei">🏭</div>
+  <div class="et">생산 실적 데이터 없음</div>
+  <div class="es">라인별 생산·목표·불량 실적이 등록되면 여기에 표시됩니다.</div></div></div>
+
+ <div class="row2">
+  <div class="panel"><div class="ph"><b>LOT 추적 현황</b></div>
+   <div class="emptybox"><div class="ei">🗇</div><div class="et">등록된 LOT 없음</div></div></div>
+  <div class="panel"><div class="ph"><b>금일 불량 현황</b></div>
+   <div class="emptybox"><div class="ei">📉</div><div class="et">불량 데이터 없음</div></div></div>
+ </div>
+ <div class="row2">
+  <div class="panel"><div class="ph"><b>설비 이상·BM 알림</b></div>
+   <div class="emptybox"><div class="ei">🔕</div><div class="et">알림 없음</div></div></div>
+  <div class="panel"><div class="ph"><b>비가동 사유 분포 <span style="font-weight:400;color:var(--faint);font-size:11px">(기간 누계)</span></b></div>
+   <div class="emptybox"><div class="ei">📊</div><div class="et">비가동 데이터 없음</div></div></div>
+ </div>
+</div>
+
+<script>
+/* 종합대시보드 (현장용) — 실데이터 연동 모드.
+   설비/생산 저장소가 없어 값은 비어 있음. 시계·교대진행률만 실시간 계산. */
+var WD=["일","월","화","수","목","금","토"];
+function tick(){
+ var n=new Date();
+ var hh=String(n.getHours()).padStart(2,"0"),mm=String(n.getMinutes()).padStart(2,"0"),ss=String(n.getSeconds()).padStart(2,"0");
+ document.getElementById("clk").textContent=hh+":"+mm+":"+ss;
+ var y=n.getFullYear(),mo=String(n.getMonth()+1).padStart(2,"0"),d=String(n.getDate()).padStart(2,"0");
+ document.getElementById("today").textContent=y+"-"+mo+"-"+d+" ("+WD[n.getDay()]+")";
+ var mins=n.getHours()*60+n.getMinutes(), start=7*60, end=19*60;
+ var pct=Math.max(0,Math.min(100,(mins-start)/(end-start)*100));
+ document.getElementById("shFl").style.width=pct.toFixed(1)+"%";
+ document.getElementById("shPc").textContent=pct.toFixed(1)+"%";
+}
+tick();setInterval(tick,1000);
+</script>
+</body></html>

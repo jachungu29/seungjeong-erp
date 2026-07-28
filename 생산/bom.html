@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BOM LIST · 클라우드 앱</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<style>
+html,body{margin:0;padding:0;height:100%;background:#0d1117;color:#e6edf3;font-family:Pretendard,"Malgun Gothic",sans-serif}
+#load{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:5}
+#load .sp{width:38px;height:38px;border:4px solid #21324a;border-top-color:#58a6ff;border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+#load .t{font-size:14px;color:#8b949e}
+#load .s{font-family:Consolas,monospace;font-size:12px;color:#6e7681}
+#err{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;z-index:6}
+#err.on{display:flex}#err h2{margin:0;font-size:18px}#err p{color:#8b949e;font-size:14px;max-width:440px;margin:0}
+#err a{background:#58a6ff;color:#08131f;text-decoration:none;font-weight:800;padding:10px 20px;border-radius:10px;font-size:14px}
+#frame{position:fixed;inset:0;width:100%;height:100%;border:0;background:#fff;display:none}
+#frame.on{display:block}
+</style></head><body>
+<div id="load"><div class="sp"></div><div class="t">클라우드에서 BOM 앱을 불러오는 중…</div><div class="s" id="st">연결 중</div></div>
+<div id="err"><div style="font-size:40px">📥</div><h2>업로드된 BOM 앱이 없습니다</h2><p id="emsg">먼저 앱 파일을 클라우드에 올려주세요. 올린 뒤 이 화면을 새로고침하면 여기에 그대로 나타납니다.</p><a href="설계/apps.html">＋ 앱 파일 삽입 화면 열기</a></div>
+<iframe id="frame"></iframe>
+<script src="_lib/supabase.js"></script>
+<script>
+var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
+function st(t){var e=document.getElementById("st");if(e)e.textContent=t;}
+function fail(msg){document.getElementById("load").style.display="none";if(msg)document.getElementById("emsg").textContent=msg;document.getElementById("err").classList.add("on");}
+async function boot(){
+ st("앱 목록 조회 중");
+ var r=await sb.from("custom_pages").select("id,title,slug,updated_at").order("updated_at",{ascending:false});
+ if(r.error){fail("클라우드 연결 오류: "+r.error.message+" — apps.html에서 표(custom_pages)를 먼저 만들어 주세요.");return;}
+ var list=r.data||[];
+ if(!list.length){fail();return;}
+ // 이름/슬러그에 'bom'이 든 것을 우선, 없으면 가장 최근 것
+ var pick=list.filter(function(p){var s=((p.title||"")+" "+(p.slug||"")).toLowerCase();return s.indexOf("bom")>=0;})[0]||list[0];
+ st("불러오는 중: "+(pick.title||"앱"));
+ var d=await sb.from("custom_pages").select("html,title").eq("id",pick.id).single();
+ if(d.error||!d.data||!d.data.html){fail("앱 내용을 읽지 못했습니다.");return;}
+ var html=d.data.html;
+ // ── 헤더 제목 덮어쓰기 (앱 파일은 그대로 두고 표시만 변경) ──
+ var TITLE_OVERRIDE="BOM LIST";
+ if(TITLE_OVERRIDE){html=html.replace(/(<div class="tt"><h1>)[\s\S]*?(<\/h1>)/, '$1'+TITLE_OVERRIDE+'$2');}
+ // ── 화면 잘림 방지: 여백·글자·버튼을 촘촘히 줄여 한 화면에 맞춤(텍스트는 안 잘림) ──
+ var FIT_CSS='<style>'
+  +'.wrap{padding:6px 6px 16px !important}'
+  +'table{font-size:11px !important;white-space:nowrap}'
+  +'thead th,tbody td{padding:1px 5px !important;line-height:1.15 !important}'
+  +'tbody td button,tbody td .btn,tbody td .delbtn{font-size:10px !important;padding:1px 5px !important;margin:0 1px !important}'
+  +'.editbadge{display:none !important}'
+  +'.tt{background:linear-gradient(120deg,#0b1220 0%,#15357e 52%,#2563eb 100%) !important;border-radius:14px !important;padding:15px 22px !important;margin:2px 0 12px !important;box-shadow:0 8px 24px rgba(37,99,235,.30) !important;display:flex !important;align-items:center !important;gap:14px !important;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}'
+  +'.tt::before{content:"\\1F4CB";font-size:27px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}'
+  +'.tt::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}'
+  +'.tt h1{color:#fff !important;font-size:27px !important;font-weight:900 !important;letter-spacing:.6px !important;margin:0 !important;text-shadow:0 2px 4px rgba(0,0,0,.35)}'
+  +'.tt h1 span{color:#dbe6ff !important}'
+  +'.tt .date{color:#0b1220 !important;font-weight:800 !important;font-size:12.5px !important;background:#ffd54a !important;padding:5px 14px !important;border-radius:20px !important;margin-left:auto !important;box-shadow:0 2px 8px rgba(255,213,74,.4)}'
+  +'#remarkFilterBar,#eqpFilterBar{display:inline-flex;gap:6px;align-items:center;margin:2px 14px 6px 0;flex-wrap:wrap;font-size:12px;vertical-align:middle}button[onclick*="toggleFull"]{display:none!important}'
+  +'#remarkFilterBar .rf-btn,#eqpFilterBar .rf-btn{border:1px solid #d8e0ec;border-radius:7px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:700}'
+  /* ① 표 머리글(청색띠) 상하폭 크게  ② 검색·완제품만·전체펼치기 숨김  ④ 신규만보기·상태 숨김 */
+  +'thead th{padding:6px 5px !important}'
+  +'#q{display:none !important}button[onclick*="expandLv"]{display:none !important}'
+  +'label.kpi{display:none !important}#kpi{display:none !important}'
+  +'</style>';
+ html=html.replace(/<\/head>/i, FIT_CSS+'</head>');
+ // ── Remark 필터 버튼 주입 (완제품/반제품/원자재/부자재) ──
+ function __bomFilterFn(){
+  var CATS=["전체","완제품","반제품","원자재","부자재","원재료"],active="전체";
+  var EQPS=["전체","수직사출BOM","수평사출BOM","조립BOM","검사BOM"],activeE="전체";
+  var EQMAP={"수직사출BOM":["수직"],"수평사출BOM":["수평"],"조립BOM":["조립","압입","코킹","마킹"],"검사BOM":["검사","리크","통전"]};
+  function colIdx(re){var t=document.querySelectorAll("thead th");for(var i=0;i<t.length;i++){if(re.test(t[i].textContent))return i;}return -1;}
+  function paint(){var bs=document.querySelectorAll("#remarkFilterBar .rf-btn");for(var i=0;i<bs.length;i++){var on=bs[i].textContent===active;bs[i].style.background=on?"#2563eb":"#fff";bs[i].style.color=on?"#fff":"#1c2942";}var es=document.querySelectorAll("#eqpFilterBar .rf-btn");for(var k=0;k<es.length;k++){var oe=es[k].textContent===activeE;es[k].style.background=oe?"#2563eb":"#fff";es[k].style.color=oe?"#fff":"#1c2942";}}
+  function apply(){var ri=colIdx(/Remark/i),ei=colIdx(/설비명/);var rows=document.querySelectorAll("tbody tr");for(var i=0;i<rows.length;i++){var c=rows[i].children;var okR=true,okE=true;if(active!=="전체"){var t1=(ri>=0&&c[ri])?c[ri].textContent.trim():"";okR=t1.indexOf(active)>=0||(active==="원재료"&&t1.indexOf("원소재")>=0);}if(activeE!=="전체"){var t2=(ei>=0&&c[ei])?c[ei].textContent:"";var ks=EQMAP[activeE]||[];okE=false;for(var m=0;m<ks.length;m++){if(t2.indexOf(ks[m])>=0){okE=true;break;}}}rows[i].style.display=(okR&&okE)?"":"none";}}
+  function mkbar(id,lab,arr,cb){if(document.getElementById(id))return;var tbl=document.querySelector("table");if(!tbl)return;var wrap=tbl.parentElement;var b=document.createElement("div");b.id=id;var hh='<b style="color:#64748b;min-width:52px;display:inline-block">'+lab+'</b>';for(var i=0;i<arr.length;i++){hh+='<button class="rf-btn" data-c="'+arr[i]+'">'+arr[i]+'</button>';}b.innerHTML=hh;wrap.parentNode.insertBefore(b,wrap);var bs=b.querySelectorAll(".rf-btn");for(var j=0;j<bs.length;j++){bs[j].onclick=function(){cb(this.getAttribute("data-c"));apply();paint();};}}
+  function bar(){mkbar("remarkFilterBar","Remark:",CATS,function(v){active=v;});mkbar("eqpFilterBar","설비별:",EQPS,function(v){activeE=v;});paint();}
+  function tree(){var cells=document.querySelectorAll("tbody td.nm");for(var i=0;i<cells.length;i++){var c=cells[i];if(c.getAttribute("data-tree")==="1")continue;var pl=parseFloat(getComputedStyle(c).paddingLeft)||9;var lv=Math.round((pl-9)/16);if(lv<0)lv=0;if(lv>0){var im=[],sz=[],ps=[];for(var k=0;k<lv;k++){var x=k*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("2px 100%");ps.push(x+"px 0");}var lx=(lv-1)*16+17;im.push("linear-gradient(#9fb2cd,#9fb2cd)");sz.push("8px 2px");ps.push(lx+"px 50%");c.style.backgroundImage=im.join(",");c.style.backgroundSize=sz.join(",");c.style.backgroundPosition=ps.join(",");c.style.backgroundRepeat="no-repeat";}c.setAttribute("data-tree","1");}}
+  function boot(){bar();apply();tree();}
+  if(document.readyState!=="loading")setTimeout(boot,300);else document.addEventListener("DOMContentLoaded",function(){setTimeout(boot,300);});
+  var tmr;var mo=new MutationObserver(function(){clearTimeout(tmr);tmr=setTimeout(function(){bar();apply();tree();},120);});
+  setTimeout(function(){var w=document.querySelector(".wrap")||document.body;mo.observe(w,{childList:true,subtree:true});},900);
+}
+ var FILTER_JS='<scr'+'ipt>('+__bomFilterFn.toString()+')();<\/scr'+'ipt>';
+ html=html.replace(/<\/body>/i, FILTER_JS+'</body>');
+ var f=document.getElementById("frame");
+ f.onload=function(){document.getElementById("load").style.display="none";f.classList.add("on");document.title=(d.data.title||"BOM")+" · 클라우드";};
+ f.srcdoc=html;
+ setTimeout(function(){if(document.getElementById("load").style.display!=="none"){document.getElementById("load").style.display="none";f.classList.add("on");}},2500);
+}
+boot();
+</script>
+</body></html>
