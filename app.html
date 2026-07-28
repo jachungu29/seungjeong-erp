@@ -44,7 +44,7 @@ topbar .r{margin-left:auto;font-size:11px;color:var(--faint);font-family:var(--m
 <aside>
  <div class="brand"><div class="logo">SJ</div><div><b>승정 ERP</b><span class="rev">REV-0</span></div></div>
  <div class="nav" id="nav"><div style="padding:20px;color:var(--faint);font-size:12px">불러오는 중…</div></div>
- <div class="foot"><a href="설계/rev0-map.html">🗺️ 구조도 편집</a><a href="index.html">🏠 시작화면</a><a href="legacy.html" target="_blank">📦 기존 큰 앱</a></div>
+ <div class="foot"><a href="설계/rev0-map.html">🗺️ 구조도 편집</a><a href="index.html">🏠 시작화면</a><a href="index.html" target="_blank">📦 기존 큰 앱</a></div>
 </aside>
 <main>
  <topbar><div class="crumb" id="crumb"><b>승정 ERP REV-0</b></div><div class="r">구조도 연동 · 클라우드</div></topbar>
@@ -87,7 +87,7 @@ function openScreen(ci,mi,ii){
  document.getElementById("crumb").innerHTML='<span style="color:var(--faint)">'+esc(STRUCT[ci].label)+' · '+esc(STRUCT[ci].mids[mi].hdr)+'</span> &nbsp;<b>'+esc(it.name)+'</b>';
  var file=fileFor(it.name,it.st), st=document.getElementById("stage");
  if(file){ st.innerHTML='<iframe src="'+file+'"></iframe>'; }
- else{ st.innerHTML='<div class="ph"><div class="box"><div class="ic">🚧</div><h2>'+esc(it.name)+'</h2><p>이 화면은 아직 <b>새 구조(클라우드)로 준비 중</b>이에요.<br>지금은 기존 큰 앱에서 사용하실 수 있어요.</p><a href="legacy.html" target="_blank">📦 기존 큰 앱에서 열기</a><a class="ghost" href="설계/rev0-map.html">🗺️ 구조도 편집</a></div></div>'; }
+ else{ st.innerHTML='<div class="ph"><div class="box"><div class="ic">🚧</div><h2>'+esc(it.name)+'</h2><p>이 화면은 아직 <b>새 구조(클라우드)로 준비 중</b>이에요.<br>지금은 기존 큰 앱에서 사용하실 수 있어요.</p><a href="index.html" target="_blank">📦 기존 큰 앱에서 열기</a><a class="ghost" href="설계/rev0-map.html">🗺️ 구조도 편집</a></div></div>'; }
  buildNav();
 }
 function welcome(){ document.getElementById("stage").innerHTML='<div class="ph"><div class="box"><div class="ic">🏭</div><h2>승정 ERP · REV-0</h2><p>왼쪽 메뉴에서 항목을 선택하세요.<br>메뉴는 <b>구조도</b>에서 자동으로 만들어지고,<br>집·사무실 어디서든 같은 내용이 보입니다.</p><a href="sales.html" onclick="event.preventDefault();document.querySelector(&quot;.stage&quot;).innerHTML=&quot;&quot;">　</a></div></div>'; }
