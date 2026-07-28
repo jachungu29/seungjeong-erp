@@ -60,7 +60,11 @@ function colHTML(lv){
  if(!list.length)return '<div class="empty">'+(editOn()?'＋ 로 추가':'없음')+'</div>';
  var sel=SEL[lv-1];
  return list.map(function(o,i){
-   var acts='<span class="acts"><button class="nbtn" title="이름변경" onclick="event.stopPropagation();renameNode('+lv+','+i+')">✎</button>'+(lv>=3?'<button class="nbtn" title="상태" onclick="event.stopPropagation();toggleSt('+lv+','+i+')">●</button>':'')+'<button class="nbtn" title="삭제" onclick="event.stopPropagation();delNode('+lv+','+i+')">✕</button></span>';
+   var acts='<span class="acts">'+
+     '<button class="nbtn" title="위로" onclick="event.stopPropagation();moveNode('+lv+','+i+',\'up\')">▲</button>'+
+     '<button class="nbtn" title="아래로" onclick="event.stopPropagation();moveNode('+lv+','+i+',\'down\')">▼</button>'+
+     (lv>=2?'<button class="nbtn" title="이전 그룹으로" onclick="event.stopPropagation();moveNode('+lv+','+i+',\'left\')">◀</button><button class="nbtn" title="다음 그룹으로" onclick="event.stopPropagation();moveNode('+lv+','+i+',\'right\')">▶</button>':'')+
+     '<button class="nbtn" title="이름변경" onclick="event.stopPropagation();renameNode('+lv+','+i+')">✎</button>'+(lv>=3?'<button class="nbtn" title="상태" onclick="event.stopPropagation();toggleSt('+lv+','+i+')">●</button>':'')+'<button class="nbtn" title="삭제" onclick="event.stopPropagation();delNode('+lv+','+i+')">✕</button></span>';
    var left;
    if(lv===1)left='<span class="num" style="background:'+(o.color||"#58a6ff")+'">'+esc(o.num||"")+'</span><span class="nm">'+esc(nlabel(lv,o))+'</span>';
    else if(lv===2)left='<span class="nm" style="color:#cfe0ff">'+esc(nlabel(lv,o))+'</span>';
@@ -81,6 +85,15 @@ function render(){
  setTxt("h2","중분류 · "+(g.label||""));setTxt("h3","소분류 · "+(m.hdr||""));setTxt("h4","소분류1 · "+(it.name||""));setTxt("h5","소분류2 · "+(s1.name||""));
 }
 function drill(lv,i){SEL[lv-1]=i;for(var k=lv;k<5;k++)SEL[k]=0;render();}
+function renum(){S.forEach(function(g,i){g.num=("0"+(i+1)).slice(-2);});}
+function moveNode(lv,i,dir){var list=LIST(lv);if(!list||list[i]==null)return;
+ if(dir==='up'||dir==='down'){var j=i+(dir==='up'?-1:1);if(j<0||j>=list.length)return;var t=list[i];list[i]=list[j];list[j]=t;
+  if(SEL[lv-1]===i)SEL[lv-1]=j;else if(SEL[lv-1]===j)SEL[lv-1]=i;if(lv===1)renum();DIRTY=true;render();return;}
+ if(lv===1)return; /* 대분류는 좌우 없음 */
+ var plist=LIST(lv-1),pi=SEL[lv-2],pj=pi+(dir==='left'?-1:1);if(!plist||pj<0||pj>=plist.length)return;
+ var field=(lv===2?'mids':lv===3?'items':'subs');
+ var moved=list.splice(i,1)[0];var dst=plist[pj];dst[field]=dst[field]||[];dst[field].push(moved);
+ SEL[lv-2]=pj;SEL[lv-1]=dst[field].length-1;for(var k=lv;k<5;k++)SEL[k]=0;DIRTY=true;render();}
 function addNode(lv){var list=LIST(lv);if(list===null){alert("상위 항목을 먼저 선택하세요.");return;}
  if(lv===1){var lb=prompt("대분류 이름?");if(!lb)return;var num=("0"+(S.length+1)).slice(-2);list.push({num:num,label:lb,color:"#3a4a63",mids:[]});}
  else if(lv===2){var hd=prompt("중분류 이름?");if(!hd)return;list.push({hdr:hd,items:[]});}
