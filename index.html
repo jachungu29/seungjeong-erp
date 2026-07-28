@@ -12,15 +12,12 @@ html,body{height:100%}
 body{background:#0e1116;display:flex;flex-direction:column;align-items:center;justify-content:center;
  min-height:100vh;font-family:"Malgun Gothic","Pretendard",sans-serif;cursor:pointer;
  -webkit-tap-highlight-color:transparent;user-select:none}
-.logo{width:min(64vw,340px);filter:drop-shadow(0 8px 26px rgba(0,0,0,.55));transition:transform .25s ease,filter .25s ease}
-body:hover .logo,body:active .logo{transform:scale(1.04)}
-.hint{margin-top:28px;color:#5b6472;font-size:12.5px;letter-spacing:3px;animation:bl 2.2s ease-in-out infinite}
-@keyframes bl{0%,100%{opacity:.3}50%{opacity:.85}}
+.logo{width:min(58vw,300px);border-radius:22px;filter:drop-shadow(0 10px 30px rgba(0,0,0,.55));transition:transform .25s ease}
+body:hover .logo,body:active .logo{transform:scale(1.05)}
 </style></head>
 <body onclick="go()" role="button" aria-label="승정 ERP 시작">
- <img class="logo" src="로고/승정로고_투명.svg" alt="SEUNGJEONG ERP"
-      onerror="this.onerror=null;this.src='로고/승정로고_투명_512.png'">
- <div class="hint">화면을 누르면 시작합니다</div>
+ <img class="logo" src="로고/승정로고_기본_512.png" alt="SEUNG JEONG"
+      onerror="this.onerror=null;this.src='sj-icon.png'">
 <script>
 function go(){location.href="legacy.html";}
 </script>
