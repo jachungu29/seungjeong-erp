@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><base href="../">
+<link rel="icon" href="sj-icon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>승정 조도 측정 관리 시스템</title>
+<style>
+:root{
+  --navy:#0b2a4a;
+  --blue:#1565c0;
+  --lightblue:#e8f1fb;
+  --green:#2e8b57;
+  --red:#c0392b;
+  --amber:#e08e0b;
+  --gray-bg:#f4f6f9;
+  --border:#d8e0ea;
+  --text:#1f2937;
+  --muted:#6b7280;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:var(--gray-bg); color:var(--text);
+}
+/* ===== Header & Top Menu ===== */
+header.topbar{
+  background-image:
+    linear-gradient(90deg, rgba(10,20,35,.50) 0%, rgba(10,20,35,.18) 35%, rgba(10,20,35,0) 60%),
+    url('data:image/jpeg;base64,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');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color:#fff; padding:14px 20px; display:flex; align-items:center; gap:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+header.topbar .logo{
+  height:46px; display:block; filter:drop-shadow(0 2px 5px rgba(0,0,0,.35));
+}
+header.topbar h1{font-size:18px; margin:0; font-weight:700; text-shadow:0 1px 3px rgba(0,0,0,.45);}
+header.topbar .sub{font-size:12px; opacity:.95; margin-left:auto; text-shadow:0 1px 3px rgba(0,0,0,.45);}
+@media (max-width:480px){
+  header.topbar{padding:10px 12px; gap:8px;}
+  header.topbar h1{font-size:13.5px; line-height:1.25;}
+  header.topbar .logo{height:34px;}
+  header.topbar .sub{font-size:10px;}
+}
+nav.menu{
+  display:flex; background:#fff; border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:50; overflow-x:auto;
+  box-shadow:0 2px 4px rgba(0,0,0,.04);
+}
+nav.menu button{
+  flex:0 0 auto; padding:13px 18px; border:none; background:transparent;
+  font-size:14px; font-weight:600; color:var(--muted); cursor:pointer;
+  border-bottom:3px solid transparent; white-space:nowrap;
+  transition:.15s;
+}
+nav.menu button:hover{background:var(--lightblue); color:var(--blue);}
+nav.menu button.active{color:var(--blue); border-bottom-color:var(--blue); background:var(--lightblue);}
+
+main{padding:18px; max-width:1500px; margin:0 auto;}
+.page{display:none;}
+.page.active{display:block; animation:fade .2s;}
+@keyframes fade{from{opacity:0} to{opacity:1}}
+
+.card{
+  background:#fff; border:1px solid var(--border); border-radius:10px;
+  padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.card h2{margin:0 0 12px; font-size:16px; color:var(--navy); display:flex; align-items:center; gap:8px;}
+.card h2 .badge{font-size:11px; background:var(--lightblue); color:var(--blue); padding:2px 8px; border-radius:10px; font-weight:600;}
+
+.grid2{display:grid; grid-template-columns:1.4fr 1fr; gap:16px;}
+.grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media (max-width:1000px){.grid2{grid-template-columns:1fr;} .grid4{grid-template-columns:repeat(2,1fr);}}
+
+.stat{
+  background:linear-gradient(135deg,#fff,#f0f5fb); border:1px solid var(--border);
+  border-radius:10px; padding:14px 16px;
+}
+.stat .num{font-size:26px; font-weight:800; color:var(--navy);}
+.stat .label{font-size:12px; color:var(--muted); margin-top:2px;}
+.stat.warn .num{color:var(--red);}
+
+table{width:100%; border-collapse:collapse; font-size:13px;}
+table th, table td{border:1px solid var(--border); padding:7px 8px; text-align:center;}
+table th{background:var(--navy); color:#fff; font-weight:600; font-size:12.5px;}
+table tbody tr:nth-child(even){background:#fafbfd;}
+table tbody tr:hover{background:var(--lightblue);}
+.dot-plan{color:#999; font-weight:700;}
+.dot-done{color:var(--green); font-weight:700;}
+.dot-none{color:#ccc;}
+
+select, input[type=date], input[type=time], input[type=number], input[type=text]{
+  padding:8px 10px; border:1px solid #c8d2e0; border-radius:6px; font-size:13.5px;
+  background:#fff; color:var(--text);
+}
+select:focus, input:focus{outline:2px solid var(--blue); outline-offset:1px;}
+label.f{display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600;}
+.formrow{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+.formrow > div{display:flex; flex-direction:column;}
+
+button.btn{
+  padding:9px 16px; border:none; border-radius:6px; background:var(--blue); color:#fff;
+  font-weight:700; font-size:13.5px; cursor:pointer; transition:.15s;
+}
+button.btn:hover{background:var(--navy);}
+button.btn.green{background:var(--green);} button.btn.green:hover{background:#1f6b41;}
+button.btn.gray{background:#9aa5b1;} button.btn.gray:hover{background:#76808c;}
+button.btn.danger{background:var(--red);} button.btn.danger:hover{background:#922018;}
+button.btn.sm{padding:5px 10px; font-size:12px;}
+button.btn:disabled{background:#c6cdd6; cursor:not-allowed;}
+
+/* ===== Floor map ===== */
+.floorwrap{
+  overflow:auto; border:1px solid var(--border); border-radius:8px; background:#fbfcfe;
+  max-height:620px; position:relative;
+}
+.floorstage{position:relative; display:block;}
+svg.floor{display:block;}
+.equip-box{stroke-width:1.6; filter:drop-shadow(0 1px 2px rgba(0,0,0,.12));}
+.zone-box{fill:rgba(154,165,177,.08); stroke:#aab4c0; stroke-width:1.4; stroke-dasharray:6 5; rx:8;}
+.zone-label{fill:#7b8794; font-size:12px; font-weight:700; letter-spacing:.3px;}
+.equip-icon{pointer-events:none;}
+.equip-label{font-size:12px; font-weight:700; pointer-events:none; letter-spacing:.2px;}
+.equip-sub{font-size:10px; font-weight:500; pointer-events:none; opacity:.85;}
+
+.point-marker{cursor:pointer;}
+.point-rect{stroke-width:2.5; transition:.15s; rx:6;}
+.point-rect.unmeasured{fill:#fff7f4; stroke:var(--red); stroke-dasharray:5 4;}
+.point-rect.ok{fill:#e6f7ec; stroke:var(--green);}
+.point-rect.ng{fill:#fdecea; stroke:var(--red);}
+.point-marker:hover .point-rect{filter:brightness(0.97);}
+.point-rect.today-ring{stroke-width:3.5;}
+.point-rect.selected{stroke:#1565c0; stroke-width:3.5; stroke-dasharray:none;}
+.point-badge-bg{fill:var(--red);}
+.point-badge-bg.ok{fill:var(--green);}
+.point-num{fill:#fff; font-size:13px; font-weight:800; pointer-events:none; text-anchor:middle; dominant-baseline:central;}
+.point-lastval{font-size:11.5px; font-weight:800; text-anchor:middle; pointer-events:none; paint-order:stroke; stroke:#fff; stroke-width:3;}
+.point-lastval.ng{fill:var(--red);}
+.point-lastval.ok{fill:var(--green);}
+.point-lastval.none{fill:#c0392b; font-weight:700;}
+
+/* floating quick-input popup over the LAY-OUT */
+.quickpop{
+  position:absolute; z-index:40; width:250px; background:#fff; border:2px solid var(--blue);
+  border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.25); padding:12px; display:none;
+  font-size:12.5px;
+}
+.quickpop.show{display:block;}
+.quickpop .qp-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+.quickpop .qp-title{font-weight:800; color:var(--navy); font-size:13px;}
+.quickpop .qp-close{cursor:pointer; color:var(--muted); font-size:16px; line-height:1; padding:0 4px;}
+.quickpop .qp-close:hover{color:var(--red);}
+.quickpop .qp-row{display:flex; gap:6px; margin-bottom:7px;}
+.quickpop .qp-row > *{flex:1; min-width:0;}
+.quickpop input{width:100%; padding:6px 7px; font-size:12.5px; border:1px solid #c8d2e0; border-radius:5px;}
+.quickpop .qp-actions{display:flex; gap:6px; margin-top:8px;}
+.quickpop .qp-actions button{flex:1;}
+.quickpop .qp-last{font-size:11px; color:var(--muted); margin-bottom:6px;}
+.quickpop:after{
+  content:''; position:absolute; left:50%; top:-9px; transform:translateX(-50%);
+  border-left:9px solid transparent; border-right:9px solid transparent; border-bottom:9px solid var(--blue);
+}
+
+.pointlist{display:flex; flex-direction:column; gap:6px; max-height:560px; overflow:auto;}
+.pointlist .pitem{
+  border:1px solid var(--border); border-radius:8px; padding:8px 10px; cursor:pointer; background:#fff;
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
+}
+.pointlist .pitem:hover{border-color:var(--blue); background:var(--lightblue);}
+.pointlist .pitem.selected{border-color:var(--blue); background:var(--lightblue); box-shadow:0 0 0 2px rgba(21,101,192,.25);}
+.pointlist .pnum{
+  width:24px; height:24px; border-radius:50%; background:var(--red); color:#fff; font-weight:800;
+  display:flex; align-items:center; justify-content:center; font-size:12px; flex:0 0 auto;
+}
+.pointlist .pname{font-size:13px; flex:1; text-align:left;}
+.pointlist .pcount{font-size:11px; color:var(--muted);}
+.tag-custom{font-size:9.5px; background:#e3f2ff; color:var(--blue); border:1px solid #b9dcff; padding:1px 5px; border-radius:8px; font-weight:700; margin-left:3px;}
+.ptoggle{
+  flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:1px solid #e0c5c5; background:#fff;
+  color:#c0392b; font-size:12px; cursor:pointer; line-height:1; padding:0;
+}
+.ptoggle:hover{background:#fdecea;}
+.addpoint-row{display:flex; gap:6px; margin-bottom:8px;}
+.addpoint-row input{flex:1; padding:8px 10px; border:1px solid #c8d2e0; border-radius:6px; font-size:12.5px;}
+.disabled-section{margin-top:10px; padding-top:8px; border-top:1px dashed var(--border);}
+.disabled-header{font-size:12px; color:var(--muted); font-weight:700; margin-bottom:6px;}
+.disabled-item{opacity:.7; background:#f7f7f8;}
+.disabled-item .pname{color:var(--muted);}
+
+/* entry panel */
+.entrypanel{border:2px solid var(--blue); border-radius:10px; padding:14px; background:#f7fafe;}
+.entrypanel h3{margin:0 0 10px; font-size:14px; color:var(--navy);}
+.spec-tag{display:inline-block; background:#fff3cd; color:#8a6500; border:1px solid #f0d98a; padding:2px 8px; border-radius:6px; font-size:12px; margin-left:8px;}
+
+.history-table-wrap{max-height:260px; overflow:auto; margin-top:10px;}
+.ng{color:var(--red); font-weight:700;}
+.ok{color:var(--green); font-weight:700;}
+
+.toast{
+  position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:12px 18px;
+  border-radius:8px; font-size:13.5px; box-shadow:0 4px 14px rgba(0,0,0,.25); z-index:999; opacity:0;
+  transform:translateY(10px); transition:.25s;
+}
+.toast.show{opacity:1; transform:translateY(0);}
+
+.toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px;}
+.legend{display:flex; gap:14px; font-size:12px; color:var(--muted); align-items:center; flex-wrap:wrap;}
+.legend span{display:flex; align-items:center; gap:5px;}
+.legend i{width:12px; height:12px; border-radius:3px; display:inline-block;}
+
+canvas.chart{width:100%; max-width:100%; }
+.chartbox{background:#fff; border:1px solid var(--border); border-radius:8px; padding:10px;}
+
+footer.appfoot{text-align:center; color:var(--muted); font-size:11.5px; padding:18px; }
+.small{font-size:11.5px; color:var(--muted);}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+<defs>
+  <symbol id="ic-injector-h" viewBox="0 0 200 110">
+    <rect x="6" y="24" width="62" height="62" rx="11" fill="#1b2c4a"/>
+    <rect x="17" y="35" width="30" height="6" rx="2.5" fill="#fff"/>
+    <rect x="17" y="47" width="30" height="6" rx="2.5" fill="#fff"/>
+    <rect x="17" y="59" width="17" height="6" rx="2.5" fill="#fff"/>
+    <circle cx="50" cy="71" r="8.5" fill="none" stroke="#fff" stroke-width="4.5"/>
+    <rect x="55" y="74" width="19" height="6.5" rx="3.2" fill="#fff" transform="rotate(42 55 74)"/>
+    <rect x="68" y="68" width="14" height="11" fill="#1b2c4a"/>
+    <rect x="80" y="64" width="114" height="22" rx="6" fill="#1b2c4a"/>
+    <rect x="92" y="40" width="92" height="28" rx="10" fill="#1b2c4a"/>
+    <path d="M118,40 L168,40 L156,16 Q142,8 130,16 Z" fill="#aeb7c2"/>
+  </symbol>
+  <symbol id="ic-injector-v" viewBox="0 0 100 100">
+    <rect x="5" y="5" width="90" height="90" rx="20" fill="#1c3258"/>
+    <path d="M33,33 Q50,12 67,33 L62,42 L38,42 Z" fill="#fff"/>
+    <circle cx="50" cy="34" r="4" fill="#fff"/>
+    <circle cx="50" cy="58" r="17" fill="#d9a94e"/>
+    <rect x="26" y="76" width="48" height="6" rx="2" fill="#0f2038"/>
+    <rect x="30" y="83" width="40" height="7" rx="2" fill="#0f2038"/>
+  </symbol>
+  <symbol id="ic-bench" viewBox="0 0 100 100">
+    <rect x="12" y="28" width="76" height="7" rx="2" fill="#5fae77"/>
+    <rect x="9" y="35" width="82" height="15" rx="3" fill="#2e5b3d"/>
+    <rect x="18" y="50" width="8" height="32" fill="#2e5b3d"/>
+    <rect x="74" y="50" width="8" height="32" fill="#2e5b3d"/>
+  </symbol>
+  <symbol id="ic-rack" viewBox="0 0 100 100">
+    <rect x="13" y="9" width="74" height="82" rx="4" fill="none" stroke="#6b4f9c" stroke-width="5"/>
+    <line x1="13" y1="36" x2="87" y2="36" stroke="#6b4f9c" stroke-width="5"/>
+    <line x1="13" y1="63" x2="87" y2="63" stroke="#6b4f9c" stroke-width="5"/>
+    <rect x="21" y="15" width="18" height="16" fill="#9c6fd1"/>
+    <rect x="48" y="42" width="22" height="16" fill="#9c6fd1"/>
+    <rect x="21" y="69" width="26" height="16" fill="#9c6fd1"/>
+  </symbol>
+  <symbol id="ic-assembly" viewBox="0 0 100 100">
+    <circle cx="38" cy="52" r="22" fill="none" stroke="#0c6b63" stroke-width="6"/>
+    <circle cx="38" cy="52" r="7" fill="#0c6b63"/>
+    <rect x="56" y="46" width="34" height="9" rx="3" fill="#16a394" transform="rotate(25 56 50)"/>
+  </symbol>
+  <symbol id="ic-gauge" viewBox="0 0 100 100">
+    <circle cx="50" cy="54" r="34" fill="#fff" stroke="#1565c0" stroke-width="6"/>
+    <line x1="50" y1="54" x2="68" y2="36" stroke="#c0392b" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="50" cy="54" r="5" fill="#1565c0"/>
+    <rect x="41" y="14" width="18" height="10" rx="2" fill="#1565c0"/>
+  </symbol>
+  <symbol id="ic-elevator" viewBox="0 0 100 100">
+    <rect x="14" y="10" width="72" height="80" rx="4" fill="none" stroke="#5b6b7b" stroke-width="5"/>
+    <line x1="50" y1="10" x2="50" y2="90" stroke="#5b6b7b" stroke-width="4"/>
+    <polygon points="30,44 38,32 46,44" fill="#5b6b7b"/>
+    <polygon points="54,56 62,68 70,56" fill="#5b6b7b"/>
+  </symbol>
+  <symbol id="ic-restroom" viewBox="0 0 100 100">
+    <circle cx="34" cy="22" r="9" fill="#8a6500"/>
+    <polygon points="22,58 46,58 42,30 26,30" fill="#8a6500"/>
+    <circle cx="66" cy="22" r="9" fill="#8a6500"/>
+    <rect x="56" y="30" width="20" height="28" rx="4" fill="#8a6500"/>
+  </symbol>
+  <symbol id="ic-fan" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="32" fill="none" stroke="#1b7f93" stroke-width="5"/>
+    <path d="M50,50 Q60,18 76,29 Q60,38 50,50" fill="#1b7f93"/>
+    <path d="M50,50 Q82,56 76,76 Q60,65 50,50" fill="#1b7f93"/>
+    <path d="M50,50 Q40,82 24,71 Q40,62 50,50" fill="#1b7f93"/>
+    <path d="M50,50 Q18,44 24,24 Q40,35 50,50" fill="#1b7f93"/>
+    <circle cx="50" cy="50" r="5" fill="#0d5a68"/>
+  </symbol>
+  <symbol id="ic-locker" viewBox="0 0 100 100">
+    <rect x="22" y="7" width="56" height="86" rx="3" fill="none" stroke="#34495e" stroke-width="5"/>
+    <line x1="50" y1="7" x2="50" y2="93" stroke="#34495e" stroke-width="4"/>
+    <circle cx="44" cy="50" r="3" fill="#34495e"/>
+    <circle cx="56" cy="50" r="3" fill="#34495e"/>
+  </symbol>
+</defs>
+</svg>
+
+<header class="topbar">
+  <img class="logo" src="data:image/webp;base64,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" alt="SEUNG JEONG logo">
+  <h1>승정(Seung Jeong) 조도 측정 관리 시스템</h1>
+  <div class="sub" id="clockNow">2026</div>
+</header>
+
+<nav class="menu" id="topMenu">
+  <button data-page="dash" class="active">📊 대시보드</button>
+  <button data-page="loc-A동">🏭 사출실 A동</button>
+  <button data-page="loc-B동">🏭 사출실 B동</button>
+  <button data-page="loc-조립실">🔧 조립실</button>
+  <button data-page="loc-측정실">📐 측정실</button>
+  <button data-page="trend">📈 월별추이 / 파레토</button>
+  <button data-page="data">🗂 측정 데이터 관리</button>
+</nav>
+
+<main>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section class="page active" id="page-dash">
+    <div class="card">
+      <h2>■ 2026년 조도 측정 계획 / 실적 현황 <span class="badge">600 ~ 2000 Lux 기준</span></h2>
+      <div class="grid4" id="dashStats"></div>
+    </div>
+
+    <div class="card">
+      <h2>점검 위치별 월간 실시 현황</h2>
+      <div class="toolbar">
+        <span class="legend">
+          <span><i style="background:#ccc"></i> 계획(○)</span>
+          <span><i style="background:var(--green)"></i> 실시완료(●)</span>
+          <span><i style="background:var(--red)"></i> 미실시</span>
+        </span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table id="dashTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LOCATION PAGES (template filled by JS) ================= -->
+  <section class="page" id="page-loc-A동"></section>
+  <section class="page" id="page-loc-B동"></section>
+  <section class="page" id="page-loc-조립실"></section>
+  <section class="page" id="page-loc-측정실"></section>
+
+  <!-- ================= TREND / PARETO ================= -->
+  <section class="page" id="page-trend">
+    <div class="card">
+      <h2>월별 누적 추이도 (1월 ~ 12월)</h2>
+      <div class="formrow">
+        <div><label class="f">대상 위치</label>
+          <select id="trendLoc">
+            <option value="ALL">전체 위치 평균</option>
+            <option value="A동">사출실 A동</option>
+            <option value="B동">사출실 B동</option>
+            <option value="조립실">조립실</option>
+            <option value="측정실">측정실</option>
+          </select>
+        </div>
+        <div><label class="f">측정위치</label><select id="trendPoint"><option value="ALL">전체(위치 평균)</option></select></div>
+        <div><label class="f">연도</label><select id="trendYear"></select></div>
+        <div><button class="btn" id="btnTrendDraw">추이도 그리기</button></div>
+      </div>
+      <div class="chartbox" style="margin-top:12px;">
+        <canvas id="trendCanvas" class="chart" height="320"></canvas>
+      </div>
+      <p class="small">막대 = 월별 평균 조도(Lux), 점선 = 600~2000 Lux 기준 범위, 빨간 막대 = 기준 이탈(부적합) 평균 발생월 · 특정 측정위치를 선택하면 해당 위치만의 추이를 확인할 수 있습니다</p>
+    </div>
+
+    <div class="card">
+      <h2>파레토 분석 — 측정위치별 부적합(NG) 발생 빈도</h2>
+      <div class="formrow">
+        <div><label class="f">대상 위치</label>
+          <select id="paretoLoc">
+            <option value="ALL">전체 위치</option>
+            <option value="A동">사출실 A동</option>
+            <option value="B동">사출실 B동</option>
+            <option value="조립실">조립실</option>
+            <option value="측정실">측정실</option>
+          </select>
+        </div>
+        <div><label class="f">측정위치</label><select id="paretoPoint"><option value="ALL">전체 측정위치</option></select></div>
+        <div><label class="f">연도</label><select id="paretoYear"></select></div>
+        <div><button class="btn" id="btnParetoDraw">파레토도 그리기</button></div>
+      </div>
+      <div class="chartbox" style="margin-top:12px;">
+        <canvas id="paretoCanvas" class="chart" height="340"></canvas>
+      </div>
+      <p class="small">막대 = 측정위치별 부적합 건수(내림차순), 빨간 선 = 누적 비율(%) — 80% 기준선 참고 · 특정 측정위치를 선택하면 해당 위치만의 부적합 빈도를 확인할 수 있습니다</p>
+    </div>
+  </section>
+
+  <!-- ================= DATA MANAGEMENT ================= -->
+  <section class="page" id="page-data">
+    <div class="card">
+      <h2>💾 데이터 백업 / 복원 <span class="badge">PC 변경 · 브라우저 데이터 삭제 대비</span></h2>
+      <p class="small" style="margin-top:-4px;">이 시스템의 모든 데이터(측정기록, 위치 이름, 추가/비활성화된 측정위치)는 현재 사용 중인 브라우저에 저장됩니다. 다른 PC로 옮기거나 만약을 위한 안전 백업이 필요하면 아래에서 백업 파일(JSON)을 내려받아 보관하세요.</p>
+      <div class="formrow">
+        <div><button class="btn green" id="btnBackupJson">💾 전체 백업 파일 내려받기(JSON)</button></div>
+        <div>
+          <label class="f">백업 파일 불러오기(복원)</label>
+          <input type="file" id="fileRestoreJson" accept="application/json">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>전체 측정 데이터</h2>
+      <div class="formrow">
+        <div><label class="f">위치 필터</label>
+          <select id="filterLoc">
+            <option value="ALL">전체</option>
+            <option value="A동">사출실 A동</option>
+            <option value="B동">사출실 B동</option>
+            <option value="조립실">조립실</option>
+            <option value="측정실">측정실</option>
+          </select>
+        </div>
+        <div><label class="f">월 필터</label>
+          <select id="filterMonth"><option value="ALL">전체</option></select>
+        </div>
+        <div><button class="btn gray" id="btnExportCsv">📤 CSV 내보내기</button></div>
+        <div><button class="btn danger" id="btnClearAll">🗑 전체 데이터 초기화</button></div>
+      </div>
+      <div class="history-table-wrap" style="max-height:520px; margin-top:12px;">
+        <table id="allDataTable"></table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="appfoot">승정(Seung Jeong) 품질팀 · 조도 측정 관리 시스템 · 데이터는 이 브라우저(이 PC)에 저장됩니다</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   조도측정 관리 시스템 — Standalone single-file app
+   ============================================================ */
+
+const STORAGE_KEY = 'sj_illum_records_v1';
+const NAME_KEY = 'sj_illum_pointnames_v1';
+const CUSTOM_KEY = 'sj_illum_custom_points_v1';
+const DISABLED_KEY = 'sj_illum_disabled_points_v1';
+const SPEC_MIN = 600, SPEC_MAX = 2000;
+const LUX_HARD_MAX = 100000; // values above this are rejected outright (clear data-entry error)
+const LUX_WARN_MAX = 10000;  // values above this trigger a confirmation (unusual but not impossible)
+
+const LOCATIONS = ["A동","B동","조립실","측정실"];
+const LOCATION_FULLNAME = {"A동":"사출실 A동","B동":"사출실 B동","조립실":"조립실","측정실":"측정실"};
+
+/* ---- floor layout data (extracted from original Excel drawing shapes) ---- */
+const LAYOUT = {"A동": {"equip": [{"x": 1706.4, "y": 216.3, "w": 174.3, "h": 143.6, "label": "수직 5호기", "color": null, "kind": "equip"}, {"x": 1336.9, "y": 221.4, "w": 281.0, "h": 143.6, "label": "수직 4호기(압입기)", "color": null, "kind": "equip"}, {"x": 960.4, "y": 222.4, "w": 281.0, "h": 143.6, "label": "수직 3호기(압입기)", "color": null, "kind": "equip"}, {"x": 602.9, "y": 222.4, "w": 281.0, "h": 143.6, "label": "수직 2호기(압입기)", "color": null, "kind": "equip"}, {"x": 4.0, "y": 495.0, "w": 44.0, "h": 49.0, "label": "냉온풍기", "color": null, "kind": "equip"}, {"x": 286.4, "y": 222.4, "w": 235.4, "h": 143.6, "label": "수직 1호기", "color": null, "kind": "equip"}, {"x": 1543.0, "y": 598.0, "w": 68.0, "h": 201.0, "label": "수평 2호기", "color": null, "kind": "equip"}, {"x": 1770.0, "y": 599.0, "w": 68.0, "h": 201.0, "label": "수평 1호기", "color": null, "kind": "equip"}, {"x": 1066.8, "y": 603.2, "w": 68.0, "h": 201.0, "label": "수평 4호기", "color": null, "kind": "equip"}, {"x": 967.5, "y": 602.0, "w": 68.0, "h": 201.0, "label": "수평 5호기", "color": null, "kind": "equip"}, {"x": 700.0, "y": 672.0, "w": 174.8, "h": 143.6, "label": "수직 7호기", "color": null, "kind": "equip"}, {"x": 411.4, "y": 674.0, "w": 151.8, "h": 143.6, "label": "수직 6호기", "color": null, "kind": "equip"}, {"x": 5.0, "y": 208.0, "w": 27.0, "h": 230.0, "label": "사 물 함", "color": null, "kind": "equip"}, {"x": 35.0, "y": 164.0, "w": 86.0, "h": 26.0, "label": "사물함", "color": null, "kind": "equip"}, {"x": 290.0, "y": 635.0, "w": 68.4, "h": 246.7, "label": "금형 보관대", "color": "7030A0", "kind": "equip"}, {"x": 1219.2, "y": 601.0, "w": 68.0, "h": 201.0, "label": "수평 3호기", "color": null, "kind": "equip"}, {"x": 43.3, "y": 225.1, "w": 211.4, "h": 143.6, "label": "수직 8호기", "color": null, "kind": "equip"}, {"x": 0, "y": 595, "w": 384, "h": 290, "label": "금 형 실", "color": null, "kind": "zone"}], "points": [{"id": "A1", "x": 254.8, "y": 371.1, "w": 36.6, "h": 73.0, "name": "수직 5호기 작업대"}, {"id": "A2", "x": 521.9, "y": 368.4, "w": 36.6, "h": 73.0, "name": "수직 4호기(압입기) 작업대"}, {"id": "A3", "x": 883.9, "y": 368.4, "w": 59.0, "h": 73.0, "name": "수직 3호기(압입기) 작업대"}, {"id": "A4", "x": 1241.4, "y": 368.4, "w": 59.0, "h": 73.0, "name": "수직 2호기(압입기) 작업대"}, {"id": "A5", "x": 1617.9, "y": 367.4, "w": 59.0, "h": 73.0, "name": "수직 1호기 작업대"}, {"id": "A6", "x": 1882.9, "y": 362.3, "w": 36.6, "h": 73.1, "name": "수평2~3호기 사이 작업대"}, {"id": "A7", "x": 593.2, "y": 598.6, "w": 35.7, "h": 73.0, "name": "수직 6호기 작업대"}, {"id": "A8", "x": 661.0, "y": 599.0, "w": 36.0, "h": 73.0, "name": "수직 7호기 작업대"}, {"id": "A9", "x": 1138.1, "y": 597.5, "w": 36.0, "h": 73.0, "name": "수평5호기 부근 작업대"}, {"id": "A10", "x": 1408.0, "y": 597.0, "w": 106.1, "h": 30.2, "name": "수평 2호기 작업대"}, {"id": "A11", "x": 1705.9, "y": 601.8, "w": 59.0, "h": 73.0, "name": "수평 4호기 작업대"}, {"id": "A12", "x": 887.5, "y": 806.8, "w": 129.4, "h": 30.2, "name": "수직 8호기 작업대"}], "w": 1939.5, "h": 905, "notes": []}, "B동": {"equip": [{"x": 1287.0, "y": 600.0, "w": 68.4, "h": 279.7, "label": "금형 보관대", "color": "7030A0", "kind": "equip"}, {"x": 1406.0, "y": 400.0, "w": 76.0, "h": 49.0, "label": "승강기", "color": null, "kind": "equip"}, {"x": 1893.0, "y": 575.0, "w": 30.2, "h": 83.1, "label": "측정실", "color": null, "kind": "equip"}, {"x": 1003.0, "y": 600.0, "w": 68.4, "h": 279.7, "label": "제품 보관렉", "color": null, "kind": "equip"}, {"x": 260.0, "y": 163.0, "w": 30.2, "h": 132.3, "label": "통전 검사대", "color": "92D050", "kind": "equip"}, {"x": 260.0, "y": 364.0, "w": 30.2, "h": 83.1, "label": "검사대", "color": "92D050", "kind": "equip"}, {"x": 1893.0, "y": 162.0, "w": 30.2, "h": 83.1, "label": "화장실", "color": "FFFF00", "kind": "equip"}, {"x": 1359.0, "y": 694.0, "w": 53.0, "h": 183.7, "label": "제품 보관렉", "color": null, "kind": "equip"}, {"x": 4.0, "y": 224.0, "w": 44.4, "h": 163.7, "label": "금형 보관대", "color": "7030A0", "kind": "equip"}, {"x": 348.0, "y": 202.0, "w": 68.0, "h": 201.0, "label": "수평 6호기", "color": null, "kind": "equip"}, {"x": 554.0, "y": 227.0, "w": 68.0, "h": 172.0, "label": "수평 7호기", "color": null, "kind": "equip"}, {"x": 765.0, "y": 224.0, "w": 68.0, "h": 172.0, "label": "수평 8호기", "color": null, "kind": "equip"}, {"x": 1000.0, "y": 221.0, "w": 68.0, "h": 172.0, "label": "수평 9호기", "color": null, "kind": "equip"}, {"x": 2.0, "y": 596.0, "w": 44.0, "h": 49.0, "label": "냉온풍기", "color": null, "kind": "equip"}, {"x": 1404, "y": 160, "w": 272, "h": 290, "label": "보전창고", "color": null, "kind": "zone"}, {"x": 0, "y": 595, "w": 996, "h": 290, "label": "완제품 대기 장소", "color": null, "kind": "zone"}, {"x": 1676, "y": 160, "w": 136, "h": 290, "label": "휴  게  실", "color": null, "kind": "zone"}, {"x": 1676, "y": 595, "w": 136, "h": 203, "label": "부적합품 보관장소", "color": null, "kind": "zone"}], "points": [{"id": "B1", "x": 409.0, "y": 408.0, "w": 129.1, "h": 30.2, "name": "통전검사대"}, {"id": "B2", "x": 615.0, "y": 404.0, "w": 129.1, "h": 30.2, "name": "수평 6호기 작업대"}, {"id": "B3", "x": 826.0, "y": 401.0, "w": 129.1, "h": 30.2, "name": "수평 7호기 작업대"}, {"id": "B4", "x": 1038.0, "y": 398.0, "w": 129.1, "h": 30.2, "name": "수평 8호기 작업대"}, {"id": "B5", "x": 128.0, "y": 418.0, "w": 129.1, "h": 30.2, "name": "수평 9호기 작업대"}, {"id": "B6", "x": 1359.0, "y": 601.0, "w": 53.2, "h": 83.1, "name": "제품보관렉(2층계단측)"}, {"id": "B7", "x": 1680.0, "y": 850.0, "w": 106.1, "h": 30.2, "name": "검사대(측정실 옆)"}], "w": 1943.2, "h": 905, "notes": []}, "조립실": {"equip": [{"x": 476.6, "y": 697.7, "w": 316.8, "h": 205.6, "label": "승강기", "color": null, "kind": "equip"}, {"x": 1146.7, "y": 810.9, "w": 495.7, "h": 93.1, "label": "자동 마킹 및 포장", "color": null, "kind": "equip"}, {"x": 12.9, "y": 810.9, "w": 120.6, "h": 91.3, "label": "TABLE", "color": null, "kind": "equip"}, {"x": 1629.1, "y": 317.6, "w": 275.2, "h": 310.9, "label": "HOSE ASS'Y자동 조립기", "color": null, "kind": "equip"}, {"x": 1756.9, "y": 167.2, "w": 156.0, "h": 88.4, "label": "BODY조립기", "color": null, "kind": "equip"}, {"x": 1472.3, "y": 168.9, "w": 245.1, "h": 88.4, "label": "HOSE ASS'Y단방향 조립기(수동)", "color": null, "kind": "equip"}, {"x": 1171.1, "y": 169.2, "w": 267.4, "h": 88.4, "label": "HOSE ASS'Y양방향 조립기(수동)", "color": null, "kind": "equip"}, {"x": 996.0, "y": 168.0, "w": 163.7, "h": 88.4, "label": "열코킹", "color": null, "kind": "equip"}, {"x": 687.4, "y": 496.1, "w": 176.9, "h": 52.3, "label": "HOSE잔량 보관대", "color": null, "kind": "equip"}, {"x": 699.1, "y": 195.7, "w": 135.7, "h": 289.0, "label": "사출품잔량보관대", "color": null, "kind": "equip"}, {"x": 207.7, "y": 167.4, "w": 478.3, "h": 69.1, "label": "사출품 잔량 보관대", "color": null, "kind": "equip"}, {"x": 13.7, "y": 267.9, "w": 142.6, "h": 205.0, "label": "BALL 압입LEAK TEST(수동)", "color": null, "kind": "equip"}, {"x": 12.6, "y": 490.2, "w": 142.6, "h": 205.0, "label": "BALL 압입LEAKTEST(자동)", "color": null, "kind": "equip"}], "points": [{"id": "조1", "x": 478.1, "y": 628.3, "w": 290.2, "h": 62.3, "name": "HOSE 잔량보관대 부근"}, {"id": "조2", "x": 1650.6, "y": 682.0, "w": 131.5, "h": 222.2, "name": "BALL 압입LEAK TEST(자동) 부근"}, {"id": "조3", "x": 336.0, "y": 700.6, "w": 131.5, "h": 204.4, "name": "자동 마킹 및 포장 부근"}], "w": 1932.9, "h": 925.0, "notes": ["3정5S 관리담당자 : 정-최영길 부장 / 부-이근혜 사원"]}, "측정실": {"equip": [{"x": 11.0, "y": 803.0, "w": 70.8, "h": 75.6, "label": "CHAMPER", "color": null, "kind": "equip"}, {"x": 1012.0, "y": 176.0, "w": 194.0, "h": 75.0, "label": "이탈력 측정기(PUSH PULLGAGE)", "color": null, "kind": "equip"}, {"x": 1628.0, "y": 458.0, "w": 281.0, "h": 103.0, "label": "비젼 원샷 측정기", "color": null, "kind": "equip"}, {"x": 1633.0, "y": 774.0, "w": 281.0, "h": 103.0, "label": "3차원 좌표 측정기(VM)", "color": null, "kind": "equip"}, {"x": 1431.0, "y": 470.0, "w": 182.0, "h": 75.0, "label": "표면조도측정기", "color": null, "kind": "equip"}, {"x": 1244.0, "y": 470.0, "w": 162.0, "h": 75.0, "label": "진원도측정기", "color": null, "kind": "equip"}, {"x": 1087.0, "y": 471.0, "w": 139.0, "h": 75.0, "label": "ROCK WELL경도계", "color": null, "kind": "equip"}, {"x": 1096.0, "y": 774.0, "w": 281.0, "h": 103.0, "label": "비젼 측정기", "color": null, "kind": "equip"}, {"x": 1486.0, "y": 366.0, "w": 424.0, "h": 75.0, "label": "서류 보관함", "color": null, "kind": "equip"}, {"x": 1231.0, "y": 177.0, "w": 447.0, "h": 75.0, "label": "서류 보관함", "color": null, "kind": "equip"}, {"x": 1720.0, "y": 268.0, "w": 194.0, "h": 75.0, "label": "절단기(BAND SAW)", "color": null, "kind": "equip"}, {"x": 4.0, "y": 163.0, "w": 400.0, "h": 75.0, "label": "초도품 보관함", "color": null, "kind": "equip"}, {"x": 1405.0, "y": 782.0, "w": 224.0, "h": 43.0, "label": "TABLE", "color": null, "kind": "equip"}, {"x": 180, "y": 798, "w": 816, "h": 87, "label": "계측기 및 GAGE/JIG류 보관함", "color": null, "kind": "zone"}, {"x": 44, "y": 363, "w": 136, "h": 29, "label": "신발장", "color": null, "kind": "equip"}, {"x": 0, "y": 479, "w": 112, "h": 290, "label": "TABLE", "color": null, "kind": "equip"}, {"x": 316, "y": 624, "w": 136, "h": 87, "label": "정반", "color": null, "kind": "equip"}, {"x": 792, "y": 276, "w": 136, "h": 58, "label": "복합기", "color": null, "kind": "equip"}, {"x": 520, "y": 595, "w": 408, "h": 145, "label": "정반", "color": null, "kind": "equip"}], "points": [{"id": "측1", "x": 0, "y": 392, "w": 248, "h": 58, "name": "측정실 검사대"}], "w": 1934.0, "h": 905, "notes": []}};
+
+/* ---- state ---- */
+let RECORDS = loadRecords();
+let NAMES = loadNames();
+let CUSTOM_POINTS = loadCustomPoints();   // {loc:[{id,name,custom:true}]} - added via UI, no code edits needed
+let DISABLED = new Set(loadDisabled());    // Set of point ids hidden from active use (history preserved)
+let SELECTED_POINT = {}; // per-location currently selected point id
+
+function loadRecords(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ return []; }
+}
+function saveRecords(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(RECORDS)); }
+function loadNames(){
+  try{ return JSON.parse(localStorage.getItem(NAME_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveNames(){ localStorage.setItem(NAME_KEY, JSON.stringify(NAMES)); }
+function loadCustomPoints(){
+  try{ return JSON.parse(localStorage.getItem(CUSTOM_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveCustomPoints(){ localStorage.setItem(CUSTOM_KEY, JSON.stringify(CUSTOM_POINTS)); }
+function loadDisabled(){
+  try{ return JSON.parse(localStorage.getItem(DISABLED_KEY)) || []; }catch(e){ return []; }
+}
+function saveDisabled(){ localStorage.setItem(DISABLED_KEY, JSON.stringify(Array.from(DISABLED))); }
+
+/* All points for a location, including custom-added and disabled (for history/name lookups) */
+function getAllPointsRaw(loc){
+  return LAYOUT[loc].points.concat(CUSTOM_POINTS[loc]||[]);
+}
+/* Only active (non-disabled) points, used for floor rendering / input / dashboard counts */
+function getActivePoints(loc){
+  return getAllPointsRaw(loc).filter(p=>!DISABLED.has(p.id));
+}
+
+function pointName(loc, pid){
+  return (NAMES[pid]) || (getAllPointsRaw(loc).find(p=>p.id===pid)||{}).name || pid;
+}
+function uid(){ return 'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function todayStr(){ const d=new Date(); return d.toISOString().slice(0,10); }
+function nowTimeStr(){ const d=new Date(); return d.toTimeString().slice(0,5); }
+function isNG(v){ return v < SPEC_MIN || v > SPEC_MAX; }
+
+/* ---- input validation: rejects negatives/garbage values, warns on implausible highs ---- */
+function validateLuxValue(value){
+  if(isNaN(value)) return {ok:false, msg:'측정값은 숫자로 입력해주세요'};
+  if(value < 0) return {ok:false, msg:'측정값은 0 이상이어야 합니다 (음수 입력 불가)'};
+  if(value > LUX_HARD_MAX) return {ok:false, msg:`측정값이 비정상적으로 큽니다 (${LUX_HARD_MAX.toLocaleString()} Lux 초과). 입력값을 다시 확인해주세요`};
+  if(value > LUX_WARN_MAX){
+    const proceed = confirm(`입력하신 측정값(${value.toLocaleString()} Lux)이 일반적인 범위를 크게 초과합니다.\n오타가 아닌지 확인해주세요. 그래도 저장하시겠습니까?`);
+    if(!proceed) return {ok:false, msg:null};
+  }
+  return {ok:true};
+}
+
+/* ---- custom point management (add/disable/restore without touching source code) ---- */
+function addCustomPoint(loc){
+  const input = document.getElementById('newPointName-'+loc);
+  const name = input.value.trim();
+  if(!name){ showToast('새 측정위치 이름을 입력해주세요'); return; }
+  if(!CUSTOM_POINTS[loc]) CUSTOM_POINTS[loc] = [];
+  const newId = loc[0]+'_C'+Date.now().toString(36).slice(-5);
+  CUSTOM_POINTS[loc].push({id:newId, name, custom:true});
+  saveCustomPoints();
+  input.value = '';
+  renderFloor(loc); renderPointList(loc);
+  fillYearSelects();
+  showToast(`"${name}" 측정위치가 추가되었습니다`);
+}
+function disablePoint(loc, pid){
+  if(!confirm('이 측정위치를 목록에서 비활성화하시겠습니까?\n기존 측정 기록은 삭제되지 않으며 언제든 다시 복원할 수 있습니다.')) return;
+  DISABLED.add(pid);
+  saveDisabled();
+  if(SELECTED_POINT[loc]===pid){
+    SELECTED_POINT[loc] = null;
+    document.getElementById('entrycard-'+loc).style.display = 'none';
+    closeQuickPop(loc);
+  }
+  renderFloor(loc); renderPointList(loc);
+  showToast('측정위치가 비활성화되었습니다');
+}
+function enablePoint(loc, pid){
+  DISABLED.delete(pid);
+  saveDisabled();
+  renderFloor(loc); renderPointList(loc);
+  showToast('측정위치가 복원되었습니다');
+}
+function deleteCustomPointForever(loc, pid){
+  if(!confirm('이 추가 측정위치를 완전히 삭제하시겠습니까?\n해당 위치의 측정 기록도 함께 삭제되며 복구할 수 없습니다.')) return;
+  CUSTOM_POINTS[loc] = (CUSTOM_POINTS[loc]||[]).filter(p=>p.id!==pid);
+  DISABLED.delete(pid);
+  saveCustomPoints(); saveDisabled();
+  RECORDS = RECORDS.filter(r=>!(r.loc===loc && r.pointId===pid));
+  saveRecords();
+  renderFloor(loc); renderPointList(loc);
+  showToast('측정위치가 완전히 삭제되었습니다');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ============== NAV ============== */
+document.querySelectorAll('nav.menu button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.menu button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('main .page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+btn.dataset.page).classList.add('active');
+    if(btn.dataset.page==='dash'){ renderDashboard(); }
+    if(btn.dataset.page==='data') renderDataPage();
+    if(btn.dataset.page==='trend'){ drawTrendChart(); drawParetoChart(); }
+  });
+});
+
+/* ============== build location pages ============== */
+function buildLocationPage(loc){
+  const data = LAYOUT[loc];
+  const root = document.getElementById('page-loc-'+loc);
+  root.innerHTML = `
+    <div class="card">
+      <h2>${LOCATION_FULLNAME[loc]} 조도 측정 LAY-OUT <span class="badge">측정기준 ${SPEC_MIN} ~ ${SPEC_MAX} Lux</span></h2>
+      <div class="toolbar">
+        <span class="legend">
+          <span><i style="background:#eef1f5;border:1px solid #33415c;"></i> 사출기(수직/수평)</span>
+          <span><i style="background:#bfe9e3"></i> 조립기</span>
+          <span><i style="background:#d9c4ef"></i> 보관대</span>
+          <span><i style="background:#fff7f4;border:1.5px dashed var(--red);"></i> 측정위치(작업대/검사대 · 클릭하여 입력)</span>
+          <span><i style="background:var(--green)"></i> 측정완료(적합)</span>
+          <span><i style="background:var(--red)"></i> 부적합</span>
+        </span>
+      </div>
+      <p class="small" style="margin:-4px 0 10px;">※ 측정위치는 각 설비의 작업대 또는 검사대 위치이며, 점선 테두리 박스를 클릭하면 그 자리에서 측정값을 입력할 수 있습니다.</p>
+      ${(data.notes&&data.notes.length) ? `<p class="small" style="margin:-4px 0 10px; color:#8a6500;">📌 ${data.notes.map(escapeXml).join(' · ')}</p>` : ''}
+      <div class="grid2">
+        <div class="floorwrap">
+          <div class="floorstage" id="stage-${loc}">
+            <svg class="floor" id="svg-${loc}" viewBox="0 0 ${data.w} ${data.h}" width="100%" preserveAspectRatio="xMinYMin meet"></svg>
+            <div class="quickpop" id="qp-${loc}"></div>
+          </div>
+        </div>
+        <div>
+          <div class="pointlist" id="plist-${loc}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="entrycard-${loc}" style="display:none;"></div>
+  `;
+  renderFloor(loc);
+  renderPointList(loc);
+}
+
+/* ---- equipment categorization for icon/color styling ---- */
+function classifyEquip(label){
+  const l = label;
+  if(/수직.*호기/.test(l)) return {icon:'ic-injector-v', fill:'#eef1f5', stroke:'#33415c'};
+  if(/수평.*호기/.test(l)) return {icon:'ic-injector-h', fill:'#eef1f5', stroke:'#33415c'};
+  if(/금형\s*보관/.test(l)) return {icon:'ic-rack', fill:'#d9c4ef', stroke:'#9c6fd1'};
+  if(/사물함|신발장/.test(l)) return {icon:'ic-locker', fill:'#dfe6ee', stroke:'#9aa9ba'};
+  if(/보관[대함렉]/.test(l)) return {icon:'ic-rack', fill:'#f0e6cf', stroke:'#cdb27c'};
+  if(/작업대|검사대|^TABLE$|통전\s*검사대/.test(l)) return {icon:'ic-bench', fill:'#bfe6c8', stroke:'#5fae77'};
+  if(/조립기|코킹|마킹|포장|압입|ASS'Y|BODY/i.test(l)) return {icon:'ic-assembly', fill:'#bfe9e3', stroke:'#16a394'};
+  if(/측정기|게이지|GAGE|경도계|BAND\s*SAW|좌표|PULL\s*GAGE|조도측정기|진원도|표면조도|원샷|정반/i.test(l)) return {icon:'ic-gauge', fill:'#cfe3fa', stroke:'#1565c0'};
+  if(/승강기/.test(l)) return {icon:'ic-elevator', fill:'#e3e7ec', stroke:'#5b6b7b'};
+  if(/화장실/.test(l)) return {icon:'ic-restroom', fill:'#fff4b8', stroke:'#e0c548'};
+  if(/냉온풍기/.test(l)) return {icon:'ic-fan', fill:'#d7f0f5', stroke:'#1b7f93'};
+  if(/복합기/.test(l)) return {icon:null, fill:'#e9eef5', stroke:'#9aa9ba'};
+  return {icon:null, fill:'#eef1f5', stroke:'#c5cdd6'};
+}
+
+function renderZoneBox(e){
+  const html = `<rect class="zone-box" x="${e.x}" y="${e.y}" width="${e.w}" height="${e.h}" rx="8"></rect>
+    <text class="zone-label" x="${e.x+10}" y="${e.y+20}">${escapeXml(e.label)}</text>`;
+  return html;
+}
+
+function renderEquipBox(e){
+  const cat = classifyEquip(e.label);
+  const cx = e.x+e.w/2, cy = e.y+e.h/2;
+  let html = `<rect class="equip-box" x="${e.x}" y="${e.y}" width="${e.w}" height="${e.h}" rx="6" style="fill:${cat.fill};stroke:${cat.stroke};"></rect>`;
+  if(!cat.icon){
+    html += wrapLabel(cx, cy, e.label, 'equip-label', e.w, '#1f2937');
+    return html;
+  }
+  const iconSize = Math.max(14, Math.min(52, Math.min(e.w,e.h)*0.54));
+  const stacked = e.h >= iconSize+20 && e.w >= iconSize+8;
+  const horizontal = !stacked && e.w >= iconSize*2.3 && e.h >= iconSize*0.75;
+  if(stacked){
+    const iy = e.y + e.h*0.30;
+    html += `<use class="equip-icon" href="#${cat.icon}" x="${cx-iconSize/2}" y="${iy-iconSize/2}" width="${iconSize}" height="${iconSize}"></use>`;
+    html += wrapLabel(cx, e.y+e.h*0.74, e.label, 'equip-label', e.w, '#1f2937');
+  } else if(horizontal){
+    const ix = e.x + iconSize*0.18;
+    html += `<use class="equip-icon" href="#${cat.icon}" x="${ix}" y="${cy-iconSize/2}" width="${iconSize}" height="${iconSize}"></use>`;
+    const availW = e.w - iconSize - 14;
+    const maxChars = Math.max(3, Math.floor(availW/7.2));
+    let txt = e.label.length>maxChars ? e.label.slice(0,maxChars-1)+'…' : e.label;
+    html += `<text class="equip-label" x="${ix+iconSize+6}" y="${cy+4}" fill="#1f2937">${escapeXml(txt)}</text>`;
+  } else {
+    // box too small for icon + text together: show icon only, label as title tooltip via <title>
+    const sz = Math.min(iconSize, Math.min(e.w,e.h)*0.8);
+    html += `<use class="equip-icon" href="#${cat.icon}" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}"><title>${escapeXml(e.label)}</title></use>`;
+  }
+  return html;
+}
+
+function computeCustomLayout(loc){
+  const customPts = (CUSTOM_POINTS[loc]||[]).filter(p=>!DISABLED.has(p.id));
+  const boxW=120, boxH=78, gap=14;
+  const cols = Math.max(1, Math.floor((LAYOUT[loc].w-20)/(boxW+gap)));
+  customPts.forEach((p,i)=>{
+    const col = i%cols, row = Math.floor(i/cols);
+    p.x = 10 + col*(boxW+gap);
+    p.y = LAYOUT[loc].h + 34 + row*(boxH+gap);
+    p.w = boxW; p.h = boxH;
+  });
+  const rows = customPts.length ? Math.ceil(customPts.length/cols) : 0;
+  const totalH = LAYOUT[loc].h + (customPts.length ? 34 + rows*(boxH+gap) : 0);
+  return {customPts, totalH};
+}
+
+function renderFloor(loc){
+  const data = LAYOUT[loc];
+  const {customPts, totalH} = computeCustomLayout(loc);
+  const svg = document.getElementById('svg-'+loc);
+  svg.setAttribute('viewBox', `0 0 ${data.w} ${totalH}`);
+  let html = '';
+  data.equip.forEach(e=>{ html += (e.kind==='zone') ? renderZoneBox(e) : renderEquipBox(e); });
+
+  if(customPts.length){
+    html += `<line x1="8" y1="${data.h+18}" x2="${data.w-8}" y2="${data.h+18}" stroke="#c5cdd6" stroke-width="1.5" stroke-dasharray="5 4"></line>
+      <text x="8" y="${data.h+13}" class="zone-label" fill="#5b7ca0">➕ 추가 측정위치</text>`;
+  }
+
+  const basePoints = data.points.filter(p=>!DISABLED.has(p.id));
+  const allPoints = basePoints.concat(customPts);
+  allPoints.forEach((p,idx)=>{
+    const cx = p.x + p.w/2, cy = p.y + p.h/2;
+    const recs = RECORDS.filter(r=>r.loc===loc && r.pointId===p.id);
+    const hasToday = recs.some(r=>r.date===todayStr());
+    const latest = recs.slice().sort((a,b)=>b.ts-a.ts)[0];
+    const isSel = SELECTED_POINT[loc]===p.id;
+
+    let statusCls = 'unmeasured';
+    let badgeCls = '';
+    let lastLabel = `<text class="point-lastval none" x="${cx}" y="${p.y+p.h+16}">측정대기</text>`;
+    if(latest){
+      const ng = isNG(latest.value);
+      statusCls = ng ? 'ng' : 'ok';
+      badgeCls = ng ? '' : 'ok';
+      lastLabel = `<text class="point-lastval ${ng?'ng':'ok'}" x="${cx}" y="${p.y+p.h+16}">${latest.value} Lux</text>`;
+    }
+    const iconSize = Math.max(12, Math.min(34, Math.min(p.w,p.h)*0.6));
+    const showIcon = p.w>=20 && p.h>=20;
+
+    html += `<g class="point-marker" id="marker-${loc}-${p.id}" data-pid="${p.id}" onclick="onPointClick('${loc}','${p.id}', event)">
+      <rect class="point-rect ${statusCls} ${hasToday?'today-ring':''} ${isSel?'selected':''}" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="6"></rect>
+      ${showIcon ? `<use class="equip-icon" href="#ic-bench" x="${cx-iconSize/2}" y="${cy-iconSize/2}" width="${iconSize}" height="${iconSize}"></use>` : ''}
+      <circle class="point-badge-bg ${badgeCls}" cx="${p.x+2}" cy="${p.y+2}" r="11"></circle>
+      <text class="point-num" x="${p.x+2}" y="${p.y+3}">${idx+1}</text>
+      ${lastLabel}
+    </g>`;
+  });
+  svg.innerHTML = html;
+}
+
+function wrapLabel(cx,cy,text,cls,maxw,fill){
+  const approxCharW=7.2;
+  const maxChars = Math.max(4, Math.floor(maxw/approxCharW));
+  const fillAttr = fill? ` fill="${fill}"`:'';
+  if(text.length<=maxChars){
+    return `<text class="${cls}" x="${cx}" y="${cy+4}" text-anchor="middle"${fillAttr}>${escapeXml(text)}</text>`;
+  }
+  let mid = Math.floor(text.length/2);
+  let splitAt = text.lastIndexOf(' ', mid);
+  if(splitAt<0) splitAt = mid;
+  const l1 = text.slice(0,splitAt).trim();
+  const l2 = text.slice(splitAt).trim();
+  return `<text class="${cls}" x="${cx}" y="${cy-2}" text-anchor="middle"${fillAttr}>${escapeXml(l1)}</text>
+          <text class="${cls}" x="${cx}" y="${cy+14}" text-anchor="middle"${fillAttr}>${escapeXml(l2)}</text>`;
+}
+function escapeXml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderPointList(loc){
+  const wrap = document.getElementById('plist-'+loc);
+  const basePoints = LAYOUT[loc].points.filter(p=>!DISABLED.has(p.id));
+  const customActive = (CUSTOM_POINTS[loc]||[]).filter(p=>!DISABLED.has(p.id));
+  const activePoints = basePoints.concat(customActive);
+  const disabledPoints = getAllPointsRaw(loc).filter(p=>DISABLED.has(p.id));
+
+  let html = `<div class="addpoint-row">
+    <input type="text" id="newPointName-${loc}" placeholder="새 측정위치 이름 (예: 신규 사출기 작업대)" onkeydown="if(event.key==='Enter') addCustomPoint('${loc}')">
+    <button class="btn sm" onclick="addCustomPoint('${loc}')">+ 추가</button>
+  </div>`;
+
+  html += activePoints.map((p,idx)=>{
+    const cnt = RECORDS.filter(r=>r.loc===loc && r.pointId===p.id).length;
+    const sel = SELECTED_POINT[loc]===p.id ? 'selected':'';
+    return `<div class="pitem ${sel}" onclick="onPointClick('${loc}','${p.id}', event)">
+      <div class="pnum">${idx+1}</div>
+      <div class="pname">${escapeXml(pointName(loc,p.id))}${p.custom?' <span class="tag-custom">추가됨</span>':''}</div>
+      <div class="pcount">${cnt}건</div>
+      <button class="ptoggle" title="비활성화" onclick="event.stopPropagation(); disablePoint('${loc}','${p.id}')">✕</button>
+    </div>`;
+  }).join('');
+
+  if(disabledPoints.length){
+    html += `<div class="disabled-section">
+      <div class="disabled-header">⏸ 비활성화된 측정위치 (${disabledPoints.length})</div>
+      ${disabledPoints.map(p=>`
+        <div class="pitem disabled-item">
+          <div class="pname">${escapeXml(pointName(loc,p.id))}</div>
+          <button class="btn gray sm" onclick="enablePoint('${loc}','${p.id}')">복원</button>
+          ${p.custom ? `<button class="btn danger sm" onclick="deleteCustomPointForever('${loc}','${p.id}')">완전삭제</button>` : ''}
+        </div>`).join('')}
+    </div>`;
+  }
+  wrap.innerHTML = html;
+}
+
+function onPointClick(loc, pid, evt){
+  if(evt) evt.stopPropagation();
+  SELECTED_POINT[loc] = pid;
+  renderPointList(loc);
+  renderFloor(loc);
+  renderEntryCard(loc, pid);
+  openQuickPop(loc, pid);
+}
+
+function openQuickPop(loc, pid){
+  const stage = document.getElementById('stage-'+loc);
+  const marker = document.getElementById(`marker-${loc}-${pid}`);
+  const pop = document.getElementById('qp-'+loc);
+  if(!stage || !marker || !pop) return;
+  const sRect = stage.getBoundingClientRect();
+  const mRect = marker.getBoundingClientRect();
+  const relX = (mRect.left - sRect.left) + mRect.width/2;
+  const relY = (mRect.bottom - sRect.top);
+  pop.style.left = Math.max(8, relX-125) + 'px';
+  pop.style.top = (relY+12) + 'px';
+
+  const history = RECORDS.filter(r=>r.loc===loc && r.pointId===pid).sort((a,b)=>b.ts-a.ts);
+  const latest = history[0];
+  const lastInfo = latest
+    ? `최근: ${latest.date} ${latest.time||''} · <b class="${isNG(latest.value)?'ng':'ok'}">${latest.value} Lux (${isNG(latest.value)?'부적합':'적합'})</b>`
+    : '최근 측정 기록 없음';
+
+  pop.innerHTML = `
+    <div class="qp-head">
+      <div class="qp-title">📍 ${escapeXml(pointName(loc,pid))}</div>
+      <div class="qp-close" onclick="closeQuickPop('${loc}')">✕</div>
+    </div>
+    <div class="qp-last">${lastInfo}</div>
+    <div class="qp-row">
+      <input type="date" id="qpDate-${loc}" value="${todayStr()}">
+      <input type="time" id="qpTime-${loc}" value="${nowTimeStr()}">
+    </div>
+    <div class="qp-row">
+      <input type="number" id="qpVal-${loc}" placeholder="측정값 (Lux)" min="0" max="100000" step="1" autofocus>
+    </div>
+    <div class="qp-actions">
+      <button class="btn green sm" onclick="saveQuickPop('${loc}','${pid}')">💾 저장</button>
+      <button class="btn gray sm" onclick="closeQuickPop('${loc}')">닫기</button>
+    </div>
+  `;
+  pop.classList.add('show');
+  setTimeout(()=>{ const el=document.getElementById('qpVal-'+loc); if(el) el.focus(); }, 30);
+}
+
+function closeQuickPop(loc){
+  const pop = document.getElementById('qp-'+loc);
+  if(pop) pop.classList.remove('show');
+}
+
+function saveQuickPop(loc, pid){
+  const date = document.getElementById('qpDate-'+loc).value;
+  const time = document.getElementById('qpTime-'+loc).value;
+  const valRaw = document.getElementById('qpVal-'+loc).value;
+  if(!date || valRaw===''){ showToast('측정일자와 측정값을 입력해주세요'); return; }
+  const value = parseFloat(valRaw);
+  const v = validateLuxValue(value);
+  if(!v.ok){ if(v.msg) showToast(v.msg); return; }
+  RECORDS.push({id:uid(), loc, pointId:pid, date, time, value, memo:'', ts:Date.now()});
+  saveRecords();
+  renderFloor(loc);
+  renderPointList(loc);
+  renderEntryCard(loc, pid);
+  closeQuickPop(loc);
+  showToast(isNG(value) ? '⚠ 기준 이탈(부적합) 값이 저장되었습니다' : '측정값이 LAY-OUT에 저장되었습니다');
+}
+
+/* close popup when clicking outside of it */
+document.addEventListener('click', (e)=>{
+  LOCATIONS.forEach(loc=>{
+    const pop = document.getElementById('qp-'+loc);
+    if(pop && pop.classList.contains('show') && !pop.contains(e.target) && !e.target.closest(`#marker-${loc}-${SELECTED_POINT[loc]}`)){
+      closeQuickPop(loc);
+    }
+  });
+});
+
+function renderEntryCard(loc, pid){
+  const card = document.getElementById('entrycard-'+loc);
+  card.style.display = 'block';
+  const name = pointName(loc, pid);
+  const history = RECORDS.filter(r=>r.loc===loc && r.pointId===pid)
+                          .sort((a,b)=> (b.date+b.time).localeCompare(a.date+a.time));
+  card.innerHTML = `
+    <h2>📍 측정 입력 — <span id="nameDisplay-${pid}">${escapeXml(name)}</span>
+      <span class="spec-tag">기준 ${SPEC_MIN}~${SPEC_MAX} Lux</span>
+    </h2>
+    <div class="entrypanel">
+      <h3>측정위치 이름 수정</h3>
+      <div class="formrow" style="margin-bottom:14px;">
+        <div style="flex:1; min-width:220px;"><input type="text" id="nameEdit-${pid}" value="${escapeXml(name)}" style="width:100%;"></div>
+        <div><button class="btn gray sm" onclick="renamePoint('${loc}','${pid}')">이름 저장</button></div>
+      </div>
+      <h3>새 측정값 입력</h3>
+      <div class="formrow">
+        <div><label class="f">측정일자</label><input type="date" id="inDate-${pid}" value="${todayStr()}"></div>
+        <div><label class="f">측정시간</label><input type="time" id="inTime-${pid}" value="${nowTimeStr()}"></div>
+        <div><label class="f">측정값 (Lux)</label><input type="number" id="inVal-${pid}" placeholder="예: 850" min="0" max="100000" step="1" style="width:110px;"></div>
+        <div><label class="f">비고</label><input type="text" id="inMemo-${pid}" placeholder="선택 입력" style="width:160px;"></div>
+        <div><button class="btn green" onclick="addRecord('${loc}','${pid}')">💾 저장</button></div>
+      </div>
+    </div>
+    <h3 style="margin:16px 0 6px; font-size:14px; color:var(--navy);">측정 이력 (${history.length}건)</h3>
+    <div class="history-table-wrap">
+      <table>
+        <thead><tr><th>날짜</th><th>시간</th><th>측정값(Lux)</th><th>판정</th><th>비고</th><th>삭제</th></tr></thead>
+        <tbody>
+          ${history.length? history.map(r=>`
+            <tr>
+              <td>${r.date}</td><td>${r.time||'-'}</td><td>${r.value}</td>
+              <td>${isNG(r.value)?'<span class="ng">부적합</span>':'<span class="ok">적합</span>'}</td>
+              <td>${escapeXml(r.memo||'')}</td>
+              <td><button class="btn danger sm" onclick="deleteRecord('${r.id}','${loc}','${pid}')">삭제</button></td>
+            </tr>`).join('') : `<tr><td colspan="6" style="color:#999;">측정 기록이 없습니다</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renamePoint(loc, pid){
+  const v = document.getElementById('nameEdit-'+pid).value.trim();
+  if(!v) return;
+  NAMES[pid] = v;
+  saveNames();
+  renderPointList(loc);
+  renderEntryCard(loc, pid);
+  showToast('측정위치 이름이 저장되었습니다');
+}
+
+function addRecord(loc, pid){
+  const date = document.getElementById('inDate-'+pid).value;
+  const time = document.getElementById('inTime-'+pid).value;
+  const valRaw = document.getElementById('inVal-'+pid).value;
+  const memo = document.getElementById('inMemo-'+pid).value;
+  if(!date || valRaw===''){ showToast('측정일자와 측정값을 입력해주세요'); return; }
+  const value = parseFloat(valRaw);
+  const v = validateLuxValue(value);
+  if(!v.ok){ if(v.msg) showToast(v.msg); return; }
+  RECORDS.push({id:uid(), loc, pointId:pid, date, time, value, memo, ts:Date.now()});
+  saveRecords();
+  renderFloor(loc);
+  renderPointList(loc);
+  renderEntryCard(loc, pid);
+  showToast(isNG(value) ? '⚠ 기준 이탈(부적합) 값이 저장되었습니다' : '측정값이 저장되었습니다');
+}
+
+function deleteRecord(id, loc, pid){
+  if(!confirm('이 측정 기록을 삭제하시겠습니까?')) return;
+  RECORDS = RECORDS.filter(r=>r.id!==id);
+  saveRecords();
+  renderFloor(loc);
+  renderPointList(loc);
+  renderEntryCard(loc, pid);
+}
+
+/* ============== DASHBOARD ============== */
+function renderDashboard(){
+  const year = new Date().getFullYear();
+  const totalPoints = LOCATIONS.reduce((s,l)=>s+getActivePoints(l).length,0);
+  const totalRecords = RECORDS.length;
+  const ngCount = RECORDS.filter(r=>isNG(r.value)).length;
+  const thisMonth = (new Date().getMonth()+1);
+  const thisMonthCount = RECORDS.filter(r=>{
+    const d = new Date(r.date); return d.getFullYear()===year && (d.getMonth()+1)===thisMonth;
+  }).length;
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat"><div class="num">${totalPoints}</div><div class="label">전체 측정 위치 수</div></div>
+    <div class="stat"><div class="num">${totalRecords}</div><div class="label">누적 측정 건수</div></div>
+    <div class="stat"><div class="num">${thisMonthCount}</div><div class="label">이번달(${thisMonth}월) 측정 건수</div></div>
+    <div class="stat ${ngCount>0?'warn':''}"><div class="num">${ngCount}</div><div class="label">기준 이탈(부적합) 건수</div></div>
+  `;
+
+  // monthly status table
+  let thead = '<tr><th>점검장소</th><th>측정위치 수</th>' + Array.from({length:12},(_,i)=>`<th>${i+1}월</th>`).join('') + '</tr>';
+  let rows = LOCATIONS.map(loc=>{
+    const cells = Array.from({length:12},(_,i)=>{
+      const m = i+1;
+      const done = RECORDS.some(r=>r.loc===loc && new Date(r.date).getFullYear()===year && (new Date(r.date).getMonth()+1)===m);
+      return `<td>${done?'<span class="dot-done">●</span>':'<span class="dot-plan">○</span>'}</td>`;
+    }).join('');
+    return `<tr><td style="font-weight:700;">${LOCATION_FULLNAME[loc]}</td><td>${getActivePoints(loc).length}</td>${cells}</tr>`;
+  }).join('');
+  document.getElementById('dashTable').innerHTML = thead + rows;
+}
+
+/* ============== TREND / PARETO ============== */
+function fillYearSelects(){
+  const years = new Set(RECORDS.map(r=> new Date(r.date).getFullYear()));
+  years.add(new Date().getFullYear());
+  const arr = Array.from(years).sort();
+  ['trendYear','paretoYear'].forEach(id=>{
+    const sel = document.getElementById(id);
+    sel.innerHTML = arr.map(y=>`<option value="${y}">${y}년</option>`).join('');
+    sel.value = new Date().getFullYear();
+  });
+}
+
+function populatePointSelect(locSelectId, pointSelectId, allLabel){
+  const loc = document.getElementById(locSelectId).value;
+  const psel = document.getElementById(pointSelectId);
+  if(loc==='ALL'){
+    psel.innerHTML = `<option value="ALL">${allLabel}</option>`;
+    return;
+  }
+  const pts = getActivePoints(loc);
+  psel.innerHTML = `<option value="ALL">${allLabel}</option>` +
+    pts.map(p=>`<option value="${p.id}">${escapeXml(pointName(loc,p.id))}</option>`).join('');
+}
+document.getElementById('trendLoc').addEventListener('change', ()=>populatePointSelect('trendLoc','trendPoint','전체(위치 평균)'));
+document.getElementById('paretoLoc').addEventListener('change', ()=>populatePointSelect('paretoLoc','paretoPoint','전체 측정위치'));
+
+function drawTrendChart(){
+  const loc = document.getElementById('trendLoc').value;
+  const pointId = document.getElementById('trendPoint').value;
+  const year = parseInt(document.getElementById('trendYear').value);
+  const canvas = document.getElementById('trendCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.clientWidth || 900;
+  const H = canvas.height = 320;
+  ctx.clearRect(0,0,W,H);
+
+  const useSinglePoint = loc!=='ALL' && pointId!=='ALL';
+  const monthly = [];
+  for(let m=1;m<=12;m++){
+    let recs;
+    if(loc==='ALL') recs = RECORDS.filter(r=> new Date(r.date).getFullYear()===year && (new Date(r.date).getMonth()+1)===m);
+    else if(useSinglePoint) recs = RECORDS.filter(r=>r.loc===loc && r.pointId===pointId && new Date(r.date).getFullYear()===year && (new Date(r.date).getMonth()+1)===m);
+    else recs = RECORDS.filter(r=>r.loc===loc && new Date(r.date).getFullYear()===year && (new Date(r.date).getMonth()+1)===m);
+    const avg = recs.length ? recs.reduce((s,r)=>s+r.value,0)/recs.length : null;
+    const ngAvg = recs.length && recs.some(r=>isNG(r.value));
+    monthly.push({m, avg, count:recs.length, ngAvg});
+  }
+
+  const padL=55, padR=20, padT=34, padB=34;
+  const plotW = W-padL-padR, plotH = H-padT-padB;
+  const maxVal = Math.max(SPEC_MAX*1.15, ...monthly.filter(d=>d.avg!=null).map(d=>d.avg), 100);
+  const yScale = v => padT + plotH - (v/maxVal)*plotH;
+
+  const titleTxt = useSinglePoint ? `${LOCATION_FULLNAME[loc]} · ${pointName(loc,pointId)}` : (loc==='ALL'? '전체 위치 평균' : `${LOCATION_FULLNAME[loc]} 평균`);
+  ctx.fillStyle='#1565c0'; ctx.font='bold 12.5px sans-serif'; ctx.fillText('📍 '+titleTxt, padL, 16);
+
+  // axis
+  ctx.strokeStyle = '#ccd5e0'; ctx.fillStyle='#6b7280'; ctx.font='11px sans-serif';
+  ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+plotH); ctx.lineTo(padL+plotW,padT+plotH); ctx.stroke();
+  for(let g=0; g<=4; g++){
+    const v = maxVal*g/4;
+    const y = yScale(v);
+    ctx.strokeStyle='#eef1f5'; ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+plotW,y); ctx.stroke();
+    ctx.fillStyle='#9aa5b1'; ctx.fillText(Math.round(v), 6, y+4);
+  }
+  // spec band lines (600~2000)
+  [SPEC_MIN,SPEC_MAX].forEach(v=>{
+    const y = yScale(v);
+    ctx.setLineDash([5,4]); ctx.strokeStyle='#e08e0b'; ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+plotW,y); ctx.stroke(); ctx.setLineDash([]);
+  });
+
+  const bw = plotW/12;
+  monthly.forEach((d,i)=>{
+    const x = padL + i*bw + bw*0.2;
+    const barW = bw*0.6;
+    ctx.fillStyle = '#9aa5b1';
+    ctx.fillText((i+1)+'월', padL+i*bw+bw/2-10, padT+plotH+18);
+    if(d.avg!=null){
+      const y = yScale(d.avg);
+      ctx.fillStyle = d.ngAvg ? '#c0392b' : '#1565c0';
+      ctx.fillRect(x, y, barW, padT+plotH-y);
+      ctx.fillStyle='#1f2937'; ctx.font='11px sans-serif';
+      ctx.fillText(Math.round(d.avg), x-2, y-6);
+    }
+  });
+  ctx.fillStyle='#8a6500'; ctx.font='11px sans-serif';
+  ctx.fillText(`기준범위 ${SPEC_MIN}~${SPEC_MAX} Lux`, padL+plotW-150, padT+12);
+}
+
+function drawParetoChart(){
+  const loc = document.getElementById('paretoLoc').value;
+  const pointId = document.getElementById('paretoPoint').value;
+  const year = parseInt(document.getElementById('paretoYear').value);
+  const canvas = document.getElementById('paretoCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.clientWidth || 900;
+  const H = canvas.height = 340;
+  ctx.clearRect(0,0,W,H);
+
+  const useSinglePoint = loc!=='ALL' && pointId!=='ALL';
+  const locsToUse = loc==='ALL' ? LOCATIONS : [loc];
+  let items = [];
+  locsToUse.forEach(l=>{
+    getActivePoints(l).forEach(p=>{
+      if(useSinglePoint && p.id!==pointId) return;
+      const recs = RECORDS.filter(r=>r.loc===l && r.pointId===p.id && new Date(r.date).getFullYear()===year);
+      const ng = recs.filter(r=>isNG(r.value)).length;
+      if(ng>0) items.push({label: (loc==='ALL'? LOCATION_FULLNAME[l]+' · ':'') + pointName(l,p.id), ng});
+    });
+  });
+  items.sort((a,b)=>b.ng-a.ng);
+
+  const padL=50, padR=50, padT=20, padB=80;
+  const plotW = W-padL-padR, plotH = H-padT-padB;
+
+  if(items.length===0){
+    ctx.fillStyle='#9aa5b1'; ctx.font='14px sans-serif';
+    ctx.fillText('선택한 조건에서 부적합(NG) 데이터가 없습니다 (모두 기준 충족)', padL, padT+plotH/2);
+    return;
+  }
+
+  const total = items.reduce((s,d)=>s+d.ng,0);
+  let cum=0;
+  const maxNg = items[0].ng;
+  const bw = plotW/items.length;
+
+  ctx.strokeStyle='#ccd5e0';
+  ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+plotH); ctx.lineTo(padL+plotW,padT+plotH); ctx.stroke();
+
+  items.forEach((d,i)=>{
+    const x = padL+i*bw+bw*0.15, barW = bw*0.7;
+    const barH = (d.ng/maxNg)*plotH;
+    ctx.fillStyle = '#c0392b';
+    ctx.fillRect(x, padT+plotH-barH, barW, barH);
+    ctx.fillStyle='#1f2937'; ctx.font='11px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(d.ng, x+barW/2, padT+plotH-barH-5);
+    ctx.save();
+    ctx.translate(x+barW/2, padT+plotH+10);
+    ctx.rotate(Math.PI/180*30);
+    ctx.textAlign='left'; ctx.fillStyle='#4b5563'; ctx.font='10.5px sans-serif';
+    ctx.fillText(d.label.length>14? d.label.slice(0,14)+'…': d.label, 0, 0);
+    ctx.restore();
+  });
+  ctx.textAlign='left';
+
+  // cumulative line (secondary axis 0-100%)
+  ctx.beginPath(); ctx.strokeStyle='#1565c0'; ctx.lineWidth=2; cum=0;
+  items.forEach((d,i)=>{
+    cum += d.ng;
+    const pct = cum/total;
+    const x = padL+i*bw+bw/2;
+    const y = padT+plotH - pct*plotH;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  cum=0;
+  items.forEach((d,i)=>{
+    cum += d.ng;
+    const pct = cum/total;
+    const x = padL+i*bw+bw/2;
+    const y = padT+plotH - pct*plotH;
+    ctx.fillStyle='#1565c0';
+    ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
+  });
+
+  // 80% reference line
+  const y80 = padT+plotH-0.8*plotH;
+  ctx.setLineDash([4,4]); ctx.strokeStyle='#e08e0b';
+  ctx.beginPath(); ctx.moveTo(padL,y80); ctx.lineTo(padL+plotW,y80); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='#8a6500'; ctx.font='11px sans-serif'; ctx.fillText('80%', padL+plotW+4, y80+3);
+
+  ctx.fillStyle='#1565c0'; ctx.font='11px sans-serif';
+  ctx.fillText('— 누적비율(%)', padL, padT+12);
+}
+
+document.getElementById('btnTrendDraw').addEventListener('click', drawTrendChart);
+document.getElementById('btnParetoDraw').addEventListener('click', drawParetoChart);
+
+/* ============== DATA MANAGEMENT PAGE ============== */
+function renderDataPage(){
+  const filterLoc = document.getElementById('filterLoc').value;
+  const filterMonth = document.getElementById('filterMonth').value;
+  let recs = [...RECORDS];
+  if(filterLoc!=='ALL') recs = recs.filter(r=>r.loc===filterLoc);
+  if(filterMonth!=='ALL') recs = recs.filter(r=> (new Date(r.date).getMonth()+1) === parseInt(filterMonth));
+  recs.sort((a,b)=>b.ts-a.ts);
+
+  document.getElementById('allDataTable').innerHTML = `
+    <tr><th>날짜</th><th>시간</th><th>위치</th><th>측정위치</th><th>측정값(Lux)</th><th>판정</th><th>비고</th><th>삭제</th></tr>
+    ${recs.length ? recs.map(r=>`
+      <tr>
+        <td>${r.date}</td><td>${r.time||'-'}</td><td>${LOCATION_FULLNAME[r.loc]}</td>
+        <td>${escapeXml(pointName(r.loc,r.pointId))}</td><td>${r.value}</td>
+        <td>${isNG(r.value)?'<span class="ng">부적합</span>':'<span class="ok">적합</span>'}</td>
+        <td>${escapeXml(r.memo||'')}</td>
+        <td><button class="btn danger sm" onclick="deleteRecordGlobal('${r.id}')">삭제</button></td>
+      </tr>`).join('') : '<tr><td colspan="8" style="color:#999;">데이터가 없습니다</td></tr>'}
+  `;
+}
+function deleteRecordGlobal(id){
+  if(!confirm('삭제하시겠습니까?')) return;
+  RECORDS = RECORDS.filter(r=>r.id!==id);
+  saveRecords();
+  renderDataPage();
+}
+document.getElementById('filterLoc').addEventListener('change', renderDataPage);
+document.getElementById('filterMonth').addEventListener('change', renderDataPage);
+document.getElementById('btnClearAll').addEventListener('click', ()=>{
+  if(!confirm('정말로 모든 측정 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
+  RECORDS = []; saveRecords();
+  renderDataPage(); renderDashboard();
+  LOCATIONS.forEach(loc=>{ renderFloor(loc); renderPointList(loc); });
+  showToast('전체 데이터가 초기화되었습니다');
+});
+document.getElementById('btnExportCsv').addEventListener('click', ()=>{
+  const header = ['날짜','시간','위치','측정위치','측정값(Lux)','판정','비고'];
+  const rows = RECORDS.slice().sort((a,b)=>a.ts-b.ts).map(r=>[
+    r.date, r.time||'', LOCATION_FULLNAME[r.loc], pointName(r.loc,r.pointId), r.value,
+    isNG(r.value)?'부적합':'적합', (r.memo||'').replace(/,/g,' ')
+  ]);
+  let csv = '\uFEFF' + [header, ...rows].map(row=>row.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `조도측정데이터_${todayStr()}.csv`;
+  a.click();
+});
+
+/* ---- JSON full backup / restore (mitigates "data lost if browser/PC changes") ---- */
+document.getElementById('btnBackupJson').addEventListener('click', ()=>{
+  const backup = {
+    app:'sj_illum', version:1, exportedAt:new Date().toISOString(),
+    records:RECORDS, names:NAMES, customPoints:CUSTOM_POINTS, disabled:Array.from(DISABLED)
+  };
+  const blob = new Blob([JSON.stringify(backup,null,2)], {type:'application/json;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `조도측정_백업_${todayStr()}.json`;
+  a.click();
+  showToast('백업 파일이 저장되었습니다');
+});
+document.getElementById('fileRestoreJson').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    let data;
+    try{ data = JSON.parse(ev.target.result); }
+    catch(err){ showToast('백업 파일을 읽을 수 없습니다 (형식 오류)'); return; }
+    if(!data || !Array.isArray(data.records)){ showToast('올바른 백업 파일이 아닙니다'); return; }
+    if(!confirm(`백업 파일(${data.exportedAt? data.exportedAt.slice(0,10):'알수없음'} 생성)을 불러옵니다.\n현재 브라우저의 데이터는 백업 파일 내용으로 모두 교체됩니다. 계속하시겠습니까?`)) return;
+    RECORDS = data.records || [];
+    NAMES = data.names || {};
+    CUSTOM_POINTS = data.customPoints || {};
+    DISABLED = new Set(data.disabled || []);
+    saveRecords(); saveNames(); saveCustomPoints(); saveDisabled();
+    LOCATIONS.forEach(loc=>{ renderFloor(loc); renderPointList(loc); });
+    renderDashboard(); renderDataPage(); fillYearSelects();
+    showToast('백업 파일을 불러왔습니다');
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+});
+
+/* fill month filter options 1~12 */
+(function(){
+  const sel = document.getElementById('filterMonth');
+  for(let m=1;m<=12;m++){ const o=document.createElement('option'); o.value=m; o.textContent=m+'월'; sel.appendChild(o); }
+})();
+
+/* ============== CLOCK ============== */
+function tickClock(){
+  const d = new Date();
+  document.getElementById('clockNow').textContent =
+    `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+tickClock(); setInterval(tickClock, 30000);
+
+/* ============== INIT ============== */
+LOCATIONS.forEach(buildLocationPage);
+fillYearSelects();
+renderDashboard();
+drawTrendChart();
+drawParetoChart();
+window.addEventListener('resize', ()=>{ drawTrendChart(); drawParetoChart(); });
+</script>
+
+<script>
+/* ===== 승정 ERP 클라우드 동기화 (조도관리) ===== */
+(function(){
+  var SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co";
+  var SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+  var CKEY="illumination_v1";
+  var LKEYS=["sj_illum_records_v1","sj_illum_pointnames_v1","sj_illum_custom_points_v1","sj_illum_disabled_points_v1"];
+  function bundle(){var o={};LKEYS.forEach(function(k){o[k]=localStorage.getItem(k);});return o;}
+  function bstr(){return JSON.stringify(bundle());}
+  function hdr(){return {"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};}
+  // ---- push (debounced) ----
+  var t=null, lastPushed=null;
+  function push(){
+    var body=bstr(); if(body===lastPushed) return; lastPushed=body;
+    fetch(SB_URL+"/rest/v1/app_state",{method:"POST",headers:Object.assign(hdr(),{"Prefer":"resolution=merge-duplicates"}),
+      body:JSON.stringify({key:CKEY,value:JSON.parse(body)})}).catch(function(){});
+  }
+  var _set=localStorage.setItem.bind(localStorage);
+  localStorage.setItem=function(k,v){_set(k,v); if(LKEYS.indexOf(k)>=0){clearTimeout(t);t=setTimeout(push,800);}};
+  // ---- pull on boot: if cloud differs, write local + reload once ----
+  try{
+    fetch(SB_URL+"/rest/v1/app_state?key=eq."+CKEY+"&select=value",{headers:hdr()})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      if(!rows||!rows.length) return;
+      var cv=rows[0].value||{}; var local=bundle();
+      var diff=LKEYS.some(function(k){return (cv[k]||null)!==(local[k]||null);});
+      if(diff){
+        LKEYS.forEach(function(k){ if(cv[k]!=null)_set(k,cv[k]); else localStorage.removeItem(k); });
+        lastPushed=JSON.stringify(cv);
+        location.reload();
+      } else { lastPushed=bstr(); }
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>

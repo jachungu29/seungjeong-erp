@@ -1,0 +1,3139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><base href="../">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수입검사 관리 시스템</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<script src="xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" onerror="this.remove()">
+<style>
+:root{
+  --navy:#0d2240;--navy-mid:#1a3a6e;--navy-light:#2d5499;
+  --blue:#1a7abf;--blue-light:#d6eaf8;--blue-bg:#eaf3fb;
+  --green:#16a34a;--green-light:#dcfce7;
+  --red:#dc2626;--red-light:#fee2e2;
+  --amber:#d97706;--amber-light:#fef3c7;
+  --teal:#0f766e;--teal-light:#ccfbf1;
+  --gray:#64748b;--gray-light:#f1f5f9;
+  --border:#b0c0d8;--border-light:#dde6f0;
+  --bg:#eef2f8;--card:#fff;
+  --sb-w:224px;
+  --font:'Noto Sans KR',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--navy);font-size:13px;min-height:100vh}
+
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:var(--sb-w);background:var(--navy);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:200;overflow-y:auto}
+.main{margin-left:var(--sb-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sb-brand{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px}
+.sb-logo{font-size:24px}
+.sb-title{color:#fff;font-size:14px;font-weight:700;line-height:1.3}
+.sb-sub{color:rgba(255,255,255,.4);font-size:10px;margin-top:1px}
+.sb-db{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.db-status{font-size:11px;font-weight:600;padding:4px 8px;border-radius:4px;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.db-status.conn{background:rgba(22,163,74,.2);color:#86efac}
+.db-status.local{background:rgba(217,119,6,.2);color:#fbbf24}
+.db-status.disc{background:rgba(255,255,255,.08);color:rgba(255,255,255,.45)}
+.sb-db-row{display:flex;gap:5px}
+.sb-btn{flex:1;padding:6px 4px;border:none;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .15s}
+.sb-btn:hover{opacity:.82}
+.sb-btn.connect{background:#1a7abf;color:#fff}
+.sb-btn.newdb{background:rgba(255,255,255,.13);color:rgba(255,255,255,.8)}
+.sb-btn.export{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.sb-nav{flex:1;padding:8px 0}
+.sb-group{padding:10px 16px 3px;font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 16px;color:rgba(255,255,255,.68);cursor:pointer;transition:all .13s;border-left:3px solid transparent;font-size:12px}
+.sb-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.sb-item.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:#60a5fa;font-weight:700}
+.sb-icon{font-size:15px;min-width:20px;text-align:center}
+.sb-label{flex:1}
+.sb-badge{background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;min-width:22px;text-align:center}
+.sb-badge.has{background:rgba(220,38,38,.7);color:#fff}
+.sb-divider{height:1px;background:rgba(255,255,255,.06);margin:5px 12px}
+.sb-footer{padding:10px 12px;border-top:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(255,255,255,.35);line-height:1.6}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--card);border-bottom:1.5px solid var(--border-light);padding:10px 22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(13,34,64,.06)}
+.tb-bc{font-size:11px;color:var(--gray)}
+.tb-title{font-size:16px;font-weight:700;color:var(--navy)}
+.tb-left{flex:1}
+.tb-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+
+/* ── CONTENT ── */
+.content{padding:20px 22px 40px;flex:1}
+.page{display:none}.page.active{display:block}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 15px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);transition:all .16s;white-space:nowrap}
+.btn:hover{filter:brightness(.9)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-amber{background:var(--amber);color:#fff}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-gray{background:#6b7280;color:#fff}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--gray)}
+.btn-outline:hover{background:var(--gray-light)}
+.btn-sm{padding:5px 11px;font-size:11px}
+.btn-xs{padding:3px 9px;font-size:11px}
+.btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:6px}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:10px;box-shadow:0 2px 12px rgba(13,34,64,.08);overflow:hidden;margin-bottom:16px}
+.card-header{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
+.card-header.navy{background:var(--navy)}
+.card-header.navy .card-title{color:#fff}
+.card-header.blue{background:var(--navy-mid)}
+.card-header.blue .card-title{color:#fff}
+.card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+.card-body{padding:16px 18px}
+
+/* ── DASHBOARD ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat-card{background:var(--card);border-radius:10px;padding:16px 18px;box-shadow:0 2px 10px rgba(13,34,64,.07);border-top:4px solid}
+.stat-card.navy-t{border-top-color:var(--navy)}
+.stat-card.blue-t{border-top-color:var(--blue)}
+.stat-card.green-t{border-top-color:var(--green)}
+.stat-card.amber-t{border-top-color:var(--amber)}
+.stat-val{font-size:28px;font-weight:900;color:var(--navy);line-height:1}
+.stat-label{font-size:11px;color:var(--gray);margin-top:4px;font-weight:600}
+.stat-sub{font-size:11px;color:var(--gray);margin-top:2px}
+.dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.filter-chip{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fafbfd;color:var(--gray);cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);transition:all .14s}
+.filter-chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.filter-chip.raw{}.filter-chip.raw.active{background:var(--teal);border-color:var(--teal)}
+.filter-chip.sub{}.filter-chip.sub.active{background:var(--amber);border-color:var(--amber)}
+.search-input{padding:6px 11px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font);color:var(--navy);outline:none;background:#fafbfd}
+.search-input:focus{border-color:var(--navy-light)}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--navy);color:#fff;font-weight:700;padding:8px 10px;text-align:left;white-space:nowrap;font-size:11px}
+th.mid{background:var(--navy-mid)}
+th.center{text-align:center}
+td{padding:7px 10px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+tr:hover td{background:var(--blue-bg)}
+.no-data{text-align:center;padding:32px;color:var(--gray);font-size:12px}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.b-raw{background:var(--teal-light);color:var(--teal)}
+.b-sub{background:var(--amber-light);color:var(--amber)}
+.b-pass{background:var(--green-light);color:var(--green)}
+.b-fail{background:var(--red-light);color:var(--red)}
+.b-cond{background:var(--amber-light);color:var(--amber)}
+.b-ok{background:var(--green-light);color:var(--green)}
+.b-ng{background:var(--red-light);color:var(--red)}
+.b-na{background:var(--gray-light);color:var(--gray)}
+.b-navy{background:var(--blue-light);color:var(--navy-mid)}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fg4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.fw{grid-column:1/-1}
+.fl{display:flex;flex-direction:column;gap:3px}
+.fl label{font-size:11px;font-weight:700;color:var(--gray);white-space:nowrap}
+.fl input,.fl select,.fl textarea{font-size:12px;padding:7px 9px;border:1.5px solid var(--border);border-radius:6px;background:#fafbfd;color:var(--navy);font-family:var(--font);outline:none;width:100%;transition:border-color .15s}
+.fl input:focus,.fl select:focus,.fl textarea:focus{border-color:var(--navy-light);background:#fff}
+.fl textarea{resize:vertical;min-height:56px}
+.fl input[readonly]{background:var(--blue-bg);color:var(--navy-mid);cursor:default}
+.req{color:var(--red);margin-left:2px}
+.section-title{font-size:12px;font-weight:700;color:var(--navy-mid);padding:8px 0 6px;border-bottom:2px solid var(--border-light);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* ── INSPECTION TABLE ── */
+.insp-table-wrap{overflow-x:auto;max-height:420px;overflow-y:auto}
+.insp-table{border-collapse:collapse;font-size:11px;min-width:600px}
+.insp-table th{position:sticky;top:0;z-index:10;padding:6px 4px;font-size:10px;white-space:nowrap}
+.insp-table td{padding:2px 3px;border:1px solid #dde6f0;text-align:center;vertical-align:middle}
+.insp-table td.item-col{text-align:left;padding:2px 6px;font-size:11px;white-space:nowrap;overflow:hidden;max-width:120px;text-overflow:ellipsis}
+.insp-input{border:none;outline:none;width:100%;text-align:center;font-family:var(--font);font-size:11px;padding:2px 1px;background:transparent;color:var(--navy);min-width:38px}
+.insp-input:focus{background:var(--blue-bg);border-radius:3px}
+.insp-input.out-spec{background:var(--red-light)!important;color:var(--red);font-weight:700}
+.judge-ok{background:var(--green-light);color:var(--green);font-weight:700;font-size:11px}
+.judge-ng{background:var(--red-light);color:var(--red);font-weight:700;font-size:11px}
+.judge-na{background:var(--gray-light);color:var(--gray);font-size:11px}
+.cat-outer{background:#fffbea}
+.cat-other{background:#fafbfd}
+.insp-note{border:none;outline:none;width:100%;text-align:left;font-family:var(--font);font-size:10px;padding:2px 4px;background:transparent;min-width:50px}
+.insp-note:focus{background:var(--blue-bg)}
+.row-del-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:12px;padding:0 2px}
+.row-del-btn:hover{color:var(--red)}
+
+/* ── STATS BAR ── */
+.stats-bar{display:flex;gap:16px;padding:8px 14px;background:var(--gray-light);border-radius:6px;margin-top:8px;flex-wrap:wrap}
+.stat-item{font-size:12px;display:flex;align-items:center;gap:5px}
+.stat-dot{width:8px;height:8px;border-radius:50%}
+
+/* ── SKETCH GALLERY ── */
+.sketch-gallery{display:flex;gap:10px;flex-wrap:wrap;padding:10px 0}
+.sketch-item{position:relative;border-radius:6px;overflow:hidden;border:1.5px solid var(--border-light)}
+.sketch-item img{width:120px;height:90px;object-fit:cover;display:block;cursor:pointer}
+.sketch-item .del-btn{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:3px;width:18px;height:18px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
+.sketch-drop{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;color:var(--gray);font-size:12px;transition:all .15s;position:relative}
+.sketch-drop:hover,.sketch-drop.over{border-color:var(--blue);background:var(--blue-bg);color:var(--blue)}
+.sketch-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+
+/* ── MODAL ── */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;padding:16px}
+.modal-ov.show{display:flex}
+.modal-box{background:#fff;border-radius:12px;width:100%;max-width:820px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,.25)}
+.modal-box.wide{max-width:1100px}
+.modal-box.slim{max-width:500px}
+.modal-hd{background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:12px 12px 0 0;flex-shrink:0}
+.modal-title{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;line-height:1;padding:0}
+.modal-close:hover{color:#fff}
+.modal-body{padding:18px 20px;overflow-y:auto;flex:1}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border-light);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0}
+
+/* ── POPUP (history detail) ── */
+.popup-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:4000;align-items:center;justify-content:center;padding:12px}
+.popup-ov.show{display:flex}
+.popup-box{background:#fff;border-radius:12px;width:100%;max-width:1140px;max-height:94vh;display:flex;flex-direction:column;box-shadow:0 16px 64px rgba(0,0,0,.35)}
+.popup-hd{background:var(--navy);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-radius:12px 12px 0 0;flex-shrink:0}
+.popup-title{font-size:13px;font-weight:700;color:#fff}
+.popup-body{display:grid;grid-template-columns:1fr 1fr;gap:0;flex:1;overflow:hidden;border-radius:0 0 12px 12px}
+.popup-panel{padding:14px;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.popup-panel.left{border-right:1px solid var(--border-light);background:#fafbfd}
+.popup-panel.right{background:#fff}
+.popup-panel-title{font-size:12px;font-weight:700;color:var(--navy-mid);padding-bottom:8px;border-bottom:1px solid var(--border-light);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.popup-sketch-img{max-width:100%;border-radius:6px;border:1px solid var(--border-light);display:block;margin-bottom:8px;cursor:pointer}
+.popup-report-img{max-width:100%;border-radius:6px;border:1px solid var(--border-light);display:block;cursor:pointer}
+/* ── 팝업 성적서 데이터 테이블 ── */
+.popup-rpt-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;font-size:11px}
+.popup-rpt-info-item{background:var(--blue-bg);border-radius:6px;padding:5px 9px}
+.popup-rpt-info-item label{color:var(--gray);font-size:10px;display:block;margin-bottom:1px}
+.popup-rpt-info-item span{font-weight:700;color:var(--navy-mid)}
+.popup-data-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.popup-data-tbl th{background:var(--navy);color:#fff;padding:5px 7px;text-align:center;white-space:nowrap;font-size:10px}
+.popup-data-tbl td{padding:4px 6px;border-bottom:1px solid var(--border-light);vertical-align:middle;font-size:11px}
+.popup-data-tbl tr:nth-child(even) td{background:#f8f9fb}
+.popup-judge-ok{color:var(--green);font-weight:900;font-size:11px}
+.popup-judge-ng{color:var(--red);font-weight:900;font-size:11px}
+.popup-judge-nm{color:var(--gray);font-size:11px}
+.popup-decision{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:900;margin-bottom:10px}
+.popup-decision.ok{background:#dcfce7;color:#166534}
+.popup-decision.ng{background:#fee2e2;color:#991b1b}
+.popup-decision.cond{background:#fef9c3;color:#854d0e}
+.popup-footer{padding:10px 18px;border-top:1px solid var(--border-light);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0}
+
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:2px solid var(--border-light);margin-bottom:16px}
+.tab-btn{padding:9px 16px;border:none;background:none;font-size:12px;font-weight:600;font-family:var(--font);color:var(--gray);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--navy-mid)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* ── SAVE MODAL ── */
+.save-success-box{background:var(--green-light);border:1.5px solid var(--green);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.save-path-box{background:var(--blue-bg);border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;font-size:11px;color:var(--navy-mid);font-family:monospace;word-break:break-all;line-height:1.6}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:9px 22px;border-radius:24px;font-size:13px;font-weight:700;z-index:9999;pointer-events:none;opacity:0;transition:opacity .3s;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.toast.success{background:var(--green);color:#fff}
+.toast.error{background:var(--red);color:#fff}
+.toast.info{background:var(--navy);color:#fff}
+.toast.warn{background:var(--amber);color:#fff}
+
+/* ── LOADING ── */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.loading-overlay.show{display:flex}
+.loading-spin{width:44px;height:44px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+.loading-msg{color:#fff;font-size:14px;font-weight:700}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── MISC ── */
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray)}
+.empty-state .icon{font-size:40px;margin-bottom:10px}
+.empty-state .msg{font-size:14px;font-weight:600;margin-bottom:6px}
+.empty-state .sub{font-size:12px}
+.alert{padding:10px 14px;border-radius:7px;font-size:12px;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px}
+.alert.info{background:#dbeafe;border:1px solid #93c5fd;color:#1e40af}
+.alert.warn{background:var(--amber-light);border:1px solid #fcd34d;color:#92400e}
+.sep{height:1px;background:var(--border-light);margin:14px 0}
+.text-sm{font-size:11px;color:var(--gray)}
+.text-center{text-align:center}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+.flex{display:flex}.flex-1{flex:1}.gap8{gap:8px}.gap12{gap:12px}.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.font-bold{font-weight:700}.font-900{font-weight:900}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+/* print hidden area */
+#rpt-render{position:fixed;left:-9999px;top:0;background:#fff;font-family:var(--font);font-size:9pt;width:1122px;z-index:-1}
+
+
+/* ── 감사로그 ── */
+.audit-tbl{width:100%;font-size:11px;border-collapse:collapse}
+.audit-tbl td,.audit-tbl th{padding:6px 10px;border-bottom:1px solid var(--border-light);vertical-align:top}
+.audit-tbl th{background:var(--navy);color:#fff;text-align:left;font-size:11px}
+.a-create{color:var(--green);font-weight:700}
+.a-update{color:#2563eb;font-weight:700}
+.a-delete{color:var(--red);font-weight:700}
+.a-auth{color:var(--gray);font-weight:700}
+
+/* ── 이미지 파일 분리 배지 ── */
+.img-file-badge{display:inline-block;font-size:10px;padding:1px 7px;background:#e0f2fe;color:#0369a1;border-radius:8px;font-weight:700}
+.ng-warn-icon{font-size:42px;margin-bottom:10px}
+.ng-warn-title{font-size:16px;font-weight:900;color:var(--red);margin-bottom:8px}
+.ng-warn-body{font-size:13px;color:var(--navy);line-height:1.6;margin-bottom:20px}
+/* ── Rev 배지 ── */
+.rev-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:1px 8px;border-radius:8px;background:var(--blue-light);color:var(--navy-mid);white-space:nowrap}
+/* ── 개정 이력 테이블 ── */
+.rev-hist-row td{padding:7px 10px;border-bottom:1px solid var(--border-light);font-size:12px;vertical-align:top}
+
+/* ── TREND CHART ── */
+.trend-grid{display:grid;grid-template-columns:260px 1fr;gap:14px;align-items:start}
+.trend-mat-list{background:var(--card);border-radius:10px;box-shadow:0 2px 12px rgba(13,34,64,.08);overflow:hidden}
+.trend-mat-header{background:var(--navy);padding:10px 14px;font-size:12px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.trend-mat-item{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border-light);transition:all .13s;display:flex;align-items:center;gap:8px}
+.trend-mat-item:hover{background:var(--blue-bg)}
+.trend-mat-item.active{background:var(--blue-light);border-left:3px solid var(--blue);font-weight:700;color:var(--navy)}
+.trend-mat-brand{font-size:10px;color:var(--gray);margin-top:1px}
+.trend-mat-grade{font-size:12px;font-weight:600;color:var(--navy)}
+.trend-chart-area{background:var(--card);border-radius:10px;box-shadow:0 2px 12px rgba(13,34,64,.08);padding:16px 18px}
+.trend-prop-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.trend-prop-tab{padding:6px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fafbfd;color:var(--gray);cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);transition:all .14s}
+.trend-prop-tab.active{background:var(--navy-mid);border-color:var(--navy-mid);color:#fff}
+.trend-chart-container{position:relative;height:320px;width:100%}
+.trend-stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}
+.trend-stat-box{background:var(--gray-light);border-radius:8px;padding:10px 12px;text-align:center}
+.trend-stat-val{font-size:18px;font-weight:900;color:var(--navy)}
+.trend-stat-lbl{font-size:10px;color:var(--gray);margin-top:2px;font-weight:600}
+.trend-info-row{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.trend-badge-brand{background:var(--blue-light);color:var(--navy-mid);font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.trend-badge-spec{background:var(--amber-light);color:var(--amber);font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.trend-badge-cnt{background:var(--green-light);color:var(--green);font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.trend-no-data{text-align:center;padding:60px;color:var(--gray);font-size:13px}
+.trend-data-table{margin-top:14px;overflow-x:auto;max-height:200px;overflow-y:auto}
+.trend-data-table table{font-size:11px}
+.trend-ng{color:var(--red);font-weight:700}
+.trend-ok{color:var(--green)}
+.trend-src-legend{display:flex;gap:14px;align-items:center;padding:6px 10px;background:var(--gray-light);border-radius:6px;margin-bottom:10px;flex-wrap:wrap;font-size:11px}
+.trend-src-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
+.trend-db-badge{background:rgba(245,158,11,.15);color:#b45309;border:1px solid #fcd34d;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.trend-new-badge{animation:pulse-badge 1.2s ease-in-out 3}
+@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:.4}}
+.cat-mat{background:#f0fdf4}
+@media(max-width:860px){
+  .trend-grid{grid-template-columns:1fr}
+  .trend-stats-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:860px){
+  .sidebar{width:52px}
+  .sb-label,.sb-badge,.sb-title,.sb-sub,.sb-group,.sb-footer{display:none}
+  .main{margin-left:52px}
+  .sb-item{justify-content:center;padding:10px}
+  .sb-db-row{flex-direction:column}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .dash-grid2{grid-template-columns:1fr}
+  .popup-body{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+  .popup-panel.left{border-right:none;border-bottom:1px solid var(--border-light)}
+  .fg4{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+
+<style id="SJ-HORIZONTAL-NAV">
+/* ===== 승정: 좌측 세로 사이드바 → 상단 가로 메뉴바 (미세조정) ===== */
+.layout{ display:flex !important; flex-direction:column !important; min-height:100vh; }
+.sidebar{
+  position:sticky !important; top:0 !important; left:0 !important;
+  width:100% !important; height:auto !important; min-height:54px;
+  flex-direction:row !important; align-items:center !important; flex-wrap:nowrap !important;
+  gap:12px !important; padding:6px 18px !important; box-sizing:border-box !important;
+  overflow-x:auto !important; overflow-y:hidden !important; z-index:200 !important;
+  border-bottom:2px solid rgba(255,255,255,.10);
+}
+.sb-brand{ order:1; flex:0 0 auto !important; margin:0 8px 0 0 !important; padding:0 !important; }
+.sb-brand .sb-sub{ font-size:9px !important; opacity:.6 !important; }
+.sb-nav{ order:2; display:flex !important; flex-direction:row !important; align-items:center !important;
+  gap:4px !important; flex:0 1 auto !important; overflow-x:auto !important; overflow-y:hidden !important; padding:0 !important; margin:0 !important; }
+.sb-group{ display:none !important; }
+.sb-item{ flex:0 0 auto !important; white-space:nowrap !important;
+  padding:9px 14px !important; margin:0 !important; border-left:0 !important; border-radius:8px 8px 0 0 !important; }
+.sb-item.active{ border-left:0 !important; background:rgba(255,255,255,.12) !important;
+  box-shadow:inset 0 -3px 0 #60a5fa !important; }
+.sb-db{ order:3; margin:0 0 0 auto !important; padding:0 !important;
+  display:flex !important; flex-direction:row !important; align-items:center !important; gap:8px !important; flex:0 0 auto !important; }
+.sb-db > div[style]{ margin-top:0 !important; }
+.sb-footer{ display:none !important; }
+.main{ margin-left:0 !important; margin-top:0 !important; }
+@media(max-width:860px){
+  .sidebar{ width:100% !important; }
+  .sb-label,.sb-badge,.sb-title,.sb-sub{ display:inline-block !important; }
+  .main{ margin-left:0 !important; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════ SIDEBAR ══════════════════ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">🔍</div>
+    <div>
+      <div class="sb-title">수입검사 관리</div>
+      <div class="sb-sub">Import Inspection v8</div>
+    </div>
+  </div>
+
+
+  <div class="sb-db">
+    <div id="db-status" class="db-status local">● 로컬 저장소</div>
+    <div style="display:flex;gap:5px;margin-top:6px">
+      <button class="sb-btn export" onclick="exportBackup()" title="DB를 JSON 파일로 내보내기" style="flex:1;font-size:10px">💾 내보내기</button>
+      <button class="sb-btn connect" onclick="document.getElementById('import-file').click()" title="JSON 파일에서 DB 가져오기" style="flex:1;font-size:10px">📥 가져오기</button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importBackup(this)">
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-group">메인</div>
+    <div class="sb-item active" id="nav-dashboard" onclick="navigate('dashboard')">
+      <span class="sb-icon">📊</span><span class="sb-label">대시보드</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-group">검사 관리</div>
+    <div class="sb-item" id="nav-standards" onclick="navigate('standards')">
+      <span class="sb-icon">📋</span><span class="sb-label">기준서 관리</span>
+      <span class="sb-badge" id="badge-std">0</span>
+    </div>
+    <div class="sb-item" id="nav-report" onclick="navigate('report')">
+      <span class="sb-icon">✏️</span><span class="sb-label">성적서 작성</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-group">이력 조회</div>
+    <div class="sb-item" id="nav-history" onclick="navigate('history')">
+      <span class="sb-icon">🗂️</span><span class="sb-label">수입검사 이력</span>
+      <span class="sb-badge" id="badge-hist">0</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-group">품질 분석</div>
+    <div class="sb-item" id="nav-trend" onclick="navigate('trend')">
+      <span class="sb-icon">📈</span><span class="sb-label">원재료 물성추이도</span>
+    </div>
+
+  </nav>
+
+  <div class="sb-footer" id="sb-info">💾 로컬 저장소</div>
+</aside>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-left">
+      <div id="tb-bc" class="tb-bc">홈</div>
+      <div id="tb-title" class="tb-title">대시보드</div>
+    </div>
+    <div id="tb-actions" class="tb-actions"></div>
+  </div>
+
+  <div class="content">
+
+    <!-- ─── PAGE: DASHBOARD ─── -->
+    <div id="page-dashboard" class="page active">
+      <div class="stat-grid" id="dash-stats">
+        <div class="stat-card navy-t"><div class="stat-val" id="s-std">0</div><div class="stat-label">📋 등록 기준서</div><div class="stat-sub">원자재 + 부자재</div></div>
+        <div class="stat-card blue-t"><div class="stat-val" id="s-rpt">0</div><div class="stat-label">📄 총 성적서</div><div class="stat-sub">누적 검사 건수</div></div>
+        <div class="stat-card green-t"><div class="stat-val" id="s-pass">0%</div><div class="stat-label">✅ 합격률</div><div class="stat-sub">전체 성적서 기준</div></div>
+        <div class="stat-card amber-t"><div class="stat-val" id="s-month">0</div><div class="stat-label">📅 이번달 검사</div><div class="stat-sub" id="s-month-label">건</div></div>
+      </div>
+      <div class="dash-grid2">
+        <div class="card">
+          <div class="card-header navy"><div class="card-title">📊 구분별 현황</div></div>
+          <div class="card-body" id="dash-cat"></div>
+        </div>
+        <div class="card">
+          <div class="card-header navy"><div class="card-title">🕐 최근 검사 이력</div></div>
+          <div class="card-body" style="padding:0">
+            <div class="tbl-wrap"><table id="dash-recent">
+              <thead><tr><th>검사일</th><th>구분</th><th>품명</th><th>업체</th><th class="center">판정</th></tr></thead>
+              <tbody id="dash-recent-body"><tr><td colspan="5" class="no-data">검사 이력이 없습니다</td></tr></tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: STANDARDS ─── -->
+    <div id="page-standards" class="page">
+      <div class="card">
+        <div class="card-header navy">
+          <div class="card-title">📋 수입검사 기준서 목록</div>
+          <div class="flex gap8">
+            <button class="btn btn-teal btn-sm" onclick="downloadTemplate()">📥 엑셀 템플릿</button>
+            <button class="btn btn-blue btn-sm" onclick="openStdModal()">➕ 기준서 등록</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:14px 16px">
+          <div class="filter-bar">
+            <button class="filter-chip active" id="fc-all" onclick="setStdFilter('all',this)">전체</button>
+            <button class="filter-chip raw" id="fc-raw" onclick="setStdFilter('원자재',this)">원자재</button>
+            <button class="filter-chip sub" id="fc-sub" onclick="setStdFilter('부자재',this)">부자재</button>
+            <input class="search-input" id="std-search" placeholder="🔍 품명·품번·업체 검색" oninput="renderStdList()" style="min-width:200px;margin-left:8px">
+          </div>
+          <div class="tbl-wrap">
+            <table id="std-table">
+              <thead><tr>
+                <th style="width:50px" class="center">No.</th>
+                <th>기준서번호</th><th>원재료명 / 품명</th><th>GRADE</th><th>품번</th><th>업체명</th>
+                <th class="center">구분</th><th class="center">Rev.</th><th class="center">항목수</th>
+                <th>등록일</th><th class="center">작업</th>
+              </tr></thead>
+              <tbody id="std-tbody"><tr><td colspan="11" class="no-data">등록된 기준서가 없습니다. 엑셀 업로드 또는 직접 등록해주세요.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: REPORT ─── -->
+    <div id="page-report" class="page">
+      <div class="card">
+        <div class="card-header blue">
+          <div class="card-title">✏️ 수입검사 성적서 작성</div>
+          <div class="flex gap8">
+            <button class="btn btn-outline btn-sm" onclick="clearReportForm()">🗑 초기화</button>
+            <button class="btn btn-green" onclick="saveReport()" id="btn-save-report">💾 성적서 저장</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Step 1: Standard Selection -->
+          <div class="section-title">① 기준서 선택</div>
+          <div class="fg3">
+            <div class="fl fw">
+              <label>기준서 선택 <span class="req">*</span></label>
+              <select id="rpt-std-sel" onchange="loadStandardToReport(this.value)" style="font-size:13px">
+                <option value="">-- 기준서를 선택하세요 --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+          <!-- Step 2: Basic Info -->
+          <div class="section-title">② 검사 기본 정보</div>
+          <div class="fg4">
+            <div class="fl"><label>성적서 번호</label><input id="rpt-no" readonly style="background:var(--blue-bg);color:var(--navy-mid);font-weight:700" placeholder="자동 생성"></div>
+            <div class="fl"><label>검사일 <span class="req">*</span></label><input type="date" id="rpt-date" onchange="updateAutoRptNo()"></div>
+            <div class="fl"><label>구분</label><input id="rpt-cat" readonly style="background:var(--blue-bg)"></div>
+            <div class="fl"><label>MODEL</label><input id="rpt-model" readonly style="background:var(--blue-bg)"></div>
+            <div class="fl fw"><label id="rpt-name-label">원재료명 / 품명</label><input id="rpt-name" readonly style="background:var(--blue-bg)"></div>
+            <div class="fl" id="rpt-grade-wrap"><label>GRADE</label><input id="rpt-grade" readonly style="background:var(--blue-bg)"></div>
+            <div class="fl"><label>품번</label><input id="rpt-partno" readonly style="background:var(--blue-bg)"></div>
+            <div class="fl"><label>업체명 <span class="req">*</span></label><input id="rpt-vendor" placeholder="납품업체명"></div>
+            <div class="fl"><label>입고 LOT No.</label><input id="rpt-lot" placeholder="LOT 번호"></div>
+            <div class="fl"><label>EO No. / 발주번호</label><input id="rpt-eono" placeholder="EO 번호"></div>
+            <div class="fl"><label>입고수량 (EA)</label><input type="number" id="rpt-qty" placeholder="0" min="0"></div>
+            <div class="fl"><label>시료수 <span class="req">*</span></label>
+              <input type="number" id="rpt-sample" value="5" min="1" max="30"
+                     style="width:100%;font-size:13px;padding:7px 9px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font)"
+                     oninput="updateSampleCols()" onchange="updateSampleCols()" placeholder="시료수 입력">
+            </div>
+          </div>
+
+          <div class="sep"></div>
+          <!-- Step 3: Approval items -->
+          <div class="section-title">③ 승인 항목 & 서명</div>
+          <div class="fg2">
+            <div class="fl">
+              <label>검사 항목 구분</label>
+              <div style="display:flex;gap:12px;padding:8px 0;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" id="chk-outer" checked> 외관검사</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" id="chk-dim" checked> 치수검사</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" id="chk-mat"> 재질(MS)</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" id="chk-perf"> 성능(ES)</label>
+              </div>
+            </div>
+            <div class="fl">
+              <label>종합 판정 <span class="req">*</span></label>
+              <div style="display:flex;gap:10px;padding:8px 0">
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="radio" name="decision" value="합격" checked> <span style="color:var(--green);font-weight:700">합격</span></label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="radio" name="decision" value="불합격"> <span style="color:var(--red);font-weight:700">불합격</span></label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="radio" name="decision" value="조건부합격"> <span style="color:var(--amber);font-weight:700">조건부합격</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="fg3 mt8">
+            <div class="fl"><label>작성자</label><input id="rpt-writer" placeholder="작성자 이름"></div>
+            <div class="fl"><label>검토자</label><input id="rpt-reviewer" placeholder="검토자 이름"></div>
+            <div class="fl"><label>승인자</label><input id="rpt-approver" placeholder="승인자 이름"></div>
+          </div>
+
+          <div class="sep"></div>
+          <!-- Step 4: Inspection Table -->
+          <div class="section-title" style="justify-content:space-between">
+            <span>④ 검사 데이터 입력</span>
+            <div class="flex gap8">
+              <span id="rpt-item-count" class="text-sm">항목: 0개</span>
+              <button class="btn btn-outline btn-xs" onclick="addReportRow()">+ 항목 추가</button>
+            </div>
+          </div>
+          <div id="rpt-table-area">
+            <div class="alert info">기준서를 선택하면 검사 항목이 자동으로 불러와집니다.</div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-bar mt8" id="rpt-stats" style="display:none">
+            <div class="stat-item"><div class="stat-dot" style="background:var(--gray)"></div> 전체: <strong id="st-total">0</strong></div>
+            <div class="stat-item"><div class="stat-dot" style="background:var(--green)"></div> OK: <strong id="st-ok">0</strong></div>
+            <div class="stat-item"><div class="stat-dot" style="background:var(--red)"></div> NG: <strong id="st-ng">0</strong></div>
+            <div class="stat-item"><div class="stat-dot" style="background:var(--gray)"></div> 미측정: <strong id="st-nm">0</strong></div>
+          </div>
+
+          <div class="sep"></div>
+          <!-- Step 5: Additional info -->
+          <div class="fl mt8"><label>특이사항 / 비고</label><textarea id="rpt-remark" rows="3" placeholder="검사 특이사항이나 비고를 입력하세요..."></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: HISTORY ─── -->
+    <div id="page-history" class="page">
+      <div class="card">
+        <div class="card-header navy">
+          <div class="card-title">🗂️ 수입검사 이력 대장</div>
+          <button class="btn btn-teal btn-sm" onclick="exportHistoryExcel()">📊 Excel 출력</button>
+        </div>
+        <div class="card-body" style="padding:14px 16px">
+          <div class="filter-bar">
+            <button class="filter-chip active" id="hf-all" onclick="setHistFilter('all',this)">전체</button>
+            <button class="filter-chip raw" id="hf-raw" onclick="setHistFilter('원자재',this)">원자재</button>
+            <button class="filter-chip sub" id="hf-sub" onclick="setHistFilter('부자재',this)">부자재</button>
+            <input type="date" id="hf-from" class="search-input" onchange="renderHistList()">
+            <span class="text-sm">~</span>
+            <input type="date" id="hf-to" class="search-input" onchange="renderHistList()">
+            <input class="search-input" id="hf-search" placeholder="🔍 품명·업체 검색" oninput="renderHistList()" style="min-width:180px">
+          </div>
+          <div class="tbl-wrap">
+            <table id="hist-table">
+              <thead><tr>
+                <th class="center" style="width:50px">No.</th>
+                <th>성적서번호</th><th>검사일</th>
+                <th class="center">구분</th><th>품명</th><th>품번</th><th>업체명</th>
+                <th class="center">시료수</th><th class="center">합부판정</th>
+                <th class="center">OK/NG</th><th class="center">상세조회</th>
+              </tr></thead>
+              <tbody id="hist-tbody"><tr><td colspan="11" class="no-data">검사 이력이 없습니다.</td></tr></tbody>
+            </table>
+          </div>
+          <div id="hist-page-info" class="text-sm mt8 text-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: TREND ─── -->
+    <div id="page-trend" class="page">
+      <div class="trend-grid">
+        <!-- 재질 목록 -->
+        <div class="trend-mat-list">
+          <div class="trend-mat-header">🧪 원재료 목록 <span id="trend-mat-count" style="margin-left:auto;background:rgba(255,255,255,.15);padding:1px 8px;border-radius:8px;font-size:11px">0종</span></div>
+          <div style="padding:8px 12px;background:rgba(26,122,191,.08);border-bottom:1px solid var(--border-light);font-size:11px;color:var(--navy-mid)">
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+              <span style="width:8px;height:8px;border-radius:50%;background:#1a7abf;display:inline-block"></span> 
+            </div>
+            <div style="display:flex;align-items:center;gap:5px">
+              <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span> 성적서 DB 연계 데이터 (<span id="trend-live-count">0</span>건)
+            </div>
+          </div>
+          <div id="trend-mat-list-body"></div>
+        </div>
+        <!-- 차트 영역 -->
+        <div class="trend-chart-area">
+          <div id="trend-empty" class="trend-no-data">
+            <div style="font-size:36px;margin-bottom:10px">📈</div>
+            <div style="font-size:14px;font-weight:700;color:var(--navy-mid);margin-bottom:6px">원재료를 선택하세요</div>
+            <div style="font-size:12px;color:var(--gray)">좌측 목록에서 재질을 클릭하면<br>물성 추이도가 표시됩니다</div>
+            <div style="margin-top:16px;background:var(--blue-bg);border:1px solid var(--blue-light);border-radius:8px;padding:12px 16px;text-align:left;max-width:400px;margin-left:auto;margin-right:auto">
+              <div style="font-size:12px;font-weight:700;color:var(--navy-mid);margin-bottom:6px">📎 성적서 연계 방법</div>
+              <div style="font-size:11px;color:var(--gray);line-height:1.8">
+                ① 기준서 등록 시 <strong>물성추이 연계 Grade</strong> 선택<br>
+                ② 검사 항목 구분을 <strong>재질</strong>로 지정<br>
+                ③ 항목명을 <strong>정확히</strong> 입력 (예: 인장강도·인장신도는 별도 항목)<br>
+                ④ 성적서 저장 시 추이도에 <strong>자동 반영</strong> ●
+              </div>
+            </div>
+          </div>
+          <div id="trend-content" style="display:none">
+            <div class="trend-info-row">
+              <span id="trend-grade-label" style="font-size:15px;font-weight:900;color:var(--navy)"></span>
+              <span id="trend-brand-badge" class="trend-badge-brand"></span>
+              <span id="trend-spec-badge" class="trend-badge-spec"></span>
+              <span id="trend-cnt-badge" class="trend-badge-cnt"></span>
+              <span id="trend-live-badge" style="display:none" class="trend-db-badge">🔗 성적서 연계: <span id="trend-live-pts">0</span>건</span>
+              <button class="btn btn-outline btn-sm" onclick="exportTrendExcel()" style="margin-left:auto">📊 Excel 출력</button>
+            </div>
+            <div id="trend-src-legend" class="trend-src-legend" style="display:none"></div>
+            <div class="trend-prop-tabs" id="trend-prop-tabs"></div>
+            <div class="trend-chart-container">
+              <canvas id="trend-chart"></canvas>
+            </div>
+            <div class="trend-stats-grid" id="trend-stats"></div>
+            <div class="trend-data-table" id="trend-data-table"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: AUDIT ─── -->
+    <div id="page-audit" class="page">
+      <div class="card">
+        <div class="card-header navy">
+          <div class="card-title">🛡️ 감사 로그 (Audit Trail)</div>
+          <div class="flex gap8">
+            <select id="audit-filter-type" onchange="renderAuditPage()" style="font-size:11px;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff">
+              <option value="">전체 작업</option>
+              <option value="LOGIN">로그인</option>
+              <option value="STD">기준서</option>
+              <option value="RPT">성적서</option>
+            </select>
+            <button class="btn btn-outline btn-sm" onclick="exportAuditLog()">📊 Excel</button>
+            <button class="btn btn-outline btn-sm" onclick="clearAuditLog()" id="audit-clear-btn">🗑 로그 초기화</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div class="tbl-wrap">
+            <table class="audit-tbl">
+              <thead><tr>
+                <th style="width:130px">일시</th>
+                <th style="width:60px">역할</th>
+                <th style="width:55px">사용자</th>
+                <th style="width:75px">작업</th>
+                <th style="width:55px">대상</th>
+                <th>이름/번호</th>
+                <th style="width:50px">변경</th>
+              </tr></thead>
+              <tbody id="audit-tbody"><tr><td colspan="7" class="no-data">로그 없음</td></tr></tbody>
+            </table>
+          </div>
+          <div id="audit-pager" class="text-center mt8 mb8" style="font-size:12px;color:var(--gray)"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- ══════════════════ MODALS ══════════════════ -->
+
+<!-- NG 판정 경고 모달 -->
+<div class="modal-ov" id="modal-ng-warn">
+  <div class="ng-warn-box">
+    <div class="ng-warn-icon">⚠️</div>
+    <div class="ng-warn-title">NG 항목이 존재합니다</div>
+    <div class="ng-warn-body" id="ng-warn-body"></div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn btn-outline" onclick="document.getElementById('modal-ng-warn').classList.remove('show')">취소 — 판정 재선택</button>
+      <button class="btn btn-amber" onclick="confirmNgSave()">⚠️ 경고 인지 후 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 개정 이력 모달 -->
+<div class="modal-ov" id="modal-rev-hist">
+  <div class="modal-box" style="max-width:660px">
+    <div class="modal-hd">
+      <div class="modal-title">📜 기준서 개정 이력</div>
+      <button class="modal-close" onclick="document.getElementById('modal-rev-hist').classList.remove('show')">✕</button>
+    </div>
+    <div class="modal-body" id="rev-hist-body" style="padding:16px 20px"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('modal-rev-hist').classList.remove('show')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Standard Modal -->
+<div class="modal-ov" id="modal-std">
+  <div class="modal-box wide">
+    <div class="modal-hd">
+      <div class="modal-title" id="std-modal-title">📋 기준서 등록</div>
+      <button class="modal-close" onclick="closeStdModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert info">
+        <span>💡</span>
+        <div>엑셀 파일로 자동 등록하거나, 항목을 직접 입력할 수 있습니다.<br>
+        <strong>엑셀 템플릿:</strong> 상단 "엑셀 템플릿" 버튼으로 양식 다운로드 후 작성하세요.</div>
+      </div>
+
+      <!-- Excel Upload -->
+      <div style="background:var(--blue-bg);border:1.5px dashed var(--blue);border-radius:8px;padding:14px;margin-bottom:14px;position:relative;text-align:center">
+        <div style="font-size:13px;font-weight:700;color:var(--navy-mid);margin-bottom:6px">📊 엑셀 파일로 자동 등록</div>
+        <div style="font-size:11px;color:var(--gray);margin-bottom:8px">템플릿에 맞게 작성된 Excel(.xlsx/.xls) 파일을 업로드하면 자동으로 항목이 생성됩니다</div>
+        <button class="btn btn-blue btn-sm" onclick="document.getElementById('std-excel-input').click()">📂 엑셀 파일 선택</button>
+        <input type="file" id="std-excel-input" accept=".xlsx,.xls" style="display:none" onchange="handleStdExcelUpload(this)">
+      </div>
+
+      <div class="tabs" id="std-tabs">
+        <button class="tab-btn active" onclick="switchStdTab(0,this)">기본 정보</button>
+        <button class="tab-btn" onclick="switchStdTab(1,this)">검사 항목 (<span id="item-count-tab">0</span>)</button>
+        <button class="tab-btn" onclick="switchStdTab(2,this)">스케치 이미지</button>
+      </div>
+
+      <!-- Tab 0: Basic Info -->
+      <div class="tab-panel active" id="std-tab-0">
+        <div class="fg2">
+          <div class="fl"><label>기준서 번호 <span class="req">*</span></label><input id="std-code" placeholder="예: QC-2024-001"></div>
+          <div class="fl"><label>구분 <span class="req">*</span></label>
+            <select id="std-cat" onchange="onStdCatChange()">
+              <option value="원자재">원자재</option>
+              <option value="부자재">부자재</option>
+            </select>
+          </div>
+          <!-- 원자재: 원재료명 -->
+          <div class="fl fw" id="std-rawname-wrap"><label>원재료명 <span class="req">*</span></label><input id="std-name" placeholder="원재료명 입력 (예: HI-PRENE, POM 등)"></div>
+          <!-- 부자재: 품명 (원자재일 때 숨김) -->
+          <div class="fl fw" id="std-subname-wrap" style="display:none"><label>품명 <span class="req">*</span></label><input id="std-name-sub" placeholder="부품/자재 품명"></div>
+          <!-- GRADE: 원자재 전용 -->
+          <div class="fl" id="std-grade-wrap"><label>GRADE <span class="req">*</span></label><input id="std-grade" placeholder="예: HG42BK, F25-03, KN3311BL"></div>
+          <div class="fl"><label>품번 <span class="req">*</span></label><input id="std-partno" placeholder="부품번호"></div>
+          <div class="fl"><label>업체명 <span class="req">*</span></label><input id="std-vendor" placeholder="납품업체명"></div>
+          <div class="fl"><label>MODEL</label><input id="std-model" placeholder="적용 모델"></div>
+          <div class="fl"><label>물성추이 연계 Grade <span title="물성추이도에 연계할 원재료 Grade명을 입력하세요. 직접 입력하여 신규 원재료도 추가할 수 있습니다." style="cursor:help;color:var(--blue)">ℹ️</span></label>
+            <input id="std-trend-grade" list="trend-grade-list" placeholder="Grade 입력 또는 선택">
+            <datalist id="trend-grade-list">
+              <option value="HG42BK"><option value="MR71N"><option value="SPR-373">
+              <option value="F10-03H"><option value="F20-03 BBK"><option value="F25-03">
+              <option value="KN3311BL"><option value="KN333G30BL"><option value="1500G30 BK">
+              <option value="LUPOX GP2156FL"><option value="GP2300"><option value="LUPOX SG5300H">
+              <option value="PBT GF30%">
+            </datalist>
+          </div>
+          <div class="fl fw"><label>비고</label><textarea id="std-note" rows="2" placeholder="기준서 비고사항..."></textarea></div>
+          <!-- Rev. 필드 (자동관리) -->
+          <div class="fl">
+            <label>개정 번호 (Rev.)</label>
+            <input id="std-rev" readonly style="background:var(--blue-bg);font-weight:700;color:var(--navy-mid)" placeholder="자동">
+          </div>
+          <!-- 개정 메모 (수정 시 표시) -->
+          <div class="fl fw" id="std-change-note-wrap" style="display:none">
+            <label>개정 사유 / 변경 내용 <span style="color:var(--amber);font-size:11px">(기록 권장)</span></label>
+            <textarea id="std-change-note" rows="2" placeholder="예: 치수 허용공차 변경, 검사항목 추가..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 1: Items -->
+      <div class="tab-panel" id="std-tab-1">
+        <div class="flex justify-between items-center" style="margin-bottom:10px">
+          <div class="text-sm">검사 항목을 직접 추가하거나 엑셀로 일괄 등록하세요</div>
+          <button class="btn btn-blue btn-sm" onclick="addStdItem()">+ 항목 추가</button>
+        </div>
+        <div class="tbl-wrap" style="max-height:320px;overflow-y:auto">
+          <table>
+            <thead><tr>
+              <th style="width:40px" class="center">순번</th>
+              <th style="width:80px">구분</th>
+              <th style="width:120px">검사항목 *</th>
+              <th>검사규격 *</th>
+              <th style="width:90px">규격상한(USL)</th>
+              <th style="width:90px">규격하한(LSL)</th>
+              <th style="width:100px">계측기</th>
+              <th style="width:80px">비고</th>
+              <th style="width:36px"></th>
+            </tr></thead>
+            <tbody id="std-items-body"></tbody>
+          </table>
+        </div>
+        <div class="text-sm mt8">* 외관검사 항목은 USL/LSL 없이 구분을 "외관검사"로 설정하세요. 합/부 판정은 입력값 기준으로 자동 처리됩니다.</div>
+      </div>
+
+      <!-- Tab 2: Sketches -->
+      <div class="tab-panel" id="std-tab-2">
+        <div class="sketch-drop" id="sketch-drop">
+          <div>📷 스케치 이미지 드래그&드롭 또는 클릭하여 업로드</div>
+          <div class="text-sm mt8">JPG, PNG, GIF 등 이미지 파일 (여러 장 가능) — 수입검사 이력 팝업에 표시됩니다</div>
+          <input type="file" id="sketch-input" accept="image/*" multiple onchange="handleSketchUpload(this)">
+        </div>
+        <div class="sketch-gallery" id="sketch-gallery"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeStdModal()">취소</button>
+      <button class="btn btn-green" onclick="saveStandard()">💾 기준서 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- History Popup -->
+<div class="popup-ov" id="popup-hist">
+  <div class="popup-box">
+    <div class="popup-hd">
+      <div class="popup-title" id="popup-title">검사 상세 보기</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-teal btn-sm" onclick="downloadReportImg()">⬇ 이미지 다운로드</button>
+        <button class="modal-close" onclick="closeHistPopup()">✕</button>
+      </div>
+    </div>
+    <div class="popup-body">
+      <div class="popup-panel left">
+        <div class="popup-panel-title">📐 기준서 스케치</div>
+        <div id="popup-sketches"><div class="empty-state"><div class="icon">📷</div><div class="msg">스케치 없음</div></div></div>
+      </div>
+      <div class="popup-panel right" style="overflow-y:auto">
+        <div class="popup-panel-title">📋 검사 성적서 데이터</div>
+        <div id="popup-report-data"></div>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <div id="popup-meta" class="text-sm" style="flex:1"></div>
+      <button class="btn btn-outline" onclick="closeHistPopup()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save Result Modal -->
+<div class="modal-ov" id="modal-save-result">
+  <div class="modal-box slim">
+    <div class="modal-hd" style="background:var(--green)">
+      <div class="modal-title">✅ 성적서 저장 완료</div>
+      <button class="modal-close" onclick="document.getElementById('modal-save-result').classList.remove('show')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="save-success-box">
+        <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:6px">✅ 성적서가 성공적으로 저장되었습니다!</div>
+        <div class="text-sm" id="save-result-info"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('modal-save-result').classList.remove('show')">닫기</button>
+      <button class="btn btn-green" onclick="goToHistory()">이력 조회 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-spin"></div>
+  <div class="loading-msg" id="loading-msg">처리 중...</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Hidden report render area for html2canvas -->
+<div id="rpt-render"></div>
+
+<!-- ══════════════════ JAVASCRIPT ══════════════════ -->
+<script>
+'use strict';
+
+/* ══════════════════════════════════════
+   DATABASE & STORAGE  v8
+══════════════════════════════════════ */
+let DB = { version: 2, standards: [], reports: [] };
+let _fullImgDataUrl = '';
+let dbHandle = null;
+
+/* ── 스토리지 키 ── */
+const LS_KEY   = 'IMS_DB_v8';
+const LS_IMG   = 'IMS_IMG_';
+const LS_AUDIT = 'IMS_AUDIT_v8';
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function today(){return new Date().toISOString().slice(0,10)}
+function now(){return new Date().toISOString()}
+function fmt(d){return d?d.replace(/-/g,'.'):'';}
+function fmtDt(d){if(!d)return'';const dt=new Date(d);return dt.toLocaleString('ko-KR',{year:'2-digit',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}
+
+/* ════════════════════════════════════════
+   감사 로그 (Audit Trail)
+════════════════════════════════════════ */
+const AUDIT_MAX=2000;
+let _auditPage=0;
+const AUDIT_PAGE_SIZE=50;
+
+function auditLog(action,entityType,entityName,detail=''){
+  try{
+    const raw=localStorage.getItem(LS_AUDIT);
+    const logs=raw?JSON.parse(raw):[];
+    logs.unshift({ts:now(),role:_curRole||'?',action,entityType,entityName,detail});
+    if(logs.length>AUDIT_MAX) logs.splice(AUDIT_MAX);
+    localStorage.setItem(LS_AUDIT,JSON.stringify(logs));
+  }catch(e){console.warn('Audit fail:',e);}
+}
+
+function getAuditLogs(ft=''){
+  try{
+    const raw=localStorage.getItem(LS_AUDIT);
+    let logs=raw?JSON.parse(raw):[];
+    if(ft==='LOGIN')  logs=logs.filter(l=>l.action.includes('LOGIN')||l.action==='LOGOUT');
+    else if(ft==='STD') logs=logs.filter(l=>l.entityType==='standard');
+    else if(ft==='RPT') logs=logs.filter(l=>l.entityType==='report');
+    return logs;
+  }catch(e){return[];}
+}
+
+function renderAuditPage(){
+  const ft=document.getElementById('audit-filter-type')?.value||'';
+  const logs=getAuditLogs(ft);
+  const tb=document.getElementById('audit-tbody');
+  const pager=document.getElementById('audit-pager');
+  if(!tb) return;
+  const start=_auditPage*AUDIT_PAGE_SIZE;
+  const page=logs.slice(start,start+AUDIT_PAGE_SIZE);
+  const AL={LOGIN:'로그인',LOGIN_FAIL:'로그인실패',LOGOUT:'로그아웃',PIN_CHANGE:'PIN변경',
+    CREATE_STD:'기준서등록',UPDATE_STD:'기준서수정',DELETE_STD:'기준서삭제',
+    CREATE_RPT:'성적서저장',DELETE_RPT:'성적서삭제',BACKUP:'백업',CLEAR_AUDIT:'로그초기화'};
+  const AC={LOGIN:'a-auth',LOGIN_FAIL:'a-delete',LOGOUT:'a-auth',
+    CREATE_STD:'a-create',UPDATE_STD:'a-update',DELETE_STD:'a-delete',
+    CREATE_RPT:'a-create',DELETE_RPT:'a-delete'};
+  tb.innerHTML=page.length?page.map(l=>`<tr>
+    <td style="white-space:nowrap;font-size:10px">${(l.ts||'').replace('T',' ').slice(0,16)}</td>
+    <td><span class="badge ${l.role==='admin'?'b-raw':l.role==='approver'?'b-cond':'b-sub'}" style="font-size:9px">${ROLE_INFO[l.role]?.label||l.role||'-'}</span></td>
+    <td style="font-size:10px">${l.role||'-'}</td>
+    <td><span class="${AC[l.action]||''}">${AL[l.action]||l.action}</span></td>
+    <td style="color:var(--gray);font-size:10px">${l.entityType||'-'}</td>
+    <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${l.entityName||''}">${l.entityName||'-'}</td>
+    <td style="font-size:10px;color:var(--gray)">${l.detail||''}</td>
+  </tr>`).join(''):'<tr><td colspan="7" class="no-data">로그 없음</td></tr>';
+  const tp=Math.ceil(logs.length/AUDIT_PAGE_SIZE);
+  if(pager) pager.innerHTML=tp>1?
+    `<button class="btn btn-outline btn-xs" onclick="_auditPage=Math.max(0,_auditPage-1);renderAuditPage()" ${_auditPage===0?'disabled':''}>◀</button>
+     &nbsp;${_auditPage+1}/${tp}&nbsp;
+     <button class="btn btn-outline btn-xs" onclick="_auditPage=Math.min(${tp-1},_auditPage+1);renderAuditPage()" ${_auditPage>=tp-1?'disabled':''}>▶</button>
+     <span style="color:var(--gray);margin-left:8px">총 ${logs.length}건</span>`:`총 ${logs.length}건`;
+}
+
+function exportAuditLog(){
+  const logs=getAuditLogs();
+  if(!logs.length){showToast('로그가 없습니다','warn');return;}
+  if(typeof XLSX==='undefined'){showToast('잠시 후 다시 시도하세요','warn');return;}
+  const rows=[['일시','역할','작업','대상유형','대상명','상세'],...logs.map(l=>[l.ts?.slice(0,19),l.role,l.action,l.entityType,l.entityName,l.detail])];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'감사로그');
+  XLSX.writeFile(wb,'수입검사_감사로그_'+today().replace(/-/g,'')+'.xlsx');
+  showToast('감사 로그 Excel 내보내기 완료','success');
+}
+
+function clearAuditLog(){
+  if(!confirm('감사 로그 전체를 삭제하시겠습니까?')) return;
+  localStorage.removeItem(LS_AUDIT);
+  renderAuditPage();
+  showToast('감사 로그 초기화됨','info');
+}
+
+/* ════════════════════════════════════════
+   정기 자동 백업 강제화
+════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   JSON 내보내기 / 가져오기
+════════════════════════════════════════ */
+function exportBackup(){
+  // 성적서 이미지를 localStorage에서 읽어 JSON에 포함 (다른 PC에서도 이미지 복원 가능)
+  const reports = DB.reports.map(r=>({
+    ...r,
+    reportImage: r.reportImage || loadImg('rpt_'+r.id) || ''
+  }));
+
+  const data = JSON.stringify({
+    version: DB.version,
+    standards: DB.standards,
+    reports
+  }, null, 2);
+
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '수입검사DB_' + today().replace(/-/g,'') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  const imgCnt = reports.filter(r=>r.reportImage).length;
+  showToast(`✅ JSON 내보내기 완료 (성적서 이미지 ${imgCnt}건 포함)`,'success', 3000);
+}
+
+function importBackup(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!data.standards && !data.reports) throw new Error('올바른 형식이 아닙니다');
+      if(!confirm(`가져오기를 실행하면 현재 데이터가 덮어써집니다.\n기준서 ${(data.standards||[]).length}건, 성적서 ${(data.reports||[]).length}건\n계속하시겠습니까?`)){input.value='';return;}
+      DB.standards = (data.standards||[]).map(s=>({...s, sketchImages: s.sketchImages||[]}));
+      DB.reports   = (data.reports||[]).map(r=>({...r}));
+
+      // 이미지 복원: JSON에 포함된 경우 우선, 없으면 기존 localStorage 조회
+      let imgRestored = 0;
+      DB.reports.forEach(r=>{
+        if(!r.reportImage) r.reportImage = loadImg('rpt_'+r.id)||'';
+        if(r.reportImage){
+          storeImg('rpt_'+r.id, r.reportImage); // localStorage에도 저장
+          imgRestored++;
+        }
+      });
+
+      saveDB();
+      refreshAll();
+      updateBadges();
+      showToast(`✅ 가져오기 완료 — 기준서 ${DB.standards.length}건, 성적서 ${DB.reports.length}건 (이미지 ${imgRestored}건 복원)`, 'success', 4000);
+    }catch(err){
+      showToast('❌ 파일 오류: '+err.message, 'error');
+    }
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+/* ════════════════════════════════════════
+   이미지 분리 저장 정책
+   성적서 PNG: 다운로드만, localStorage 저장 안 함
+   스케치 이미지: 기존 base64 방식 유지
+════════════════════════════════════════ */
+function storeImg(key,dataUrl){
+  try{ localStorage.setItem(LS_IMG+key,dataUrl); }catch(e){ console.warn('IMG store fail:',key); }
+}
+function loadImg(key){
+  return localStorage.getItem(LS_IMG+key)||'';
+}
+function removeImg(key){ localStorage.removeItem(LS_IMG+key); }
+
+/* ── localStorage 저장·로드 ── */
+function saveLocal(){
+  try{
+    const data={
+      version:DB.version,
+      standards:DB.standards.map(s=>({...s, sketchImages:[], revisions:[]})),
+      reports:DB.reports.map(r=>({...r,reportImage:'',reportImageFile:r.reportImageFile||''}))
+    };
+    localStorage.setItem(LS_KEY,JSON.stringify(data));
+    // 성적서 이미지를 별도 key에 저장 (용량 분산)
+    DB.reports.forEach(r=>{
+      if(r.reportImage) storeImg('rpt_'+r.id, r.reportImage);
+    });
+    // 스케치 이미지 & 개정이력을 별도 key에 저장
+    DB.standards.forEach(s=>{
+      if(s.sketchImages?.length) storeImg('std_'+s.id,JSON.stringify(s.sketchImages));
+      try{
+        if(s.revisions?.length)
+          localStorage.setItem(LS_IMG+'rev_'+s.id, JSON.stringify(
+            s.revisions.map(r=>({rev:r.rev, changedAt:r.changedAt, changeNote:r.changeNote||''}))
+          ));
+        else
+          localStorage.removeItem(LS_IMG+'rev_'+s.id);
+      }catch(e2){ console.warn('Rev save fail:',s.id); }
+    });
+  }catch(e){ console.error('Local save fail:',e); }
+}
+
+function loadLocal(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw) return false;
+    DB=JSON.parse(raw);
+    if(!DB.standards) DB.standards=[];
+    if(!DB.reports)   DB.reports=[];
+    DB.standards.forEach(s=>{
+      const imgs=localStorage.getItem(LS_IMG+'std_'+s.id);
+      s.sketchImages=imgs?JSON.parse(imgs):[];
+      // 개정이력 복원
+      const revRaw=localStorage.getItem(LS_IMG+'rev_'+s.id);
+      s.revisions=revRaw?JSON.parse(revRaw):[];
+    });
+    DB.reports.forEach(r=>{ r.reportImage = loadImg('rpt_'+r.id)||''; });
+    return true;
+  }catch(e){ return false; }
+}
+
+async function saveDB(){
+  saveLocal();
+  localStorage.setItem('IMS_LAST_SAVE', Date.now().toString());
+  const t = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  updateDBStatus('local', '● 저장됨 '+t);
+  setTimeout(()=>updateDBStatus('local'), 3000);
+}
+
+
+function updateDBStatus(state, name=''){
+  const el=document.getElementById('db-status');
+  const info=document.getElementById('sb-info');
+  if(state==='conn'){
+    el.className='db-status conn'; el.textContent='● '+(name||'연결됨');
+    if(info) info.textContent='💾 '+(name||'연결됨');
+  } else if(state==='local'){
+    const txt=name||'● 로컬 저장소';
+    el.className='db-status local'; el.textContent=txt;
+    if(info) info.textContent='💾 로컬 저장소';
+  } else {
+    el.className='db-status disc'; el.textContent='● 미연결';
+    if(info) info.textContent='';
+  }
+}
+
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+let curPage = 'dashboard';
+const PAGE_INFO = {
+  dashboard:{bc:'홈',title:'대시보드'},
+  standards:{bc:'검사 관리',title:'기준서 관리'},
+  report:{bc:'검사 관리',title:'성적서 작성'},
+  history:{bc:'이력 조회',title:'수입검사 이력 대장'},
+  trend:{bc:'품질 분석',title:'원재료 물성추이도'},
+};
+
+function navigate(page){
+  // 권한 체크
+  if(page==='audit' && !requireRole(['admin'],'감사 로그')) return;
+  document.getElementById('page-'+curPage).classList.remove('active');
+  const prevNav=document.getElementById('nav-'+curPage);
+  if(prevNav) prevNav.classList.remove('active');
+  curPage=page;
+  document.getElementById('page-'+page).classList.add('active');
+  const nav=document.getElementById('nav-'+page);
+  if(nav) nav.classList.add('active');
+  const info=PAGE_INFO[page]||{bc:'',title:''};
+  document.getElementById('tb-bc').textContent=info.bc;
+  document.getElementById('tb-title').textContent=info.title;
+  document.getElementById('tb-actions').innerHTML='';
+  if(page==='dashboard') renderDashboard();
+  else if(page==='standards') renderStdList();
+  else if(page==='report') initReportPage();
+  else if(page==='history') renderHistList();
+  else if(page==='trend') renderTrendPage();
+  else if(page==='audit'){ _auditPage=0; renderAuditPage(); }
+}
+
+/* ══════════════════════════════════════
+   TOAST & LOADING
+══════════════════════════════════════ */
+let toastTimer=null;
+function showToast(msg, type='info', dur=2800){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show '+type;
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), dur);
+}
+function showLoading(msg='처리 중...'){
+  document.getElementById('loading-msg').textContent = msg;
+  document.getElementById('loading').classList.add('show');
+}
+function hideLoading(){document.getElementById('loading').classList.remove('show')}
+
+/* ══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+function renderDashboard(){
+  document.getElementById('s-std').textContent = DB.standards.length;
+  document.getElementById('s-rpt').textContent = DB.reports.length;
+  
+  const total = DB.reports.length;
+  const passed = DB.reports.filter(r=>r.decision==='합격').length;
+  document.getElementById('s-pass').textContent = total ? Math.round(passed/total*100)+'%' : '-';
+  
+  const ym = today().slice(0,7);
+  const thisMonth = DB.reports.filter(r=>r.date && r.date.startsWith(ym)).length;
+  document.getElementById('s-month').textContent = thisMonth;
+  document.getElementById('s-month-label').textContent = ym.replace('-','년 ')+'월';
+
+  // Category stats
+  const rawCnt = DB.reports.filter(r=>r.category==='원자재').length;
+  const subCnt = DB.reports.filter(r=>r.category==='부자재').length;
+  const rawPass = DB.reports.filter(r=>r.category==='원자재'&&r.decision==='합격').length;
+  const subPass = DB.reports.filter(r=>r.category==='부자재'&&r.decision==='합격').length;
+  const rawStd = DB.standards.filter(s=>s.category==='원자재').length;
+  const subStd = DB.standards.filter(s=>s.category==='부자재').length;
+  
+  const catEl = document.getElementById('dash-cat');
+  catEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      ${[
+        {label:'원자재 기준서',val:rawStd,color:'var(--teal)',bg:'var(--teal-light)'},
+        {label:'부자재 기준서',val:subStd,color:'var(--amber)',bg:'var(--amber-light)'},
+        {label:'원자재 성적서',val:rawCnt,color:'var(--navy-mid)',bg:'var(--blue-light)'},
+        {label:'부자재 성적서',val:subCnt,color:'var(--navy)',bg:'var(--gray-light)'},
+        {label:'원자재 합격',val:rawPass,color:'var(--green)',bg:'var(--green-light)'},
+        {label:'부자재 합격',val:subPass,color:'var(--green)',bg:'var(--green-light)'}
+      ].map(d=>`<div style="background:${d.bg};border-radius:8px;padding:10px 12px">
+        <div style="font-size:20px;font-weight:900;color:${d.color}">${d.val}</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:2px">${d.label}</div>
+      </div>`).join('')}
+    </div>`;
+
+  // Recent list
+  const recent = [...DB.reports].sort((a,b)=>b.createdAt?.localeCompare(a.createdAt||'')).slice(0,8);
+  const rb = document.getElementById('dash-recent-body');
+  if(!recent.length){rb.innerHTML='<tr><td colspan="5" class="no-data">검사 이력이 없습니다</td></tr>';return;}
+  rb.innerHTML = recent.map(r=>`<tr>
+    <td>${fmt(r.date)}</td>
+    <td><span class="badge ${r.category==='원자재'?'b-raw':'b-sub'}">${r.category||'-'}</span></td>
+    <td style="font-weight:700">${r.name||'-'}</td>
+    <td>${r.vendor||'-'}</td>
+    <td class="text-center"><span class="badge ${r.decision==='합격'?'b-pass':r.decision==='불합격'?'b-fail':'b-cond'}">${r.decision||'-'}</span></td>
+  </tr>`).join('');
+
+  updateBadges();
+}
+
+function updateBadges(){
+  document.getElementById('badge-std').textContent = DB.standards.length;
+  document.getElementById('badge-std').className = 'sb-badge'+(DB.standards.length?' has':'');
+  document.getElementById('badge-hist').textContent = DB.reports.length;
+  document.getElementById('badge-hist').className = 'sb-badge'+(DB.reports.length?' has':'');
+}
+
+/* ══════════════════════════════════════
+   STANDARDS MANAGEMENT
+══════════════════════════════════════ */
+let stdFilter = 'all';
+let editingStdId = null;
+let stdSketchImages = []; // temp during modal
+
+function setStdFilter(f, el){
+  stdFilter = f;
+  document.querySelectorAll('#page-standards .filter-chip').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderStdList();
+}
+
+function renderStdList(){
+  const q = document.getElementById('std-search').value.trim().toLowerCase();
+  let list = DB.standards;
+  if(stdFilter!=='all') list = list.filter(s=>s.category===stdFilter);
+  if(q) list = list.filter(s=>(s.name+s.grade+(s.partNo||'')+s.vendor+s.code).toLowerCase().includes(q));
+  list = [...list].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  
+  const tb = document.getElementById('std-tbody');
+  if(!list.length){
+    tb.innerHTML='<tr><td colspan="11" class="no-data">등록된 기준서가 없습니다.</td></tr>'; return;
+  }
+  tb.innerHTML = list.map((s,i)=>`<tr>
+    <td class="text-center" style="color:var(--gray)">${i+1}</td>
+    <td style="font-weight:700;color:var(--navy-mid)">${s.code||'-'}</td>
+    <td style="font-weight:700">${s.name||'-'}</td>
+    <td style="color:var(--teal);font-weight:700">${s.category==='원자재'?(s.grade||'-'):'-'}</td>
+    <td>${s.partNo||'-'}</td>
+    <td>${s.vendor||'-'}</td>
+    <td class="text-center"><span class="badge ${s.category==='원자재'?'b-raw':'b-sub'}">${s.category||'-'}</span></td>
+    <td class="text-center"><span class="rev-badge">Rev.${s.rev||1}</span></td>
+    <td class="text-center"><span class="badge b-navy">${(s.items||[]).length}항목</span></td>
+    <td style="font-size:11px;color:var(--gray)">${fmt(s.createdAt?.slice(0,10))}</td>
+    <td class="text-center" style="white-space:nowrap">
+      <button class="btn btn-blue btn-xs" onclick="editStandard('${s.id}')">✏ 수정</button>
+      <button class="btn btn-green btn-xs" onclick="useStandard('${s.id}')">✏ 성적서</button>
+      <button class="btn btn-outline btn-xs" onclick="showRevHistory('${s.id}')">📜 이력</button>
+      <button class="btn btn-outline btn-xs" onclick="deleteStandard('${s.id}')">🗑</button>
+    </td>
+  </tr>`).join('');
+}
+
+function openStdModal(id=null){
+  editingStdId = id;
+  stdSketchImages = [];
+  document.getElementById('std-modal-title').textContent = id ? '📋 기준서 수정' : '📋 기준서 등록';
+  
+  if(id){
+    const s = DB.standards.find(x=>x.id===id);
+    if(!s) return;
+    document.getElementById('std-code').value = s.code||'';
+    document.getElementById('std-cat').value = s.category||'원자재';
+    document.getElementById('std-name').value = s.category==='원자재' ? (s.name||'') : '';
+    document.getElementById('std-name-sub').value = s.category==='부자재' ? (s.name||'') : '';
+    document.getElementById('std-grade').value = s.grade||'';
+    document.getElementById('std-partno').value = s.partNo||'';
+    document.getElementById('std-vendor').value = s.vendor||'';
+    document.getElementById('std-model').value = s.model||'';
+    document.getElementById('std-trend-grade').value = s.trendGrade||'';
+    document.getElementById('std-note').value = s.note||'';
+    document.getElementById('std-rev').value = `Rev.${s.rev||1}`;
+    document.getElementById('std-change-note').value = '';
+    document.getElementById('std-change-note-wrap').style.display = '';
+    stdSketchImages = [...(s.sketchImages||[])];
+    renderStdItems(s.items||[]);
+  } else {
+    document.getElementById('std-code').value = 'QC-'+today().replace(/-/g,'').slice(2)+'-'+(String(DB.standards.length+1).padStart(3,'0'));
+    document.getElementById('std-cat').value = '원자재';
+    ['std-name','std-name-sub','std-grade','std-partno','std-vendor','std-model','std-note','std-change-note'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('std-trend-grade').value = '';
+    document.getElementById('std-rev').value = 'Rev.1 (신규)';
+    document.getElementById('std-change-note-wrap').style.display = 'none';
+    renderStdItems([]);
+  }
+  onStdCatChange();
+  renderSketchGallery();
+  switchStdTab(0, document.querySelector('#std-tabs .tab-btn'));
+  document.getElementById('modal-std').classList.add('show');
+}
+
+function updateAutoRptNo(){
+  const d = document.getElementById('rpt-date').value || today();
+  const ym = d.slice(0,7).replace('-','');
+  const cnt = DB.reports.filter(r=>r.date&&r.date.startsWith(d.slice(0,7))).length;
+  document.getElementById('rpt-no').value = 'RPT-'+ym+'-'+String(cnt+1).padStart(3,'0');
+}
+
+function onStdCatChange(){
+  const isRaw = document.getElementById('std-cat').value === '원자재';
+  // 원자재: 원재료명 + GRADE 표시, 부자재: 품명 표시
+  document.getElementById('std-rawname-wrap').style.display = isRaw ? '' : 'none';
+  document.getElementById('std-subname-wrap').style.display = isRaw ? 'none' : '';
+  document.getElementById('std-grade-wrap').style.display = isRaw ? '' : 'none';
+}
+
+function closeStdModal(){document.getElementById('modal-std').classList.remove('show')}
+
+function editStandard(id){ openStdModal(id) }
+function useStandard(id){
+  navigate('report');
+  setTimeout(()=>{
+    document.getElementById('rpt-std-sel').value = id;
+    loadStandardToReport(id);
+  },100);
+}
+
+function switchStdTab(idx, el){
+  document.querySelectorAll('#std-tabs .tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active', i===idx);
+    document.getElementById('std-tab-'+i).classList.toggle('active', i===idx);
+  });
+}
+
+function addStdItem(item=null){
+  const tb = document.getElementById('std-items-body');
+  const rows = tb.querySelectorAll('tr');
+  const seq = rows.length + 1;
+  const tr = document.createElement('tr');
+  tr.dataset.seq = seq;
+  tr.innerHTML = `
+    <td class="text-center" style="font-size:11px;color:var(--gray)">${seq}</td>
+    <td><select class="insp-input" style="width:82px;font-size:11px">
+      <option ${(item?.category||'치수')==='치수'?'selected':''}>치수</option>
+      <option ${(item?.category)==='외관검사'?'selected':''}>외관검사</option>
+      <option ${(item?.category)==='재질'?'selected':''}>재질</option>
+      <option ${(item?.category)==='성능'?'selected':''}>성능</option>
+      <option ${(item?.category)==='중량'?'selected':''}>중량</option>
+      <option ${(item?.category)==='기능'?'selected':''}>기능</option>
+    </select></td>
+    <td><input class="insp-input" style="width:115px" value="${item?.dwgNo||''}" placeholder="검사항목명"></td>
+    <td><input class="insp-input" style="width:100%;min-width:120px;text-align:left;padding:2px 6px" value="${item?.item||''}" placeholder="검사규격 (예: ≥74 MPa)" required></td>
+    <td><input class="insp-input" style="width:88px" value="${item?.usl||''}" placeholder="상한"></td>
+    <td><input class="insp-input" style="width:88px" value="${item?.lsl||''}" placeholder="하한"></td>
+    <td><input class="insp-input" style="width:98px" value="${item?.instrument||''}" placeholder="버니어캘리퍼스"></td>
+    <td><input class="insp-input" style="width:78px" value="${item?.note||''}" placeholder="비고"></td>
+    <td><button class="row-del-btn" onclick="this.closest('tr').remove();renumberStdItems()">✕</button></td>`;
+  tb.appendChild(tr);
+  updateItemCountTab();
+}
+
+function renumberStdItems(){
+  document.querySelectorAll('#std-items-body tr').forEach((r,i)=>{
+    r.dataset.seq = i+1;
+    r.querySelector('td:first-child').textContent = i+1;
+  });
+  updateItemCountTab();
+}
+
+function updateItemCountTab(){
+  document.getElementById('item-count-tab').textContent = document.querySelectorAll('#std-items-body tr').length;
+}
+
+function renderStdItems(items){
+  document.getElementById('std-items-body').innerHTML = '';
+  items.forEach(it=>addStdItem(it));
+}
+
+function getStdItems(){
+  return Array.from(document.querySelectorAll('#std-items-body tr')).map((r,i)=>{
+    const inputs = r.querySelectorAll('input,select');
+    const cat = inputs[0].value;
+    const dwg = inputs[1].value.trim();
+    const item = inputs[2].value.trim();
+    const usl = inputs[3].value.trim();
+    const lsl = inputs[4].value.trim();
+    const inst = inputs[5].value.trim();
+    const note = inputs[6].value.trim();
+    return { id:uid(), seq:i+1, category:cat, dwgNo:dwg, item, usl, lsl, instrument:inst, note };
+  }).filter(it=>it.item);
+}
+
+function saveStandard(){
+  const code = document.getElementById('std-code').value.trim();
+  const cat = document.getElementById('std-cat').value;
+  const name = cat==='원자재'
+    ? document.getElementById('std-name').value.trim()
+    : document.getElementById('std-name-sub').value.trim();
+  const grade = cat==='원자재' ? document.getElementById('std-grade').value.trim() : '';
+  const partNo = document.getElementById('std-partno').value.trim();
+  const vendor = document.getElementById('std-vendor').value.trim();
+  const model = document.getElementById('std-model').value.trim();
+  const note = document.getElementById('std-note').value.trim();
+  const changeNote = document.getElementById('std-change-note')?.value.trim()||'';
+  const trendGrade = document.getElementById('std-trend-grade').value;
+  const items = getStdItems();
+
+  if(!code||!name||!vendor){
+    showToast(cat==='원자재'?'기준서번호·원재료명·업체명은 필수입니다':'기준서번호·품명·업체명은 필수입니다','error');
+    return;
+  }
+  if(cat==='원자재'&&!grade){showToast('원자재는 GRADE를 입력하세요','error');return}
+
+  if(editingStdId){
+    const s = DB.standards.find(x=>x.id===editingStdId);
+    if(s){
+      if(!s.revisions) s.revisions=[];
+      s.revisions.push({
+        rev: s.rev||1,
+        snapshot: JSON.parse(JSON.stringify({...s, revisions:undefined})),
+        changeNote,
+        changedAt: now()
+      });
+      const newRev = (s.rev||1)+1;
+      Object.assign(s,{code,category:cat,name,grade,partNo,vendor,model,note,trendGrade,
+        items,sketchImages:stdSketchImages,updatedAt:now(),rev:newRev});
+        showToast(`✅ 기준서 수정 완료 (Rev.${newRev}): ${name}`+(grade?` (${grade})`:''),'success');
+    }
+  } else {
+    DB.standards.push({
+      id:uid(),code,category:cat,name,grade,partNo,vendor,model,note,trendGrade,
+      items,sketchImages:stdSketchImages,rev:1,revisions:[],createdAt:now(),updatedAt:now()
+    });
+    showToast(`✅ 기준서 등록 완료 (Rev.1): ${name}`+(grade?` (${grade})`:''),'success');
+  }
+  saveDB();
+  closeStdModal();
+  renderStdList();
+  updateBadges();
+}
+
+function deleteStandard(id){
+  const s = DB.standards.find(x=>x.id===id);
+  if(!s||!confirm(`기준서 "${s.name}" (${s.code}) 을 삭제하시겠습니까?\n\n연결된 성적서는 삭제되지 않습니다.`)) return;
+  DB.standards = DB.standards.filter(x=>x.id!==id);
+  localStorage.removeItem(LS_IMG+'rev_'+id);  // 개정이력 key 삭제
+  saveDB(); renderStdList(); updateBadges();
+  showToast('기준서 삭제됨','info');
+}
+
+function showRevHistory(stdId){
+  const s = DB.standards.find(x=>x.id===stdId);
+  if(!s) return;
+  const revs = s.revisions||[];
+
+  // 이력 행 (과거 버전들, 최신순)
+  const histRows = [...revs].reverse().map(r=>{
+    const date = (r.changedAt||'').replace('T',' ').slice(0,16);
+    const note = r.changeNote||'—';
+    return `<tr>
+      <td class="text-center" style="padding:7px 10px;border-bottom:1px solid var(--border-light)"><span class="rev-badge">Rev.${r.rev}</span></td>
+      <td style="padding:7px 10px;border-bottom:1px solid var(--border-light);font-size:12px">${date}</td>
+      <td style="padding:7px 10px;border-bottom:1px solid var(--border-light);font-size:12px;color:var(--gray)">${note}</td>
+    </tr>`;
+  }).join('');
+
+  const noHistory = !histRows
+    ? '<tr><td colspan="3" class="no-data" style="padding:14px">이전 개정 이력 없음 — 현재 버전이 최초 등록본입니다</td></tr>'
+    : '';
+
+  const gradeSpan = s.grade
+    ? `<span style="color:var(--teal);margin-left:6px">(${s.grade})</span>` : '';
+
+  document.getElementById('rev-hist-body').innerHTML = `
+    <div style="margin-bottom:14px;font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-weight:700">${s.name}</span>${gradeSpan}
+      <span style="color:var(--gray);font-size:11px">${s.code||''}</span>
+      <span style="margin-left:auto">현재: <span class="rev-badge" style="font-size:11px">Rev.${s.rev||1}</span></span>
+    </div>
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr>
+        <th style="width:70px;padding:8px 10px;background:var(--navy);color:#fff;text-align:center">Rev.</th>
+        <th style="padding:8px 10px;background:var(--navy);color:#fff">수정 일시</th>
+        <th style="padding:8px 10px;background:var(--navy);color:#fff">변경 내용</th>
+      </tr></thead>
+      <tbody>${histRows}${noHistory}</tbody>
+    </table>
+    <div style="font-size:11px;color:var(--gray);margin-top:10px">
+      💡 기준서를 수정할 때마다 이 목록에 이전 버전이 자동 기록됩니다.
+    </div>`;
+
+  document.getElementById('modal-rev-hist').classList.add('show');
+}
+
+/* EXCEL IMPORT */
+function handleStdExcelUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const raw = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      const result = parseExcelStandard(raw);
+      
+      // Fill form
+      if(result.name){
+        if(result.category==='원자재') document.getElementById('std-name').value = result.name;
+        else document.getElementById('std-name-sub').value = result.name;
+      }
+      if(result.grade) document.getElementById('std-grade').value = result.grade;
+      if(result.partNo) document.getElementById('std-partno').value = result.partNo;
+      if(result.vendor) document.getElementById('std-vendor').value = result.vendor;
+      if(result.model) document.getElementById('std-model').value = result.model;
+      if(result.category) document.getElementById('std-cat').value = result.category;
+      if(result.code) document.getElementById('std-code').value = result.code;
+      onStdCatChange();
+      
+      renderStdItems(result.items);
+      switchStdTab(1, document.querySelectorAll('#std-tabs .tab-btn')[1]);
+      showToast(`✅ 엑셀 불러오기 완료: ${result.items.length}개 항목`,'success');
+    }catch(err){
+      showToast('엑셀 파싱 오류: '+err.message,'error');
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  input.value='';
+}
+
+function parseExcelStandard(raw){
+  const result = {name:'',grade:'',partNo:'',vendor:'',model:'',category:'원자재',code:'',items:[]};
+  const LABEL_MAP = {
+    '품명':['품명','부품명','품 명','원재료명','원재료 명'],'partNo':['품번','부품번호','품 번'],
+    'grade':['GRADE','Grade','grade','그레이드'],
+    '업체':['업체','업체명','협력사','납품업체'],'model':['MODEL','모델','모델명','Model'],
+    '구분':['구분','품목구분'],'code':['기준서번호','기준서 번호','No.','번호']
+  };
+  
+  // Scan header rows (first 10)
+  for(let r=0; r<Math.min(10,raw.length); r++){
+    const row = raw[r];
+    for(let c=0; c<row.length-1; c++){
+      const lbl = String(row[c]).trim().replace(/\s+/g,'');
+      const val = String(row[c+1]).trim();
+      if(!val) continue;
+      if(LABEL_MAP['품명'].some(l=>lbl.includes(l))) result.name = result.name||val;
+      if(LABEL_MAP['partNo'].some(l=>lbl.includes(l))) result.partNo = result.partNo||val;
+      if(LABEL_MAP['grade'].some(l=>lbl===l||lbl.includes(l))) result.grade = result.grade||val;
+      if(LABEL_MAP['업체'].some(l=>lbl.includes(l))) result.vendor = result.vendor||val;
+      if(LABEL_MAP['model'].some(l=>lbl.includes(l))) result.model = result.model||val;
+      if(LABEL_MAP['code'].some(l=>lbl.includes(l))) result.code = result.code||val;
+      if(LABEL_MAP['구분'].some(l=>lbl.includes(l))) result.category = val.includes('부')?'부자재':'원자재';
+    }
+  }
+  
+  // Find item header row
+  let hdrRow = -1, hdrCols = {};
+  for(let r=0; r<raw.length; r++){
+    const row = raw[r].map(c=>String(c).trim());
+    const joined = row.join(',').toLowerCase();
+    if(joined.includes('검사항목') || joined.includes('검사규격') || (joined.includes('usl') && joined.includes('lsl'))){
+      hdrRow = r;
+      row.forEach((h,i)=>{
+        const hl = h.toLowerCase();
+        if(hl.includes('구분')) hdrCols.cat = hdrCols.cat??i;
+        if(hl==='검사항목'||hl.includes('검사항목')) hdrCols.dwg = hdrCols.dwg??i; // 검사항목→dwgNo
+        if(hl==='검사규격'||hl.includes('검사규격')) hdrCols.item = hdrCols.item??i; // 검사규격→item
+        if(hl.includes('도면')) hdrCols.dwg = hdrCols.dwg??i; // 구버전 호환
+        if((hl.includes('검사항목')||hl==='항목') && !hdrCols.hasOwnProperty('item')) hdrCols.item = i; // 구버전 호환
+        if(hl.includes('usl')||hl.includes('상한')) hdrCols.usl = hdrCols.usl??i;
+        if(hl.includes('lsl')||hl.includes('하한')) hdrCols.lsl = hdrCols.lsl??i;
+        if(hl.includes('계측')||hl.includes('측정기')) hdrCols.inst = hdrCols.inst??i;
+        if(hl.includes('비고')) hdrCols.note = hdrCols.note??i;
+      });
+      break;
+    }
+  }
+  
+  // Default column positions if headers not found
+  if(hdrRow<0){
+    // Try to find a row with obvious data
+    hdrCols = {cat:0,dwg:1,item:2,usl:3,lsl:4,inst:5,note:6};
+    hdrRow = 0;
+  }
+  
+  for(let r=hdrRow+1; r<raw.length; r++){
+    const row = raw[r];
+    const itemVal = String(row[hdrCols.item??2]||'').trim();
+    if(!itemVal) continue;
+    if(itemVal.toLowerCase().includes('검사항목')||itemVal.toLowerCase().includes('검사규격')) continue;
+    result.items.push({
+      id:uid(), seq:result.items.length+1,
+      category: String(row[hdrCols.cat??0]||'치수').trim()||'치수',
+      dwgNo: String(row[hdrCols.dwg??1]||'').trim(),
+      item: itemVal,
+      usl: String(row[hdrCols.usl??3]||'').trim(),
+      lsl: String(row[hdrCols.lsl??4]||'').trim(),
+      instrument: String(row[hdrCols.inst??5]||'').trim(),
+      note: String(row[hdrCols.note??6]||'').trim()
+    });
+  }
+  return result;
+}
+
+/* Sketch images */
+function handleSketchUpload(input){
+  Array.from(input.files).forEach(f=>{
+    const reader = new FileReader();
+    reader.onload = e => {
+      stdSketchImages.push(e.target.result);
+      renderSketchGallery();
+    };
+    reader.readAsDataURL(f);
+  });
+  input.value='';
+}
+
+function renderSketchGallery(){
+  const el = document.getElementById('sketch-gallery');
+  el.innerHTML = stdSketchImages.map((img,i)=>`
+    <div class="sketch-item">
+      <img src="${img}" onclick="openSketchImgFull('${img.replace(/'/g,'%27')}')" title="클릭하여 확대">
+      <button class="del-btn" onclick="stdSketchImages.splice(${i},1);renderSketchGallery()">✕</button>
+    </div>`).join('');
+}
+
+function openImgFull(src){
+  // src가 짧으면(잘린 base64) 전역 버퍼 사용
+  const useSrc = (src && src.length > 200) ? src : _fullImgDataUrl || src;
+  const w=window.open('','_blank','width=1100,height=850,resizable=yes');
+  if(!w){ showToast('팝업이 차단되었습니다. 팝업을 허용해 주세요.','warn'); return; }
+  w.document.write(`<!DOCTYPE html><html><head><title>이미지 확대</title><style>body{margin:0;background:#111;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:10px;box-sizing:border-box}img{max-width:100%;height:auto;object-fit:contain;display:block;border-radius:4px}</style></head><body><img src="${useSrc}"></body></html>`);
+  w.document.close();
+}
+
+function openRptImgFull(){
+  openImgFull(_fullImgDataUrl);
+}
+
+function openSketchImgFull(src){
+  _fullImgDataUrl = src;
+  openImgFull(src);
+}
+
+/* Excel Template Download */
+function downloadTemplate(){
+  const wb = XLSX.utils.book_new();
+  // 원자재 시트
+  const ws_raw = XLSX.utils.aoa_to_sheet([
+    ['수입검사 기준서 등록 템플릿 (원자재)','','','','','','',''],
+    ['원재료명','[원재료명 입력]','GRADE','[예: HG42BK]','품번','[품번 입력]','업체명','[업체명 입력]'],
+    ['MODEL','[모델 입력]','구분(원자재/부자재)','원자재','기준서번호','QC-2024-001','',''],
+    ['','','','','','','',''],
+    ['※ 아래 행부터 검사항목을 입력하세요. 5행은 헤더이므로 삭제하지 마세요.','','','','','','',''],
+    ['구분','검사항목','검사규격','규격상한(USL)','규격하한(LSL)','계측기','비고',''],
+    ['재질','','인장강도','74','','','MPa'],
+    ['재질','','굴곡강도','94','','','MPa'],
+    ['재질','','충격강도','59','','','kJ/㎡'],
+    ['치수','A-001','전체 길이','50.5','49.5','버니어캘리퍼스',''],
+    ['외관검사','','외관 이상 유무','','','육안','합/부 입력'],
+  ]);
+  ws_raw['!cols']=[{wch:16},{wch:14},{wch:14},{wch:14},{wch:14},{wch:16},{wch:14},{wch:10}];
+  XLSX.utils.book_append_sheet(wb, ws_raw, '원자재기준서');
+  // 부자재 시트
+  const ws_sub = XLSX.utils.aoa_to_sheet([
+    ['수입검사 기준서 등록 템플릿 (부자재)','','','','','',''],
+    ['품명','[품명 입력]','품번','[품번 입력]','업체명','[업체명 입력]',''],
+    ['MODEL','[모델 입력]','구분(원자재/부자재)','부자재','기준서번호','QC-2024-001',''],
+    ['','','','','','',''],
+    ['※ 아래 행부터 검사항목을 입력하세요.','','','','','',''],
+    ['구분','검사항목','검사규격','규격상한(USL)','규격하한(LSL)','계측기','비고'],
+    ['치수','A-001','전체 길이','50.5','49.5','버니어캘리퍼스',''],
+    ['외관검사','','외관 이상 유무','','','육안','합/부 입력'],
+  ]);
+  ws_sub['!cols']=[{wch:14},{wch:12},{wch:24},{wch:14},{wch:14},{wch:16},{wch:14}];
+  XLSX.utils.book_append_sheet(wb, ws_sub, '부자재기준서');
+  XLSX.writeFile(wb,'수입검사기준서_템플릿.xlsx');
+  showToast('✅ 엑셀 템플릿 다운로드 완료 (원자재/부자재 시트)','success');
+}
+
+/* ══════════════════════════════════════
+   REPORT WRITING
+══════════════════════════════════════ */
+let rptRows = []; // current report item rows
+let rptSampleCnt = 5;
+let curStdId = null;
+
+function initReportPage(){
+  // Populate standards dropdown
+  const sel = document.getElementById('rpt-std-sel');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">-- 기준서를 선택하세요 --</option>';
+  DB.standards.forEach(s=>{
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    if(s.category==='원자재'){
+      opt.textContent = `[원자재] ${s.name} ${s.grade?'('+s.grade+')':''} - ${s.vendor}`;
+    } else {
+      opt.textContent = `[${s.category}] ${s.name} (${s.partNo}) - ${s.vendor}`;
+    }
+    sel.appendChild(opt);
+  });
+  sel.value = cur;
+  
+  if(!document.getElementById('rpt-date').value) document.getElementById('rpt-date').value = today();
+}
+
+function loadStandardToReport(stdId){
+  curStdId = stdId;
+  if(!stdId){ clearReportTable(); return; }
+  const s = DB.standards.find(x=>x.id===stdId);
+  if(!s) return;
+  
+  document.getElementById('rpt-cat').value = s.category||'';
+  document.getElementById('rpt-model').value = s.model||'';
+  document.getElementById('rpt-name').value = s.name||'';
+  document.getElementById('rpt-partno').value = s.partNo||'';
+  if(!document.getElementById('rpt-vendor').value) document.getElementById('rpt-vendor').value = s.vendor||'';
+
+  // GRADE 필드: 원자재만 표시
+  const gradeWrap = document.getElementById('rpt-grade-wrap');
+  const gradeEl = document.getElementById('rpt-grade');
+  if(s.category==='원자재'){
+    gradeEl.value = s.grade||'';
+    if(gradeWrap) gradeWrap.style.display='';
+    const lbl = document.getElementById('rpt-name-label');
+    if(lbl) lbl.textContent='원재료명';
+  } else {
+    gradeEl.value = '';
+    if(gradeWrap) gradeWrap.style.display='none';
+    const lbl = document.getElementById('rpt-name-label');
+    if(lbl) lbl.textContent='품명';
+  }
+  
+  rptRows = (s.items||[]).map(it=>({...it, data:Array(rptSampleCnt).fill(''), judge:'-', note:''}));
+  renderRptTable();
+  showToast('기준서 "'+s.name+'"'+(s.grade?' ('+s.grade+')':'')+' 로드됨 ('+rptRows.length+'개 항목)','info');
+}
+
+function updateSampleCols(){
+  const raw = parseInt(document.getElementById('rpt-sample').value);
+  rptSampleCnt = (isNaN(raw)||raw<1) ? 1 : raw>30 ? 30 : raw;
+  // Adjust data arrays
+  rptRows.forEach(r=>{
+    while(r.data.length < rptSampleCnt) r.data.push('');
+    r.data = r.data.slice(0, rptSampleCnt);
+  });
+  renderRptTable();
+}
+
+function addReportRow(){
+  rptRows.push({
+    id:uid(), seq:rptRows.length+1, category:'치수', dwgNo:'', item:'',
+    usl:'', lsl:'', instrument:'', data:Array(rptSampleCnt).fill(''), judge:'-', note:''
+  });
+  renderRptTable();
+}
+
+function clearReportTable(){
+  rptRows = [];
+  document.getElementById('rpt-table-area').innerHTML = '<div class="alert info">기준서를 선택하면 검사 항목이 자동으로 불러와집니다.</div>';
+  document.getElementById('rpt-stats').style.display = 'none';
+  document.getElementById('rpt-item-count').textContent = '항목: 0개';
+}
+
+function clearReportForm(){
+  if(!confirm('성적서 작성 내용을 초기화하시겠습니까?')) return;
+  document.getElementById('rpt-std-sel').value = '';
+  curStdId = null;
+  ['rpt-no','rpt-cat','rpt-model','rpt-name','rpt-partno','rpt-vendor','rpt-lot','rpt-eono','rpt-qty','rpt-writer','rpt-reviewer','rpt-approver','rpt-remark'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('rpt-date').value = today();
+  document.getElementById('rpt-sample').value = '5';
+  rptSampleCnt = 5; rptRows = [];
+  // GRADE 필드 초기화
+  const gradeEl = document.getElementById('rpt-grade');
+  if(gradeEl) gradeEl.value = '';
+  const gradeWrap = document.getElementById('rpt-grade-wrap');
+  if(gradeWrap) gradeWrap.style.display = 'none';
+  const nameLbl = document.getElementById('rpt-name-label');
+  if(nameLbl) nameLbl.textContent = '원재료명 / 품명';
+  clearReportTable();
+  document.querySelector('input[name="decision"][value="합격"]').checked = true;
+  clearReportTable();
+  // Auto-generate report number
+  const nextNo = 'RPT-'+today().slice(0,7).replace('-','')+ '-' + String(DB.reports.filter(r=>r.date&&r.date.startsWith(today().slice(0,7))).length+1).padStart(3,'0');
+  document.getElementById('rpt-no').value = nextNo;
+}
+
+function renderRptTable(){
+  const _sv = parseInt(document.getElementById('rpt-sample').value); rptSampleCnt = (isNaN(_sv)||_sv<1)?5:_sv>30?30:_sv;
+  document.getElementById('rpt-item-count').textContent = '항목: '+rptRows.length+'개';
+  
+  if(!rptRows.length){
+    document.getElementById('rpt-table-area').innerHTML = '<div class="alert info">기준서를 선택하거나 "+ 항목 추가" 버튼으로 항목을 추가하세요.</div>';
+    document.getElementById('rpt-stats').style.display = 'none';
+    return;
+  }
+  
+  const hasMatRow = rptRows.some(r=>r.category==='재질');
+  const avgColHeader = hasMatRow ? '<th class="center" style="min-width:46px;background:#0f766e;font-size:10px">평균</th>' : '';
+  const dataCols = Array.from({length:rptSampleCnt},(_,i)=>`<th class="center" style="min-width:42px;background:var(--navy-mid)">X${i+1}</th>`).join('') + avgColHeader;
+  
+  let html = `<div class="insp-table-wrap"><table class="insp-table">
+    <thead><tr>
+      <th style="width:32px" class="center">No.</th>
+      <th style="width:72px">구분</th>
+      <th style="width:72px">검사항목</th>
+      <th style="min-width:120px;text-align:left">검사규격</th>
+      <th style="width:72px" class="center">USL</th>
+      <th style="width:72px" class="center">LSL</th>
+      <th style="width:90px">계측기</th>
+      ${dataCols}
+      <th class="center" style="width:46px">판정</th>
+      <th style="width:80px">비고</th>
+      <th style="width:28px"></th>
+    </tr></thead>
+    <tbody>`;
+  
+  rptRows.forEach((row, ri) => {
+    const isOuter = row.category==='외관검사';
+    const isMat = row.category==='재질';
+    const rowBg = isOuter ? 'cat-outer' : isMat ? 'cat-mat' : 'cat-other';
+    const dataCells = row.data.map((v,di)=>{
+      if(row.category==='외관검사'){
+        const ng=(v==='부'||v==='NG');
+        return `<td><select class="insp-input${ng?' out-spec':''}" data-ri="${ri}" data-di="${di}" onchange="onDataInput(this,${ri},${di});judgeRow(${ri})" style="width:100%;min-width:40px;font-size:11px;padding:1px 2px"><option value="" ${!v?'selected':''}>-</option><option value="합" ${'합'===v?'selected':''}>합</option><option value="부" ${'부'===v?'selected':''}>부</option></select></td>`;
+      }
+      return `<td><input class="insp-input${isOutOfSpec(row,v)?' out-spec':''}" data-ri="${ri}" data-di="${di}" value="${v}" oninput="onDataInput(this,${ri},${di})" onblur="judgeRow(${ri})" placeholder=""></td>`;
+    }).join('');
+    // Average cell for 재질 rows (when >1 sample)
+    let avgCell = '';
+    if(hasMatRow){
+      if(isMat && rptSampleCnt>1){
+        const nums=row.data.map(v=>parseFloat(v)).filter(v=>!isNaN(v));
+        const avg=nums.length?(nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(2):'';
+        avgCell=`<td class="text-center" id="avg-cell-${ri}" style="background:#f0fdf4;font-weight:700;color:var(--teal);font-size:11px;border-left:1px solid #86efac">${avg}</td>`;
+      } else {
+        avgCell='<td style="background:#f9fafb"></td>';
+      }
+    }
+    const judgeClass = row.judge==='OK'?'judge-ok':row.judge==='NG'?'judge-ng':'judge-na';
+    html += `<tr class="${rowBg}" data-ri="${ri}">
+      <td class="text-center" style="font-size:11px;color:var(--gray)">${ri+1}</td>
+      <td><select class="insp-input" style="font-size:10px;width:70px" onchange="rptRows[${ri}].category=this.value;renderRptTable()">
+        ${['치수','외관검사','재질','성능','중량','기능'].map(c=>`<option ${c===row.category?'selected':''}>${c}</option>`).join('')}
+      </select></td>
+      <td><input class="insp-input" style="width:70px" value="${row.dwgNo||''}" oninput="rptRows[${ri}].dwgNo=this.value" placeholder="검사항목"></td>
+      <td class="item-col"><input class="insp-input" style="width:100%;min-width:118px;text-align:left;padding:2px 5px" value="${row.item||''}" oninput="rptRows[${ri}].item=this.value" placeholder="검사규격"></td>
+      <td><input class="insp-input" style="width:70px" value="${row.usl||''}" oninput="rptRows[${ri}].usl=this.value;judgeRow(${ri})"></td>
+      <td><input class="insp-input" style="width:70px" value="${row.lsl||''}" oninput="rptRows[${ri}].lsl=this.value;judgeRow(${ri})"></td>
+      <td><input class="insp-input" style="width:88px" value="${row.instrument||''}" oninput="rptRows[${ri}].instrument=this.value"></td>
+      ${dataCells}${avgCell}
+      <td class="text-center ${judgeClass}">${row.judge}</td>
+      <td><input class="insp-note" value="${row.note||''}" oninput="rptRows[${ri}].note=this.value"></td>
+      <td><button class="row-del-btn" onclick="rptRows.splice(${ri},1);renderRptTable()">✕</button></td>
+    </tr>`;
+  });
+  
+  html += '</tbody></table></div>';
+  document.getElementById('rpt-table-area').innerHTML = html;
+  document.getElementById('rpt-stats').style.display = 'flex';
+  updateRptStats();
+}
+
+function isOutOfSpec(row, v){
+  if(!v) return false;
+  const isOuter = row.category==='외관검사';
+  if(isOuter){ const u=String(v).trim().toUpperCase(); return(u==='부'||u==='NG'||u==='N'); }
+  const num = parseFloat(v);
+  if(isNaN(num)) return false;
+  const usl=parseFloat(row.usl), lsl=parseFloat(row.lsl);
+  if(!isNaN(usl)&&num>usl) return true;
+  if(!isNaN(lsl)&&num<lsl) return true;
+  return false;
+}
+
+function onDataInput(el, ri, di){
+  rptRows[ri].data[di] = el.value;
+  if(isOutOfSpec(rptRows[ri], el.value)) el.classList.add('out-spec');
+  else el.classList.remove('out-spec');
+  judgeRow(ri);
+  // Update avg cell for 재질 rows
+  if(rptRows[ri].category==='재질'){
+    const avgEl = document.getElementById('avg-cell-'+ri);
+    if(avgEl){
+      const nums = rptRows[ri].data.map(v=>parseFloat(v)).filter(v=>!isNaN(v));
+      const avg = nums.length ? (nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(2) : '';
+      avgEl.textContent = avg;
+    }
+  }
+}
+
+function judgeRow(ri){
+  const row = rptRows[ri];
+  const data = row.data.filter(v=>v!=='');
+  if(!data.length){ row.judge = '-'; }
+  else {
+    const hasNG = data.some(v=>isOutOfSpec(row,v));
+    row.judge = hasNG ? 'NG' : 'OK';
+  }
+  // Update judge cell in DOM
+  const tr = document.querySelector(`[data-ri="${ri}"]`);
+  if(tr){
+    const judgeCell = tr.querySelector('td.judge-ok,td.judge-ng,td.judge-na') || Array.from(tr.querySelectorAll('td')).find(td=>td.textContent==='OK'||td.textContent==='NG'||td.textContent==='-');
+    if(judgeCell){
+      judgeCell.textContent = row.judge;
+      judgeCell.className = 'text-center '+(row.judge==='OK'?'judge-ok':row.judge==='NG'?'judge-ng':'judge-na');
+    }
+  }
+  updateRptStats();
+}
+
+function updateRptStats(){
+  let total=0, ok=0, ng=0, nm=0;
+  rptRows.forEach(r=>{
+    if(r.judge==='OK'){total++;ok++;}
+    else if(r.judge==='NG'){total++;ng++;}
+    else nm++;
+  });
+  document.getElementById('st-total').textContent = total;
+  document.getElementById('st-ok').textContent = ok;
+  document.getElementById('st-ng').textContent = ng;
+  document.getElementById('st-nm').textContent = nm;
+}
+
+/* SAVE REPORT */
+let _ngSaveConfirmed = false;
+
+async function saveReport(){
+  // 성적서 번호 자동 생성 (항상 최신 상태로 재계산)
+  const rptDate = document.getElementById('rpt-date').value || today();
+  const ym = rptDate.slice(0,7).replace('-','');
+  const sameMonth = DB.reports.filter(r=>r.date&&r.date.startsWith(rptDate.slice(0,7))).length;
+  const autoNo = 'RPT-'+ym+'-'+String(sameMonth+1).padStart(3,'0');
+  document.getElementById('rpt-no').value = autoNo;
+  const no = autoNo;
+  const date = document.getElementById('rpt-date').value;
+  const vendor = document.getElementById('rpt-vendor').value.trim();
+  const name = document.getElementById('rpt-name').value.trim();
+  
+  if(!date){showToast('검사일을 입력하세요','error');return}
+  if(!vendor){showToast('업체명을 입력하세요','error');return}
+  if(!name){showToast('기준서를 선택하거나 품명을 확인하세요','error');return}
+  if(!rptRows.length){showToast('검사 항목이 없습니다','error');return}
+
+  // ── NG 항목 + 합격 판정 경고 ──────────────────────
+  const ngRows = rptRows.filter(r=>r.judge==='NG');
+  const decision = document.querySelector('input[name="decision"]:checked')?.value||'합격';
+  if(ngRows.length>0 && decision==='합격' && !_ngSaveConfirmed){
+    const list = ngRows.map(r=>`<li style="text-align:left">${r.item||('항목 '+(rptRows.indexOf(r)+1))}</li>`).join('');
+    document.getElementById('ng-warn-body').innerHTML =
+      `NG 판정 항목 <b>${ngRows.length}건</b>이 있는데 종합판정이 <b style="color:var(--green)">합격</b>으로 설정되어 있습니다.<br>
+       <ul style="margin:10px 0 10px 16px;font-size:12px;background:var(--red-light);padding:8px 12px 8px 28px;border-radius:6px">${list}</ul>
+       계속 저장하려면 <b>"경고 인지 후 저장"</b>을 클릭하세요.`;
+    document.getElementById('modal-ng-warn').classList.add('show');
+    return;
+  }
+  _ngSaveConfirmed = false;
+  
+  showLoading('① 이미지 생성 중...');
+  
+  try{
+      const report = collectReportData();
+    
+    // ① 이미지 생성 + PNG 다운로드
+    const imgData = await generateReportImage(report);
+    showLoading('② 데이터 저장 중...');
+    const filename = triggerDownload(imgData, report);  // PNG 즉시 다운로드
+    
+    // ② 데이터 저장 (이미지 + DB 동시)
+    report.reportImage = imgData;
+    storeImg('rpt_'+report.id, imgData);
+    report.reportImageFile = filename;
+    
+    const existing = DB.reports.findIndex(r=>r.id===report.id);
+    if(existing>=0) DB.reports[existing] = report;
+    else DB.reports.push(report);
+    
+    await saveDB();
+    
+    hideLoading();
+    
+    // 감사 로그
+        
+    // 결과 모달
+    document.getElementById('save-result-info').innerHTML =
+      `성적서 번호: <strong>${report.no}</strong><br>품명: <strong>${report.name}</strong><br>검사일: <strong>${report.date}</strong><br>판정: <strong>${report.decision}</strong>`;
+    const fnEl = document.getElementById('save-result-filename');
+    if(fnEl) fnEl.textContent = filename;
+    document.getElementById('modal-save-result').classList.add('show');
+    
+    invalidateTrendCache();
+    updateBadges();
+    onReportTrendUpdate();
+    showToast('✅ 성적서 저장 완료','success');
+    
+  }catch(err){
+    hideLoading();
+    showToast('저장 실패: '+err.message,'error');
+    console.error(err);
+  }
+}
+
+function collectReportData(){
+  const id = uid();
+  const decision = document.querySelector('input[name="decision"]:checked')?.value||'합격';
+  let ok=0,ng=0,nm=0;
+  rptRows.forEach(r=>{
+    if(r.judge==='OK') ok++;
+    else if(r.judge==='NG') ng++;
+    else nm++;
+  });
+  return {
+    id, no: document.getElementById('rpt-no').value.trim(),
+    standardId: curStdId||'',
+    date: document.getElementById('rpt-date').value,
+    category: document.getElementById('rpt-cat').value||'원자재',
+    name: document.getElementById('rpt-name').value.trim(),
+    grade: document.getElementById('rpt-grade').value.trim(),
+    partNo: document.getElementById('rpt-partno').value.trim(),
+    vendor: document.getElementById('rpt-vendor').value.trim(),
+    model: document.getElementById('rpt-model').value.trim(),
+    lot: document.getElementById('rpt-lot').value.trim(),
+    eono: document.getElementById('rpt-eono').value.trim(),
+    qty: document.getElementById('rpt-qty').value||'',
+    sampleCount: rptSampleCnt,
+    writer: document.getElementById('rpt-writer').value.trim(),
+    reviewer: document.getElementById('rpt-reviewer').value.trim(),
+    approver: document.getElementById('rpt-approver').value.trim(),
+    chkOuter: document.getElementById('chk-outer').checked,
+    chkDim: document.getElementById('chk-dim').checked,
+    chkMat: document.getElementById('chk-mat').checked,
+    chkPerf: document.getElementById('chk-perf').checked,
+    decision,
+    remark: document.getElementById('rpt-remark').value.trim(),
+    rows: rptRows.map(r=>({...r, data:[...r.data]})),
+    stats: {total:ok+ng, ok, ng, nm},
+    reportImage: '',
+    createdAt: now()
+  };
+}
+
+function triggerDownload(dataUrl, report){
+  const filename = report.date.replace(/-/g,'')+'_'+report.no.replace(/[\/\\:*?"<>|]/g,'_')+'_'+report.name+'_수입검사성적서.png';
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  return filename;
+}
+
+/* REPORT IMAGE GENERATION */
+async function generateReportImage(report){
+  const html = buildReportHTML(report);
+  const container = document.getElementById('rpt-render');
+  container.style.cssText = 'position:fixed;left:-9999px;top:0;width:1122px;background:#fff;z-index:-1;display:block';
+  container.innerHTML = html;
+  
+  await document.fonts.ready;
+  await new Promise(r=>setTimeout(r,200));
+  
+  const canvas = await html2canvas(container, {
+    scale: 1.8, useCORS:true, backgroundColor:'#ffffff', logging:false,
+    width: container.scrollWidth, windowWidth:1122
+  });
+  
+  container.style.display = 'none';
+  container.innerHTML = '';
+  return canvas.toDataURL('image/png', 0.95);
+}
+
+function buildReportHTML(report){
+  const n = report.sampleCount;
+  const chkStr = [
+    report.chkOuter?'<b>[■]외관</b>':'[□]외관',
+    report.chkDim?'<b>[■]치수</b>':'[□]치수',
+    report.chkMat?'<b>[■]재질(MS)</b>':'[□]재질(MS)',
+    report.chkPerf?'<b>[■]성능(ES)</b>':'[□]성능(ES)',
+  ].join('&nbsp;&nbsp;');
+  const dw = Math.max(20, Math.floor(480/n));
+  const xHdr = Array.from({length:n},(_,i)=>`<th style="border:1px solid #2d5499;padding:1px 0;font-size:6pt;background:#1a4878;color:#fff">X${i+1}</th>`).join('');
+  const rows = (report.rows||[]).map((r,idx)=>{
+    const usl=parseFloat(r.usl), lsl=parseFloat(r.lsl);
+    const isOuter = r.category==='외관검사';
+    const cells = r.data.slice(0,n).map(v=>{
+      if(!v) return`<td style="border:1px solid #dde;height:17px;min-width:${dw}px"></td>`;
+      let ng=false;
+      if(isOuter){const u=v.trim().toUpperCase();ng=(u==='부'||u==='NG'||u==='N');}
+      else{const num=parseFloat(v);if(!isNaN(usl)&&num>usl)ng=true;if(!isNaN(lsl)&&num<lsl)ng=true;}
+      return`<td style="border:1px solid #dde;text-align:center;font-size:7pt;${ng?'background:#fff0f0;color:#c8102e;font-weight:bold;':''}">${v}</td>`;
+    }).join('');
+    const jc = r.judge==='NG'?'#c8102e':r.judge==='OK'?'#1a7a3a':'#666';
+    const catBg = isOuter?'background:#fffbea;':'';
+    return `<tr style="height:18px;">
+      <td style="border:1px solid #dde;text-align:center;font-weight:700;font-size:8pt">${idx+1}</td>
+      <td style="border:1px solid #dde;text-align:center;font-size:7pt;${catBg}font-weight:600">${r.category}</td>
+      <td style="border:1px solid #dde;text-align:center;font-size:7pt;color:#1a3a6e;font-weight:700">${r.dwgNo||''}</td>
+      <td style="border:1px solid #dde;padding:0 4px;text-align:left;font-size:7pt">${r.item}</td>
+      <td style="border:1px solid #dde;text-align:center;font-size:7pt">${r.usl||''}</td>
+      <td style="border:1px solid #dde;text-align:center;font-size:7pt">${r.lsl||''}</td>
+      <td style="border:1px solid #dde;text-align:center;font-size:7pt">${r.instrument||''}</td>
+      ${cells}
+      <td style="border:1px solid #dde;text-align:center;font-weight:800;font-size:9pt;color:${jc}">${r.judge}</td>
+      <td style="border:1px solid #dde;padding:0 3px;font-size:7pt">${r.note||''}</td>
+    </tr>`;
+  }).join('');
+  
+  const decisionColor = report.decision==='합격'?'#16a34a':report.decision==='불합격'?'#dc2626':'#d97706';
+  
+  return `<div style="padding:6mm;width:1100px;font-family:Noto Sans KR,맑은 고딕,sans-serif;background:#fff">
+  <table style="width:100%;border-collapse:collapse;border:2px solid #0d2240">
+    <tr>
+      <td colspan="7" style="text-align:center;font-size:16pt;font-weight:900;letter-spacing:6px;padding:6px 0;border-bottom:2px solid #0d2240;background:#f8faff">
+        수 입 검 사 성 적 서
+      </td>
+    </tr>
+    <tr style="border-bottom:1px solid #b0c0d8">
+      <td colspan="3" style="padding:4px 8px;font-size:8pt">성적서번호: <b>${report.no}</b></td>
+      <td colspan="4" style="text-align:right;padding:4px 8px;font-size:8pt">작성일: ${report.date}</td>
+    </tr>
+    <tr style="border-bottom:1px solid #b0c0d8">
+      <td colspan="3" style="padding:4px 8px;font-size:8pt">승인항목: ${chkStr}</td>
+      <td style="padding:3px 6px;text-align:center;border-left:1px solid #b0c0d8;font-size:8pt;width:13%"><b>작 성</b><br>${report.writer||''}</td>
+      <td style="padding:3px 6px;text-align:center;border-left:1px solid #b0c0d8;font-size:8pt;width:13%"><b>검 토</b><br>${report.reviewer||''}</td>
+      <td style="padding:3px 6px;text-align:center;border-left:1px solid #b0c0d8;font-size:8pt;width:13%"><b>승 인</b><br>${report.approver||''}</td>
+    </tr>
+    <tr style="border-bottom:2px solid #0d2240">
+      ${report.category==='원자재'
+        ? `<td style="padding:4px 8px;font-size:8pt;width:16%"><b>원재료명:</b> ${report.name}</td>
+           <td style="padding:4px 8px;font-size:8pt;width:15%"><b>GRADE:</b> ${report.grade||''}</td>
+           <td style="padding:4px 8px;font-size:8pt;width:15%"><b>품번:</b> ${report.partNo||''}</td>`
+        : `<td style="padding:4px 8px;font-size:8pt;width:16%"><b>품명:</b> ${report.name}</td>
+           <td style="padding:4px 8px;font-size:8pt;width:15%"><b>품번:</b> ${report.partNo||''}</td>
+           <td style="padding:4px 8px;font-size:8pt;width:15%"><b>MODEL:</b> ${report.model||''}</td>`}
+      <td style="padding:4px 8px;font-size:8pt"><b>업체:</b> ${report.vendor}</td>
+      <td style="padding:4px 8px;font-size:8pt"><b>LOT:</b> ${report.lot||''}</td>
+      <td style="padding:4px 8px;font-size:8pt"><b>수량:</b> ${report.qty||''}EA</td>
+      <td style="padding:4px 8px;font-size:8pt"><b>시료:</b> ${n}ea</td>
+    </tr>
+  </table>
+  <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:7pt;border:1px solid #0d2240;border-top:none">
+    <colgroup>
+      <col style="width:24px"><col style="width:52px"><col style="width:38px"><col style="width:110px">
+      <col style="width:42px"><col style="width:42px"><col style="width:68px">
+      ${Array(n).fill(`<col style="width:${dw}px">`).join('')}
+      <col style="width:34px"><col style="width:60px">
+    </colgroup>
+    <thead>
+      <tr style="background:#0d2240;color:#fff">
+        <th rowspan="2" style="border:1px solid #2d5499;padding:2px 1px">No</th>
+        <th rowspan="2" style="border:1px solid #2d5499;background:#1a3a6e">구분</th>
+        <th rowspan="2" style="border:1px solid #2d5499;background:#1a3a6e;font-size:6pt">도면번호</th>
+        <th rowspan="2" style="border:1px solid #2d5499">검사항목</th>
+        <th colspan="2" style="border:1px solid #2d5499;background:#1a4878">Spec</th>
+        <th rowspan="2" style="border:1px solid #2d5499;background:#1a4878;font-size:6pt">계측기</th>
+        <th colspan="${n}" style="border:1px solid #2d5499;background:#1a3a6e">Dimension Result (${n}ea)</th>
+        <th rowspan="2" style="border:1px solid #2d5499">판정</th>
+        <th rowspan="2" style="border:1px solid #2d5499">비고</th>
+      </tr>
+      <tr style="background:#1a3a6e;color:#fff">
+        <th style="border:1px solid #2d5499;font-size:6pt;background:#1a4878">USL</th>
+        <th style="border:1px solid #2d5499;font-size:6pt;background:#1a4878">LSL</th>
+        ${xHdr}
+      </tr>
+    </thead>
+    <tbody>${rows||'<tr><td colspan="10" style="text-align:center;padding:8px;color:#888">검사항목 없음</td></tr>'}</tbody>
+  </table>
+  <table style="width:100%;border-collapse:collapse;font-size:7pt;border:1px solid #0d2240;border-top:none">
+    <tr>
+      <td style="padding:3px 8px;border-right:1px solid #b0c0d8;width:25%">전체: <b>${report.stats?.total||0}</b> &nbsp; OK: <b style="color:green">${report.stats?.ok||0}</b> &nbsp; NG: <b style="color:red">${report.stats?.ng||0}</b> &nbsp; 미측정: <b>${report.stats?.nm||0}</b></td>
+      <td style="padding:3px 8px;border-right:1px solid #b0c0d8"><b>종합판정: <span style="color:${decisionColor};font-size:9pt">${report.decision}</span></b></td>
+    </tr>
+    ${report.remark?`<tr><td colspan="4" style="padding:3px 8px;font-size:7pt;color:#555">특이사항: ${report.remark}</td></tr>`:''}
+  </table>
+  </div>`;
+}
+
+/* ══════════════════════════════════════
+   HISTORY
+══════════════════════════════════════ */
+let histFilter = 'all';
+let curPopupRptId = null;
+
+function setHistFilter(f, el){
+  histFilter = f;
+  document.querySelectorAll('#page-history .filter-chip').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderHistList();
+}
+
+function renderHistList(){
+  const q = document.getElementById('hf-search').value.trim().toLowerCase();
+  const from = document.getElementById('hf-from').value;
+  const to = document.getElementById('hf-to').value;
+  
+  let list = [...DB.reports];
+  if(histFilter!=='all') list = list.filter(r=>r.category===histFilter);
+  if(q) list = list.filter(r=>(r.name+r.vendor+r.no+r.partNo).toLowerCase().includes(q));
+  if(from) list = list.filter(r=>r.date>=from);
+  if(to) list = list.filter(r=>r.date<=to);
+  list.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  
+  const tb = document.getElementById('hist-tbody');
+  if(!list.length){ tb.innerHTML='<tr><td colspan="11" class="no-data">조건에 해당하는 검사 이력이 없습니다.</td></tr>'; return; }
+  
+  tb.innerHTML = list.map((r,i)=>{
+    const passClass = r.decision==='합격'?'b-pass':r.decision==='불합격'?'b-fail':'b-cond';
+    return `<tr>
+      <td class="text-center" style="color:var(--gray)">${i+1}</td>
+      <td style="font-weight:700;color:var(--navy-mid)">${r.no||'-'}</td>
+      <td>${fmt(r.date)}</td>
+      <td class="text-center"><span class="badge ${r.category==='원자재'?'b-raw':'b-sub'}">${r.category||'-'}</span></td>
+      <td style="font-weight:700">${r.name||'-'}</td>
+      <td style="font-size:11px;color:var(--gray)">${r.partNo||'-'}</td>
+      <td>${r.vendor||'-'}</td>
+      <td class="text-center">${r.sampleCount||'-'}ea</td>
+      <td class="text-center"><span class="badge ${passClass}">${r.decision||'-'}</span></td>
+      <td class="text-center" style="font-size:11px">
+        <span style="color:var(--green)">OK:${r.stats?.ok||0}</span> / <span style="color:var(--red)">NG:${r.stats?.ng||0}</span>
+      </td>
+      <td class="text-center">
+        <button class="btn btn-navy btn-xs" onclick="showHistPopup('${r.id}')">🔍 상세</button>
+        <button class="btn btn-outline btn-xs" onclick="deleteReport('${r.id}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('hist-page-info').textContent = `총 ${list.length}건 표시 중 (전체 ${DB.reports.length}건)`;
+}
+
+function deleteReport(id){
+  const r = DB.reports.find(x=>x.id===id);
+  if(!r||!confirm(`성적서 "${r.no}" (${r.name})을 삭제하시겠습니까?`)) return;
+  DB.reports = DB.reports.filter(x=>x.id!==id);
+  removeImg('rpt_'+id);
+  saveDB(); renderHistList(); updateBadges();
+  showToast('성적서 삭제됨','info');
+}
+
+function showHistPopup(id){
+  curPopupRptId = id;
+  const report = DB.reports.find(r=>r.id===id);
+  if(!report) return;
+  const standard = report.standardId ? DB.standards.find(s=>s.id===report.standardId) : null;
+
+  // 헤더
+  const decCls = report.decision==='합격'?'ok':report.decision==='불합격'?'ng':'cond';
+  const decIcon = report.decision==='합격'?'✅':report.decision==='불합격'?'❌':'⚠️';
+  document.getElementById('popup-title').textContent =
+    `[${report.date}] ${report.name} / ${report.no} / 판정: ${report.decision}`;
+
+  // 스케치
+  const sketchEl = document.getElementById('popup-sketches');
+  const sketches = standard?.sketchImages || [];
+  if(sketches.length){
+    sketchEl.innerHTML = sketches.map(img=>
+      `<img src="${img}" class="popup-sketch-img" onclick="openSketchImgFull('${img.replace(/'/g,'%27')}')" title="클릭하여 확대">`
+    ).join('');
+  } else {
+    sketchEl.innerHTML = `<div class="empty-state"><div class="icon">📷</div><div class="msg">스케치 이미지 없음</div><div class="sub">기준서에 스케치를 등록해 주세요</div></div>`;
+  }
+
+  // ── 성적서 데이터 렌더링 ──────────────────────────────
+  const rows   = report.rows || [];
+  const stats  = report.stats || {};
+  const n      = report.sampleCount || 1;
+
+  // 기본 정보 카드
+  const catBadge = `<span class="badge ${report.category==='원자재'?'b-raw':'b-sub'}">${report.category}</span>`;
+  const infoItems = [
+    ['성적서번호', report.no||'-'],
+    ['검사일', report.date||'-'],
+    ['품명', (report.name||'-')+(report.grade?` (${report.grade})`:'')],
+    ['품번', report.partNo||'-'],
+    ['업체명', report.vendor||'-'],
+    ['LOT No.', report.lot||'-'],
+    ['수량', report.qty ? report.qty+'EA' : '-'],
+    ['시료수', n+'ea'],
+    ['작성자', report.writer||'-'],
+    ['검토자', report.reviewer||'-'],
+    ['승인자', report.approver||'-'],
+  ];
+
+  // 샘플 헤더 (최대 10개 표시, 초과 시 축약)
+  const maxShow = Math.min(n, 10);
+  const sampleHeaders = Array.from({length:maxShow},(_,i)=>`<th style="min-width:38px">S${i+1}</th>`).join('');
+  const moreCol = n > maxShow ? `<th>…</th>` : '';
+
+  // 검사항목 행
+  const dataRows = rows.map(row=>{
+    const judgeHtml = row.judge==='OK'
+      ? `<span class="popup-judge-ok">OK</span>`
+      : row.judge==='NG'
+        ? `<span class="popup-judge-ng">NG</span>`
+        : `<span class="popup-judge-nm">-</span>`;
+
+    const dataCells = Array.from({length:maxShow},(_,i)=>{
+      const v = (row.data||[])[i]??'';
+      const isOuter = (row.category||'')==='외관검사';
+      let cls = '';
+      if(isOuter){ cls = (v==='부'||v==='NG') ? 'color:var(--red);font-weight:700' : ''; }
+      else{
+        const num=parseFloat(v),usl=parseFloat(row.usl),lsl=parseFloat(row.lsl);
+        if(!isNaN(num)){
+          if(!isNaN(usl)&&num>usl) cls='color:var(--red);font-weight:700';
+          else if(!isNaN(lsl)&&num<lsl) cls='color:var(--red);font-weight:700';
+        }
+      }
+      return `<td style="text-align:center;${cls}">${v||'-'}</td>`;
+    }).join('');
+    const moreCell = n > maxShow ? `<td style="text-align:center;color:var(--gray)">…</td>` : '';
+
+    const specStr = row.usl&&row.lsl ? `${row.lsl}~${row.usl}`
+      : row.lsl ? `≥${row.lsl}` : row.usl ? `≤${row.usl}` : '-';
+
+    return `<tr>
+      <td style="white-space:nowrap">${row.dwgNo||'-'}</td>
+      <td style="font-size:10px;color:var(--gray)">${row.item||'-'}</td>
+      <td style="text-align:center;font-size:10px">${specStr}</td>
+      ${dataCells}${moreCell}
+      <td style="text-align:center">${judgeHtml}</td>
+    </tr>`;
+  }).join('');
+
+  const dataEl = document.getElementById('popup-report-data');
+  dataEl.innerHTML = `
+    <div class="popup-decision ${decCls}">${decIcon} ${report.decision}
+      <span style="font-size:11px;font-weight:500;margin-left:4px">OK ${stats.ok||0}건 / NG ${stats.ng||0}건</span>
+    </div>
+    <div class="popup-rpt-info">
+      ${infoItems.map(([l,v])=>`<div class="popup-rpt-info-item"><label>${l}</label><span>${v}</span></div>`).join('')}
+    </div>
+    ${rows.length ? `
+    <div style="overflow-x:auto">
+      <table class="popup-data-tbl">
+        <thead><tr>
+          <th>검사항목</th><th>검사규격</th><th>SPEC</th>
+          ${sampleHeaders}${moreCol}
+          <th>판정</th>
+        </tr></thead>
+        <tbody>${dataRows}</tbody>
+      </table>
+    </div>
+    ${n>maxShow?`<div style="font-size:10px;color:var(--gray);margin-top:4px">* S1~S${maxShow} 표시 (전체 ${n}개)</div>`:''}
+    ` : '<div class="empty-state"><div class="icon">📋</div><div class="msg">검사 항목 없음</div></div>'}
+  `;
+
+  // 하단 메타
+  document.getElementById('popup-meta').innerHTML =
+    `${catBadge} &nbsp; 비고: ${report.remark||'-'}`;
+
+  document.getElementById('popup-hist').classList.add('show');
+}
+
+function closeHistPopup(){document.getElementById('popup-hist').classList.remove('show')}
+
+function downloadReportImg(){
+  const report = DB.reports.find(r=>r.id===curPopupRptId);
+  if(!report) return;
+  const img = report.reportImage || loadImg('rpt_'+report.id);
+  if(!img){ showToast('저장된 이미지가 없습니다','warn'); return; }
+  const link = document.createElement('a');
+  link.href = img;
+  link.download = report.date.replace(/-/g,'')+'_'+report.no+'_'+report.name+'_수입검사성적서.png';
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  showToast('이미지 다운로드 완료','success');
+}
+
+function exportHistoryExcel(){
+  const list = DB.reports.map((r,i)=>({
+    'No.': i+1,
+    '성적서번호': r.no,
+    '검사일': r.date,
+    '구분': r.category,
+    '품명': r.name,
+    '품번': r.partNo,
+    '업체명': r.vendor,
+    'MODEL': r.model,
+    'LOT No.': r.lot,
+    '시료수': r.sampleCount,
+    '종합판정': r.decision,
+    'OK수': r.stats?.ok||0,
+    'NG수': r.stats?.ng||0,
+    '작성자': r.writer,
+    '검사자': r.inspector,
+    '작성일시': r.createdAt ? fmtDt(r.createdAt) : ''
+  }));
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(list);
+  ws['!cols'] = [{wch:5},{wch:18},{wch:12},{wch:8},{wch:20},{wch:15},{wch:15},{wch:12},{wch:15},{wch:8},{wch:10},{wch:6},{wch:6},{wch:10},{wch:10},{wch:18}];
+  XLSX.utils.book_append_sheet(wb, ws, '수입검사이력');
+  XLSX.writeFile(wb, '수입검사이력_'+today().replace(/-/g,'')+'.xlsx');
+  showToast('Excel 출력 완료','success');
+}
+
+function confirmNgSave(){
+  document.getElementById('modal-ng-warn').classList.remove('show');
+  _ngSaveConfirmed = true;
+  saveReport();
+}
+
+function goToHistory(){
+  document.getElementById('modal-save-result').classList.remove('show');
+  navigate('history');
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+window.addEventListener('load', ()=>{
+
+  // ── 구버전 키 마이그레이션 (IMS_DB_v2 → IMS_DB_v8) ──
+  const OLD_KEYS = ['IMS_DB_v2','IMS_DB_v1','IMS_DB_v3','IMS_DB_v4','IMS_DB_v5','IMS_DB_v6','IMS_DB_v7'];
+  if(!localStorage.getItem(LS_KEY)){
+    for(const oldKey of OLD_KEYS){
+      const old = localStorage.getItem(oldKey);
+      if(old){
+        try{
+          const parsed = JSON.parse(old);
+          if(parsed.standards || parsed.reports){
+            localStorage.setItem(LS_KEY, old);
+            console.log('[IMS] 구버전 DB 마이그레이션:', oldKey, '→', LS_KEY);
+            break;
+          }
+        }catch(e){}
+      }
+    }
+  }
+
+  // ── 자동 불러오기 ──
+  const loaded = loadLocal();
+  const stdCnt  = DB.standards.length;
+  const rptCnt  = DB.reports.length;
+
+  if(loaded && (stdCnt > 0 || rptCnt > 0)){
+    updateDBStatus('local');
+    const lastSave = localStorage.getItem('IMS_LAST_SAVE');
+    const timeStr  = lastSave ? new Date(parseInt(lastSave)).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+    showToast(`💾 자동 불러오기 완료 — 기준서 ${stdCnt}건 · 성적서 ${rptCnt}건${timeStr?' ('+timeStr+' 저장본)':''}`, 'success', 4000);
+  } else {
+    DB = {version:2, standards:[], reports:[]};
+    updateDBStatus('local');
+  }
+
+  refreshAll();
+
+  // 성적서 기본값
+  const nextNo = 'RPT-'+today().slice(0,7).replace('-','')+'-'+String(DB.reports.filter(r=>r.date&&r.date.startsWith(today().slice(0,7))).length+1).padStart(3,'0');
+  document.getElementById('rpt-no').value = nextNo;
+  document.getElementById('rpt-date').value = today();
+
+  // 스케치 드롭존
+  const drop = document.getElementById('sketch-drop');
+  drop.addEventListener('dragover', e=>{e.preventDefault();drop.classList.add('over')});
+  drop.addEventListener('dragleave', ()=>drop.classList.remove('over'));
+  drop.addEventListener('drop', e=>{
+    e.preventDefault(); drop.classList.remove('over');
+    Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')).forEach(f=>{
+      const reader = new FileReader();
+      reader.onload = ev=>{stdSketchImages.push(ev.target.result); renderSketchGallery();};
+      reader.readAsDataURL(f);
+    });
+  });
+});
+
+function refreshAll(){
+  updateBadges();
+  if(curPage==='dashboard') renderDashboard();
+  else if(curPage==='standards') renderStdList();
+  else if(curPage==='history') renderHistList();
+}
+
+// 자동저장: 30초마다 + 마지막 저장 시각 기록
+setInterval(()=>{
+  if(DB.standards.length||DB.reports.length){
+    saveLocal();
+    localStorage.setItem('IMS_LAST_SAVE', Date.now().toString());
+  }
+}, 30000);
+
+/* ══════════════════════════════════════
+   TREND CHART - 원재료 물성추이도
+══════════════════════════════════════ */
+
+// ── 내장 물성 데이터 (2025년 상/하반기 엑셀 파일에서 추출) ──
+const TREND_DATA = {};  // 내장 데이터 삭제 — DB 성적서 데이터만 사용
+
+/* ══════════════════════════════════════
+   TREND DATA LINKAGE ENGINE
+══════════════════════════════════════ */
+
+// ── 물성 항목명: 검사항목명 기준 그대로 사용 (정확 매칭)
+// 항목명을 공백·전각문자 정규화만 하여 그대로 키로 사용 → 인장강도 ≠ 인장신도
+function normalizePropName(itemName){
+  // 공백·괄호 전후 정리, 전각→반각 변환, trim 만 수행
+  return (itemName||'').trim().replace(/\s+/g,' ');
+}
+
+// 재질 검사항목 여부 판별: category=재질 이거나, 알려진 물성 키워드 포함
+const PROP_DETECT_KEYWORDS = [
+  '인장강도','인장신도','굴곡강도','굴곡탄성률','충격강도','충격강도(노치)',
+  '열변형온도','용융점도','회분율','용융지수','비중','경도','광택','흡수율',
+  'tensile','flexural','impact','hdt','vicat','mfr','ash',
+  '연신율','파단신율','신도','인열강도','박리강도','압축강도','전단강도'
+];
+
+function isPropRow(row){
+  if((row.category||'').trim()==='재질') return true;
+  // v9: dwgNo = 검사항목명, item = 검사규격
+  const itemName = (row.dwgNo||row.item||'').toLowerCase().replace(/\s/g,'');
+  return PROP_DETECT_KEYWORDS.some(k => itemName.includes(k.toLowerCase().replace(/\s/g,'')));
+}
+
+// ── 기준서 → 연계 Grade 조회 ──
+function getStdTrendGrade(stdId){
+  const s = DB.standards.find(x=>x.id===stdId);
+  return s?.trendGrade||'';
+}
+
+// ── 성적서 DB에서 물성 데이터 추출 ──
+function getLiveTrendData(){
+  const live = {}; // { grade: { brand, grade, props: { propName: {dates,values,specValue,specDir,source:'db'} } } }
+
+  DB.reports.forEach(report => {
+    // Only raw materials; must have property rows
+    if(report.category !== '원자재') return;
+    const matRows = (report.rows||[]).filter(r => isPropRow(r));
+    if(!matRows.length) return;
+
+    // Determine grade key
+    let grade = getStdTrendGrade(report.standardId);
+    if(!grade){
+      // Auto-match: try to find TREND_DATA key inside report name
+      const rName = (report.name||'').toLowerCase();
+      grade = Object.keys(TREND_DATA).find(g => rName.includes(g.toLowerCase())) || '';
+    }
+    if(!grade) grade = report.name || report.partNo || '미연계';
+
+    const s = DB.standards.find(x=>x.id===report.standardId);
+    if(!live[grade]){
+      live[grade] = {
+        brand: report.vendor||'',
+        resinType: s?.model||'',
+        grade,
+        isLive: true,
+        props: {}
+      };
+    }
+
+    matRows.forEach(row => {
+      // v9: dwgNo = 검사항목명, item = 검사규격
+      // 물성 이름은 검사항목(dwgNo)를 우선 사용, 없으면 category
+      const propName = normalizePropName(row.dwgNo || row.category || '물성');
+      // Compute average of non-empty numeric data
+      const nums = (row.data||[]).map(v=>parseFloat(v)).filter(v=>!isNaN(v));
+      if(!nums.length) return;
+      const avg = Math.round((nums.reduce((a,b)=>a+b,0)/nums.length)*100)/100;
+
+      // Determine spec from row
+      const usl = parseFloat(row.usl), lsl = parseFloat(row.lsl);
+      let specValue = null, specDir = 'min';
+      if(!isNaN(lsl) && isNaN(usl)){ specValue = lsl; specDir = 'min'; }
+      else if(!isNaN(usl) && isNaN(lsl)){ specValue = usl; specDir = 'max'; }
+      else if(!isNaN(lsl)){ specValue = lsl; specDir = 'min'; }
+
+      // specRaw: 검사규격 문자열(row.item) 표시
+      const specRaw = row.item || (specValue!=null ? (specValue+(specDir==='min'?' 이상':' 이하')) : '');
+      if(!live[grade].props[propName]){
+        live[grade].props[propName] = {
+          dates: [], values: [], specValue, specDir, specRaw,
+          source: 'db', reportIds: []
+        };
+      }
+      live[grade].props[propName].dates.push(report.date||'');
+      live[grade].props[propName].values.push(avg);
+      live[grade].props[propName].reportIds.push(report.id);
+      // Keep spec from first occurrence
+      if(live[grade].props[propName].specValue===null && specValue!==null){
+        live[grade].props[propName].specValue = specValue;
+        live[grade].props[propName].specDir = specDir;
+      }
+    });
+  });
+
+  return live;
+}
+
+// ── TREND_DATA + 성적서 DB 병합 ──
+function getMergedTrendData(){
+  const live = getLiveTrendData();
+  const merged = {};
+
+  // Start with base Excel data
+  Object.entries(TREND_DATA).forEach(([grade, data]) => {
+    merged[grade] = {
+      ...data,
+      props: {},
+      hasLive: false
+    };
+    Object.entries(data.props).forEach(([prop, pd]) => {
+      merged[grade].props[prop] = {
+        ...pd,
+        excelDates: [...pd.dates],
+        excelValues: [...pd.values],
+        liveDates: [],
+        liveValues: [],
+        liveReportIds: []
+      };
+    });
+  });
+
+  // Overlay live DB data
+  Object.entries(live).forEach(([grade, liveData]) => {
+    if(!merged[grade]){
+      // New grade not in Excel data
+      merged[grade] = {
+        brand: liveData.brand,
+        resinType: liveData.resinType,
+        grade,
+        isLive: true,
+        hasLive: true,
+        props: {}
+      };
+    } else {
+      merged[grade].hasLive = true;
+      if(liveData.brand && !merged[grade].brand) merged[grade].brand = liveData.brand;
+    }
+
+    Object.entries(liveData.props).forEach(([prop, lpd]) => {
+      if(!merged[grade].props[prop]){
+        merged[grade].props[prop] = {
+          dates: [], values: [],
+          specValue: lpd.specValue, specDir: lpd.specDir, specRaw: '',
+          excelDates: [], excelValues: [],
+          liveDates: [...lpd.dates],
+          liveValues: [...lpd.values],
+          liveReportIds: [...(lpd.reportIds||[])]
+        };
+      } else {
+        merged[grade].props[prop].liveDates = [...lpd.dates];
+        merged[grade].props[prop].liveValues = [...lpd.values];
+        merged[grade].props[prop].liveReportIds = [...(lpd.reportIds||[])];
+        // Override spec from DB if not set in Excel
+        if(merged[grade].props[prop].specValue===null && lpd.specValue!==null){
+          merged[grade].props[prop].specValue = lpd.specValue;
+          merged[grade].props[prop].specDir = lpd.specDir;
+        }
+      }
+
+      // Build merged date+value arrays (sorted by date)
+      const mp = merged[grade].props[prop];
+      const allPts = [
+        ...(mp.excelDates||[]).map((d,i)=>({date:d,val:mp.excelValues[i],src:'excel'})),
+        ...(mp.liveDates||[]).map((d,i)=>({date:d,val:mp.liveValues[i],src:'db'}))
+      ].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      mp.dates = allPts.map(p=>p.date);
+      mp.values = allPts.map(p=>p.val);
+      mp._srcs = allPts.map(p=>p.src);
+    });
+  });
+
+  return merged;
+}
+
+// ── 연계 성적서 건수 ──
+function getLiveTrendCount(){
+  const live = getLiveTrendData();
+  return Object.values(live).reduce((s, g) =>
+    s + Object.values(g.props).reduce((ps, p) => ps + (p.reportIds||[]).length, 0), 0);
+}
+
+function onReportTrendUpdate(){
+  invalidateTrendCache();
+  if(curPage === 'trend') renderTrendPage();
+  // Update live count badge
+  const cnt = getLiveTrendCount();
+  const el = document.getElementById('trend-live-count');
+  if(el) el.textContent = cnt;
+}
+
+// ────────────────────────────────────────
+let trendChart = null;
+let curTrendGrade = null;
+let curTrendProp = null;
+let _cachedMerged = null;
+
+function getTrendDataCached(){
+  if(!_cachedMerged) _cachedMerged = getMergedTrendData();
+  return _cachedMerged;
+}
+function invalidateTrendCache(){ _cachedMerged = null; }
+
+function renderTrendPage(){
+  invalidateTrendCache();
+  const allData = getTrendDataCached();
+  const grades = Object.keys(allData);
+  document.getElementById('trend-mat-count').textContent = grades.length + '종';
+
+  // Update live count
+  const liveCnt = getLiveTrendCount();
+  const liveCntEl = document.getElementById('trend-live-count');
+  if(liveCntEl) liveCntEl.textContent = liveCnt;
+
+  const listEl = document.getElementById('trend-mat-list-body');
+  const brandGroups = {};
+  grades.forEach(g => {
+    const d = allData[g];
+    const b = d.brand || '기타';
+    if(!brandGroups[b]) brandGroups[b] = [];
+    brandGroups[b].push(g);
+  });
+
+  let html = '';
+  Object.entries(brandGroups).forEach(([brand, gradeList]) => {
+    html += `<div style="padding:6px 14px 3px;font-size:10px;font-weight:700;color:var(--gray);background:var(--gray-light);text-transform:uppercase;letter-spacing:.04em">${brand}</div>`;
+    gradeList.forEach(g => {
+      const d = allData[g];
+      const dataCnt = Object.values(d.props).reduce((s, p) => s + (p.values||[]).length, 0);
+      const livePts = Object.values(d.props).reduce((s, p) => s + (p.liveValues||[]).length, 0);
+      const liveTag = livePts > 0 ? `<span class="trend-db-badge trend-new-badge" style="margin-left:4px">+${livePts} 신규</span>` : '';
+      html += `<div class="trend-mat-item ${curTrendGrade===g?'active':''}" id="trend-mat-${g.replace(/\s/g,'_').replace(/[()%]/g,'_')}" onclick="selectTrendGrade('${g.replace(/'/g,"\\'")}')">
+        <div style="flex:1">
+          <div class="trend-mat-grade">${g}${liveTag}</div>
+          <div class="trend-mat-brand">${d.resinType||d.brand||''} · ${dataCnt}건${d.isLive?'·DB전용':''}</div>
+        </div>
+      </div>`;
+    });
+  });
+  listEl.innerHTML = html;
+
+  if(curTrendGrade && allData[curTrendGrade]) selectTrendGrade(curTrendGrade, true);
+}
+
+function selectTrendGrade(grade, keepProp=false){
+  curTrendGrade = grade;
+
+  document.querySelectorAll('.trend-mat-item').forEach(el => el.classList.remove('active'));
+  const safeId = grade.replace(/\s/g,'_').replace(/[()%]/g,'_');
+  const itemEl = document.getElementById('trend-mat-' + safeId);
+  if(itemEl) itemEl.classList.add('active');
+
+  const allData = getTrendDataCached();
+  const data = allData[grade];
+  if(!data) return;
+
+  document.getElementById('trend-empty').style.display = 'none';
+  document.getElementById('trend-content').style.display = 'block';
+
+  document.getElementById('trend-grade-label').textContent = grade;
+  const brandStr = [data.brand, data.resinType].filter(Boolean).join(' · ');
+  document.getElementById('trend-brand-badge').textContent = brandStr;
+
+  // Show live badge
+  const livePtsCnt = Object.values(data.props).reduce((s,p)=>s+(p.liveValues||[]).length,0);
+  const liveBadge = document.getElementById('trend-live-badge');
+  const livePtsEl = document.getElementById('trend-live-pts');
+  if(liveBadge){ liveBadge.style.display = livePtsCnt>0?'inline-flex':'none'; }
+  if(livePtsEl){ livePtsEl.textContent = livePtsCnt; }
+
+  const props = Object.keys(data.props);
+  if(!keepProp || !props.includes(curTrendProp)) curTrendProp = props[0];
+
+  const tabsEl = document.getElementById('trend-prop-tabs');
+  tabsEl.innerHTML = props.map(p => {
+    const pd = data.props[p];
+    const hasLive = (pd.liveValues||[]).length > 0;
+    return `<button class="trend-prop-tab ${p===curTrendProp?'active':''}" onclick="selectTrendProp('${p}')">${p}${hasLive?'<sup style=\"color:#f59e0b\"> ●</sup>':''}</button>`;
+  }).join('');
+
+  renderTrendChart();
+}
+
+function selectTrendProp(prop){
+  curTrendProp = prop;
+  document.querySelectorAll('.trend-prop-tab').forEach(b => {
+    b.classList.toggle('active', b.textContent === prop);
+  });
+  renderTrendChart();
+}
+
+function renderTrendChart(){
+  if(!curTrendGrade || !curTrendProp) return;
+  const allData = getTrendDataCached();
+  const data = allData[curTrendGrade];
+  const pd = data?.props?.[curTrendProp];
+  if(!pd) return;
+
+  const excelDates  = pd.excelDates  || pd.dates  || [];
+  const excelValues = pd.excelValues || pd.values || [];
+  const liveDates   = pd.liveDates  || [];
+  const liveValues  = pd.liveValues || [];
+
+  // Build combined sorted points with source tag
+  const allPts = [
+    ...excelDates.map((d,i) => ({date:d, val:excelValues[i], src:'excel'})),
+    ...liveDates.map((d,i)  => ({date:d, val:liveValues[i],  src:'db'}))
+  ].filter(p=>p.val!=null).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+
+  const dates  = allPts.map(p=>p.date);
+  const values = allPts.map(p=>p.val);
+  const srcs   = allPts.map(p=>p.src);
+
+  const { specValue, specDir, specRaw } = pd;
+  const isNG = v => specValue!=null && (specDir==='min' ? v<specValue : v>specValue);
+
+  // ── Point styling ──
+  const pointColors  = allPts.map(p => isNG(p.val) ? '#dc2626' : p.src==='db' ? '#f59e0b' : '#1a7abf');
+  const pointBg      = allPts.map(p => isNG(p.val) ? '#fca5a5' : p.src==='db' ? '#fde68a' : '#bfdbfe');
+  const pointRadius  = allPts.map(p => p.src==='db' ? 7 : isNG(p.val) ? 6 : 4);
+  const pointStyle   = allPts.map(p => p.src==='db' ? 'rectRot' : 'circle');
+
+  // ── Stats ──
+  const validVals = values.filter(v=>v!=null);
+  const avg       = validVals.length ? (validVals.reduce((a,b)=>a+b,0)/validVals.length).toFixed(2) : '-';
+  const mn        = validVals.length ? Math.min(...validVals).toFixed(2) : '-';
+  const mx        = validVals.length ? Math.max(...validVals).toFixed(2) : '-';
+  const ngCount   = values.filter(v=>v!=null && isNG(v)).length;
+  const ngRate    = validVals.length ? ((ngCount/validVals.length)*100).toFixed(1) : '-';
+  const liveCount = liveValues.length;
+  const excelCount = excelValues.length;
+
+  // ── Badges ──
+  document.getElementById('trend-spec-badge').textContent  = specRaw ? 'SPEC: ' + specRaw : '';
+  document.getElementById('trend-cnt-badge').textContent   = '측정 ' + validVals.length + '건';
+
+  // ── Source legend ──
+  const legendEl = document.getElementById('trend-src-legend');
+  if(legendEl){
+    const hasBoth = excelCount>0 && liveCount>0;
+    legendEl.style.display = hasBoth||liveCount>0 ? 'flex' : 'none';
+    legendEl.innerHTML = hasBoth ? 
+      `<span><span class="trend-src-dot" style="background:#1a7abf"></span>엑셀 기준 데이터 (${excelCount}건)</span>
+       <span><span class="trend-src-dot" style="background:#f59e0b;transform:rotate(45deg);display:inline-block"></span>성적서 DB 연계 (${liveCount}건)</span>
+       <span><span class="trend-src-dot" style="background:#dc2626"></span>NG 항목</span>` :
+      liveCount>0 ?
+      `<span><span class="trend-src-dot" style="background:#f59e0b"></span>성적서 DB 연계 데이터 (${liveCount}건)</span>
+       <span><span class="trend-src-dot" style="background:#dc2626"></span>NG 항목</span>` : '';
+  }
+
+  // ── Stats boxes ──
+  document.getElementById('trend-stats').innerHTML = `
+    <div class="trend-stat-box">
+      <div class="trend-stat-val">${avg}</div>
+      <div class="trend-stat-lbl">평균값</div>
+    </div>
+    <div class="trend-stat-box">
+      <div class="trend-stat-val" style="color:var(--blue)">${mn}</div>
+      <div class="trend-stat-lbl">최소값</div>
+    </div>
+    <div class="trend-stat-box">
+      <div class="trend-stat-val" style="color:var(--teal)">${mx}</div>
+      <div class="trend-stat-lbl">최대값</div>
+    </div>
+    <div class="trend-stat-box">
+      <div class="trend-stat-val" style="color:${specValue!=null?'var(--teal)':'var(--gray)'}">${specValue!=null?specValue:'-'}</div>
+      <div class="trend-stat-lbl">규격 한계</div>
+    </div>
+    <div class="trend-stat-box">
+      <div class="trend-stat-val" style="color:${ngCount>0?'var(--red)':'var(--green)'}">${ngCount>0?ngCount+'건':'전부 OK'}</div>
+      <div class="trend-stat-lbl">NG (${ngRate}%)</div>
+    </div>`;
+
+  // ── Data table ──
+  let tblHtml = `<div style="font-size:11px;font-weight:700;color:var(--navy-mid);margin-bottom:6px">📋 검사 이력 상세</div>
+    <table style="width:100%;border-collapse:collapse;font-size:11px">
+    <thead><tr>
+      <th style="background:var(--navy);color:#fff;padding:5px 8px;text-align:center">No.</th>
+      <th style="background:var(--navy);color:#fff;padding:5px 8px">검사일</th>
+      <th style="background:var(--navy);color:#fff;padding:5px 8px;text-align:center">측정값</th>
+      <th style="background:var(--navy);color:#fff;padding:5px 8px;text-align:center">SPEC</th>
+      <th style="background:var(--navy);color:#fff;padding:5px 8px;text-align:center">판정</th>
+      <th style="background:var(--navy);color:#fff;padding:5px 8px;text-align:center">출처</th>
+    </tr></thead><tbody>`;
+  allPts.forEach((p, i) => {
+    const ng = isNG(p.val);
+    const srcBadge = p.src==='db'
+      ? `<span class="badge" style="background:#fef3c7;color:#b45309">성적서</span>`
+      : `<span class="badge b-navy">엑셀</span>`;
+    const rptLink = p.src==='db' && pd.liveReportIds
+      ? (() => {
+          const dbIdx = allPts.slice(0,i+1).filter(x=>x.src==='db').length - 1;
+          const rptId = (pd.liveReportIds||[])[dbIdx];
+          const rpt = DB.reports.find(r=>r.id===rptId);
+          return rpt ? `<br><span style="font-size:10px;color:var(--gray)">${rpt.no}</span>` : '';
+        })()
+      : '';
+    tblHtml += `<tr style="${ng?'background:#fee2e2':p.src==='db'?'background:#fffbeb':''}">
+      <td style="padding:4px 8px;text-align:center;border-bottom:1px solid #eee">${i+1}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid #eee">${p.date||'-'}${rptLink}</td>
+      <td style="padding:4px 8px;text-align:center;border-bottom:1px solid #eee;font-weight:${ng?'700':'400'};color:${ng?'var(--red)':'var(--navy)'}">${p.val}</td>
+      <td style="padding:4px 8px;text-align:center;border-bottom:1px solid #eee;color:var(--gray)">${specValue!=null?specValue:'-'}</td>
+      <td style="padding:4px 8px;text-align:center;border-bottom:1px solid #eee">${ng?'<span class="badge b-ng">NG</span>':'<span class="badge b-ok">OK</span>'}</td>
+      <td style="padding:4px 8px;text-align:center;border-bottom:1px solid #eee">${srcBadge}</td>
+    </tr>`;
+  });
+  tblHtml += '</tbody></table>';
+  document.getElementById('trend-data-table').innerHTML = tblHtml;
+
+  // ── Chart ──
+  if(trendChart){ trendChart.destroy(); trendChart = null; }
+  const ctx = document.getElementById('trend-chart').getContext('2d');
+  const labels = dates.map(d => d ? d.slice(5) : '?');
+
+  const datasets = [{
+    label: curTrendProp,
+    data: values,
+    borderColor: '#1a7abf',
+    backgroundColor: 'rgba(26,122,191,0.06)',
+    pointBackgroundColor: pointColors,
+    pointBorderColor: pointColors,
+    pointRadius: pointRadius,
+    pointStyle: pointStyle,
+    pointHoverRadius: 8,
+    borderWidth: 2,
+    tension: 0.18,
+    fill: true,
+    order: 1
+  }];
+
+  if(specValue!=null){
+    datasets.push({
+      label: 'SPEC ' + (specDir==='min'?'이상':'이하') + ' ' + specValue,
+      data: values.map(()=>specValue),
+      borderColor: '#dc2626',
+      backgroundColor: 'transparent',
+      borderWidth: 1.5,
+      borderDash: [6,4],
+      pointRadius: 0,
+      tension: 0,
+      fill: false,
+      order: 0
+    });
+  }
+
+  // Add DB data highlight dataset if any
+  if(liveCount > 0){
+    const dbOnly = allPts.map((p,i) => p.src==='db' ? values[i] : null);
+    datasets.push({
+      label: '성적서 연계 데이터 (' + liveCount + '건)',
+      data: dbOnly,
+      borderColor: 'transparent',
+      backgroundColor: '#f59e0b',
+      pointBackgroundColor: dbOnly.map(v=>v!=null?'#f59e0b':'transparent'),
+      pointBorderColor: dbOnly.map(v=>v!=null?'#b45309':'transparent'),
+      pointRadius: dbOnly.map(v=>v!=null?8:0),
+      pointStyle: 'rectRot',
+      pointHoverRadius: 10,
+      borderWidth: 0,
+      tension: 0,
+      fill: false,
+      showLine: false,
+      order: 2
+    });
+  }
+
+  const allVals = specValue!=null ? [...validVals, specValue] : validVals;
+  const yPad = allVals.length ? (Math.max(...allVals)-Math.min(...allVals))*0.15 || Math.max(...allVals)*0.05 : 1;
+  const yMin = allVals.length ? Math.min(...allVals) - yPad : 0;
+  const yMax = allVals.length ? Math.max(...allVals) + yPad : 100;
+
+  trendChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font:{family:"'Noto Sans KR',sans-serif",size:11}, padding:12 }
+        },
+        tooltip: {
+          callbacks: {
+            title: items => dates[items[0].dataIndex] || labels[items[0].dataIndex],
+            label: item => {
+              if(item.datasetIndex===0){
+                const p = allPts[item.dataIndex];
+                const ng = isNG(p.val);
+                const srcTxt = p.src==='db' ? ' [성적서]' : ' [엑셀]';
+                return ` ${curTrendProp}: ${p.val}${srcTxt}${ng?' ❌ NG':''}`;
+              }
+              if(item.raw!=null && item.datasetIndex===datasets.length-1 && liveCount>0){
+                return ` 성적서 연계: ${item.raw}`;
+              }
+              return ` ${item.dataset.label}: ${item.raw}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks:{font:{size:10},maxRotation:45,minRotation:0}, grid:{color:'rgba(0,0,0,0.05)'} },
+        y: { min:yMin, max:yMax, ticks:{font:{size:11}}, grid:{color:'rgba(0,0,0,0.07)'} }
+      }
+    }
+  });
+}
+
+function exportTrendExcel(){
+  if(!curTrendGrade) return;
+  const allData = getTrendDataCached();
+  const data = allData[curTrendGrade];
+  if(!data) return;
+  const wb = XLSX.utils.book_new();
+
+  Object.entries(data.props).forEach(([prop, pd]) => {
+    const excelDates  = pd.excelDates  || [];
+    const excelValues = pd.excelValues || [];
+    const liveDates   = pd.liveDates   || [];
+    const liveValues  = pd.liveValues  || [];
+    const { specValue, specDir } = pd;
+    const isNG = v => specValue!=null && (specDir==='min' ? v<specValue : v>specValue);
+
+    const allPts = [
+      ...excelDates.map((d,i)=>({date:d,val:excelValues[i],src:'엑셀기준'})),
+      ...liveDates.map((d,i) =>({date:d,val:liveValues[i], src:'성적서DB'}))
+    ].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+
+    const rows = allPts.map((p,i) => ({
+      'No.': i+1,
+      '검사일': p.date||'',
+      '측정값': p.val,
+      'SPEC': specValue!=null ? specValue : '',
+      '방향': specDir==='min'?'이상':'이하',
+      '판정': p.val!=null ? (isNG(p.val)?'NG':'OK') : '',
+      '출처': p.src
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [{wch:5},{wch:14},{wch:12},{wch:10},{wch:8},{wch:8},{wch:10}];
+    const sheetName = (prop.length>30?prop.slice(0,30):prop);
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  });
+
+  XLSX.writeFile(wb, `${curTrendGrade}_물성추이도_${today().replace(/-/g,'')}.xlsx`);
+  showToast('Excel 출력 완료', 'success');
+}
+</script>
+
+<script src="supabase.js"></script>
+<script>
+(function(){
+ var URL="https://gyasbmiordkxcfpwgvio.supabase.co", KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF", CK="incoming_ims_v1", cid=Math.random().toString(36).slice(2), sb=null, _t=null, _loading=false;
+ function getSB(){ if(!sb&&window.supabase){ try{ sb=window.supabase.createClient(URL,KEY); }catch(e){} } return sb; }
+ function bundle(){ try{ return {version:DB.version, standards:DB.standards, reports:DB.reports}; }catch(e){ return null; } }
+ function push(){ var s=getSB(); var b=bundle(); if(!s||!b) return; s.from('app_state').upsert({key:CK,value:b,src:cid,updated_at:new Date().toISOString()}).then(function(){},function(){}); }
+ function schedule(){ if(_loading) return; clearTimeout(_t); _t=setTimeout(push,1600); }
+ function hookSave(){ if(typeof saveLocal==='function' && !saveLocal.__hk){ var o=saveLocal; var w=function(){ var r=o.apply(this,arguments); schedule(); return r; }; w.__hk=true; try{ saveLocal=w; }catch(e){} window.saveLocal=w; } }
+ function apply(b){ if(!b) return; _loading=true; try{ DB=b; if(!DB.standards)DB.standards=[]; if(!DB.reports)DB.reports=[]; if(typeof saveLocal==='function') saveLocal(); if(typeof refreshAll==='function') refreshAll(); }catch(e){} _loading=false; }
+ var _tries=0;
+ function boot(){ var s=getSB(); if(!s){ if(_tries++<20) setTimeout(boot,400); return; } hookSave();
+   s.from('app_state').select('value').eq('key',CK).maybeSingle().then(function(r){ if(r&&!r.error&&r.data&&r.data.value) apply(r.data.value); }).catch(function(){});
+   try{ s.channel('ims_rt').on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:'key=eq.'+CK},function(p){ var row=(p&&p.new)||{}; if(row.src===cid) return; if(row.value) apply(row.value); }).subscribe(); }catch(e){}
+ }
+ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot,700); }); else setTimeout(boot,700);
+})();
+</script>
+</body>
+</html>
