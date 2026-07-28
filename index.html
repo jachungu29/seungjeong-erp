@@ -1,65 +1,27 @@
 <!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>승정 ERP · 메인</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<title>승정 ERP</title>
+<link rel="icon" href="로고/승정로고.ico">
+<link rel="apple-touch-icon" href="sj-icon.png">
+<link rel="manifest" href="manifest-erp.json">
+<meta name="theme-color" content="#0e1116">
 <style>
-:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;--faint:#6e7681;--blue:#58a6ff;--green:#3fb950;--amber:#d29922;--purple:#bc8cff;--cyan:#39c5cf;--mono:"JetBrains Mono",Consolas,monospace;--kr:Pretendard,"Malgun Gothic",sans-serif}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--kr);line-height:1.6;font-size:15px}
-.wrap{max-width:960px;margin:0 auto;padding:44px 18px 90px}
-h1{font-size:30px;font-weight:800;margin:0 0 4px}
-.lead{color:var(--dim);font-size:14px;margin-bottom:6px}
-.rev{font-family:var(--mono);font-size:12px;color:var(--cyan);margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
-a.card{display:block;text-decoration:none;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:20px 20px;transition:.14s;color:var(--txt)}
-a.card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 24px rgba(88,166,255,.10)}
-.card .ic{font-size:26px;margin-bottom:10px}
-.card .t{font-size:17px;font-weight:800}
-.card .t .en{font-family:var(--mono);font-size:11px;color:var(--faint);font-weight:600;margin-left:6px}
-.card .d{font-size:13px;color:var(--dim);margin-top:5px}
-.card .go{font-family:var(--mono);font-size:11.5px;color:var(--blue);margin-top:12px}
-.sec{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:1px;margin:30px 0 10px;text-transform:uppercase}
-.legacy{border:1px dashed var(--line);border-radius:14px;background:transparent;padding:14px 18px;display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--dim)}
-.legacy:hover{border-color:var(--amber);color:var(--amber)}
-.legacy .t{font-weight:700;font-size:14px}.legacy .d{font-size:12px;color:var(--faint)}
-footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:center;margin-top:40px;border-top:1px solid var(--line);padding-top:18px}
-</style></head><body><div class="wrap">
-<h1>승정 ERP</h1>
-<div class="lead">설계 기준: 통합설계 + REV.26 · 안전·환경 → 품질 → 납기 → 원가 → 생산성</div>
-<div class="rev">REV.26 · 22 대분류 · 통합 마스터</div>
-
-<div class="sec">주요 화면</div>
-<div class="grid">
- <a class="card" href="참고/integrated.html">
-  <div class="ic">🧭</div>
-  <div class="t">통합설계 <span class="en">integrated</span></div>
-  <div class="d">메뉴(22 대분류) + 모듈 연계 + BOM을 한 화면에서. 첫 진입 추천.</div>
-  <div class="go">열기 →</div></a>
- <a class="card" href="생산/bom.html">
-  <div class="ic">📋</div>
-  <div class="t">BOM LIST <span class="en">bom</span></div>
-  <div class="d">부품표 조회·신규등록(계층)·편집·저장·인쇄·CSV.</div>
-  <div class="go">열기 →</div></a>
- <a class="card" href="설계/menu.html">
-  <div class="ic">🌳</div>
-  <div class="t">설계 구조 <span class="en">menu · REV.26</span></div>
-  <div class="d">22 대분류 코드체계 트리 + 화면별 설계 메모 · 편집.</div>
-  <div class="go">열기 →</div></a>
- <a class="card" href="설계/graph.html">
-  <div class="ic">🕸️</div>
-  <div class="t">설계 그래프 <span class="en">graph · Obsidian</span></div>
-  <div class="d">전체 모듈·화면을 네트워크 그래프로. 드래그·확대·연결 강조.</div>
-  <div class="go">열기 →</div></a>
- <a class="card" href="참고/guide.html">
-  <div class="ic">📖</div>
-  <div class="t">종합 안내서 <span class="en">guide</span></div>
-  <div class="d">계정·배포·협업·Supabase까지 초보자용 통합 안내.</div>
-  <div class="go">열기 →</div></a>
-</div>
-
-<div class="sec">참고 (옛 버전)</div>
-<a class="legacy" href="legacy.html">
- <div class="ic" style="font-size:20px">🗄️</div>
- <div><div class="t">옛 ERP 본체 (v378)</div><div class="d">이전 프로토타입(참고용). 앞으로는 통합설계+REV.26 기준으로 진행합니다.</div></div>
-</a>
-
-<footer>승정 ERP · 메인 · REV.26 기준 · GitHub Pages</footer>
-</div></body></html>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:#0e1116;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ min-height:100vh;font-family:"Malgun Gothic","Pretendard",sans-serif;cursor:pointer;
+ -webkit-tap-highlight-color:transparent;user-select:none}
+.logo{width:min(64vw,340px);filter:drop-shadow(0 8px 26px rgba(0,0,0,.55));transition:transform .25s ease,filter .25s ease}
+body:hover .logo,body:active .logo{transform:scale(1.04)}
+.hint{margin-top:28px;color:#5b6472;font-size:12.5px;letter-spacing:3px;animation:bl 2.2s ease-in-out infinite}
+@keyframes bl{0%,100%{opacity:.3}50%{opacity:.85}}
+</style></head>
+<body onclick="go()" role="button" aria-label="승정 ERP 시작">
+ <img class="logo" src="로고/승정로고_투명.svg" alt="SEUNGJEONG ERP"
+      onerror="this.onerror=null;this.src='로고/승정로고_투명_512.png'">
+ <div class="hint">화면을 누르면 시작합니다</div>
+<script>
+function go(){location.href="legacy.html";}
+</script>
+</body></html>
