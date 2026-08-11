@@ -2,7 +2,7 @@
   "name": "승정 ERP",
   "short_name": "승정ERP",
   "description": "㈜승정 통합 관리 시스템 (ERP·MES)",
-  "start_url": "start.html",
+  "start_url": "index2.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#081722",
