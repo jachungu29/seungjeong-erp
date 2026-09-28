@@ -1,0 +1,4 @@
+# Windows 배치 파일(tools\*.bat)은 CRLF 줄끝이어야 cmd.exe 가 제대로 실행합니다.
+# 어느 PC 에서 받아도(clone/pull) 항상 CRLF 로 풀리도록 고정합니다.
+*.bat text eol=crlf
+*.cmd text eol=crlf
