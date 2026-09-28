@@ -71,14 +71,25 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
   .main-card .t,.main-card .d{padding-right:100px}
 }
 </style></head><body><div class="wrap">
-<h1>승정 ERP <span class="rev">REV-0</span></h1>
-<div class="lead">대분류·중분류 기본 양식 · 내용은 새로 구성</div>
+<div style="display:flex;align-items:center;gap:15px;margin:4px 0 26px">
+ <img src="로고/승정로고_투명.svg" alt="승정 로고" style="width:80px;height:80px;flex:none;border-radius:18px;box-shadow:0 4px 18px rgba(0,0,0,.35)">
+ <div>
+  <h1>승정 ERP <span class="rev">REV-0</span></h1>
+  <div class="lead" style="margin-bottom:0">대분류·중분류 기본 양식 · 내용은 새로 구성</div>
+ </div>
+</div>
 
+<div class="main-wrap">
 <a class="main-card" href="legacy.html">
  <div class="ic">🏭</div>
  <div class="t">SEUNGJEONG ERP <span class="en">REV-0 · 실행 앱</span></div>
  <div class="d">전체 화면이 이 앱 하나에 들어있습니다.</div>
  <div class="go">앱 열기 →</div></a>
+<a class="qr-badge" href="sos.html" title="휴대폰으로 스캔하면 설비이상·안전·소방 신고 화면이 열립니다">
+ <div class="qi" id="hubqr"></div>
+ <div class="ql">📱 안전신고<small>스캔 / 클릭</small></div>
+</a>
+</div>
 
 <div class="sec">설계 · 참고</div>
 <div class="grid">
@@ -134,4 +145,19 @@ footer{color:var(--faint);font-family:var(--mono);font-size:11.5px;text-align:ce
 </div>
 
 <footer>승정 ERP · REV-0 · 기본 양식</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+/* 안전신고 QR: 휴대폰으로 찍으면 sos.html → 안전/이상안전신고.html */
+(function(){
+ var box=document.getElementById('hubqr');if(!box)return;
+ var URL_='https://jachungu29.github.io/seungjeong-erp/sos.html';
+ try{
+  var qr=qrcode(0,'M');qr.addData(URL_);qr.make();
+  box.innerHTML=qr.createSvgTag({cellSize:4,margin:1,scalable:true});
+ }catch(e){
+  box.innerHTML='<div style="font-size:9px;color:#c0392b;text-align:center;padding:8px">QR 생성 실패<br>인터넷 확인</div>';
+ }
+})();
+</script>
 </div></body></html>

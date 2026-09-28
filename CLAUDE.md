@@ -66,7 +66,7 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 | 파일 | 역할 |
 |---|---|
 | `index.html`, `index2.html` | 약 300바이트 리다이렉트 stub(meta refresh + `location.replace`)으로 `SEUNGJEONG ERP.html`로 보냅니다. `manifest-erp.json`(start_url), `sw.js`, legacy 로고 클릭, 대시보드·apqp·imds·isir·production·이상안전이력 등이 `index2.html`을 링크하므로 **index2.html stub을 지우면 안 됩니다.** |
-| `SEUNGJEONG ERP.html` | 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `설계/rev0-map`, `설계/graph`, `설계/obsidian`, `설계/apps`. 대분류 섹션 9개는 비어 있음("항목 추가 예정"). PWA 등록(manifest-erp.json + sw.js)만 스크립트로 들어 있습니다. |
+| `SEUNGJEONG ERP.html` | 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `설계/rev0-map`, `설계/graph`, `설계/obsidian`, `설계/apps`. 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`로고/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
 | `legacy.html` | **ERP 본체 SPA(약 52MB, v378 프로토타입 기반 REV-0).** 좌측 NAV와 전체 뷰가 들어 있습니다. **절대 통째로 Read하지 않습니다**(§5 참조). |
 | `_lib/cloud.js` | 공통 Supabase 헬퍼(약 58줄). `window.SB_URL/SB_KEY`, `window.SB`, `window.__CID`, `window.Cloud`. 반드시 `_lib/supabase.js` 다음에 로드합니다. |
 | `_lib/supabase.js` | supabase-js v2 UMD 로컬 사본(`window.supabase.createClient`). **수정 금지.** CDN 대신 이 파일을 씁니다. |
