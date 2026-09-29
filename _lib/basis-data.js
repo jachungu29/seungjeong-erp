@@ -281,7 +281,7 @@
     {
       id: 'emp', title: '사원 마스터', icon: '👤',
       storage: 'app_state', key: 'emp_master_v1', apply: true,
-      value: empValue, screen: '인사/사원마스터.html',
+      value: empValue, screen: '화면/사원마스터.html',
       preview: empMgr.concat(empWrk),
       cols: ['no', 'name', 'dept', 'rank', 'hire', 'status', 'memo'],
       colLabels: ['사번', '성명', '부서', '직급', '입사일', '상태', '비고'],

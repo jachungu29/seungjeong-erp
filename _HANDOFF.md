@@ -12,7 +12,7 @@
   - push하고 1~2분 뒤 반영됩니다. 옛 화면이 보이면 탭을 닫고 다시 열거나 Ctrl+F5를 누릅니다.
 - 진입 순서: `SEUNGJEONG ERP.html`(유일한 시작 화면, 약 11KB) → `legacy.html`(ERP 본체, 약 50MB)
   - 옛 이동용 파일 `index.html`·`index2.html`은 2026-09-29 삭제했습니다(사장님 지시). 로고·'← 메인' 버튼·앱 설치 시작 주소가 모두 `SEUNGJEONG ERP.html`을 가리킵니다. 인터넷 주소는 맨 앞(…/seungjeong-erp/)만으로는 열리지 않으니 …/seungjeong-erp/SEUNGJEONG%20ERP.html 을 씁니다.
-- 폴더 구조(2026-07-27 사무실 PC가 정리): 화면은 `영업/ 생산/ 품질/ 안전/ 인사/ 대시보드/ 설계/`, 공통 엔진은 `_lib/`, 참고문서·옛 화면은 `_archive/`. 폴더 안 화면은 `<base href="../">`로 루트 기준 경로를 씁니다.
+- 폴더 구조(2026-07-27 사무실 PC가 정리): 화면은 `화면/` 한 폴더(2026-09-29 8개 폴더 통합), 공통 엔진은 `_lib/`, 참고문서·옛 화면은 `_archive/`. 폴더 안 화면은 `<base href="../">`로 루트 기준 경로를 씁니다.
 - DB(현재): 외부 클라우드 Supabase를 씁니다. 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
   - 그 밖의 테이블: `bom`, `production`, `item_master`, `partners`, `sales_order`, `custom_pages`
 - ISIR 성적서 PDF(18개, 약 445MB)는 저장소 밖 `C:\ERP\_ARCHIVE_isir_pdf`에 있습니다(PC마다 따로 보관).
@@ -30,8 +30,8 @@
 ## 데이터 안전 메모
 - app_state 키 이름은 `<기능>_v1` 형식입니다. 구조가 바뀌면 기존 키를 고치지 말고 `_v2` 새 키를 만듭니다.
 - 메뉴 구조의 원본은 app_state `map_struct` 하나입니다. 고치기 전에 `Cloud.get('map_struct')`로 백업부터 받습니다.
-  - 편집은 `설계/graph.html`에서 합니다(열 때 클라우드 값을 받아옴).
-  - `설계/rev0-map.html`은 열 때 클라우드를 읽지 않아서, 다른 PC에서 고친 구조를 덮어쓸 수 있습니다.
+  - 편집은 `화면/graph.html`에서 합니다(열 때 클라우드 값을 받아옴).
+  - `화면/rev0-map.html`은 열 때 클라우드를 읽지 않아서, 다른 PC에서 고친 구조를 덮어쓸 수 있습니다.
 - 브라우저 localStorage는 PC마다 따로입니다. 공유해야 하는 데이터는 반드시 app_state(Cloud.set)에 저장합니다.
 - 아직 PC별 로컬에만 저장되는 것: legacy 핵심 마스터(`SEUNGJEONG_ERP_DB`), `_archive/SPC측정관리.html`
 
@@ -39,17 +39,20 @@
 - 약 50MB이고 한 줄이 매우 깁니다. Read로 통째로 열지 말고 Grep 패턴으로만 봅니다.
 - 수정은 scratchpad의 Python 스크립트로 합니다: utf-8로 읽기 → 앵커가 정확히 1개인지 확인 → 치환 → utf-8로 쓰기
 - 새 전역 이름을 넣기 전에 grep으로 이름이 겹치지 않는지 확인하고, 고유 접두사(`SJ_`, `ne`, `EQL`)를 씁니다.
-- 새 화면을 붙이는 방법: 분류 폴더에 단독 HTML을 만들고 `VIEWS.<id>` iframe(`src="<폴더>/<화면>.html"`)과 `_L2V` 매핑을 추가합니다. 자세한 레시피는 `CLAUDE.md`에 있습니다.
+- 새 화면을 붙이는 방법: `화면/` 폴더에 단독 HTML을 만들고 `VIEWS.<id>` iframe(`src="화면/<화면>.html"`)과 `_L2V` 매핑을 추가합니다. 자세한 레시피는 `CLAUDE.md`에 있습니다.
 - legacy를 커밋할 때마다 이력이 약 50MB씩 늘어납니다. 자잘한 수정은 모아서 한 번에 커밋합니다.
 
 ## ✅ 지금까지 완료 (요약)
 - GitHub Pages 배포와 외부 Supabase 연동(app_state / custom_pages / bom / production / item_master)
-- 22대분류 메뉴 단일 원본: `설계/graph.html`에서 편집하면 legacy/obsidian에 실시간 반영. 5단 편집기(순번 ▲▼, 승격/강등, 확대·축소, 방향키)
+- 22대분류 메뉴 단일 원본: `화면/graph.html`에서 편집하면 legacy/obsidian에 실시간 반영. 5단 편집기(순번 ▲▼, 승격/강등, 확대·축소, 방향키)
 - 영업 7화면, 출하 3화면(공통 툴바 `_lib/sj-sheet.js`)
 - 품질: 품질관리·SPC·수입검사·불량·조도·계측기·검사기준서
 - 인사: 사원마스터·인사고과
 - 안전신고(휴대폰 QR/PWA), 설비관리대장, 도면기반 BOM
-- 생산계획현황 메뉴는 원본 `생산/생산계획현황.html`을 직접 엶(2026-09-29, 빈 로더 plan.html 삭제). 월간 생산보고(prod-report)는 메뉴 '생산보고시스템'·'월간 보고서 관리'에 연결, 인터넷 동기화 제거(이 PC 저장만). 품질 메뉴에 '수입검사 MASTER LIST' 자동 추가(불러올 때마다 붙음).
+- 생산계획현황 메뉴는 원본 `화면/생산계획현황.html`을 직접 엶(2026-09-29, 빈 로더 plan.html 삭제). 월간 생산보고(prod-report)는 메뉴 '생산보고시스템'·'월간 보고서 관리'에 연결, 인터넷 동기화 제거(이 PC 저장만). 품질 메뉴에 '수입검사 MASTER LIST' 자동 추가(불러올 때마다 붙음).
+- 화면 폴더 8개(영업·생산·품질·안전·인사·대시보드·설계·로고)의 파일 28개를 `화면/` 한 폴더로 통합(2026-09-29, 파일 이름 그대로). legacy iframe 31곳·런처·`sos.html`·`manifest.json`·화면 사이 링크 5곳을 함께 고침.
+  - `sw.js` SHELL의 옛 로고 경로(`로고/…svg`)는 동결 기간이라 그대로 둠. 회사PC 백업 뒤 `화면/승정로고_투명.svg`로 바꿉니다.
+  - master 반영 뒤: 휴대폰 홈 화면에 '안전신고' 앱을 추가해 둔 직원(특히 아이폰)은 아이콘을 지우고 QR로 다시 추가해야 할 수 있습니다. QR → sos.html 경로는 그대로 됩니다.
 - 사무실 PC(7/27~8/29): 저장소 경량화, 분류 폴더 정리, 데스크톱 앱(PWA), 기준정보 마스터 `_lib/basis-data.js` 보존(미연결)
 - 집 PC(9/28): GitHub 기준으로 맞춘 뒤 런처 `SEUNGJEONG ERP.html`(대분류 9칸은 '항목 추가 예정'), 멀티 PC 체계(`CLAUDE.md`, `tools\작업시작/종료.bat`, `.gitignore`·`.gitattributes`, `docs/멀티PC_작업가이드.md`)를 올림
   - 집 PC의 옛 상태는 그 PC의 로컬 브랜치 `backup/this-pc-2026-09-28`에 남아 있습니다(9/27 시작화면 전체 메뉴 복원본 포함).
@@ -88,7 +91,7 @@
 3. legacy 핵심 마스터 클라우드화: `sjStoreWrite/sjStoreRead` 두 함수만 바꾸면 됩니다.
 4. SPC측정관리 클라우드 연동, 사원마스터(`emp_master_v1`)와 생산계획현황 작업자 연동
 5. 런처 대분류 9칸 채우기(필요하면 백업 브랜치의 9/27 전체 메뉴 복원본 참고)
-6. `설계/rev0-map.html`이 열 때 `Cloud.get`을 하도록 수정(덮어쓰기 방지)
+6. `화면/rev0-map.html`이 열 때 `Cloud.get`을 하도록 수정(덮어쓰기 방지)
 7. 기타
    - HFP 불량관리(q_hfp)와 vDefect 중복 정리
    - `_lib/basis-data.js`(398종 서식집) 화면 연결
