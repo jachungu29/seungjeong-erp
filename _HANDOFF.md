@@ -10,9 +10,9 @@
   - 옛 작업폴더 `C:\ERP\SEUNGJEONG ERP V2`에서는 더 이상 Claude Code를 열지 않습니다.
 - 배포: GitHub Pages(빌드 없음) https://jachungu29.github.io/seungjeong-erp/
   - push하고 1~2분 뒤 반영됩니다. 옛 화면이 보이면 탭을 닫고 다시 열거나 Ctrl+F5를 누릅니다.
-- 진입 순서: `index.html`·`index2.html`(작은 이동용 stub) → `SEUNGJEONG ERP.html`(대분류 런처, 약 9KB) → `legacy.html`(ERP 본체, 약 50MB)
-  - `index2.html` stub은 지우지 않습니다. 데스크톱 앱(PWA) 시작 주소, 대시보드·apqp·isir 등이 아직 이 파일로 연결됩니다.
-- 폴더 구조(2026-07-27 사무실 PC가 정리): 화면은 `영업/ 생산/ 품질/ 안전/ 인사/ 대시보드/ 설계/ 참고/`, 공통 엔진은 `_lib/`, 참고문서·옛 화면은 `_archive/`. 폴더 안 화면은 `<base href="../">`로 루트 기준 경로를 씁니다.
+- 진입 순서: `SEUNGJEONG ERP.html`(유일한 시작 화면, 약 11KB) → `legacy.html`(ERP 본체, 약 50MB)
+  - 옛 이동용 파일 `index.html`·`index2.html`은 2026-09-29 삭제했습니다(사장님 지시). 로고·'← 메인' 버튼·앱 설치 시작 주소가 모두 `SEUNGJEONG ERP.html`을 가리킵니다. 인터넷 주소는 맨 앞(…/seungjeong-erp/)만으로는 열리지 않으니 …/seungjeong-erp/SEUNGJEONG%20ERP.html 을 씁니다.
+- 폴더 구조(2026-07-27 사무실 PC가 정리): 화면은 `영업/ 생산/ 품질/ 안전/ 인사/ 대시보드/ 설계/`, 공통 엔진은 `_lib/`, 참고문서·옛 화면은 `_archive/`. 폴더 안 화면은 `<base href="../">`로 루트 기준 경로를 씁니다.
 - DB(현재): 외부 클라우드 Supabase를 씁니다. 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
   - 그 밖의 테이블: `bom`, `production`, `item_master`, `partners`, `sales_order`, `custom_pages`
 - ISIR 성적서 PDF(18개, 약 445MB)는 저장소 밖 `C:\ERP\_ARCHIVE_isir_pdf`에 있습니다(PC마다 따로 보관).
@@ -49,7 +49,7 @@
 - 품질: 품질관리·SPC·수입검사·불량·조도·계측기·검사기준서
 - 인사: 사원마스터·인사고과
 - 안전신고(휴대폰 QR/PWA), 설비관리대장, 도면기반 BOM
-- 생산계획·월간보고 클라우드 동기화. 생산계획현황 메뉴는 `생산/plan.html`(클라우드 로더)로 원복(2026-08-29)
+- 생산계획현황 메뉴는 원본 `생산/생산계획현황.html`을 직접 엶(2026-09-29, 빈 로더 plan.html 삭제). 월간 생산보고(prod-report)는 메뉴 '생산보고시스템'·'월간 보고서 관리'에 연결, 인터넷 동기화 제거(이 PC 저장만). 품질 메뉴에 '수입검사 MASTER LIST' 자동 추가(불러올 때마다 붙음).
 - 사무실 PC(7/27~8/29): 저장소 경량화, 분류 폴더 정리, 데스크톱 앱(PWA), 기준정보 마스터 `_lib/basis-data.js` 보존(미연결)
 - 집 PC(9/28): GitHub 기준으로 맞춘 뒤 런처 `SEUNGJEONG ERP.html`(대분류 9칸은 '항목 추가 예정'), 멀티 PC 체계(`CLAUDE.md`, `tools\작업시작/종료.bat`, `.gitignore`·`.gitattributes`, `docs/멀티PC_작업가이드.md`)를 올림
   - 집 PC의 옛 상태는 그 PC의 로컬 브랜치 `backup/this-pc-2026-09-28`에 남아 있습니다(9/27 시작화면 전체 메뉴 복원본 포함).
@@ -88,15 +88,13 @@
 3. legacy 핵심 마스터 클라우드화: `sjStoreWrite/sjStoreRead` 두 함수만 바꾸면 됩니다.
 4. SPC측정관리 클라우드 연동, 사원마스터(`emp_master_v1`)와 생산계획현황 작업자 연동
 5. 런처 대분류 9칸 채우기(필요하면 백업 브랜치의 9/27 전체 메뉴 복원본 참고)
-6. 옛 링크 정리(stub이 있어서 급하지 않음): 대시보드·apqp·imds·isir·production·이상안전이력의 `index2.html` 링크 → `SEUNGJEONG ERP.html`
-7. `설계/rev0-map.html`이 열 때 `Cloud.get`을 하도록 수정(덮어쓰기 방지)
-8. 기타
+6. `설계/rev0-map.html`이 열 때 `Cloud.get`을 하도록 수정(덮어쓰기 방지)
+7. 기타
    - HFP 불량관리(q_hfp)와 vDefect 중복 정리
    - `_lib/basis-data.js`(398종 서식집) 화면 연결
-   - prod-plan `/api/*`(파일함) → Supabase Storage 전환 검토
 
 ## 검증 방법
-- 로컬 확인: `.claude/launch.json`의 `erp-static`(python http.server 8791) → http://localhost:8791/
+- 로컬 확인: `.claude/launch.json`의 `erp-static`(python http.server 8791) → http://localhost:8791/SEUNGJEONG%20ERP.html (맨 앞 주소 localhost:8791/ 은 이제 파일 목록만 보입니다)
   - file:// 로 열면 fetch와 iframe이 막히므로 쓰지 않습니다.
 - 콘솔 오류(SyntaxError·ReferenceError)가 없는지 확인합니다.
 - 클라우드 화면은 저장한 뒤 시크릿창이나 다른 PC에서 같은 데이터가 보이는지 확인합니다.

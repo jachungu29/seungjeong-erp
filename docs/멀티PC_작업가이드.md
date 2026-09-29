@@ -33,7 +33,7 @@
 - Claude Code는 작업 폴더 경로로 "기억 폴더" 이름을 만듭니다.
   - `C:\ERP\seungjeong-erp` → `C--ERP-seungjeong-erp`
 - PC마다 경로가 다르면 기억 폴더도 달라져서 지난 작업을 이어서 기억하지 못합니다.
-- 바탕화면 바로가기(`승정 ERP.url`)의 아이콘도 이 경로를 씁니다.
+- 바탕화면 바로가기(`승정 ERP.url`)의 아이콘도 이 경로를 씁니다. 바로가기 주소는 `https://jachungu29.github.io/seungjeong-erp/SEUNGJEONG%20ERP.html` 입니다(2026-09-29부터 맨 앞 주소 …/seungjeong-erp/ 와 index2.html 은 열리지 않음).
 
 **왜 개인 OneDrive는 안 쓰나요?**
 - 회사 자료는 회사(비즈니스) OneDrive에만 둡니다.

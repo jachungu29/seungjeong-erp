@@ -14,6 +14,24 @@
 
 ---
 
+## 0. 실행 방식과 정리 원칙 (2026-09-29 사장님 결정 — 모든 작업보다 우선)
+
+**실행 방식은 하나: "더블클릭 + 나스".**
+- 컴퓨터: `C:\ERP\seungjeong-erp\SEUNGJEONG ERP.html`을 **더블클릭**해서 엽니다(유일한 시작 화면). 로컬 서버·앱 설치(서비스워커)·인터넷 주소는 쓰지 않는 방향입니다.
+- 데이터: 회사 나스(사내망 전용)에 저장합니다. 인터넷 클라우드 DB는 쓰지 않습니다.
+- 휴대폰 안전신고만: 나스 웹 기능으로 안전신고 화면만 제공합니다(회사 와이파이 전용).
+- 더블클릭(file://)에서는 화면이 다른 파일을 `fetch`로 읽는 것이 막힙니다. 새 기능에 쓰지 말고, 필요한 자료는 나스에서 받습니다(현재 해당: `_archive/도면BOM.html`이 `도면관리.html`을 읽는 부분 — 내장 사본으로 대체 작동 중, 정리 때 두 화면 통합).
+
+**정리 원칙 — 불필요한 것 없이 프로그래밍합니다.**
+1. 옛 판·복사본 파일을 두지 않습니다. 옛 것은 깃허브 기록에만 남깁니다(`_v2`, `_old`, `.bak`, 날짜 붙은 사본 금지).
+2. 중간에 거쳐 가기만 하는 이동용 파일(리다이렉트 stub)을 만들지 않습니다.
+3. 새 화면은 **메뉴 연결과 함께** 만듭니다. 어디에서도 들어갈 수 없는 화면은 남기지 않습니다.
+4. 사진·PDF·데이터를 화면 파일 안에 넣지 않습니다(data: 주소·큰 배열 금지). 나스에 둡니다.
+5. 서버 주소·키는 설정 파일 **한 곳**에만 둡니다(공개 저장소에 올리지 않는 `_private` 등).
+6. 백업·분석 결과물은 `_private\`에만 둡니다(깃허브 차단 확인).
+7. 사람이 보는 이름·문구·안내는 **한국어**로 씁니다.
+8. 파일을 지우기 전에는 ①메뉴·시작 화면·QR 연결 ②실제 데이터가 쓰는지 ③다른 파일과 중복인지 확인합니다. 회사PC 백업 전에는 서비스워커(`sw.js`)를 바꾸지 않고, 캐시 이름 `sj-erp-shell-v1`은 절대 바꾸지 않습니다.
+
 ## 1. 멀티 PC 황금 규칙 (집·사무실)
 
 1. **모든 PC에서 저장소 경로를 `C:\ERP\seungjeong-erp` 하나로 통일합니다.** Claude 메모리 폴더 `%USERPROFILE%\.claude\projects\C--ERP-seungjeong-erp\memory`와 `.url` 바로가기의 IconFile(`C:\ERP\seungjeong-erp\승정.ico`)이 이 경로에 묶여 있습니다. Claude Code도 반드시 이 폴더에서 실행합니다. 옛 폴더 `C:\ERP\SEUNGJEONG ERP V2`는 더 이상 쓰지 않습니다.
@@ -54,10 +72,10 @@
 2026-07-27에 사무실 PC가 저장소를 경량화(이력 1커밋 압축, ISIR PDF 제거)하고 화면을 **분류 폴더**로 옮겼습니다. 루트에는 진입·본체·공통 파일만 있습니다.
 
 ```
-/                     index.html · index2.html(stub) · SEUNGJEONG ERP.html(런처) · legacy.html(본체) · sos.html
-                      manifest-erp.json · sw.js(데스크톱 앱 PWA) · manifest.json(안전신고 PWA) · 아이콘(sj-icon*.png, sj.ico, 승정.ico)
+/                     SEUNGJEONG ERP.html(유일한 시작 화면) · legacy.html(본체) · sos.html
+                      manifest-erp.json · sw.js(데스크톱 앱 PWA) · manifest.json(안전신고 PWA) · 아이콘(sj-icon*.png, 승정.ico)
 _lib/                 cloud.js · supabase.js · sj-sheet.js · basis-data.js · xlsx.full.min.js  (공통 엔진)
-영업/ 생산/ 품질/ 안전/ 인사/ 대시보드/ 설계/ 참고/   화면 파일
+영업/ 생산/ 품질/ 안전/ 인사/ 대시보드/ 설계/   화면 파일
 _archive/             참고문서·옛 화면(legacy가 아직 iframe으로 여는 것 포함: FMEA, 관리계획서, 도면관리, 조도관리, 수입검사 대장 등)
 eq_photos/  로고/     설비 사진 / 브랜드 로고
 tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
@@ -65,8 +83,7 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 
 | 파일 | 역할 |
 |---|---|
-| `index.html`, `index2.html` | 약 300바이트 리다이렉트 stub(meta refresh + `location.replace`)으로 `SEUNGJEONG ERP.html`로 보냅니다. `manifest-erp.json`(start_url), `sw.js`, legacy 로고 클릭, 대시보드·apqp·imds·isir·production·이상안전이력 등이 `index2.html`을 링크하므로 **index2.html stub을 지우면 안 됩니다.** |
-| `SEUNGJEONG ERP.html` | 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `설계/rev0-map`, `설계/graph`, `설계/obsidian`, `설계/apps`. 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`로고/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
+| `SEUNGJEONG ERP.html` | **유일한 시작 화면**(2026-09-29 사장님 지시로 옛 이동용 파일 index.html·index2.html 삭제). legacy 로고 클릭, 각 화면 '← 메인' 버튼, `manifest-erp.json` 시작 주소가 이 파일을 가리킵니다. `sw.js`의 미리 저장 목록(SHELL)은 회사PC 백업이 끝날 때까지 **일부러 그대로 둡니다**(바꾸면 모든 PC에서 서비스워커가 다시 설치됨 — 동결 기간). 백업 뒤 SHELL의 'index2.html'만 'SEUNGJEONG%20ERP.html'로 바꾸고, 캐시 이름 `sj-erp-shell-v1`은 절대 바꾸지 않습니다. 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `설계/rev0-map`, `설계/graph`, `설계/obsidian`, `설계/apps`. 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`로고/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
 | `legacy.html` | **ERP 본체 SPA(약 52MB, v378 프로토타입 기반 REV-0).** 좌측 NAV와 전체 뷰가 들어 있습니다. **절대 통째로 Read하지 않습니다**(§5 참조). |
 | `_lib/cloud.js` | 공통 Supabase 헬퍼(약 58줄). `window.SB_URL/SB_KEY`, `window.SB`, `window.__CID`, `window.Cloud`. 반드시 `_lib/supabase.js` 다음에 로드합니다. |
 | `_lib/supabase.js` | supabase-js v2 UMD 로컬 사본(`window.supabase.createClient`). **수정 금지.** CDN 대신 이 파일을 씁니다. |
@@ -76,8 +93,8 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 | `manifest.json`, `sos.html` | 안전신고 PWA(start_url `안전/이상안전신고.html`). `sos.html`은 영문 짧은 주소 리다이렉트(QR용)입니다. |
 | `설계/graph.html` | **구조도(메뉴) 편집의 단일 원본.** 5단 편집기(순번 ▲▼, 승격◀/강등▶, 확대·축소, 방향키). 열 때 `Cloud.get('map_struct')`를 받습니다. |
 | `설계/rev0-map.html` | 구조도 편집기. ⚠ 열 때 클라우드를 받지 않고 로컬/_DEF만 읽으므로 다른 PC의 편집을 덮어쓸 수 있습니다. 편집은 graph.html에서 하세요. |
-| `설계/obsidian.html` / `설계/menu.html` | 구조도 그래프 뷰(읽기 전용, 실시간 구독) / 옛 트리 뷰(localStorage만 읽음). |
-| `설계/apps.html`, `생산/bom.html`, `생산/plan.html` | `custom_pages` 업로드기와 로더(BOM LIST, 생산계획현황 `?tab=inj\|asy\|mat\|capa\|mst`). legacy의 '생산계획현황' 메뉴는 `생산/plan.html`(클라우드 로더)을 엽니다(2026-08-29 원복). |
+| `설계/obsidian.html` | 구조도 그래프 뷰(읽기 전용, 실시간 구독). |
+| `설계/apps.html`, `생산/bom.html` | `custom_pages` 업로드기와 BOM LIST 로더(삭제된 인터넷 DB 전용 — 지금은 빈 화면, 나스 연결 때 다시 씀). 생산계획현황 로더 `생산/plan.html`은 2026-09-29 삭제. |
 | `.claude/launch.json` | 로컬 미리보기 `erp-static`(`python -m http.server 8791`). |
 | `.gitignore`, `.gitattributes` | 비밀·스크래치·PDF 차단 / `*.bat`·`*.cmd`를 CRLF로 고정. |
 | `tools/작업시작.bat`, `tools/작업종료.bat` | §1의 세션 시작·종료 루틴(UTF-8 BOM 없음 + `chcp 65001`). |
@@ -93,18 +110,17 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
   - ⚠ legacy에 `SPC측정관리.html`(루트) iframe이 남아 있는데 파일은 `_archive/`에 있습니다. 그 메뉴는 404일 수 있습니다(수정 후보).
 - IATF/APQP(`품질/`): apqp(`apqp_register`), isir(`isir_reports`), imds(`imds_data`). 문서관리대장(`iatf_docs_2026`)·IATF절차서(`iatf_procs_v1`)·IATF16949요구사항(`iatf_req_status_v1`)은 `_archive/`
   - ISIR 스캔 PDF(18개, 약 445MB)는 **저장소 밖** `C:\ERP\_ARCHIVE_isir_pdf`에 있습니다. `.gitignore`가 `isir_pdf/`·`*.pdf`를 막습니다. 웹(Pages)에서 isir.html의 PDF 링크는 열리지 않습니다.
-- 생산(`생산/`): prod-plan(`prodplan_v3`, `prodplan_bom`, 5초 폴링. `/api/*`는 Pages에서 비활성), prod-report(`monthreport_v4` = `sj*_v8` localStorage 스냅샷, 4MB 초과 시 로컬만), production(`production` 테이블, 실시간), 생산계획현황(원본 화면; legacy 메뉴는 plan.html 로더 = custom_pages id=4), itemmaster(`item_master`), bom·plan(로더)
+- 생산(`생산/`): prod-report(월간 생산보고, 이 PC 저장만 — `sjprod_data_v8` 등 11개 키. 2026-09-29 'sj*' 전체를 인터넷에 올리던 동기화 제거; 메뉴 '생산보고시스템'·'월간 보고서 관리' = ph_r074/ph_r075), 생산계획현황(원본 화면; 메뉴 '생산계획현황' = plan_cloud가 직접 엶, `?m=2026_09`처럼 월 선택 — 7월 외 달은 단가·가동율이 7월 원본 기준이라는 안내 표시), bom(로더). ※ 2026-09-29 prod-plan·production·itemmaster 삭제(깃허브 기록에 있음)
 - 인사(`인사/`): 사원마스터(`emp_master_v1`, `?tab=mgr|wrk|day|quit` → `emp_office/emp_prod/emp_day/emp_quit`). 인사고과는 legacy 내장(`hr_office/hr_prod`, `hrCompute()`)입니다.
 - 안전(`안전/`): 이상안전신고·이상안전이력(`safety_reports`). 안전대시보드(`safety_dash_cfg`)는 `대시보드/`, 점검체크시트(`safety_inspect_v2`)·신고QR포스터는 `_archive/`
-- 대시보드(`대시보드/`): exec-dashboard(테이블 읽기), dashboard(정적), 안전대시보드
-- 참고(`참고/`): guide, integrated
-- 자산: `eq_photos/`(설비 사진), 브랜드 아이콘(`sj-icon.png`, `sj-icon-mask.png`, `sj.ico`, `승정.ico`, `로고/`; 감청 #15408F, 골드 #F2C14E)
+- 대시보드(`대시보드/`): 안전대시보드 (dashboard·exec-dashboard는 2026-09-29 삭제)
+- 자산: `eq_photos/`(설비 사진), 브랜드 아이콘(`sj-icon.png`, `sj-icon-mask.png`, `승정.ico`, `로고/승정로고_투명.svg`; 감청 #15408F, 골드 #F2C14E)
 
 ---
 
 ## 3. 아키텍처
 
-**진입 흐름:** `/` → `index.html`(stub) → `SEUNGJEONG ERP.html`(런처) → `legacy.html`(앱) → 메뉴를 누르면 네이티브 뷰 또는 iframe 화면이 뜹니다.
+**진입 흐름:** `SEUNGJEONG ERP.html`(유일한 시작 화면 — 더블클릭 또는 로컬 서버 주소/SEUNGJEONG%20ERP.html) → `legacy.html`(앱) → 메뉴를 누르면 네이티브 뷰 또는 iframe 화면이 뜹니다.
 
 **legacy.html의 배선** (줄번호는 바뀔 수 있으니 항상 Grep으로 다시 확인)
 - 975줄 `<script src="_lib/supabase.js"></script><script src="_lib/cloud.js">`
@@ -146,7 +162,7 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
   - `SJ_NAV_V2`, 인사고과 `SJ_HR_*`, 설비대장 확장 `sj_eq_ledger_v1`(전역 `EQL`), `spc_records_v1`, `drawingMgmt_v2`, `CP_INJ_V2`
 - "집과 사무실 화면·데이터가 다르다"는 문제의 원인은 대부분 이 로컬 전용 데이터입니다. 공유가 필요한 데이터는 반드시 app_state에 저장합니다.
 
-**URL/키 하드코딩 현황:** `_lib/cloud.js` 방식(legacy, graph, rev0-map, obsidian, prod-plan, production, exec-dashboard, apqp, isir, imds, 이상안전신고 등)과, 파일마다 `const SB_URL=…, SB_KEY=…`를 인라인으로 두는 방식(`_archive` 제외 약 21개 파일: apps, bom, plan, itemmaster, prod-report, 영업·출하·품질 화면 대부분, 사원마스터 등)이 섞여 있습니다. 불량관리·조도관리는 `/rest/v1/app_state`를 fetch로 직접 호출합니다. **새 화면은 URL/키를 하드코딩하지 말고 `cloud.js`(`window.SB`/`window.Cloud`)를 쓰세요.** DB 주소를 바꿀 때 cloud.js 한 곳만 고치면 되게 하려는 것입니다.
+**URL/키 하드코딩 현황:** `_lib/cloud.js` 방식(legacy, graph, rev0-map, obsidian, apqp, isir, imds, 이상안전신고 등)과, 파일마다 `const SB_URL=…, SB_KEY=…`를 인라인으로 두는 방식(`_archive` 제외 약 19개 파일: apps, bom, 생산계획현황, 영업·출하·품질 화면 대부분, 사원마스터 등)이 섞여 있습니다. 불량관리·조도관리는 `/rest/v1/app_state`를 fetch로 직접 호출합니다. **새 화면은 URL/키를 하드코딩하지 말고 `cloud.js`(`window.SB`/`window.Cloud`)를 쓰세요.** DB 주소를 바꿀 때 cloud.js 한 곳만 고치면 되게 하려는 것입니다.
 
 ---
 
@@ -160,9 +176,9 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 4. 메뉴에 항목이 없으면 `설계/graph.html`에서 추가합니다(클라우드 반영, push 불필요).
 5. 브라우저로 검증(§5)한 뒤 **새 파일과 legacy.html을 함께** 커밋합니다.
 
-**B. 한 파일 여러 탭:** `?tab=` 파라미터로 첫 탭을 고르게 하고, 메뉴마다 뷰 id를 따로 둔 뒤 같은 파일을 다른 tab으로 iframe합니다(품질관리, 사원마스터, SPC측정관리, plan.html 사례). 한 뷰 id를 여러 메뉴가 공유할 수 있으므로, 한 항목만 바꿀 때는 새 뷰 id를 만듭니다(불량관리 → `q_hfp` 사례).
+**B. 한 파일 여러 탭:** `?tab=` 파라미터로 첫 탭을 고르게 하고, 메뉴마다 뷰 id를 따로 둔 뒤 같은 파일을 다른 tab으로 iframe합니다(품질관리, 사원마스터, SPC측정관리 사례). 한 뷰 id를 여러 메뉴가 공유할 수 있으므로, 한 항목만 바꿀 때는 새 뷰 id를 만듭니다(불량관리 → `q_hfp` 사례).
 
-**C. 클라우드 업로드 페이지(custom_pages):** apps.html로 HTML을 업로드하면 같은 title의 행이 교체됩니다. 로더(bom.html/plan.html을 복제)가 slug·title 키워드로 행을 골라 `iframe.srcdoc`으로 띄웁니다. 로더 파일과 VIEWS/_L2V는 처음 한 번만 push하면 되고, 이후 내용 교체는 push 없이 전 PC에 반영됩니다.
+**C. 클라우드 업로드 페이지(custom_pages):** apps.html로 HTML을 업로드하면 같은 title의 행이 교체됩니다. 로더(bom.html을 복제)가 slug·title 키워드로 행을 골라 `iframe.srcdoc`으로 띄웁니다. 로더 파일과 VIEWS/_L2V는 처음 한 번만 push하면 되고, 이후 내용 교체는 push 없이 전 PC에 반영됩니다.
 
 **D. 네이티브 뷰 재사용(먼저 확인!):** legacy에는 v378 코어(`vDefect`, `vGaugeReg`, `vQStd` 등)가 이미 들어 있습니다. 새로 만들기 전에 `grep -o 'qual_[a-z_]*:v[A-Za-z]*' legacy.html`처럼 검색하세요. 있으면 `_L2V` 한 줄로 끝나고, 쓸모없어진 iframe VIEWS와 대용량 파일은 삭제합니다. 사례: 계측기 → `qual_gauge`, 검사기준서 → `qual_std`, 불량집계(자동) → `qual_defect`.
 
@@ -211,7 +227,7 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
   6. 클라우드 화면은 저장한 뒤 새 탭에서 같은 데이터가 보이는지 확인
 - **스크린샷은 legacy처럼 무거운 페이지에서 시간 초과될 수 있습니다.** `read_page`/`find`/`javascript_tool`을 우선 씁니다.
 - **캐시:** push 후 반영까지 1~2분 걸립니다. 첫 404나 옛 화면이 보이면 탭을 완전히 닫았다 열거나 Ctrl+F5를 누르게 안내합니다.
-- **localStorage는 PC 간에 동기화되지 않습니다**(§3). app_state 값이 커지고 있으므로(`monthreport_v4` 약 1.1MB) 사진은 클라우드 base64로만 저장하고 로컬에는 `hasPhoto`만 둡니다. 4MB를 넘는 스냅샷은 클라우드 저장을 건너뛰는 가드를 둡니다.
+- **localStorage는 PC 간에 동기화되지 않습니다**(§3). app_state 값이 커지고 있으므로(옛 `monthreport_v4` 약 1.1MB — 월간 생산보고는 이제 인터넷에 올리지 않음) 사진은 클라우드 base64로만 저장하고 로컬에는 `hasPhoto`만 둡니다. 4MB를 넘는 스냅샷은 클라우드 저장을 건너뛰는 가드를 둡니다.
 - **저장소 용량:** 2026-07-27 경량화로 파일은 약 110MB입니다(그중 `legacy.html` 약 50MB, 이미 50MB 경고선). legacy를 고쳐 커밋할 때마다 약 50MB씩 이력이 늘어나므로, 자잘한 수정은 모아서 한 번에 커밋합니다.
 - **이력 압축(force push) 사고 교훈 (2026-09-28):** 사무실 PC가 7/27에 이력을 압축해 force push한 뒤, 집 PC는 옛 이력 위에서 두 달간 작업해 `no merge base`로 갈라졌습니다. 집 PC를 GitHub 기준으로 맞추고(`git checkout -B master origin/master`) 새 파일만 옮겨 해결했습니다. 옛 상태는 그 PC의 로컬 브랜치 `backup/this-pc-2026-09-28`에 있습니다(그래서 그 PC의 `.git`은 아직 약 2.6GB). **이력을 다시 쓰는 작업은 모든 PC에 알리고, 다른 PC는 재clone 하게 해야 합니다.**
 - 옛 메모리·문서의 "SEUNGJEONG ERP.html = 52MB 앱", "graph.html·cloud.js가 루트에 있음"은 옛 구조 기준입니다. 지금은 9KB 런처 + `legacy.html` 본체 + `설계/`·`_lib/` 폴더입니다.
@@ -242,7 +258,6 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 - HFP 불량관리(`q_hfp`)와 네이티브 `vDefect`의 중복 정리
 - 데이터 권한 정책 강화 + 매일 백업
 - legacy의 `SPC측정관리.html` iframe 경로를 `_archive/SPC측정관리.html`로 고치기(현재 404 가능)
-- 대시보드·apqp·imds·isir 등의 `index2.html` 링크 → `SEUNGJEONG ERP.html`(stub이 있어서 급하지 않음)
 - `설계/rev0-map.html`이 열 때 클라우드를 받도록 개선
 - 런처 대분류 9칸 채우기
 
@@ -253,5 +268,4 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 - `docs/멀티PC_작업가이드.md`: 새 PC 준비(clone 경로, GitHub Desktop, OneDrive)와 매일 작업 절차(초보자용)
 - `tools/작업시작.bat`, `tools/작업종료.bat`: §1 루틴. 파일 안 주석에 단계가 설명돼 있습니다.
 - `_HANDOFF.md`: 집↔사무실 인수인계(현재 상태·다음 작업). 작업을 마칠 때 갱신합니다.
-- `참고/guide.html`: 사용자용 안내 페이지(일부 오래됨)
 - 회사 OneDrive `SEUNGJEONG_ERP_DEV\README.md`, `PRIVATE_인프라정보.md`: 비공개. 저장소에 복사 금지.

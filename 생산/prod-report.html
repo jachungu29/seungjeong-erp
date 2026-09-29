@@ -7,52 +7,7 @@
 <title>생산부 월간 생산보고 시스템 v4 | (주)승정</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<!-- ☁ 클라우드 동기화 (localStorage ↔ Supabase) · 앱 로직은 그대로, 저장만 전 PC 공유 -->
-<script src="_lib/supabase.js"></script>
-<script>
-(function(){
- var SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
- var CKEY="monthreport_v4";           /* app_state 키 */
- var sb=null; try{ sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
- var CID='c'+Math.random().toString(36).slice(2,9);
- function snap(){var o={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('sj')===0)o[k]=localStorage.getItem(k);}return o;}
- function setStatus(msg,warn){var e=document.getElementById('cloudStatus');if(e){e.textContent=msg;e.style.background=warn?'#DC2626':'#0F2B46';}}
- /* 쓰기 가로채기 → 디바운스 후 클라우드 저장 */
- var _si=localStorage.setItem.bind(localStorage), _ri=localStorage.removeItem.bind(localStorage), t=null;
- function schedule(){ if(!sb)return; clearTimeout(t); t=setTimeout(push,1500); }
- function push(){ if(!sb)return; var data=snap(); var s=JSON.stringify(data);
-   if(s.length>4000000){ setStatus('⚠ 사진 용량이 커서 클라우드 저장 생략(로컬만)',true); return; }
-   setStatus('☁ 저장 중…');
-   sb.from('app_state').upsert({key:CKEY,value:data,src:CID,updated_at:new Date().toISOString()})
-     .then(function(r){ setStatus((r&&r.error)?'⚠ 클라우드 저장 실패':'☁ 클라우드 저장됨 ✓',!!(r&&r.error)); })
-     .catch(function(){ setStatus('⚠ 클라우드 저장 실패',true); }); }
- localStorage.setItem=function(k,v){_si(k,v); if(k&&k.indexOf('sj')===0)schedule();};
- localStorage.removeItem=function(k){_ri(k); if(k&&k.indexOf('sj')===0)schedule();};
- /* 부팅: 클라우드 → localStorage → (변경 있으면) 새로고침 1회 */
- if(sb && !sessionStorage.getItem('mr_booted')){
-   sb.from('app_state').select('value').eq('key',CKEY).maybeSingle().then(function(r){
-     sessionStorage.setItem('mr_booted','1');
-     var cloud=(r&&r.data)?r.data.value:null;
-     if(cloud && typeof cloud==='object'){
-       var changed=false;
-       Object.keys(cloud).forEach(function(k){ if(localStorage.getItem(k)!==cloud[k]){ _si(k,cloud[k]); changed=true; } });
-       if(changed) location.reload();
-     } else { if(Object.keys(snap()).length) push(); }   /* 클라우드 비었으면 현재 로컬을 시드 */
-   }).catch(function(){ sessionStorage.setItem('mr_booted','1'); });
- }
- /* 실시간: 다른 PC에서 저장 시, 내가 편집중이 아니면 새로고침 */
- if(sb){ try{ sb.channel('mr_rt').on('postgres_changes',
-     {event:'*',schema:'public',table:'app_state',filter:'key=eq.'+CKEY},
-     function(p){ var row=(p&&p.new)||{}; if(row.src===CID)return; if(!document.hasFocus()) location.reload(); }
-   ).subscribe(); }catch(e){} }
- /* 화면 좌하단 상태 배지 */
- document.addEventListener('DOMContentLoaded',function(){
-   var b=document.createElement('div'); b.id='cloudStatus';
-   b.style.cssText='position:fixed;bottom:10px;left:10px;z-index:99999;font-size:11px;background:#0F2B46;color:#fff;padding:4px 11px;border-radius:9px;opacity:.9;box-shadow:0 2px 8px rgba(0,0,0,.2)';
-   b.textContent=sb?'☁ 클라우드 연결':'로컬 모드'; document.body.appendChild(b);
- });
-})();
-</script>
+<!-- 클라우드 동기화 제거(2026-09-29): 외부 DB 소멸 · sj* 전체 키 업로드 차단 — 저장은 이 PC 브라우저(localStorage) 전용 -->
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--navy:#0F2B46;--blue:#0077B6;--sky:#00B4D8;--sec:#1A3D5C;--hdr-blue:#D1E9F7;--hdr-green:#D1FAE5;--lb:#EBF5FB;--alt:#EFF6FF;--inp:#DBEAFE;--wr:#FEE2E2;--wy:#FEF3C7;--border:#D1D5DB;--text:#374151;--green:#065F46;--red:#DC2626;--amber:#92400E;--sbw:250px}
@@ -1138,7 +1093,7 @@ function woGridHTML(){const rows=woRows();
 
 
 /* ===== 저장 / 취소 (스냅샷 롤백) ===== */
-function snapKeys(){return Object.keys(localStorage).filter(k=>k.indexOf('sj')===0);}
+function snapKeys(){return Object.keys(localStorage).filter(k=>/^(sjprod_|sjplan_|sjdaily_|sjgrid_|sjot_|sjoee_|sjcapa_|sjwo_)/.test(k));}
 function takeSnap(){SNAP={};snapKeys().forEach(k=>SNAP[k]=localStorage.getItem(k));}
 function commitAll(){persist();savePlans();saveDaily();saveGrid();saveOT();saveWO();saveOEEP();}
 function reloadStores(){
