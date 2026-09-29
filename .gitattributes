@@ -2,3 +2,4 @@
 # 어느 PC 에서 받아도(clone/pull) 항상 CRLF 로 풀리도록 고정합니다.
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.ps1 text eol=crlf

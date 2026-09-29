@@ -35,3 +35,6 @@ Thumbs.db
 desktop.ini
 
 node_modules/
+
+# 파이썬 실행 때 생기는 임시 폴더
+__pycache__/
