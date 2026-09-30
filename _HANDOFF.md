@@ -76,6 +76,11 @@
   6. 인터넷이 없어도 되도록, CDN으로 불러오는 라이브러리(Chart.js, xlsx, exceljs, html2canvas, qrcode)의 로컬 사본 검토
 - 서버 주소·계정·키는 이 저장소에 적지 않습니다. 필요하면 사용자에게 OneDrive `PRIVATE_인프라정보.md`를 확인해 달라고 합니다.
 
+## ⚠️ 폴더 구조 일원화 — 사장님 최종 결정 (2026-09-30)
+- **표준 = 집 컴퓨터 정리본(`화면/` 폴더 하나 구조)**. 사장님이 두 안을 비교한 뒤 직접 골랐습니다. 같은 날 아침 회사PC 클로드가 적었던 "분류 폴더가 표준, 집 PC 구조는 버림(재clone)" 기록은 **취소**합니다(사장님 결정 전 회사PC 클로드가 단독으로 적은 것).
+- 표준 구조: `SEUNGJEONG ERP.html`(유일한 시작 화면) · `legacy.html` · `화면/`(화면 29개, 로고 포함) · `sos.html` · `_archive/ _lib/ eq_photos/ tools/ docs/` · 비공개 `_private/` · 별도 저장소 `26_seungjeong_ERP/`(제외). index.html·index2.html·참고/ 등은 삭제됨.
+- 회사PC 맞추는 법: 재clone 하지 말고 ① `tools\작업시작.bat`(최신 받기) ② `tools\브라우저백업.bat`(백업) → 사장님이 "백업 끝"이라고 하면 집PC 클로드가 master 에 반영 → ③ 회사PC `작업시작.bat` 한 번 더. 옛 분류 폴더에 회사PC에만 있는 파일이 남아 있으면 폴더가 안 사라질 수 있으니 확인.
+
 ## 🔧 진행중 ② 멀티 PC 체계 마무리
 1. 사무실 PC에서 `tools\작업시작.bat`을 처음 실행해 최신 코드(이번 런처·bat·문서)를 받습니다.
 2. 메모리 통합을 확인합니다: 각 PC의 `%USERPROFILE%\.claude\projects\C--ERP-seungjeong-erp\memory`와 OneDrive `claude-memory`.

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>승정 기준정보 불러오기</title>
+<style>
+  :root{ --bg:#f4f6fb; --card:#fff; --ink:#0f2748; --ink2:#5b6b83; --line:#e4e9f2;
+         --blue:#1a56db; --green:#16a34a; --red:#dc2626; --amber:#b45309; --amberbg:#fef3c7; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Malgun Gothic","맑은 고딕",system-ui,sans-serif;background:var(--bg);color:var(--ink);}
+  .wrap{max-width:1040px;margin:0 auto;padding:18px 16px 60px}
+  h1{font-size:22px;margin:6px 0 4px}
+  .sub{color:var(--ink2);font-size:13.5px;line-height:1.7;margin:0 0 14px}
+  .steps{background:#eef4ff;border:1px solid #cfe0ff;border-radius:12px;padding:12px 16px;font-size:13px;line-height:1.9;margin-bottom:16px}
+  .steps b{color:var(--blue)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(15,39,72,.04)}
+  .head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .ic{font-size:22px}
+  .ttl{font-size:16px;font-weight:800}
+  .cnt{background:#eef2f9;color:var(--ink2);border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:700}
+  .badge{font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 8px}
+  .b-apply{background:#e7f6ec;color:var(--green)}
+  .b-ref{background:#eef2f9;color:var(--ink2)}
+  .b-warn{background:var(--amberbg);color:var(--amber)}
+  .note{color:var(--ink2);font-size:12.5px;line-height:1.6;margin:8px 0 10px}
+  .screen{color:var(--ink2);font-size:12px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  button{font-family:inherit;border:0;border-radius:9px;padding:9px 15px;font-size:13px;font-weight:700;cursor:pointer}
+  .btn-load{background:var(--blue);color:#fff}
+  .btn-prev{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn-csv{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn-load:disabled{background:#c7d2e5;cursor:not-allowed}
+  .st{font-size:12.5px;font-weight:700;margin-left:2px;align-self:center}
+  .prev{margin-top:10px;overflow:auto;max-height:280px;border:1px solid var(--line);border-radius:8px;display:none}
+  table{border-collapse:collapse;width:100%;font-size:12px}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;white-space:nowrap}
+  th{background:#f2f6fc;position:sticky;top:0}
+  .top{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+  .conn{font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:8px;background:#eef2f9;color:var(--ink2)}
+  .warnbox{background:var(--amberbg);border:1px solid #fcd34d;color:var(--amber);border-radius:10px;padding:10px 14px;font-size:12.5px;line-height:1.6;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📋 승정 기준정보 불러오기</h1>
+  <p class="sub">서식집(v11.0)의 <b>승정 실제 기준정보</b>를 현재 ERP의 <b>기존 화면(양식)</b>에 그대로 채워 넣습니다.
+     버튼을 누르기 전에는 아무것도 바뀌지 않고, 누르면 <b>기존 데이터를 먼저 백업</b>한 뒤 교체합니다.</p>
+
+  <div class="steps">
+    <b>사용법(3단계)</b><br>
+    1️⃣ <b>미리보기</b>로 들어올 데이터를 확인 →
+    2️⃣ <b>불러오기(교체)</b> 클릭(확인창 → 자동 백업 → 반영) →
+    3️⃣ 해당 <b>현재 화면</b>을 열어 데이터가 들어왔는지 확인.
+  </div>
+
+  <div class="warnbox">
+    ⚠️ <b>안전 안내</b> · 파란색 <b>불러오기</b> 버튼이 있는 5종(품목·사원·고객사·협력사·금형)만 현재 화면에 바로 반영됩니다.
+    설비·계측기는 현재 ERP 데이터가 더 상세하여 <b>교체하지 않고</b> 미리보기·CSV만 제공합니다.
+    모든 불러오기는 실행 직전 기존 값을 <b>JSON 파일로 자동 다운로드</b>하고 브라우저에도 백업본을 남깁니다.
+  </div>
+
+  <div class="top">
+    <span class="conn" id="conn">클라우드 연결 확인 중…</span>
+    <button class="btn-csv" onclick="backupAllApply()">💾 현재값 전체 백업(JSON)</button>
+  </div>
+
+  <div id="cards"></div>
+</div>
+
+<script src="../_lib/supabase.js"></script>
+<script src="../_lib/basis-data.js"></script>
+<script>
+var B = window.SJ_BASIS;
+var sb = null;
+try { sb = window.supabase.createClient(B.supabaseUrl, B.supabaseKey); } catch (e) {}
+
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function ts(){ var d=new Date(); function p(n){return (n<10?'0':'')+n;} return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds()); }
+function download(name, text){ var b=new Blob([text],{type:'application/json;charset=utf-8'}); var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click(); }
+function setSt(id, msg, color){ var el=document.getElementById('st-'+id); if(el){ el.textContent=msg; el.style.color=color||'#5b6b83'; } }
+
+function rowsOf(m){ return m.rows || m.preview || []; }
+function countOf(m){ if(m.id==='emp') return (m.value.mgr.length+m.value.wrk.length); return rowsOf(m).length; }
+
+function render(){
+  var h='';
+  B.masters.forEach(function(m){
+    var badge = m.apply ? '<span class="badge b-apply">현재 화면에 반영</span>'
+                        : (m.warn ? '<span class="badge b-warn">교체 제외(안전)</span>'
+                                  : '<span class="badge b-ref">참고용</span>');
+    var storeTxt = m.storage==='supabase-table' ? ('Supabase · '+m.table)
+                 : m.storage==='app_state' ? ('클라우드 app_state · '+m.key)
+                 : m.storage==='localStorage' ? ('브라우저 저장 · '+m.key) : '참고 데이터';
+    h+='<div class="card">'
+      + '<div class="head"><span class="ic">'+m.icon+'</span>'
+      + '<span class="ttl">'+esc(m.title)+'</span>'
+      + '<span class="cnt">'+countOf(m)+'건</span>'+badge+'</div>'
+      + '<div class="note">'+esc(m.note)+'</div>'
+      + (m.screen?('<div class="screen">저장 위치: '+esc(storeTxt)+' · 현재 화면: '+esc(m.screen)+'</div>'):('<div class="screen">저장 위치: '+esc(storeTxt)+'</div>'))
+      + '<div class="row">'
+      + '<button class="btn-prev" onclick="preview(\''+m.id+'\')">👁 미리보기</button>'
+      + '<button class="btn-csv" onclick="csv(\''+m.id+'\')">📄 CSV 내보내기</button>'
+      + (m.apply?('<button class="btn-load" onclick="load(\''+m.id+'\')">⬇ 불러오기(교체)</button>'):'')
+      + '<span class="st" id="st-'+m.id+'"></span>'
+      + '</div>'
+      + '<div class="prev" id="prev-'+m.id+'"></div>'
+      + '</div>';
+  });
+  document.getElementById('cards').innerHTML=h;
+}
+
+function mById(id){ for(var i=0;i<B.masters.length;i++) if(B.masters[i].id===id) return B.masters[i]; return null; }
+
+function preview(id){
+  var m=mById(id), box=document.getElementById('prev-'+id);
+  if(box.style.display==='block'){ box.style.display='none'; return; }
+  var rows=rowsOf(m), cols=m.cols, labels=m.colLabels||cols;
+  var h='<table><thead><tr>'+labels.map(function(c){return '<th>'+esc(c)+'</th>';}).join('')+'</tr></thead><tbody>';
+  rows.forEach(function(r){ h+='<tr>'+cols.map(function(c){var v=r[c]; if(Array.isArray(v))v=v.join(', '); return '<td>'+esc(v)+'</td>';}).join('')+'</tr>'; });
+  h+='</tbody></table>';
+  box.innerHTML=h; box.style.display='block';
+}
+
+function csv(id){
+  var m=mById(id), rows=rowsOf(m), cols=m.cols, labels=m.colLabels||cols;
+  var lines=[labels.join(',')];
+  rows.forEach(function(r){ lines.push(cols.map(function(c){ var v=r[c]; if(Array.isArray(v))v=v.join(' '); v=(v==null?'':String(v)); if(/[",\n]/.test(v))v='"'+v.replace(/"/g,'""')+'"'; return v; }).join(',')); });
+  var b=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='승정_기준정보_'+m.id+'.csv'; a.click();
+}
+
+async function load(id){
+  var m=mById(id);
+  if(!m.apply) return;
+  if(!confirm('['+m.title+'] '+countOf(m)+'건을 현재 ERP에 불러옵니다.\n\n· 기존 데이터는 먼저 백업(JSON 다운로드)됩니다.\n· 그런 다음 현재 값을 이 기준정보로 교체합니다.\n\n계속할까요?')) return;
+  setSt(id,'백업·불러오는 중…','#1a56db');
+  try{
+    if(m.storage==='localStorage'){ await loadLocal(m); }
+    else if(m.storage==='app_state'){ await loadAppState(m); }
+    else if(m.storage==='supabase-table'){ await loadTable(m); }
+    setSt(id,'✓ 불러오기 완료 — 현재 화면을 열어 확인하세요','#16a34a');
+  }catch(e){ setSt(id,'✗ 실패: '+(e&&e.message||e),'#dc2626'); alert('불러오기 실패:\n'+(e&&e.message||e)); }
+}
+
+function backupLocal(key){
+  var cur=localStorage.getItem(key);
+  var bakKey=key+'__BAK_'+ts();
+  if(cur!=null){ try{localStorage.setItem(bakKey,cur);}catch(e){} }
+  download('backup_'+key+'_'+ts()+'.json', cur==null?'null':cur);
+  return cur;
+}
+
+async function loadLocal(m){
+  backupLocal(m.key);
+  localStorage.setItem(m.key, JSON.stringify(m.rows));
+}
+
+async function loadAppState(m){
+  var curLocal=localStorage.getItem(m.key);
+  var cloudVal=null;
+  if(sb){ try{ var r=await sb.from('app_state').select('value').eq('key',m.key).maybeSingle(); if(r&&r.data) cloudVal=r.data.value; }catch(e){} }
+  var bak = cloudVal!=null ? cloudVal : (curLocal?JSON.parse(curLocal):null);
+  download('backup_'+m.key+'_'+ts()+'.json', JSON.stringify(bak));
+  try{ localStorage.setItem(m.key+'__BAK_'+ts(), JSON.stringify(bak)); }catch(e){}
+  localStorage.setItem(m.key, JSON.stringify(m.value));
+  if(sb){
+    var res=await sb.from('app_state').upsert({key:m.key, value:m.value, updated_at:new Date().toISOString()});
+    if(res.error) throw new Error('클라우드 저장 실패: '+res.error.message+' (브라우저 저장은 완료됨)');
+  }
+}
+
+async function loadTable(m){
+  if(!sb) throw new Error('Supabase 연결이 없습니다.');
+  var cur=await sb.from(m.table).select('*');
+  if(cur.error) throw new Error(m.table+' 조회 실패: '+cur.error.message);
+  download('backup_'+m.table+'_'+ts()+'.json', JSON.stringify(cur.data||[]));
+  var del=await sb.from(m.table).delete().neq('id', -1);
+  if(del.error) throw new Error(m.table+' 비우기 실패: '+del.error.message);
+  var ins=await sb.from(m.table).insert(m.rows);
+  if(ins.error) throw new Error(m.table+' 입력 실패: '+ins.error.message);
+}
+
+function backupAllApply(){
+  B.masters.forEach(function(m){ if(!m.apply) return;
+    if(m.storage==='localStorage'){ backupLocal(m.key); }
+    else if(m.storage==='app_state'){ var v=localStorage.getItem(m.key); download('backup_'+m.key+'_'+ts()+'.json', v==null?'null':v); }
+  });
+  alert('브라우저에 저장된 현재 기준정보 백업(JSON)을 내려받았습니다.\n(Supabase 품목마스터는 해당 카드의 미리보기/불러오기 시 백업됩니다.)');
+}
+
+(async function(){
+  var c=document.getElementById('conn');
+  if(!sb){ c.textContent='⚠ Supabase 연결 불가(품목·사원 클라우드 반영 제한, 나머지는 정상)'; c.style.color='#b45309'; render(); return; }
+  try{ var r=await sb.from('item_master').select('id').limit(1); if(r.error) throw r.error; c.textContent='☁️ 클라우드 연결됨'; c.style.color='#16a34a'; }
+  catch(e){ c.textContent='⚠ 클라우드 응답 없음(브라우저 저장 항목은 정상 동작)'; c.style.color='#b45309'; }
+  render();
+})();
+</script>
+</body>
+</html>
