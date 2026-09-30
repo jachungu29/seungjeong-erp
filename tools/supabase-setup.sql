@@ -4,6 +4,11 @@
 --       여러 번 실행해도 안전합니다(있는 테이블·데이터는 건드리지 않음).
 -- NAS와 집 PC의 Docker Supabase에 똑같이 실행하면 두 곳의 구조가 같아집니다.
 -- ⚠ 공개 저장소: 이 파일에 주소·비밀번호·키를 적지 마세요.
+-- ⚠ 서버(나스)에서 따로 할 일 — 이 파일로는 되지 않습니다:
+--    · supabase\docker\.env 의 JWT_SECRET·ANON_KEY·SERVICE_ROLE_KEY 를 예시값에서 새 값으로 바꾸기
+--      (예시값 그대로면 누구나 아는 키입니다. 바꾼 뒤 각 PC의 화면/db-setup.html 에 새 anon 키를 저장)
+--    · 8000번 포트는 사내망에서만 열리게 방화벽 설정(공유기 포트포워딩 금지)
+--    · 매일 pg_dump 로 DB 전체 백업(아래 변경 이력은 최근 몇 개만 남으므로 백업을 대신하지 못함)
 -- ===================================================================
 
 -- 1) app_state : 화면 1개 = 문서 1개 (key/value). 거의 모든 화면이 사용
@@ -93,19 +98,70 @@ create table if not exists public.sales_order (
   updated_at timestamptz default now()
 );
 
--- 권한: 브라우저(anon 키)에서 읽기·쓰기 허용 (기존 클라우드와 같은 정책, 사내망 전용 전제)
+-- 권한: 브라우저(anon 키)는 읽기·추가·고치기만 허용합니다. 지우기는 화면에서 실제로 지우는 두 테이블에만 허용합니다.
+--   · 지우기 허용: custom_pages(화면/apps.html 의 앱 삭제), item_master(화면/승정_기준정보_불러오기.html — 백업을 내려받은 뒤 비우고 다시 넣음)
+--   · 지우기 금지: app_state, production, bom, partners, sales_order (화면에서 지우는 곳 없음)
+--   · anon 키는 모든 PC 브라우저에 저장되므로 사실상 공개입니다 → 사내망 전용 + 아래 변경 이력 + 매일 백업이 전제입니다.
+--   · 예전 판의 '모든 동작 허용' 정책(sj_anon_all)이 있으면 지우고 나눠서 다시 만듭니다(여러 번 실행해도 같은 결과).
 do $$
 declare t text;
 begin
   foreach t in array array['app_state','custom_pages','production','item_master','bom','partners','sales_order'] loop
     execute format('alter table public.%I enable row level security', t);
-    execute format('grant select, insert, update, delete on public.%I to anon, authenticated', t);
-    if not exists (select 1 from pg_policies where schemaname='public' and tablename=t and policyname='sj_anon_all') then
-      execute format('create policy sj_anon_all on public.%I for all to anon, authenticated using (true) with check (true)', t);
+    execute format('grant select, insert, update on public.%I to anon, authenticated', t);
+    execute format('revoke delete, truncate on public.%I from anon, authenticated', t);
+    execute format('drop policy if exists sj_anon_all on public.%I', t);
+    execute format('drop policy if exists sj_read on public.%I', t);
+    execute format('drop policy if exists sj_ins on public.%I', t);
+    execute format('drop policy if exists sj_upd on public.%I', t);
+    execute format('drop policy if exists sj_del on public.%I', t);
+    execute format('create policy sj_read on public.%I for select to anon, authenticated using (true)', t);
+    execute format('create policy sj_ins on public.%I for insert to anon, authenticated with check (true)', t);
+    execute format('create policy sj_upd on public.%I for update to anon, authenticated using (true) with check (true)', t);
+    if t = any(array['custom_pages','item_master']) then
+      execute format('grant delete on public.%I to anon, authenticated', t);
+      execute format('create policy sj_del on public.%I for delete to anon, authenticated using (true)', t);
     end if;
   end loop;
 end $$;
 grant usage, select on all sequences in schema public to anon, authenticated;
+
+-- 8) app_state_history : app_state 값을 고치거나 지우기 직전의 값을 보관합니다(잘못 덮어쓴 값 되돌리기용).
+--    브라우저(anon 키)에서는 읽기·쓰기 모두 막습니다. 키마다 최근 20개만 남깁니다.
+--    되돌리기(Studio → SQL Editor):
+--      select id, saved_at, op, src from public.app_state_history where key='<키>' order by id desc;
+--      update public.app_state set value=(select value from public.app_state_history where id=<번호>), updated_at=now() where key='<키>';
+create table if not exists public.app_state_history (
+  id         bigserial primary key,
+  key        text not null,
+  value      jsonb,
+  src        text,
+  op         text,
+  saved_at   timestamptz default now()
+);
+create index if not exists app_state_history_key_id on public.app_state_history (key, id);
+alter table public.app_state_history enable row level security;
+revoke all on public.app_state_history from anon, authenticated;
+revoke all on sequence public.app_state_history_id_seq from anon, authenticated;
+
+create or replace function public.sj_app_state_keep() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if tg_op = 'UPDATE' and old.value is not distinct from new.value then
+    return new;
+  end if;
+  insert into public.app_state_history (key, value, src, op) values (old.key, old.value, old.src, tg_op);
+  delete from public.app_state_history h
+   where h.key = old.key
+     and h.id not in (select x.id from public.app_state_history x where x.key = old.key order by x.id desc limit 20);
+  if tg_op = 'DELETE' then
+    return old;
+  end if;
+  return new;
+end $$;
+drop trigger if exists sj_app_state_keep on public.app_state;
+create trigger sj_app_state_keep before update or delete on public.app_state
+  for each row execute function public.sj_app_state_keep();
 
 -- 실시간(realtime): app_state, production, bom, partners, sales_order
 do $$
@@ -121,8 +177,8 @@ begin
   end loop;
 end $$;
 
--- 확인: 아래 결과에 7개 테이블이 보이면 성공
+-- 확인: 아래 결과에 8개 테이블(7개 + app_state_history)이 보이면 성공
 select table_name from information_schema.tables
 where table_schema='public'
-  and table_name in ('app_state','custom_pages','production','item_master','bom','partners','sales_order')
+  and table_name in ('app_state','custom_pages','production','item_master','bom','partners','sales_order','app_state_history')
 order by 1;

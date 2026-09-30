@@ -59,11 +59,12 @@
 
 ## ✅ 2026-09-30 DB 설정 일원화 (코드 완료)
 - 하드코딩된 옛 클라우드 URL·키를 약 30개 파일에서 모두 제거 → `_lib/sb-env.js` 한 곳에서 결정.
-- 새 파일: `_lib/sb-env.js`, `_lib/sb-config.example.json`, `화면/db-setup.html`(주소·키 입력·연결 시험 — 런처 '설계 · 참고'의 'DB 연결 설정' 카드), `tools/supabase-setup.sql`(7개 테이블+RLS+realtime, 여러 번 실행 안전).
+- 새 파일: `_lib/sb-env.js`, `_lib/sb-config.example.json`, `화면/db-setup.html`(주소·키 입력·연결 시험 — 런처 '설계 · 참고'의 'DB 연결 설정' 카드), `tools/supabase-setup.sql`(7개 테이블+RLS(지우기는 custom_pages·item_master만)+app_state 변경 이력+realtime, 여러 번 실행 안전).
 - 설정 우선순위(`sb-env.js`): 화면이 먼저 정한 값 → 이 브라우저 저장값(db-setup, localStorage `SJ_SB_URL/SJ_SB_KEY`) → `_lib/sb-config.json`(git 제외 — `.gitignore`가 막음, 형식은 `sb-config.example.json`) → 기본값 `http://<연 서버>:8000` 또는 `http://localhost:8000`. 더블클릭(file://)에서는 sb-config.json을 읽지 못하므로 브라우저 저장값을 씁니다.
-- 각 PC에서 할 일: Docker Supabase Studio에서 `tools/supabase-setup.sql` 실행 → `화면/db-setup.html`에서 주소·anon 키 저장 → 연결 시험 초록색 확인 → ERP를 다시 열기(더블클릭).
+- 각 PC에서 할 일: Docker Supabase Studio에서 `tools/supabase-setup.sql` 실행 → **연결 전에 `tools\브라우저백업.bat`로 이 PC 백업 → 어느 PC를 원본으로 할지 사장님이 정함 → 원본 PC를 먼저 연결**(연결되면 구조도·불량관리·영업·품질 화면은 DB 값이 이 PC 값을 덮어쓸 수 있음) → `화면/db-setup.html`에서 주소·anon 키 저장 → 연결 시험 초록색 확인 → ERP를 다시 열기(더블클릭).
 - 옛 인터넷 DB의 custom_pages BOM_LIST와 bom 278건은 새 DB에 없음 → 남은 백업(브라우저백업·엑셀)에서 다시 넣어야 함(생산계획현황은 원본 화면을 직접 열므로 필요 없음).
 - 월간 생산보고(`화면/prod-report.html`)는 정리본대로 클라우드 동기화 없음(이 PC 저장만) — 이번 합치기에서도 그대로 둠.
+- 나스에서 따로 할 일: `.env`의 예시 키(`JWT_SECRET`·`ANON_KEY`·`SERVICE_ROLE_KEY`)를 새 값으로 바꾸기, 8000번 포트는 사내망에서만 열기(방화벽), 매일 `pg_dump` 백업. anon 키는 모든 PC 브라우저에 저장되므로 사실상 공개라는 전제입니다.
 
 ## 🔧 진행중 ① DB를 회사 NAS의 자체 호스팅 Supabase로 이전 (사내망 전용) — 아래는 이전 기록(참고)
 - 설계:

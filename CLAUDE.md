@@ -271,15 +271,17 @@ _private/              비공개(깃허브 차단): 백업·분석·나스 접�
 **진행 중: DB를 회사 NAS의 자체 호스팅 Supabase(Docker)로 이전(사내 LAN 전용).** 정적 HTML + GitHub 구조는 유지하고(재개발 없음), NAS는 DB만 맡습니다. 옛 인터넷 DB(Supabase)는 2026-09-29 사장님이 삭제했으므로(되살리지 않음) 새 서버는 빈 테이블로 시작합니다. 남은 단계:
 1. 관리 대시보드 연결 문제 해결
 2. NAS 웹서버로 ERP 제공
-3. 빈 테이블 생성 — `tools/supabase-setup.sql`(`app_state`, `custom_pages`, `bom`, `production`, `item_master`, `partners`, `sales_order` 7개 + 권한(RLS) + realtime 게시, 여러 번 실행해도 안전)을 Studio → SQL Editor → Run으로 실행
-4. ✅ `SB_URL/SB_KEY` 공통 설정으로 통합 완료(2026-09-30, `_lib/sb-env.js`). 남은 일: 각 PC 브라우저에서 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 연결 설정' 카드)로 주소·anon 키를 저장하고 연결 시험이 초록색인지 확인
-5. 자동 백업
+3. 빈 테이블 생성 — `tools/supabase-setup.sql`(`app_state`, `custom_pages`, `bom`, `production`, `item_master`, `partners`, `sales_order` 7개 + 권한(RLS: 읽기·추가·고치기, 지우기는 `custom_pages`·`item_master`만) + `app_state` 변경 이력(`app_state_history`, 키마다 최근 20개) + realtime 게시, 여러 번 실행해도 안전)을 Studio → SQL Editor → Run으로 실행
+4. ✅ `SB_URL/SB_KEY` 공통 설정으로 통합 완료(2026-09-30, `_lib/sb-env.js`). 남은 일: 각 PC에서 먼저 `tools\브라우저백업.bat`로 백업한 뒤(아래 '연결 전 백업' 참고) 브라우저에서 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 연결 설정' 카드)로 주소·anon 키를 저장하고 연결 시험이 초록색인지 확인
+5. 자동 백업(나스에서 매일 `pg_dump`)
+6. 나스 `.env`의 예시 키(`JWT_SECRET`·`ANON_KEY`·`SERVICE_ROLE_KEY`)를 새 값으로 바꾸고, 8000번 포트는 사내망에서만 열리게 방화벽 설정
 
 **DB 접속 설정 (2026-09-30):**
 - `_lib/sb-env.js`가 `window.SB_URL/SB_KEY/SB_ENV_SRC`를 정하는 단일 원본입니다. 우선순위: ① 화면이 먼저 정한 값 → ② 이 브라우저 저장값(`화면/db-setup.html`에서 입력, localStorage `SJ_SB_URL/SJ_SB_KEY`) → ③ `_lib/sb-config.json`(git 제외 — `.gitignore`가 막음, 형식은 `_lib/sb-config.example.json`) → ④ 기본값 `http://<연 서버>:8000`(http로 열었을 때) 또는 `http://localhost:8000`. 키가 없으면 화면은 로컬 모드로 동작합니다.
 - 더블클릭(file://)으로 열면 ③ 파일을 읽을 수 없으므로(파일 읽기 차단) 실제로는 ② 브라우저 저장값을 씁니다. 더블클릭 화면끼리는 저장값을 함께 쓰므로 `화면/db-setup.html`에서 한 번 저장하면 legacy와 모든 화면에 적용됩니다.
 - 새 DB에는 옛 인터넷 DB의 `custom_pages` BOM_LIST와 `bom` 278건이 없습니다. 남은 백업(브라우저백업·엑셀)에서 다시 넣어야 합니다(생산계획현황은 원본 화면을 직접 열므로 필요 없음).
 - 회사 NAS와 집 PC의 Docker Supabase는 서로 다른 DB입니다(자동 동기화 없음). 데이터까지 같게 하려면 한쪽을 원본으로 정해 옮깁니다.
+- **연결 전 백업(필수):** PC를 DB에 처음 연결하면 구조도(`map_struct`)·`화면/불량관리.html`·app_state 영업·품질 화면은 DB 값이 이 PC 값을 덮어쓸 수 있습니다. 연결 전에 `tools\브라우저백업.bat`로 이 PC 백업 → 어느 PC를 원본으로 할지 사장님이 정함 → 원본 PC를 먼저 연결.
 
 주소·계정·키·진단 절차는 **PRIVATE_인프라정보.md에만** 있습니다.
 
