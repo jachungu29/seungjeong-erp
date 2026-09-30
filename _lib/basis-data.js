@@ -275,7 +275,7 @@
       storage: 'supabase-table', table: 'item_master', apply: true,
       cols: ['pno', 'name', 'cat', 'spec', 'mat', 'price', 'unit', 'sup', 'remark'],
       colLabels: ['품번', '품명', '구분', '규격', '재질', '단가', '단위', '공급처', '비고'],
-      screen: '생산/itemmaster.html', rows: itemRows,
+      screen: '나스 DB item_master 표(전용 화면 없음)', rows: itemRows,
       note: '현재 품목마스터(Supabase item_master)에 그대로 불러옵니다.'
     },
     {

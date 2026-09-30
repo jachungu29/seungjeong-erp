@@ -13,7 +13,7 @@
 - 진입 순서: `SEUNGJEONG ERP.html`(유일한 시작 화면, 약 11KB) → `legacy.html`(ERP 본체, 약 50MB)
   - 옛 이동용 파일 `index.html`·`index2.html`은 2026-09-29 삭제했습니다(사장님 지시). 로고·'← 메인' 버튼·앱 설치 시작 주소가 모두 `SEUNGJEONG ERP.html`을 가리킵니다. 인터넷 주소는 맨 앞(…/seungjeong-erp/)만으로는 열리지 않으니 …/seungjeong-erp/SEUNGJEONG%20ERP.html 을 씁니다.
 - 폴더 구조(2026-07-27 사무실 PC가 정리): 화면은 `화면/` 한 폴더(2026-09-29 8개 폴더 통합), 공통 엔진은 `_lib/`, 참고문서·옛 화면은 `_archive/`. 폴더 안 화면은 `<base href="../">`로 루트 기준 경로를 씁니다.
-- DB(현재, 2026-09-30~): 회사 나스의 **자체 호스팅 Supabase(Docker)**로 옮기는 중입니다(사내망 전용). 옛 인터넷 DB(Supabase)는 2026-09-29 사장님이 삭제했습니다(되살리지 않음). 집 PC에도 같은 구성의 Docker Supabase가 있지만 나스와는 서로 다른 DB입니다(자동 동기화 없음). 접속 주소·키는 `_lib/sb-env.js`가 정하고, 값은 PC(브라우저)마다 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 연결 설정' 카드)에서 입력합니다(저장소에는 없음). 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
+- DB(현재, 2026-09-30~): 회사 나스의 **자체 호스팅 Supabase(Docker)**로 옮기는 중입니다(사내망 전용). 옛 인터넷 DB(Supabase)는 2026-09-29 사장님이 삭제했습니다(되살리지 않음). 집 PC에도 같은 구성의 Docker Supabase가 있지만 나스와는 서로 다른 DB입니다(자동 동기화 없음). 접속 주소·키는 `_lib/sb-env.js`가 정하고, 값은 PC(브라우저)마다 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 접속 설정' 카드)에서 입력합니다(저장소에는 없음). 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
   - 그 밖의 테이블: `bom`, `production`, `item_master`, `partners`, `sales_order`, `custom_pages`
 - ISIR 성적서 PDF(18개, 약 445MB)는 저장소 밖 `C:\ERP\_ARCHIVE_isir_pdf`에 있습니다(PC마다 따로 보관).
 
@@ -21,7 +21,7 @@
 1. **시작할 때**: `tools\작업시작.bat`을 더블클릭합니다(최신 코드 pull + Claude 메모리 받기). 그다음 Claude 새 대화를 엽니다.
 2. **끝낼 때**: `tools\작업종료.bat`을 더블클릭합니다(메모리 올리기 + 변경 확인). 그다음 GitHub Desktop에서 **Commit → Push** 합니다.
 3. **집·사무실 동시 편집 금지**. 한 PC에서 끝내고 push까지 마친 뒤 다른 PC에서 시작합니다.
-4. **실데이터 삭제·훼손 금지**: `bom` 278건, `production`, `app_state`. 외부 클라우드 데이터는 NAS로 옮긴 뒤에도 지우지 않고 보존합니다.
+4. **실데이터 삭제·훼손 금지**: 각 PC 브라우저 저장 자료, `_private\백업`의 백업 파일(BOM 원본 278행 포함), 앞으로 나스 DB의 자료. 옛 인터넷 DB는 2026-09-29 사장님이 이미 삭제했습니다(되살리지 않음).
 5. **공개 저장소이므로** IP, 서버 주소, NAS 이름, 계정, 비밀번호, 키, .env 내용은 절대 커밋하지 않습니다.
    - 비공개 메모는 회사 OneDrive `SEUNGJEONG_ERP_DEV\PRIVATE_인프라정보.md`에만 둡니다.
    - 비밀번호와 키는 회사 NAS와 사무실 PC에만 둡니다.
@@ -59,7 +59,7 @@
 
 ## ✅ 2026-09-30 DB 설정 일원화 (코드 완료)
 - 하드코딩된 옛 클라우드 URL·키를 약 30개 파일에서 모두 제거 → `_lib/sb-env.js` 한 곳에서 결정.
-- 새 파일: `_lib/sb-env.js`, `_lib/sb-config.example.json`, `화면/db-setup.html`(주소·키 입력·연결 시험 — 런처 '설계 · 참고'의 'DB 연결 설정' 카드), `tools/supabase-setup.sql`(7개 테이블+RLS(지우기는 custom_pages·item_master만)+app_state 변경 이력+realtime, 여러 번 실행 안전).
+- 새 파일: `_lib/sb-env.js`, `_lib/sb-config.example.json`, `화면/db-setup.html`(주소·키 입력·연결 시험 — 런처 '설계 · 참고'의 'DB 접속 설정' 카드), `tools/supabase-setup.sql`(7개 테이블+RLS(지우기는 custom_pages·item_master만)+app_state 변경 이력+realtime, 여러 번 실행 안전).
 - 설정 우선순위(`sb-env.js`): 화면이 먼저 정한 값 → 이 브라우저 저장값(db-setup, localStorage `SJ_SB_URL/SJ_SB_KEY`) → `_lib/sb-config.json`(git 제외 — `.gitignore`가 막음, 형식은 `sb-config.example.json`) → 기본값 `http://<연 서버>:8000` 또는 `http://localhost:8000`. 더블클릭(file://)에서는 sb-config.json을 읽지 못하므로 브라우저 저장값을 씁니다.
 - 각 PC에서 할 일: Docker Supabase Studio에서 `tools/supabase-setup.sql` 실행 → **연결 전에 `tools\브라우저백업.bat`로 이 PC 백업 → 어느 PC를 원본으로 할지 사장님이 정함 → 원본 PC를 먼저 연결**(연결되면 구조도·불량관리·영업·품질 화면은 DB 값이 이 PC 값을 덮어쓸 수 있음) → `화면/db-setup.html`에서 주소·anon 키 저장 → 연결 시험 초록색 확인 → ERP를 다시 열기(더블클릭).
 - 옛 인터넷 DB의 custom_pages BOM_LIST와 bom 278건은 새 DB에 없음 → 남은 백업(브라우저백업·엑셀)에서 다시 넣어야 함(생산계획현황은 원본 화면을 직접 열므로 필요 없음).
@@ -71,7 +71,7 @@
   - 정적 HTML 코드와 GitHub는 그대로 둡니다. NAS는 DB 역할만 합니다.
   - 사무실 PC에서 웹 ERP를 열면 API를 통해 NAS 데이터를 읽고 씁니다.
   - 회사 밖(집)에서는 NAS에 접속되지 않는 것이 정상입니다.
-- 새 서버는 빈 테이블로 시작합니다. 외부 클라우드 데이터는 보존합니다(삭제 금지).
+- 새 서버는 빈 테이블로 시작합니다. 자료는 각 PC 백업(엣지 더블클릭 저장본이 기준)과 `_private\백업\승정ERP_BOM원본_278행_integrated.json`에서 옮겨 넣습니다.
 - 완료: NAS에서 Supabase 컨테이너가 실행 중입니다(경량 구성).
 - 남은 일(순서대로):
   1. 관리 화면(대시보드) 연결 문제 해결

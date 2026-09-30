@@ -105,11 +105,11 @@ _private/              비공개(깃허브 차단): 백업·분석·나스 접�
 
 | 파일 | 역할 |
 |---|---|
-| `SEUNGJEONG ERP.html` | **유일한 시작 화면**(2026-09-29 사장님 지시로 옛 이동용 파일 index.html·index2.html 삭제). legacy 로고 클릭, 각 화면 '← 메인' 버튼, `manifest-erp.json` 시작 주소가 이 파일을 가리킵니다. `sw.js`의 미리 저장 목록(SHELL)은 회사PC 백업이 끝날 때까지 **일부러 그대로 둡니다**(바꾸면 모든 PC에서 서비스워커가 다시 설치됨 — 동결 기간). 백업 뒤 SHELL의 'index2.html'을 'SEUNGJEONG%20ERP.html'로, '로고/승정로고_투명.svg'를 '화면/승정로고_투명.svg'로(2026-09-29 폴더 통합으로 옮겨짐) 바꾸고, 캐시 이름 `sj-erp-shell-v1`은 절대 바꾸지 않습니다. 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `화면/rev0-map`, `화면/graph`, `화면/obsidian`, `화면/apps`, `화면/db-setup`(DB 연결 설정). 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`화면/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
+| `SEUNGJEONG ERP.html` | **유일한 시작 화면**(2026-09-29 사장님 지시로 옛 이동용 파일 index.html·index2.html 삭제). legacy 로고 클릭, 각 화면 '← 메인' 버튼, `manifest-erp.json` 시작 주소가 이 파일을 가리킵니다. `sw.js`의 미리 저장 목록(SHELL)은 회사PC 백업이 끝날 때까지 **일부러 그대로 둡니다**(바꾸면 모든 PC에서 서비스워커가 다시 설치됨 — 동결 기간). 백업 뒤 SHELL의 'index2.html'을 'SEUNGJEONG%20ERP.html'로, '로고/승정로고_투명.svg'를 '화면/승정로고_투명.svg'로(2026-09-29 폴더 통합으로 옮겨짐) 바꾸고, 캐시 이름 `sj-erp-shell-v1`은 절대 바꾸지 않습니다. 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `화면/rev0-map`, `화면/graph`, `화면/obsidian`, `화면/apps`, `화면/db-setup`(DB 접속 설정). 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`화면/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
 | `legacy.html` | **ERP 본체 SPA(약 52MB, v378 프로토타입 기반 REV-0).** 좌측 NAV와 전체 뷰가 들어 있습니다. **절대 통째로 Read하지 않습니다**(§5 참조). |
 | `_lib/sb-env.js` | **DB 접속 설정 단일 원본**(2026-09-30). `window.SB_URL/SB_KEY/SB_ENV_SRC`를 정합니다. 우선순위: 화면 지정 → 브라우저 저장값(`화면/db-setup.html`, localStorage `SJ_SB_URL/SJ_SB_KEY`) → `_lib/sb-config.json`(git 제외 — `.gitignore`가 막음, 형식은 `sb-config.example.json`. 더블클릭(file://)에서는 읽히지 않음) → 기본값 `http://<연 서버>:8000` 또는 `http://localhost:8000`. Supabase를 쓰는 모든 화면이 `<base>` 바로 다음에 이 파일을 로드합니다. **주소·키를 여기 적지 않습니다.** |
 | `_lib/cloud.js` | 공통 Supabase 헬퍼(약 58줄). `window.SB`, `window.__CID`, `window.Cloud`. 반드시 `_lib/sb-env.js` → `_lib/supabase.js` 다음에 로드합니다. |
-| `화면/db-setup.html`, `tools/supabase-setup.sql` | PC(브라우저)별 DB 주소·anon 키 입력·연결 시험 화면(런처 '설계 · 참고'의 'DB 연결 설정' 카드) / 7개 테이블+RLS+realtime을 만드는 SQL(여러 번 실행해도 안전). |
+| `화면/db-setup.html`, `tools/supabase-setup.sql` | PC(브라우저)별 DB 주소·anon 키 입력·연결 시험 화면(런처 '설계 · 참고'의 'DB 접속 설정' 카드) / 7개 테이블+RLS+realtime을 만드는 SQL(여러 번 실행해도 안전). |
 | `_lib/supabase.js` | supabase-js v2 UMD 로컬 사본(`window.supabase.createClient`). **수정 금지.** CDN 대신 이 파일을 씁니다. |
 | `_lib/sj-sheet.js` | 영업·수주 9개 화면 공통 툴바(검색 + CSV). 한 곳 고치면 전체 반영. |
 | `_lib/basis-data.js` | 기준정보 마스터(398종 서식집 단일 원본). **아직 어느 화면에도 연결 안 됨**(보존용). |
@@ -272,7 +272,7 @@ _private/              비공개(깃허브 차단): 백업·분석·나스 접�
 1. 관리 대시보드 연결 문제 해결
 2. NAS 웹서버로 ERP 제공
 3. 빈 테이블 생성 — `tools/supabase-setup.sql`(`app_state`, `custom_pages`, `bom`, `production`, `item_master`, `partners`, `sales_order` 7개 + 권한(RLS: 읽기·추가·고치기, 지우기는 `custom_pages`·`item_master`만) + `app_state` 변경 이력(`app_state_history`, 키마다 최근 20개) + realtime 게시, 여러 번 실행해도 안전)을 Studio → SQL Editor → Run으로 실행
-4. ✅ `SB_URL/SB_KEY` 공통 설정으로 통합 완료(2026-09-30, `_lib/sb-env.js`). 남은 일: 각 PC에서 먼저 `tools\브라우저백업.bat`로 백업한 뒤(아래 '연결 전 백업' 참고) 브라우저에서 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 연결 설정' 카드)로 주소·anon 키를 저장하고 연결 시험이 초록색인지 확인
+4. ✅ `SB_URL/SB_KEY` 공통 설정으로 통합 완료(2026-09-30, `_lib/sb-env.js`). 남은 일: 각 PC에서 먼저 `tools\브라우저백업.bat`로 백업한 뒤(아래 '연결 전 백업' 참고) 브라우저에서 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 접속 설정' 카드)로 주소·anon 키를 저장하고 연결 시험이 초록색인지 확인
 5. 자동 백업(나스에서 매일 `pg_dump`)
 6. 나스 `.env`의 예시 키(`JWT_SECRET`·`ANON_KEY`·`SERVICE_ROLE_KEY`)를 새 값으로 바꾸고, 8000번 포트는 사내망에서만 열리게 방화벽 설정
 

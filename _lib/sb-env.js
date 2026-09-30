@@ -22,7 +22,7 @@
     if(u){ window.SB_URL = u; window.SB_KEY = window.SB_KEY || k; src = 'browser'; }
   }
 
-  if(!window.SB_URL){
+  if(!window.SB_URL && location.protocol !== 'file:'){   // 더블클릭(file://)에서는 파일 읽기가 막히므로 건너뜀
     try{
       var me = document.currentScript && document.currentScript.src;
       var cfgUrl = me ? new URL('sb-config.json', me).href : '_lib/sb-config.json';
