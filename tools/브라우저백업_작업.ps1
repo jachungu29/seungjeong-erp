@@ -1001,6 +1001,93 @@ foreach ($l in $script:Linked) { Say ('  - 복사: ' + (Get-MaskedPath $l.source
 foreach ($l in $script:LinkedSkipped) { Say ('  - 못/안 받음: ' + (Get-MaskedPath $l.source) + '  - ' + $l.reason) 'Yellow' }
 if ($script:Linked.Count -eq 0 -and $script:LinkedSkipped.Count -eq 0) { Say '  찾은 파일 없음' }
 
+# ---- [2c] 이 PC 의 ERP 폴더 상태 기록 (읽기만 - 두 PC 를 똑같이 맞추기 전에 이 PC 에만 있는 것을 확인하려고)
+function Find-GitExe {
+    $c = Get-Command git.exe -ErrorAction SilentlyContinue
+    if ($c) { return $c.Source }
+    $gd = Join-Path $env:LOCALAPPDATA 'GitHubDesktop'
+    if (Test-Path -LiteralPath $gd) {
+        $cand = @(Get-ChildItem -LiteralPath $gd -Directory -Filter 'app-*' -ErrorAction SilentlyContinue | Sort-Object Name -Descending |
+                  ForEach-Object { Join-Path $_.FullName 'resources\app\git\cmd\git.exe' } | Where-Object { Test-Path -LiteralPath $_ })
+        if ($cand.Count -gt 0) { return $cand[0] }
+    }
+    $pf = Join-Path $env:ProgramFiles 'Git\cmd\git.exe'
+    if (Test-Path -LiteralPath $pf) { return $pf }
+    return $null
+}
+function Invoke-GitLines([string]$GitExe, [string[]]$GitArgs) {
+    # 읽기 전용 git 명령만 부름. 한글 경로가 깨지지 않도록 UTF-8 로 받음
+    $old = [Console]::OutputEncoding
+    try {
+        [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+        $out = & $GitExe -c core.quotepath=false -C $repoRoot @GitArgs 2>$null
+        return @($out | ForEach-Object { [string]$_ })
+    } catch { return @() } finally { [Console]::OutputEncoding = $old }
+}
+function Get-FileSha256([string]$Path) {
+    $fs = $null
+    try {
+        $fs = [System.IO.FileStream]::new($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+        $h256 = [System.Security.Cryptography.SHA256]::Create()
+        try { return [System.BitConverter]::ToString($h256.ComputeHash($fs)).Replace('-', '').ToLowerInvariant() } finally { $h256.Dispose() }
+    } catch { return '' } finally { if ($fs) { $fs.Dispose() } }
+}
+$repoState = $null
+Say ''
+Say '[이 PC 의 ERP 폴더 상태] 기록 중... (읽기만)' 'Cyan'
+try {
+    $gitExe = Find-GitExe
+    $rs = [ordered]@{ repoRoot = $repoRoot; isGitRepo = $inRepo; gitFound = [bool]$gitExe }
+    if ($inRepo -and $gitExe) {
+        $rs.branch      = (Invoke-GitLines $gitExe @('rev-parse', '--abbrev-ref', 'HEAD')) -join ''
+        $rs.head        = (Invoke-GitLines $gitExe @('log', '-1', '--format=%h %ad %s', '--date=format:%Y-%m-%d %H:%M')) -join ''
+        $rs.statusLine  = (Invoke-GitLines $gitExe @('status', '-sb', '--porcelain=v1')) | Select-Object -First 1
+        $rs.localBranches = @(Invoke-GitLines $gitExe @('branch', '--format=%(refname:short) %(upstream:short) %(upstream:track)'))
+        $rs.recentLog   = @(Invoke-GitLines $gitExe @('log', '-10', '--format=%h %ad %s', '--date=format:%Y-%m-%d %H:%M'))
+        $rs.stashCount  = @(Invoke-GitLines $gitExe @('stash', 'list')).Count
+        $rs.unpushed    = @(Invoke-GitLines $gitExe @('log', '--branches', '--not', '--remotes', '--format=%h %ad %s', '--date=format:%Y-%m-%d %H:%M'))
+        $st = @(Invoke-GitLines $gitExe @('status', '--porcelain=v1', '--ignored', '-uall'))
+        $changed = New-Object System.Collections.Generic.List[object]
+        $onlyHere = New-Object System.Collections.Generic.List[object]
+        $privateNames = New-Object System.Collections.Generic.List[object]
+        foreach ($line in $st) {
+            if ($line.Length -lt 4) { continue }
+            $code = $line.Substring(0, 2); $rel = $line.Substring(3).Trim('"')
+            if ($code -ne '??' -and $code -ne '!!') { $changed.Add([pscustomobject]@{ code = $code; path = $rel }); continue }
+            $full = Join-Path $repoRoot $rel
+            $size = [long]0
+            try { $size = (Get-Item -LiteralPath $full -Force -ErrorAction Stop).Length } catch { }
+            $kind = '깃허브에 없음'; if ($code -eq '!!') { $kind = '제외 목록(.gitignore)' }
+            if ($rel -like '_private/*') {
+                # 비공개 폴더는 이름·크기만 (내용 확인값 계산 안 함)
+                $privateNames.Add([pscustomobject]@{ path = $rel; bytes = $size })
+                continue
+            }
+            $h = ''
+            if ($size -le 50MB) { $h = Get-FileSha256 $full }
+            $onlyHere.Add([pscustomobject]@{ kind = $kind; path = $rel; bytes = $size; sha256 = $h })
+        }
+        $rs.changedTracked = $changed
+        $rs.filesOnlyOnThisPc = $onlyHere
+        $rs.privateFolderFiles = $privateNames
+    }
+    $erpParent = Split-Path -Parent $repoRoot
+    $rs.erpParentFolder = $erpParent
+    $rs.erpParentItems = @(Get-ChildItem -LiteralPath $erpParent -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.Name })
+    $repoState = [pscustomobject]$rs
+    $rsJson = $repoState | ConvertTo-Json -Depth 8
+    [System.IO.File]::WriteAllText(($script:RunDirLP + '\ERP폴더상태.json'), $rsJson, $Utf8NoBom)
+    if (-not $inRepo) { Say '  ERP 저장소 폴더가 아닌 곳에서 실행 - 폴더 상태는 일부만 기록' 'Yellow' }
+    elseif (-not $gitExe) { Say '  git 프로그램을 못 찾음 - 폴더 목록만 기록 (깃허브 데스크톱 설치 확인)' 'Yellow' }
+    else {
+        Say ('  작업 칸(브랜치): ' + $repoState.branch + '  /  마지막 기록: ' + $repoState.head)
+        $col = 'Gray'; if ($repoState.changedTracked.Count -gt 0 -or $repoState.unpushed.Count -gt 0) { $col = 'Yellow' }
+        Say ('  저장 안 된 수정 {0}개, 깃허브에 안 올린 기록 {1}개, 이 PC 에만 있는 파일 {2}개 (비공개 폴더 제외)' -f $repoState.changedTracked.Count, $repoState.unpushed.Count, $repoState.filesOnlyOnThisPc.Count) $col
+    }
+} catch {
+    Say ('  폴더 상태 기록 실패: ' + (Get-InnerEx $_.Exception).Message) 'Yellow'
+}
+
 # ---- [3] 합계 + 무결성 확인값 + manifest
 $allRecs = New-Object System.Collections.Generic.List[object]
 foreach ($b in $browsersOut) { foreach ($p in $b.profiles) { $allRecs.Add([pscustomobject]@{ label = ((Get-KoName $b.name) + '/' + (Get-KoName $p.name)); rec = $p }) } }
@@ -1066,6 +1153,7 @@ $manifest = [pscustomobject]@{
     linkedSkipped   = $script:LinkedSkipped
     linkedRefs      = $script:LinkedRefs
     linkedSweep     = [pscustomobject]@{ roots = $sweepRoots; maxDepth = $LinkedMaxDepth; dirsVisited = $script:SweepVisited.Count; truncated = $script:SweepTruncated; namePatterns = $LinkedNamePatterns }
+    repoStateFile   = 'ERP폴더상태.json'
     totals          = [pscustomobject]@{ files = $totFiles; bytes = $totBytes; failed = $totFailed; skipped = $totSkipped; linkedFiles = $script:Linked.Count; linkedBytes = $script:LinkedBytes }
 }
 try {
@@ -1120,6 +1208,7 @@ if ($script:Linked.Count -gt 0 -or $script:LinkedSkipped.Count -gt 0) {
 Say ('   복사          : 파일 {0}개, 총 {1}  (걸린 시간 {2:N0}초)' -f $totFiles, (Format-Size $totBytes), $watch.Elapsed.TotalSeconds)
 if ($totFailed -gt 0) { Say ('   실패          : {0}개  (목록 파일 manifest.json 참고)' -f $totFailed) 'Yellow' }
 else { Say '   실패          : 0개' }
+if ($repoState -and $repoState.gitFound -and $repoState.isGitRepo) { Say ('   ERP 폴더 상태 : 기록함 (작업 칸 ' + $repoState.branch + ', 저장 안 된 수정 ' + $repoState.changedTracked.Count + '개, 이 PC 에만 있는 파일 ' + $repoState.filesOnlyOnThisPc.Count + '개) → ERP폴더상태.json') }
 Say ('   저장 폴더     : ' + $script:RunDir)
 Say ''
 Say ' ※ 이 폴더에는 다른 사이트 로그인 정보도 들어 있습니다.' 'Yellow'
