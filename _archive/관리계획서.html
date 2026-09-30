@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><base href="../">
+<head><base href="../"><script src="_lib/sb-env.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>관리계획서 (Control Plan) — 사출 제조용 v2.1</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
@@ -1511,7 +1511,7 @@ function onJSONFileSelected(e){
 <script src="_lib/supabase.js"></script>
 <script>
 (function(){
- var URL="https://gyasbmiordkxcfpwgvio.supabase.co", KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF", CK="control_plan_v1", cid=Math.random().toString(36).slice(2), sb=null, _t=null;
+ var URL=window.SB_URL, KEY=window.SB_KEY, CK="control_plan_v1", cid=Math.random().toString(36).slice(2), sb=null, _t=null;
  function getSB(){ if(!sb&&window.supabase){ try{ sb=window.supabase.createClient(URL,KEY); }catch(e){} } return sb; }
  function push(){ var s=getSB(); if(!s||typeof collectData!=='function') return; var d; try{ d=collectData(); }catch(e){ return; } s.from('app_state').upsert({key:CK,value:d,src:cid,updated_at:new Date().toISOString()}).then(function(){},function(){}); }
  function schedule(){ clearTimeout(_t); _t=setTimeout(push,900); }

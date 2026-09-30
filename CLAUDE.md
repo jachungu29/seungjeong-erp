@@ -7,7 +7,7 @@
 > **이 저장소는 공개(PUBLIC)입니다.** 커밋하는 모든 파일(이 CLAUDE.md 포함)을 누구나 볼 수 있습니다.
 > - **절대 커밋 금지:** 비밀번호, IP 주소, NAS 호스트명·원격접속 ID, NAS/관리자 계정명, NAS 내부 파일 경로, JWT·API 키·service_role 키, 자체 호스팅 `.env` 내용
 > - 위 정보는 **회사 OneDrive `SEUNGJEONG_ERP_DEV\PRIVATE_인프라정보.md`에만** 둡니다(개인 OneDrive 사용 금지). 필요하면 사용자에게 그 파일을 열어 달라고 요청하세요. 그 내용은 저장소 파일·커밋 메시지·코드 주석 어디에도 옮기지 않습니다.
-> - `cloud.js` 등에 들어 있는 Supabase publishable 키는 원래 공개용이지만, 문서나 메모에 다시 복사하지 않습니다.
+> - 옛 Supabase publishable 키(지금은 공개 이력에만 남음)를 문서나 메모에 다시 복사하지 않습니다. DB 주소·키는 `_lib/sb-env.js`가 브라우저 저장값이나 git 제외 파일(`_lib/sb-config.json`)에서 읽으며, 저장소 파일에는 적지 않습니다.
 > - 커밋 전 점검(나온 결과는 하나씩 사람이 확인):
 >   `git diff --cached -U0 | grep -nE 'eyJhbGci|service_role|sb_secret_|JWT_SECRET|PASSWORD|[0-9]{1,3}(\.[0-9]{1,3}){3}'`
 > - `.gitignore`가 `.env`, `*.env`, `_KEYS*`, `*접속키*`, `BUILD_LOG*.txt`, `*.zip`, `*.bak`, `*_chk.js`를 막고 있습니다. 이 규칙을 지우지 마세요.
@@ -94,20 +94,22 @@
 ```
 /                     SEUNGJEONG ERP.html(유일한 시작 화면) · legacy.html(본체) · sos.html
                       manifest-erp.json · sw.js(데스크톱 앱 PWA) · manifest.json(안전신고 PWA) · 아이콘(sj-icon*.png, 승정.ico)
-_lib/                 cloud.js · supabase.js · sj-sheet.js · basis-data.js · xlsx.full.min.js  (공통 엔진)
-화면/                 화면 파일 전부(HTML 28개 + 브랜드 로고 SVG) — 한 폴더(2026-09-29 8개 폴더 통합)
+_lib/                 sb-env.js(DB 접속 설정) · cloud.js · supabase.js · sj-sheet.js · basis-data.js · xlsx.full.min.js  (공통 엔진)
+화면/                 화면 파일 전부(HTML 29개 + 브랜드 로고 SVG) — 한 폴더(2026-09-29 8개 폴더 통합, 2026-09-30 db-setup 추가)
 _archive/             참고문서·옛 화면(legacy가 아직 iframe으로 여는 것 포함: FMEA, 관리계획서, 도면관리, 조도관리, 수입검사 대장 등)
 eq_photos/            설비 사진 (브랜드 로고 SVG는 화면/ 폴더)
-tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
+tools/  docs/         멀티 PC 루틴 bat · supabase-setup.sql(DB 테이블 만들기) / 사용자 가이드
 _private/              비공개(깃허브 차단): 백업·분석·나스 접속키
 26_seungjeong_ERP/     사장님의 별도 깃허브 저장소(ERP와 무관, .gitignore로 제외 — 이 저장소에 절대 추가하지 않음)
 ```
 
 | 파일 | 역할 |
 |---|---|
-| `SEUNGJEONG ERP.html` | **유일한 시작 화면**(2026-09-29 사장님 지시로 옛 이동용 파일 index.html·index2.html 삭제). legacy 로고 클릭, 각 화면 '← 메인' 버튼, `manifest-erp.json` 시작 주소가 이 파일을 가리킵니다. `sw.js`의 미리 저장 목록(SHELL)은 회사PC 백업이 끝날 때까지 **일부러 그대로 둡니다**(바꾸면 모든 PC에서 서비스워커가 다시 설치됨 — 동결 기간). 백업 뒤 SHELL의 'index2.html'을 'SEUNGJEONG%20ERP.html'로, '로고/승정로고_투명.svg'를 '화면/승정로고_투명.svg'로(2026-09-29 폴더 통합으로 옮겨짐) 바꾸고, 캐시 이름 `sj-erp-shell-v1`은 절대 바꾸지 않습니다. 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `화면/rev0-map`, `화면/graph`, `화면/obsidian`, `화면/apps`. 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`화면/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
+| `SEUNGJEONG ERP.html` | **유일한 시작 화면**(2026-09-29 사장님 지시로 옛 이동용 파일 index.html·index2.html 삭제). legacy 로고 클릭, 각 화면 '← 메인' 버튼, `manifest-erp.json` 시작 주소가 이 파일을 가리킵니다. `sw.js`의 미리 저장 목록(SHELL)은 회사PC 백업이 끝날 때까지 **일부러 그대로 둡니다**(바꾸면 모든 PC에서 서비스워커가 다시 설치됨 — 동결 기간). 백업 뒤 SHELL의 'index2.html'을 'SEUNGJEONG%20ERP.html'로, '로고/승정로고_투명.svg'를 '화면/승정로고_투명.svg'로(2026-09-29 폴더 통합으로 옮겨짐) 바꾸고, 캐시 이름 `sj-erp-shell-v1`은 절대 바꾸지 않습니다. 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `화면/rev0-map`, `화면/graph`, `화면/obsidian`, `화면/apps`, `화면/db-setup`(DB 연결 설정). 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`화면/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
 | `legacy.html` | **ERP 본체 SPA(약 52MB, v378 프로토타입 기반 REV-0).** 좌측 NAV와 전체 뷰가 들어 있습니다. **절대 통째로 Read하지 않습니다**(§5 참조). |
-| `_lib/cloud.js` | 공통 Supabase 헬퍼(약 58줄). `window.SB_URL/SB_KEY`, `window.SB`, `window.__CID`, `window.Cloud`. 반드시 `_lib/supabase.js` 다음에 로드합니다. |
+| `_lib/sb-env.js` | **DB 접속 설정 단일 원본**(2026-09-30). `window.SB_URL/SB_KEY/SB_ENV_SRC`를 정합니다. 우선순위: 화면 지정 → 브라우저 저장값(`화면/db-setup.html`, localStorage `SJ_SB_URL/SJ_SB_KEY`) → `_lib/sb-config.json`(git 제외 — `.gitignore`가 막음, 형식은 `sb-config.example.json`. 더블클릭(file://)에서는 읽히지 않음) → 기본값 `http://<연 서버>:8000` 또는 `http://localhost:8000`. Supabase를 쓰는 모든 화면이 `<base>` 바로 다음에 이 파일을 로드합니다. **주소·키를 여기 적지 않습니다.** |
+| `_lib/cloud.js` | 공통 Supabase 헬퍼(약 58줄). `window.SB`, `window.__CID`, `window.Cloud`. 반드시 `_lib/sb-env.js` → `_lib/supabase.js` 다음에 로드합니다. |
+| `화면/db-setup.html`, `tools/supabase-setup.sql` | PC(브라우저)별 DB 주소·anon 키 입력·연결 시험 화면(런처 '설계 · 참고'의 'DB 연결 설정' 카드) / 7개 테이블+RLS+realtime을 만드는 SQL(여러 번 실행해도 안전). |
 | `_lib/supabase.js` | supabase-js v2 UMD 로컬 사본(`window.supabase.createClient`). **수정 금지.** CDN 대신 이 파일을 씁니다. |
 | `_lib/sj-sheet.js` | 영업·수주 9개 화면 공통 툴바(검색 + CSV). 한 곳 고치면 전체 반영. |
 | `_lib/basis-data.js` | 기준정보 마스터(398종 서식집 단일 원본). **아직 어느 화면에도 연결 안 됨**(보존용). |
@@ -145,7 +147,7 @@ _private/              비공개(깃허브 차단): 백업·분석·나스 접�
 **진입 흐름:** `SEUNGJEONG ERP.html`(유일한 시작 화면 — 더블클릭 또는 로컬 서버 주소/SEUNGJEONG%20ERP.html) → `legacy.html`(앱) → 메뉴를 누르면 네이티브 뷰 또는 iframe 화면이 뜹니다.
 
 **legacy.html의 배선** (줄번호는 바뀔 수 있으니 항상 Grep으로 다시 확인)
-- 975줄 `<script src="_lib/supabase.js"></script><script src="_lib/cloud.js">`
+- 975줄 `<script src="_lib/sb-env.js"></script><script src="_lib/supabase.js"></script><script src="_lib/cloud.js">`
 - 1446 `const _NAV_DEFAULT`, 1447 `function _nePatchNav`, 1448 `var _L2V={...}`(`var _GM`, `function _structToNav`, `function _neLoadNav`도 같은 줄), 1449 `let NAV = _neLoadNav();`, 1450~1453 map_struct 클라우드 구독. 1446·1448줄은 한 줄이 1만 자가 넘습니다.
 - 2748 `const EQREG`, 12167 `const VIEWS={`, 12172~ `SJ_*` 주입 블록, 12830 `function renderView`, 13247 `SJ_DB_KEY`, 13323 `sjStoreWrite`/`sjStoreRead`, 13561 `VIEWS.bom_cloud=`(iframe 화면 정의가 모인 곳). iframe `src`는 `화면/수주관리.html`처럼 **폴더 경로**입니다.
 - 렌더링: 메뉴 클릭 → `renderView()` → `VIEWS[current]()`가 돌려준 HTML을 그립니다. 메뉴 이름 → 뷰 id 변환은 `_L2V[name] || ('ph_'+name)`이고, 매핑이 없으면 '준비중' 빈 화면이 됩니다.
@@ -160,7 +162,7 @@ _private/              비공개(깃허브 차단): 백업·분석·나스 접�
 - `set`은 `app_state`에 `{key,value,src:__CID,updated_at}`를 upsert합니다.
 - `on`은 `postgres_changes`를 구독하고, `src===__CID`인 자기 변경은 무시합니다.
 - `app_state`가 없으면 조용히 로컬 모드로 동작합니다.
-- 페이지가 `cloud.js`보다 먼저 `window.SB_URL/SB_KEY`를 정의하면 그 값을 씁니다.
+- 페이지가 `cloud.js`보다 먼저 `window.SB_URL/SB_KEY`를 정의하면 그 값을 씁니다(보통은 `_lib/sb-env.js`가 정함).
 
 **화면 데이터 패턴 (화면 1개 = app_state 문서 1개)**
 1. localStorage로 먼저 그림
@@ -184,14 +186,14 @@ _private/              비공개(깃허브 차단): 백업·분석·나스 접�
   - `SJ_NAV_V2`, 인사고과 `SJ_HR_*`, 설비대장 확장 `sj_eq_ledger_v1`(전역 `EQL`), `spc_records_v1`, `drawingMgmt_v2`, `CP_INJ_V2`
 - "집과 사무실 화면·데이터가 다르다"는 문제의 원인은 대부분 이 로컬 전용 데이터입니다. 공유가 필요한 데이터는 반드시 app_state에 저장합니다.
 
-**URL/키 하드코딩 현황:** `_lib/cloud.js` 방식(legacy, graph, rev0-map, obsidian, apqp, isir, imds, 이상안전신고 등)과, 파일마다 `const SB_URL=…, SB_KEY=…`를 인라인으로 두는 방식(`_archive` 제외 약 19개 파일: apps, bom, 생산계획현황, 영업·출하·품질 화면 대부분, 사원마스터 등)이 섞여 있습니다. 불량관리·조도관리는 `/rest/v1/app_state`를 fetch로 직접 호출합니다. **새 화면은 URL/키를 하드코딩하지 말고 `cloud.js`(`window.SB`/`window.Cloud`)를 쓰세요.** DB 주소를 바꿀 때 cloud.js 한 곳만 고치면 되게 하려는 것입니다.
+**URL/키 설정:** 2026-09-30부터 저장소에 하드코딩된 URL·키가 없습니다. `_lib/cloud.js` 방식(legacy, graph, rev0-map, obsidian, apqp, isir, imds, 이상안전신고 등)과 파일마다 `const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY`를 인라인으로 두는 방식(`_archive` 제외 약 19개 파일: apps, bom, 생산계획현황, 영업·출하·품질 화면 대부분, 사원마스터 등) 모두 `_lib/sb-env.js`가 정한 `window.SB_URL/SB_KEY`를 씁니다. 불량관리·조도관리는 `/rest/v1/app_state`를 fetch로 직접 호출합니다. **새 화면은 `<base href="../">` 바로 다음에 `<script src="_lib/sb-env.js"></script>`를 넣고 `cloud.js`(`window.SB`/`window.Cloud`)를 쓰세요.** 주소나 키 문자열을 파일에 적지 않습니다(§0 원칙 5). 옛 인터넷 DB(Supabase) 프로젝트는 2026-09-29 사장님이 삭제했습니다.
 
 ---
 
 ## 4. 자주 쓰는 작업 레시피
 
 **A. 새 화면 추가 (정적 파일 + iframe, 가장 흔한 작업)**
-1. `화면/` 폴더에 `<화면>.html`을 만듭니다. `<head>` 맨 앞에 `<base href="../">`를 넣고, `<script src="_lib/supabase.js"></script><script src="_lib/cloud.js"></script>`를 넣고(CDN 금지), app_state 키는 `<기능>_v1`로 정합니다. no-cache meta 3종(Cache-Control/Pragma/Expires)을 넣고, 화면에 버전(예: `v1`)을 표시하고, 파비콘은 `sj-icon.png`, 다크 테마 CSS 변수(`--bg #0d1117` 등)를 씁니다. 영업·출하 계열은 수주관리.html/수요예측.html 프레임워크(KPI 카드, 대표이사 인쇄보고서)를 복제합니다.
+1. `화면/` 폴더에 `<화면>.html`을 만듭니다. `<head>` 맨 앞에 `<base href="../">`를 넣고, `<script src="_lib/sb-env.js"></script><script src="_lib/supabase.js"></script><script src="_lib/cloud.js"></script>`를 넣고(CDN 금지), app_state 키는 `<기능>_v1`로 정합니다. no-cache meta 3종(Cache-Control/Pragma/Expires)을 넣고, 화면에 버전(예: `v1`)을 표시하고, 파비콘은 `sj-icon.png`, 다크 테마 CSS 변수(`--bg #0d1117` 등)를 씁니다. 영업·출하 계열은 수주관리.html/수요예측.html 프레임워크(KPI 카드, 대표이사 인쇄보고서)를 복제합니다.
 2. legacy.html의 `VIEWS.bom_cloud=` 근처에 추가합니다.
    `if(typeof VIEWS!=='undefined'){VIEWS.<viewid>=function(){return '<iframe src="화면/<화면>.html" style="position:fixed;top:54px;left:248px;width:calc(100vw - 248px);height:calc(100vh - 54px);border:0;display:block;background:#fff;z-index:5"></iframe>';};}`
 3. `var _L2V={` 안에 `"<메뉴라벨>":"<viewid>"`를 넣습니다. 라벨은 map_struct의 name과 **공백까지 정확히** 같아야 하므로 공백 있는/없는 형태를 둘 다 등록합니다. 같은 키가 중복되면 뒤쪽이 이기니, 가능하면 기존 항목을 교체합니다.
@@ -266,12 +268,18 @@ _private/              비공개(깃허브 차단): 백업·분석·나스 접�
 
 **2026-09-29 화면 폴더 통합:** 화면 폴더 8개(영업·생산·품질·안전·인사·대시보드·설계·로고)의 파일 28개를 `화면/` 한 폴더로 옮겼습니다(파일 이름 그대로, `git mv`). legacy iframe 경로 31곳, 런처(로고·설계 카드), `sos.html`, `manifest.json`, 화면 사이 링크 5곳을 함께 고쳤습니다. `<base href="../">` 덕분에 화면 안의 `_lib/`·아이콘·'← 메인' 경로는 그대로 맞습니다. `sw.js` SHELL에 남은 옛 로고 경로는 동결 기간이라 그대로 둡니다(미리 저장 실패는 원래 무시됨).
 
-**진행 중: DB를 회사 NAS의 자체 호스팅 Supabase로 이전(사내 LAN 전용).** 정적 HTML + GitHub 구조는 유지하고(재개발 없음), NAS는 DB만 맡습니다. 기존 외부 Supabase 데이터는 삭제하지 않고 보존하며, 새 서버는 빈 테이블로 시작합니다. 남은 단계:
+**진행 중: DB를 회사 NAS의 자체 호스팅 Supabase(Docker)로 이전(사내 LAN 전용).** 정적 HTML + GitHub 구조는 유지하고(재개발 없음), NAS는 DB만 맡습니다. 옛 인터넷 DB(Supabase)는 2026-09-29 사장님이 삭제했으므로(되살리지 않음) 새 서버는 빈 테이블로 시작합니다. 남은 단계:
 1. 관리 대시보드 연결 문제 해결
 2. NAS 웹서버로 ERP 제공
-3. 빈 테이블 생성(`app_state`, `custom_pages`, `bom`, `production`, `item_master`, `partners`, `sales_order` + realtime 게시)
-4. `_lib/cloud.js`와 약 21개 파일의 `SB_URL/SB_KEY` 교체(또는 공통 설정으로 통합)
+3. 빈 테이블 생성 — `tools/supabase-setup.sql`(`app_state`, `custom_pages`, `bom`, `production`, `item_master`, `partners`, `sales_order` 7개 + 권한(RLS) + realtime 게시, 여러 번 실행해도 안전)을 Studio → SQL Editor → Run으로 실행
+4. ✅ `SB_URL/SB_KEY` 공통 설정으로 통합 완료(2026-09-30, `_lib/sb-env.js`). 남은 일: 각 PC 브라우저에서 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 연결 설정' 카드)로 주소·anon 키를 저장하고 연결 시험이 초록색인지 확인
 5. 자동 백업
+
+**DB 접속 설정 (2026-09-30):**
+- `_lib/sb-env.js`가 `window.SB_URL/SB_KEY/SB_ENV_SRC`를 정하는 단일 원본입니다. 우선순위: ① 화면이 먼저 정한 값 → ② 이 브라우저 저장값(`화면/db-setup.html`에서 입력, localStorage `SJ_SB_URL/SJ_SB_KEY`) → ③ `_lib/sb-config.json`(git 제외 — `.gitignore`가 막음, 형식은 `_lib/sb-config.example.json`) → ④ 기본값 `http://<연 서버>:8000`(http로 열었을 때) 또는 `http://localhost:8000`. 키가 없으면 화면은 로컬 모드로 동작합니다.
+- 더블클릭(file://)으로 열면 ③ 파일을 읽을 수 없으므로(파일 읽기 차단) 실제로는 ② 브라우저 저장값을 씁니다. 더블클릭 화면끼리는 저장값을 함께 쓰므로 `화면/db-setup.html`에서 한 번 저장하면 legacy와 모든 화면에 적용됩니다.
+- 새 DB에는 옛 인터넷 DB의 `custom_pages` BOM_LIST와 `bom` 278건이 없습니다. 남은 백업(브라우저백업·엑셀)에서 다시 넣어야 합니다(생산계획현황은 원본 화면을 직접 열므로 필요 없음).
+- 회사 NAS와 집 PC의 Docker Supabase는 서로 다른 DB입니다(자동 동기화 없음). 데이터까지 같게 하려면 한쪽을 원본으로 정해 옮깁니다.
 
 주소·계정·키·진단 절차는 **PRIVATE_인프라정보.md에만** 있습니다.
 

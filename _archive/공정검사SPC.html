@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"><head><base href="../"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPC / CPK 측정관리 (웹)</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <script>/*!
  * Chart.js v4.5.1
@@ -1230,7 +1230,7 @@ init();
 <script src="_lib/supabase.js"></script>
 <script>
 (function(){
- var URL="https://gyasbmiordkxcfpwgvio.supabase.co", KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF", CK="process_spc_v1", cid=Math.random().toString(36).slice(2), sb=null, _t=null, _loading=false;
+ var URL=window.SB_URL, KEY=window.SB_KEY, CK="process_spc_v1", cid=Math.random().toString(36).slice(2), sb=null, _t=null, _loading=false;
  function getSB(){ if(!sb&&window.supabase){ try{ sb=window.supabase.createClient(URL,KEY); }catch(e){} } return sb; }
  function bundle(){ try{ return {records:JSON.parse(localStorage.getItem("spc_records_v1")||"[]"), master:JSON.parse(localStorage.getItem("spc_master_v1")||"[]")}; }catch(e){ return null; } }
  function push(){ var s=getSB(); var b=bundle(); if(!s||!b) return; s.from("app_state").upsert({key:CK,value:b,src:cid,updated_at:new Date().toISOString()}).then(function(){},function(){}); }

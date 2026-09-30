@@ -2,7 +2,7 @@
    승정 ERP — Supabase 공통 클라이언트 + app_state(key/value) 동기화
    ★ 준비확인(probe): app_state 테이블이 있어야만 클라우드로 동작.
      없으면(=SQL 미실행) "같은 PC(로컬)" 모드로만 동작(에러 없음).
-   사용: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   사용: <script src="_lib/sb-env.js"></script><script src="_lib/supabase.js"></script>
          <script src="_lib/cloud.js"></script>
      · Cloud.get(key) → Promise(value|null)
      · Cloud.set(key, value)
@@ -10,8 +10,8 @@
      · Cloud.ready → Promise(true|false)
    =================================================================== */
 (function(){
-  window.SB_URL = window.SB_URL || "https://gyasbmiordkxcfpwgvio.supabase.co";
-  window.SB_KEY = window.SB_KEY || "sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+  // 접속 주소·키는 _lib/sb-env.js 한 곳에서 정합니다(이 파일보다 먼저 로드). 공개 저장소이므로 여기 적지 않습니다.
+  if(!window.SB_URL){ window.SB_URL='http://localhost:8000'; window.SB_KEY=window.SB_KEY||'no-key'; }
   if(!window.__CID) window.__CID = 'c'+Math.random().toString(36).slice(2,9);
 
   var sb=null;

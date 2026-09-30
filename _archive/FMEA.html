@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><base href="../">
+<head><base href="../"><script src="_lib/sb-env.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>품번별 FMEA 통합관리 시스템 | AIAG FMEA v4 / IATF 16949</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
@@ -1030,7 +1030,7 @@ async function dl(wb,name){
 <script src="_lib/supabase.js"></script>
 <script>
 (function(){
- var URL="https://gyasbmiordkxcfpwgvio.supabase.co", KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF", CK="fmea_docs_v1", cid=Math.random().toString(36).slice(2), sb=null;
+ var URL=window.SB_URL, KEY=window.SB_KEY, CK="fmea_docs_v1", cid=Math.random().toString(36).slice(2), sb=null;
  function getSB(){ if(!sb&&window.supabase){ try{ sb=window.supabase.createClient(URL,KEY); }catch(e){} } return sb; }
  function push(){ var s=getSB(); if(!s) return; var v=localStorage.getItem('fmea_system_v1'); if(v==null) return; s.from('app_state').upsert({key:CK,value:{raw:v},src:cid,updated_at:new Date().toISOString()}).then(function(){},function(){}); }
  window.__fmeaPush=push;

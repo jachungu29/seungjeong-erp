@@ -13,7 +13,7 @@
 - 진입 순서: `SEUNGJEONG ERP.html`(유일한 시작 화면, 약 11KB) → `legacy.html`(ERP 본체, 약 50MB)
   - 옛 이동용 파일 `index.html`·`index2.html`은 2026-09-29 삭제했습니다(사장님 지시). 로고·'← 메인' 버튼·앱 설치 시작 주소가 모두 `SEUNGJEONG ERP.html`을 가리킵니다. 인터넷 주소는 맨 앞(…/seungjeong-erp/)만으로는 열리지 않으니 …/seungjeong-erp/SEUNGJEONG%20ERP.html 을 씁니다.
 - 폴더 구조(2026-07-27 사무실 PC가 정리): 화면은 `화면/` 한 폴더(2026-09-29 8개 폴더 통합), 공통 엔진은 `_lib/`, 참고문서·옛 화면은 `_archive/`. 폴더 안 화면은 `<base href="../">`로 루트 기준 경로를 씁니다.
-- DB(현재): 외부 클라우드 Supabase를 씁니다. 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
+- DB(현재, 2026-09-30~): 회사 나스의 **자체 호스팅 Supabase(Docker)**로 옮기는 중입니다(사내망 전용). 옛 인터넷 DB(Supabase)는 2026-09-29 사장님이 삭제했습니다(되살리지 않음). 집 PC에도 같은 구성의 Docker Supabase가 있지만 나스와는 서로 다른 DB입니다(자동 동기화 없음). 접속 주소·키는 `_lib/sb-env.js`가 정하고, 값은 PC(브라우저)마다 `화면/db-setup.html`(런처 '설계 · 참고'의 'DB 연결 설정' 카드)에서 입력합니다(저장소에는 없음). 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
   - 그 밖의 테이블: `bom`, `production`, `item_master`, `partners`, `sales_order`, `custom_pages`
 - ISIR 성적서 PDF(18개, 약 445MB)는 저장소 밖 `C:\ERP\_ARCHIVE_isir_pdf`에 있습니다(PC마다 따로 보관).
 
@@ -57,7 +57,15 @@
 - 집 PC(9/28): GitHub 기준으로 맞춘 뒤 런처 `SEUNGJEONG ERP.html`(대분류 9칸은 '항목 추가 예정'), 멀티 PC 체계(`CLAUDE.md`, `tools\작업시작/종료.bat`, `.gitignore`·`.gitattributes`, `docs/멀티PC_작업가이드.md`)를 올림
   - 집 PC의 옛 상태는 그 PC의 로컬 브랜치 `backup/this-pc-2026-09-28`에 남아 있습니다(9/27 시작화면 전체 메뉴 복원본 포함).
 
-## 🔧 진행중 ① DB를 회사 NAS의 자체 호스팅 Supabase로 이전 (사내망 전용)
+## ✅ 2026-09-30 DB 설정 일원화 (코드 완료)
+- 하드코딩된 옛 클라우드 URL·키를 약 30개 파일에서 모두 제거 → `_lib/sb-env.js` 한 곳에서 결정.
+- 새 파일: `_lib/sb-env.js`, `_lib/sb-config.example.json`, `화면/db-setup.html`(주소·키 입력·연결 시험 — 런처 '설계 · 참고'의 'DB 연결 설정' 카드), `tools/supabase-setup.sql`(7개 테이블+RLS+realtime, 여러 번 실행 안전).
+- 설정 우선순위(`sb-env.js`): 화면이 먼저 정한 값 → 이 브라우저 저장값(db-setup, localStorage `SJ_SB_URL/SJ_SB_KEY`) → `_lib/sb-config.json`(git 제외 — `.gitignore`가 막음, 형식은 `sb-config.example.json`) → 기본값 `http://<연 서버>:8000` 또는 `http://localhost:8000`. 더블클릭(file://)에서는 sb-config.json을 읽지 못하므로 브라우저 저장값을 씁니다.
+- 각 PC에서 할 일: Docker Supabase Studio에서 `tools/supabase-setup.sql` 실행 → `화면/db-setup.html`에서 주소·anon 키 저장 → 연결 시험 초록색 확인 → ERP를 다시 열기(더블클릭).
+- 옛 인터넷 DB의 custom_pages BOM_LIST와 bom 278건은 새 DB에 없음 → 남은 백업(브라우저백업·엑셀)에서 다시 넣어야 함(생산계획현황은 원본 화면을 직접 열므로 필요 없음).
+- 월간 생산보고(`화면/prod-report.html`)는 정리본대로 클라우드 동기화 없음(이 PC 저장만) — 이번 합치기에서도 그대로 둠.
+
+## 🔧 진행중 ① DB를 회사 NAS의 자체 호스팅 Supabase로 이전 (사내망 전용) — 아래는 이전 기록(참고)
 - 설계:
   - 정적 HTML 코드와 GitHub는 그대로 둡니다. NAS는 DB 역할만 합니다.
   - 사무실 PC에서 웹 ERP를 열면 API를 통해 NAS 데이터를 읽고 씁니다.
@@ -78,7 +86,7 @@
 
 ## ⚠️ 폴더 구조 일원화 — 사장님 최종 결정 (2026-09-30)
 - **표준 = 집 컴퓨터 정리본(`화면/` 폴더 하나 구조)**. 사장님이 두 안을 비교한 뒤 직접 골랐습니다. 같은 날 아침 회사PC 클로드가 적었던 "분류 폴더가 표준, 집 PC 구조는 버림(재clone)" 기록은 **취소**합니다(사장님 결정 전 회사PC 클로드가 단독으로 적은 것).
-- 표준 구조: `SEUNGJEONG ERP.html`(유일한 시작 화면) · `legacy.html` · `화면/`(화면 29개, 로고 포함) · `sos.html` · `_archive/ _lib/ eq_photos/ tools/ docs/` · 비공개 `_private/` · 별도 저장소 `26_seungjeong_ERP/`(제외). index.html·index2.html·참고/ 등은 삭제됨.
+- 표준 구조: `SEUNGJEONG ERP.html`(유일한 시작 화면) · `legacy.html` · `화면/`(화면 30개, 로고 포함 — 2026-09-30 db-setup 추가) · `sos.html` · `_archive/ _lib/ eq_photos/ tools/ docs/` · 비공개 `_private/` · 별도 저장소 `26_seungjeong_ERP/`(제외). index.html·index2.html·참고/ 등은 삭제됨.
 - 회사PC 맞추는 법: 재clone 하지 말고 ① `tools\작업시작.bat`(최신 받기) ② `tools\브라우저백업.bat`(백업) → 사장님이 "백업 끝"이라고 하면 집PC 클로드가 master 에 반영 → ③ 회사PC `작업시작.bat` 한 번 더. 옛 분류 폴더에 회사PC에만 있는 파일이 남아 있으면 폴더가 안 사라질 수 있으니 확인.
 
 ## 🔧 진행중 ② 멀티 PC 체계 마무리

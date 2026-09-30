@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BOM LIST · 클라우드 앱</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
@@ -20,7 +20,7 @@ html,body{margin:0;padding:0;height:100%;background:#0d1117;color:#e6edf3;font-f
 <iframe id="frame"></iframe>
 <script src="_lib/supabase.js"></script>
 <script>
-var sb=window.supabase.createClient("https://gyasbmiordkxcfpwgvio.supabase.co","sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF");
+var sb=window.supabase.createClient(window.SB_URL,window.SB_KEY);
 function st(t){var e=document.getElementById("st");if(e)e.textContent=t;}
 function fail(msg){document.getElementById("load").style.display="none";if(msg)document.getElementById("emsg").textContent=msg;document.getElementById("err").classList.add("on");}
 async function boot(){

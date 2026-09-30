@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>수입검사 업무 절차서 (편집형)</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <style>
@@ -198,7 +198,7 @@ body.editing .addrev{display:block}
 <script src="_lib/supabase.js"></script>
 <script>
 const KEY="iip_doc_v5", CKEY="iip_doc_v5";
-const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY;
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 const el=id=>document.getElementById(id);
 let EDIT=false, dirty=false, DEF={};

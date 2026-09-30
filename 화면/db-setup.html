@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<base href="../">
+<script src="_lib/sb-env.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>DB 접속 설정 · 승정 ERP</title>
+<link rel="icon" href="sj-icon.png">
+<style>
+:root{--bg:#0d1117;--card:#161b22;--line:#30363d;--tx:#e6edf3;--mute:#8b949e;--acc:#15408F;--gold:#F2C14E;--ok:#3fb950;--bad:#f85149}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:14px}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px}
+h1{font-size:20px;margin:0 0 4px}
+h1 small{font-size:12px;color:var(--mute);font-weight:400;margin-left:6px}
+.sub{color:var(--mute);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 12px;color:var(--gold)}
+label{display:block;color:var(--mute);font-size:12px;margin:10px 0 4px}
+input{width:100%;padding:9px 10px;border-radius:6px;border:1px solid var(--line);background:#0b0f14;color:var(--tx);font-family:Consolas,monospace;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button{padding:9px 14px;border-radius:6px;border:1px solid var(--line);background:#21262d;color:var(--tx);cursor:pointer;font-size:13px}
+button.pri{background:var(--acc);border-color:var(--acc)}
+button:hover{filter:brightness(1.2)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child{color:var(--mute);width:130px}
+code{font-family:Consolas,monospace;word-break:break-all}
+#msg{margin-top:12px;white-space:pre-wrap;font-size:13px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+ol{margin:0;padding-left:20px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>DB 접속 설정 <small>v1</small></h1>
+  <p class="sub">이 PC(이 브라우저)가 어느 Supabase 서버를 쓸지 정합니다. 입력한 값은 이 브라우저에만 저장되고 GitHub에는 올라가지 않습니다.</p>
+
+  <div class="card">
+    <h2>현재 설정</h2>
+    <table>
+      <tr><td>서버 주소</td><td><code id="curUrl"></code></td></tr>
+      <tr><td>키</td><td id="curKey"></td></tr>
+      <tr><td>설정 출처</td><td id="curSrc"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>이 브라우저에 저장</h2>
+    <label for="url">서버 주소 (예: http://서버이름:8000 · 집 PC는 http://localhost:8000)</label>
+    <input id="url" placeholder="http://localhost:8000" autocomplete="off">
+    <label for="key">anon 키 (Docker 폴더 supabase\docker\.env 의 ANON_KEY 값)</label>
+    <input id="key" type="password" placeholder="eyJ..." autocomplete="off">
+    <div class="row">
+      <button class="pri" id="bSave">저장</button>
+      <button id="bTest">연결 시험</button>
+      <button id="bShow">키 보기</button>
+      <button id="bClear">저장값 지우기</button>
+    </div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="card">
+    <h2>처음 한 번 할 일 (PC마다)</h2>
+    <ol>
+      <li>Docker Desktop에서 Supabase가 실행 중인지 확인합니다.</li>
+      <li>Supabase 관리화면(Studio) → SQL Editor에 <code>tools/supabase-setup.sql</code> 내용을 붙여 넣고 Run을 누릅니다. (여러 번 실행해도 안전)</li>
+      <li>위 칸에 서버 주소와 anon 키를 넣고 <b>저장</b> → <b>연결 시험</b>이 초록색이면 끝.</li>
+      <li>ERP를 새로고침(Ctrl+F5)합니다.</li>
+    </ol>
+  </div>
+</div>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var SRC={page:'화면 지정',browser:'이 브라우저에 저장한 값',file:'_lib/sb-config.json 파일',default:'기본값(키 없음 → 로컬 모드)'};
+  function show(){
+    $('curUrl').textContent=window.SB_URL;
+    $('curKey').innerHTML=window.SB_CONFIGURED?'<span class="ok">있음</span>':'<span class="bad">없음</span>';
+    $('curSrc').textContent=SRC[window.SB_ENV_SRC]||window.SB_ENV_SRC;
+    try{ $('url').value=localStorage.getItem('SJ_SB_URL')||window.SB_URL; $('key').value=localStorage.getItem('SJ_SB_KEY')||''; }catch(e){}
+  }
+  function msg(t,ok){ $('msg').className=ok?'ok':'bad'; $('msg').textContent=t; }
+  function vals(){ return {u:$('url').value.trim().replace(/\/+$/,''), k:$('key').value.trim()}; }
+  $('bSave').onclick=function(){
+    var v=vals(); if(!/^https?:\/\//.test(v.u)) return msg('주소는 http:// 또는 https:// 로 시작해야 합니다.',false);
+    if(!v.k) return msg('anon 키를 넣어 주세요.',false);
+    try{ localStorage.setItem('SJ_SB_URL',v.u); localStorage.setItem('SJ_SB_KEY',v.k); }catch(e){ return msg('저장 실패: '+e.message,false); }
+    msg('저장했습니다. 페이지를 다시 불러옵니다…',true); setTimeout(function(){location.reload();},600);
+  };
+  $('bClear').onclick=function(){
+    try{ localStorage.removeItem('SJ_SB_URL'); localStorage.removeItem('SJ_SB_KEY'); }catch(e){}
+    msg('지웠습니다. 다시 불러옵니다…',true); setTimeout(function(){location.reload();},600);
+  };
+  $('bShow').onclick=function(){ var k=$('key'); k.type=k.type==='password'?'text':'password'; };
+  $('bTest').onclick=function(){
+    var v=vals(); if(!v.k) return msg('anon 키를 넣어 주세요.',false);
+    msg('시험 중…',true);
+    fetch(v.u+'/rest/v1/app_state?select=key&limit=1',{headers:{apikey:v.k,Authorization:'Bearer '+v.k}})
+      .then(function(r){
+        if(r.ok) return msg('연결 성공 — app_state 테이블이 보입니다.',true);
+        return r.text().then(function(t){
+          if(r.status===404||/does not exist|PGRST205|42P01/.test(t)) msg('서버는 연결됐지만 테이블이 없습니다. tools/supabase-setup.sql을 실행해 주세요.',false);
+          else if(r.status===401||r.status===403) msg('키가 맞지 않습니다('+r.status+'). .env의 ANON_KEY를 다시 확인해 주세요.',false);
+          else msg('응답 오류 '+r.status+': '+t.slice(0,200),false);
+        });
+      })
+      .catch(function(e){ msg('서버에 닿지 않습니다. 주소·Docker 실행 여부를 확인해 주세요.\n(GitHub Pages(https)에서 사내 http 서버는 브라우저가 막을 수 있습니다.)\n'+e.message,false); });
+  };
+  show();
+})();
+</script>
+</body>
+</html>

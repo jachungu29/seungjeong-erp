@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>품질관리 · 승정 ERP</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <style>
@@ -103,7 +103,7 @@ const FGMAP={};FG.forEach(x=>FGMAP[x.pno]=x);
 const FGC={"A3204-JK101":"티에스모스트","A3204-AC301":"티에스모스트","2134-710170-10":"현담 아산","A0908-MQ402":"티에스모스트","1211-K47560-2":"현담 아산","1211-M38020":"현담테크","1058-K40220-10":"현담","1107-K41600-11":"현담"};
 const EQLIST=["수직 1호기","수직 2호기","수직 4호기","수직 5호기","수직 6호기","수직 7호기","수직 8호기","수평 1호기","수평 2호기","수평 3호기","수평 4호기","수평 6호기","수평 7호기","수평 9호기","볼압입 리크검사","양방향 호스조립","단방향 호스조립"];
 const LSKEY="quality_v1", CKEY="quality_v1";
-const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY;
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 const el=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
