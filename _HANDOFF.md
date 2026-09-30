@@ -73,6 +73,11 @@
   6. 인터넷이 없어도 되도록, CDN으로 불러오는 라이브러리(Chart.js, xlsx, exceljs, html2canvas, qrcode)의 로컬 사본 검토
 - 서버 주소·계정·키는 이 저장소에 적지 않습니다. 필요하면 사용자에게 OneDrive `PRIVATE_인프라정보.md`를 확인해 달라고 합니다.
 
+## ⚠️ 폴더 구조 일원화 결정 (2026-09-30)
+- **표준 = GitHub의 분류폴더 구조**(`영업/ 생산/ 품질/ 안전/ 인사/ 대시보드/ 설계/ 참고/ 기준정보/ 로고/` + `index.html·index2.html·SEUNGJEONG ERP.html`). 회사PC·GitHub가 이 구조로 일치함.
+- 집 PC가 화면들을 `화면` 폴더 하나로 뭉쳐 놓은 상태(미커밋 로컬 변경)는 **버림**. legacy·전 화면 링크가 분류폴더 경로에 의존하므로 구조를 바꾸면 안 됨.
+- 집 PC 조치: 기존 폴더를 `_old`로 이름변경 백업 후 GitHub에서 **재clone**하여 분류폴더 구조로 맞춤.
+
 ## 🔧 진행중 ② 멀티 PC 체계 마무리
 1. 사무실 PC에서 `tools\작업시작.bat`을 처음 실행해 최신 코드(이번 런처·bat·문서)를 받습니다.
 2. 메모리 통합을 확인합니다: 각 PC의 `%USERPROFILE%\.claude\projects\C--ERP-seungjeong-erp\memory`와 OneDrive `claude-memory`.
