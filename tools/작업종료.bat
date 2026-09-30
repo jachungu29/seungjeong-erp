@@ -8,6 +8,7 @@ rem   [1] 이 PC 의 Claude 메모리를 회사 OneDrive 로 복사
 rem       - 더 최신 파일만 덮어씀. 아무것도 지우지 않음.
 rem   [2] Claude 설정 파일(settings.json)을 OneDrive 에 백업 (더 최신일 때만)
 rem   [3] 코드 변경 확인 (git status) - 자동 Commit/Push 는 하지 않음
+rem  * 이 PC 에 회사 OneDrive 가 없어도 [3] 코드 변경 확인은 합니다. [1][2] 만 건너뜁니다.
 rem  * 개인 OneDrive 는 절대 쓰지 않습니다. 회사 OneDrive 만 씁니다.
 rem  * GitHub 저장소가 공개되어 있으므로 이 파일에 비밀번호, 서버 주소,
 rem    키 같은 비밀 정보를 절대 적지 마세요.
@@ -57,6 +58,7 @@ for /d %%D in ("%USERPROFILE%\OneDrive - *") do if not defined OD if /i not "%%~
 if defined OD set "OD_HOW=폴더 이름 검색"
 :OD_CHECK
 rem ---- [OneDrive 감지 끝] ----
+set "OD_MISSING="
 if not defined OD goto :NO_OD
 if not exist "%OD%\" goto :NO_OD
 for %%I in ("%OD%\.") do set "OD=%%~fI"
@@ -68,8 +70,26 @@ set "SET_LOCAL=%UPROF%\.claude\settings.json"
 set "SET_CLOUD=%DEV%\claude-settings.json"
 echo  회사 OneDrive : "%OD%"
 echo.
+goto :MEM_STEP
+
+:NO_OD
+rem  회사 OneDrive 가 없어도 여기서 멈추지 않습니다.
+rem  [1] 메모리 / [2] 설정 올리기만 건너뛰고, [3] 코드 변경 확인은 그대로 합니다.
+rem  개인 OneDrive 로 대신 복사하지 않습니다. (회사 자료는 회사 OneDrive 에만)
+set "OD_MISSING=1"
+echo  [주의] 회사 OneDrive (승정) 폴더를 찾지 못했습니다.
+echo         Claude 메모리와 설정 올리기만 건너뛰고, 코드 변경 확인은 그대로 합니다.
+echo         회사 OneDrive 로그인 방법은 맨 아래에 있습니다.
+if defined SJ_TEST_OD echo    [테스트] SJ_TEST_OD 폴더 없음: "%SJ_TEST_OD%"
+echo.
+echo [1/3] Claude 메모리 올리기: 건너뜀 - 회사 OneDrive 없음
+echo.
+echo [2/3] Claude 설정 파일(settings.json) 백업: 건너뜀 - 회사 OneDrive 없음
+set "SET_RESULT=건너뜀 - 회사 OneDrive 없음"
+goto :GIT_STEP
 
 rem ================= [1/3] Claude 메모리 올리기 =================
+:MEM_STEP
 echo [1/3] Claude 메모리 올리기: 이 PC → 회사 OneDrive  (더 최신 파일만, 삭제 없음)
 set "BAD_DIR=%MEM_CLOUD%"
 if not exist "%MEM_CLOUD%\" mkdir "%MEM_CLOUD%" 2>nul
@@ -123,9 +143,12 @@ set "SET_RESULT=백업 실패 - 직접 확인 필요"
 echo    → %SET_RESULT%
 
 rem ================= [3/3] 코드 변경 확인 =================
+:GIT_STEP
 echo.
 echo [3/3] 코드 변경 확인 (GitHub)
 set "GIT_RESULT="
+set "GIT_OK="
+if defined SJ_TEST_NOGIT set "GIT_OK=1"
 if defined SJ_TEST_NOGIT set "GIT_RESULT=건너뜀 - 테스트 모드"
 if defined SJ_TEST_NOGIT echo    → 건너뜀 - 테스트 모드
 if defined SJ_TEST_NOGIT goto :SUMMARY
@@ -135,6 +158,7 @@ if not exist "%REPO%\.git\" goto :GIT_NOREPO
 set "GSTAT=%TEMP%\sj_gitstatus_%RANDOM%%RANDOM%.txt"
 "%GIT%" -C "%REPO%" -c core.quotepath=false status --short >"%GSTAT%" 2>nul
 if errorlevel 1 goto :GIT_STATUS_FAIL
+set "GIT_OK=1"
 set /a CHANGED=0
 for /f "usebackq delims=" %%L in ("%GSTAT%") do set /a CHANGED+=1
 rem  Commit 은 했지만 아직 Push 안 한 개수 (확인 못 하면 0 으로 둠)
@@ -187,6 +211,7 @@ echo  [주의] 이 폴더는 git 저장소가 아니라서 코드 확인을 건�
 goto :SUMMARY
 
 :SUMMARY
+if defined OD_MISSING goto :SUMMARY_NO_OD
 echo.
 echo ================================================================
 echo  작업 종료 정리 완료
@@ -202,18 +227,35 @@ call :PAUSE_END
 endlocal
 exit /b 0
 
-rem ================= 오류 처리 =================
-:NO_OD
+rem ================= 회사 OneDrive 없음: 요약 =================
+:SUMMARY_NO_OD
 echo.
-echo  [오류] 회사 OneDrive (승정) 폴더를 찾지 못했습니다.
+echo ================================================================
+if defined GIT_OK echo  작업 종료 정리 완료 - 단, Claude 메모리는 올리지 못함
+if not defined GIT_OK echo  [주의] Claude 메모리도 못 올리고 코드 변경 확인도 못 했습니다. 위 [주의] 안내를 확인하세요.
+echo    회사 OneDrive : 찾지 못함 - 이 PC 에 로그인돼 있지 않음
+echo    Claude 메모리 : 건너뜀 - 회사 OneDrive(승정)가 이 PC에 로그인돼 있지 않음 (로그인 방법은 바로 아래 안내)
+echo    Claude 설정   : %SET_RESULT%
+echo    코드 (GitHub) : %GIT_RESULT%
+echo.
+echo  ※ 이 PC 에서 새로 생긴 Claude 메모리는 다른 PC 로 넘어가지 않았습니다.
+echo  [회사 OneDrive 로그인 방법] 로그인한 뒤 이 파일을 다시 실행하면 Claude 메모리도 올라갑니다.
 echo    1. 화면 오른쪽 아래 작업표시줄의 구름 모양 OneDrive 아이콘을 누릅니다.
 echo    2. 회사 계정(승정)으로 로그인하고 동기화가 끝날 때까지 기다립니다.
 echo    3. 파일 탐색기 왼쪽에 "OneDrive - 승정" 이 보이면 이 파일을 다시 실행합니다.
 echo    ※ 개인 OneDrive 는 쓰지 않습니다. 회사 자료는 회사 OneDrive 에만 저장합니다.
-echo    아무것도 복사하지 않고 종료합니다.
-echo    코드 변경은 따로 GitHub Desktop에서 Commit -^> Push 하세요.
-if defined SJ_TEST_OD echo    [테스트] SJ_TEST_OD 폴더 없음: "%SJ_TEST_OD%"
+echo.
+echo  ※ 다른 PC 에서는 먼저 tools\작업시작.bat 을 실행하세요.
+echo ================================================================
 call :PAUSE_END
+rem  코드 변경 확인까지 못 했을 때만 1 로 끝냅니다. (OneDrive 없음만으로는 0)
+if not defined GIT_OK goto :EXIT_CODE_FAIL
+endlocal
+exit /b 0
+
+rem ================= 오류 처리 =================
+:EXIT_CODE_FAIL
+endlocal
 exit /b 1
 
 :MKDIR_FAIL

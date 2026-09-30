@@ -8,6 +8,7 @@ rem   [1] GitHub 에서 최신 코드 받기  (git pull --ff-only)
 rem   [2] 회사 OneDrive 의 Claude 메모리를 이 PC 로 복사
 rem       - 더 최신 파일만 덮어씀. 아무것도 지우지 않음.
 rem   [3] 이 PC 에 Claude 설정 파일이 없을 때만 OneDrive 백업본을 복사
+rem  * 이 PC 에 회사 OneDrive 가 없어도 [1] 코드 받기는 합니다. [2][3] 만 건너뜁니다.
 rem  * 개인 OneDrive 는 절대 쓰지 않습니다. 회사 OneDrive 만 씁니다.
 rem  * 한 번에 한 PC 에서만 작업하세요. 집과 사무실 동시 작업 금지.
 rem  * GitHub 저장소가 공개되어 있으므로 이 파일에 비밀번호, 서버 주소,
@@ -58,6 +59,7 @@ for /d %%D in ("%USERPROFILE%\OneDrive - *") do if not defined OD if /i not "%%~
 if defined OD set "OD_HOW=폴더 이름 검색"
 :OD_CHECK
 rem ---- [OneDrive 감지 끝] ----
+set "OD_MISSING="
 if not defined OD goto :NO_OD
 if not exist "%OD%\" goto :NO_OD
 for %%I in ("%OD%\.") do set "OD=%%~fI"
@@ -69,10 +71,25 @@ set "SET_LOCAL=%UPROF%\.claude\settings.json"
 set "SET_CLOUD=%DEV%\claude-settings.json"
 echo  회사 OneDrive : "%OD%"
 echo.
+goto :GIT_STEP
+
+:NO_OD
+rem  회사 OneDrive 가 없어도 여기서 멈추지 않습니다.
+rem  [1] 코드 받기는 그대로 하고, [2] 메모리 / [3] 설정 복사만 건너뜁니다.
+rem  개인 OneDrive 로 대신 복사하지 않습니다. (회사 자료는 회사 OneDrive 에만)
+set "OD_MISSING=1"
+echo  [주의] 회사 OneDrive (승정) 폴더를 찾지 못했습니다.
+echo         최신 코드 받기는 그대로 하고, Claude 메모리와 설정 복사만 건너뜁니다.
+echo         회사 OneDrive 로그인 방법은 맨 아래에 있습니다.
+if defined SJ_TEST_OD echo    [테스트] SJ_TEST_OD 폴더 없음: "%SJ_TEST_OD%"
+echo.
 
 rem ================= [1/3] 최신 코드 받기 =================
+:GIT_STEP
 echo [1/3] GitHub 에서 최신 코드 받는 중...
 set "GIT_RESULT="
+set "GIT_OK="
+if defined SJ_TEST_NOGIT set "GIT_OK=1"
 if defined SJ_TEST_NOGIT set "GIT_RESULT=건너뜀 - 테스트 모드"
 if defined SJ_TEST_NOGIT echo    → 건너뜀 - 테스트 모드
 if defined SJ_TEST_NOGIT goto :MEM_STEP
@@ -82,6 +99,7 @@ if not exist "%REPO%\.git\" goto :GIT_NOREPO
 set "GIT_TERMINAL_PROMPT=0"
 "%GIT%" -C "%REPO%" pull --ff-only
 if errorlevel 1 goto :GIT_PULL_FAIL
+set "GIT_OK=1"
 set "GIT_RESULT=최신 코드 받기 완료"
 echo    → 최신 코드 받기 완료
 goto :MEM_STEP
@@ -89,7 +107,8 @@ goto :MEM_STEP
 :GIT_PULL_FAIL
 set "GIT_RESULT=실패 - GitHub Desktop 확인 필요"
 echo.
-echo  [주의] 최신 코드를 받지 못했습니다. 메모리 복사는 계속 진행합니다.
+if not defined OD_MISSING echo  [주의] 최신 코드를 받지 못했습니다. 메모리 복사는 계속 진행합니다.
+if defined OD_MISSING echo  [주의] 최신 코드를 받지 못했습니다.
 echo    흔한 이유: 이 PC 에 아직 Commit/Push 하지 않은 수정이 있거나,
 echo               다른 PC 에서 올린 수정과 같은 파일이 겹쳤습니다.
 echo    해결 방법:
@@ -114,6 +133,7 @@ goto :MEM_STEP
 rem ================= [2/3] Claude 메모리 받기 =================
 :MEM_STEP
 echo.
+if defined OD_MISSING goto :MEM_SKIP
 echo [2/3] Claude 메모리 받기: 회사 OneDrive → 이 PC  (더 최신 파일만, 삭제 없음)
 set "BAD_DIR=%MEM_CLOUD%"
 if not exist "%MEM_CLOUD%\" mkdir "%MEM_CLOUD%" 2>nul
@@ -167,17 +187,38 @@ call :PAUSE_END
 endlocal
 exit /b 0
 
-rem ================= 오류 처리 =================
-:NO_OD
+rem ================= 회사 OneDrive 없음: [2][3] 건너뛰고 요약 =================
+:MEM_SKIP
+echo [2/3] Claude 메모리 받기: 건너뜀 - 회사 OneDrive 없음
 echo.
-echo  [오류] 회사 OneDrive (승정) 폴더를 찾지 못했습니다.
+echo [3/3] Claude 설정 파일(settings.json) 확인: 건너뜀 - 회사 OneDrive 없음
+echo.
+echo ================================================================
+if defined GIT_OK echo  작업 시작 준비 완료 - 단, Claude 메모리는 건너뜀
+if not defined GIT_OK echo  [주의] 최신 코드도 Claude 메모리도 받지 못했습니다. 위 [주의] 안내를 확인하세요.
+echo    회사 OneDrive : 찾지 못함 - 이 PC 에 로그인돼 있지 않음
+echo    최신 코드     : %GIT_RESULT%
+echo    Claude 메모리 : 건너뜀 - 회사 OneDrive(승정)가 이 PC에 로그인돼 있지 않음 (로그인 방법은 바로 아래 안내)
+echo    Claude 설정   : 건너뜀 - 회사 OneDrive 없음
+echo.
+echo  [회사 OneDrive 로그인 방법] 로그인한 뒤 이 파일을 다시 실행하면 Claude 메모리도 받습니다.
 echo    1. 화면 오른쪽 아래 작업표시줄의 구름 모양 OneDrive 아이콘을 누릅니다.
 echo    2. 회사 계정(승정)으로 로그인하고 동기화가 끝날 때까지 기다립니다.
 echo    3. 파일 탐색기 왼쪽에 "OneDrive - 승정" 이 보이면 이 파일을 다시 실행합니다.
 echo    ※ 개인 OneDrive 는 쓰지 않습니다. 회사 자료는 회사 OneDrive 에만 저장합니다.
-echo    아무것도 복사하지 않고 종료합니다.
-if defined SJ_TEST_OD echo    [테스트] SJ_TEST_OD 폴더 없음: "%SJ_TEST_OD%"
+echo.
+echo  ※ 한 번에 한 PC 에서만 작업하세요. 집/사무실 동시 작업 금지.
+echo  ※ 작업을 마치면 tools\작업종료.bat 을 꼭 더블클릭하세요.
+echo ================================================================
 call :PAUSE_END
+rem  코드 받기까지 못 했을 때만 1 로 끝냅니다. (OneDrive 없음만으로는 0)
+if not defined GIT_OK goto :EXIT_CODE_FAIL
+endlocal
+exit /b 0
+
+rem ================= 오류 처리 =================
+:EXIT_CODE_FAIL
+endlocal
 exit /b 1
 
 :MKDIR_FAIL
