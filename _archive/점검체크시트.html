@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>설비·안전·소방 정기점검 체크시트 · 승정</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <style>
@@ -165,7 +165,7 @@ const RES=["양호","주의","불량","해당없음"];
 var FILT={설비:null,안전:null,소방:null};var _FL=[];
 const EQLIST=["수직 1호기","수직 2호기","수직 3호기","수직 4호기","수직 5호기","수직 6호기","수직 7호기","수직 8호기","수평 1호기","수평 2호기","수평 3호기","수평 4호기","수평 6호기","수평 7호기","수평 9호기","볼압입 리크검사","양방향 호스조립","단방향 호스조립","유틸리티","공용"];
 const LSKEY="safety_inspect_v2", CKEY="safety_inspect_v2";
-const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY;
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 const el=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

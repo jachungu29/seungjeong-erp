@@ -13,7 +13,7 @@
 - 진입 순서: `index.html`·`index2.html`(작은 이동용 stub) → `SEUNGJEONG ERP.html`(대분류 런처, 약 9KB) → `legacy.html`(ERP 본체, 약 50MB)
   - `index2.html` stub은 지우지 않습니다. 데스크톱 앱(PWA) 시작 주소, 대시보드·apqp·isir 등이 아직 이 파일로 연결됩니다.
 - 폴더 구조(2026-07-27 사무실 PC가 정리): 화면은 `영업/ 생산/ 품질/ 안전/ 인사/ 대시보드/ 설계/ 참고/`, 공통 엔진은 `_lib/`, 참고문서·옛 화면은 `_archive/`. 폴더 안 화면은 `<base href="../">`로 루트 기준 경로를 씁니다.
-- DB(현재): 외부 클라우드 Supabase를 씁니다. 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
+- DB(현재, 2026-09-30~): **자체 호스팅 Docker Supabase**(회사 NAS, 집 PC 같은 구성). 외부 클라우드 Supabase는 삭제됨. 접속 주소·키는 `_lib/sb-env.js`가 정하고, 값은 PC마다 `설계/db-setup.html`에서 입력합니다(저장소에는 없음). 공통 헬퍼는 `_lib/cloud.js`(`Cloud.get/set/on`)이고, 화면 데이터는 `app_state(key, value, src, updated_at)` 키/값 테이블에 들어갑니다.
   - 그 밖의 테이블: `bom`, `production`, `item_master`, `partners`, `sales_order`, `custom_pages`
 - ISIR 성적서 PDF(18개, 약 445MB)는 저장소 밖 `C:\ERP\_ARCHIVE_isir_pdf`에 있습니다(PC마다 따로 보관).
 
@@ -54,7 +54,13 @@
 - 집 PC(9/28): GitHub 기준으로 맞춘 뒤 런처 `SEUNGJEONG ERP.html`(대분류 9칸은 '항목 추가 예정'), 멀티 PC 체계(`CLAUDE.md`, `tools\작업시작/종료.bat`, `.gitignore`·`.gitattributes`, `docs/멀티PC_작업가이드.md`)를 올림
   - 집 PC의 옛 상태는 그 PC의 로컬 브랜치 `backup/this-pc-2026-09-28`에 남아 있습니다(9/27 시작화면 전체 메뉴 복원본 포함).
 
-## 🔧 진행중 ① DB를 회사 NAS의 자체 호스팅 Supabase로 이전 (사내망 전용)
+## ✅ 2026-09-30 DB 설정 일원화 (코드 완료)
+- 하드코딩된 옛 클라우드 URL·키를 약 30개 파일에서 모두 제거 → `_lib/sb-env.js` 한 곳에서 결정.
+- 새 파일: `_lib/sb-env.js`, `_lib/sb-config.example.json`, `설계/db-setup.html`(주소·키 입력·연결 시험), `tools/supabase-setup.sql`(7개 테이블+RLS+realtime, 여러 번 실행 안전).
+- 각 PC에서 할 일: Docker Supabase Studio에서 SQL 실행 → db-setup.html에서 주소·anon 키 저장 → ERP를 http로 열기.
+- 옛 클라우드의 custom_pages(BOM_LIST·생산계획현황)와 bom 데이터는 새 DB에 없음 → 백업에서 복원 필요.
+
+## 🔧 진행중 ① DB를 회사 NAS의 자체 호스팅 Supabase로 이전 (사내망 전용) — 아래는 이전 기록(참고)
 - 설계:
   - 정적 HTML 코드와 GitHub는 그대로 둡니다. NAS는 DB 역할만 합니다.
   - 사무실 PC에서 웹 ERP를 열면 API를 통해 NAS 데이터를 읽고 씁니다.

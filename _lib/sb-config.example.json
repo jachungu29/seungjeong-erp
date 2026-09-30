@@ -1,0 +1,4 @@
+{
+  "url": "http://localhost:8000",
+  "key": "여기에 supabase/docker/.env 의 ANON_KEY 값"
+}

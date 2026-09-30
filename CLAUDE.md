@@ -85,7 +85,9 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 | `index.html`, `index2.html` | 약 300바이트 리다이렉트 stub(meta refresh + `location.replace`)으로 `SEUNGJEONG ERP.html`로 보냅니다. `manifest-erp.json`(start_url), `sw.js`, legacy 로고 클릭, 대시보드·apqp·imds·isir·production·이상안전이력 등이 `index2.html`을 링크하므로 **index2.html stub을 지우면 안 됩니다.** |
 | `SEUNGJEONG ERP.html` | 메인 런처(약 9KB). '앱 열기'로 `legacy.html`을 엽니다. 설계 카드: `설계/rev0-map`, `설계/graph`, `설계/obsidian`, `설계/apps`. 대분류 섹션 9개는 비어 있음("항목 추가 예정"). 상단 로고(`로고/승정로고_투명.svg`), 앱 카드 오른쪽 위 안전신고 QR 배지(`sos.html`, jsdelivr qrcode-generator로 그림), PWA 등록(manifest-erp.json + sw.js). |
 | `legacy.html` | **ERP 본체 SPA(약 52MB, v378 프로토타입 기반 REV-0).** 좌측 NAV와 전체 뷰가 들어 있습니다. **절대 통째로 Read하지 않습니다**(§5 참조). |
-| `_lib/cloud.js` | 공통 Supabase 헬퍼(약 58줄). `window.SB_URL/SB_KEY`, `window.SB`, `window.__CID`, `window.Cloud`. 반드시 `_lib/supabase.js` 다음에 로드합니다. |
+| `_lib/sb-env.js` | **DB 접속 설정 단일 원본**(2026-09-30). `window.SB_URL/SB_KEY/SB_ENV_SRC`를 정합니다. 우선순위: 화면 지정 → 브라우저 저장값(`설계/db-setup.html`, localStorage `SJ_SB_URL/SJ_SB_KEY`) → `_lib/sb-config.json`(git 제외, 형식은 `sb-config.example.json`) → 기본값 `http://<연 서버>:8000` 또는 `http://localhost:8000`. Supabase를 쓰는 모든 화면이 `<base>` 바로 다음에 이 파일을 로드합니다. **주소·키를 여기 적지 않습니다.** |
+| `_lib/cloud.js` | 공통 Supabase 헬퍼(약 58줄). `window.SB`, `window.__CID`, `window.Cloud`. 반드시 `_lib/sb-env.js` → `_lib/supabase.js` 다음에 로드합니다. |
+| `설계/db-setup.html`, `tools/supabase-setup.sql` | PC별 DB 주소·anon 키 입력·연결 시험 화면 / 7개 테이블+RLS+realtime을 만드는 SQL(여러 번 실행해도 안전). |
 | `_lib/supabase.js` | supabase-js v2 UMD 로컬 사본(`window.supabase.createClient`). **수정 금지.** CDN 대신 이 파일을 씁니다. |
 | `_lib/sj-sheet.js` | 영업·수주 9개 화면 공통 툴바(검색 + CSV). 한 곳 고치면 전체 반영. |
 | `_lib/basis-data.js` | 기준정보 마스터(398종 서식집 단일 원본). **아직 어느 화면에도 연결 안 됨**(보존용). |
@@ -163,14 +165,14 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
   - `SJ_NAV_V2`, 인사고과 `SJ_HR_*`, 설비대장 확장 `sj_eq_ledger_v1`(전역 `EQL`), `spc_records_v1`, `drawingMgmt_v2`, `CP_INJ_V2`
 - "집과 사무실 화면·데이터가 다르다"는 문제의 원인은 대부분 이 로컬 전용 데이터입니다. 공유가 필요한 데이터는 반드시 app_state에 저장합니다.
 
-**URL/키 하드코딩 현황:** `_lib/cloud.js` 방식(legacy, graph, rev0-map, obsidian, prod-plan, production, exec-dashboard, apqp, isir, imds, 이상안전신고 등)과, 파일마다 `const SB_URL=…, SB_KEY=…`를 인라인으로 두는 방식(`_archive` 제외 약 21개 파일: apps, bom, plan, itemmaster, prod-report, 영업·출하·품질 화면 대부분, 사원마스터 등)이 섞여 있습니다. 불량관리·조도관리는 `/rest/v1/app_state`를 fetch로 직접 호출합니다. **새 화면은 URL/키를 하드코딩하지 말고 `cloud.js`(`window.SB`/`window.Cloud`)를 쓰세요.** DB 주소를 바꿀 때 cloud.js 한 곳만 고치면 되게 하려는 것입니다.
+**URL/키 설정:** 2026-09-30부터 하드코딩된 URL·키가 저장소에 없습니다. 모든 화면(`cloud.js` 방식과 인라인 `const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY` 방식 모두)이 `_lib/sb-env.js`가 정한 `window.SB_URL/SB_KEY`를 씁니다. 불량관리·조도관리는 `/rest/v1/app_state`를 fetch로 직접 호출합니다. **새 화면은 `<base href="../">` 다음에 `<script src="_lib/sb-env.js"></script>`를 넣고 `cloud.js`(`window.SB`/`window.Cloud`)를 쓰세요.** 주소나 키 문자열을 파일에 적지 않습니다. 옛 외부 클라우드 Supabase 프로젝트는 삭제되었습니다.
 
 ---
 
 ## 4. 자주 쓰는 작업 레시피
 
 **A. 새 화면 추가 (정적 파일 + iframe, 가장 흔한 작업)**
-1. 알맞은 분류 폴더(`영업/`, `품질/` 등)에 `<화면>.html`을 만듭니다. `<head>` 맨 앞에 `<base href="../">`를 넣고, `<script src="_lib/supabase.js"></script><script src="_lib/cloud.js"></script>`를 넣고(CDN 금지), app_state 키는 `<기능>_v1`로 정합니다. no-cache meta 3종(Cache-Control/Pragma/Expires)을 넣고, 화면에 버전(예: `v1`)을 표시하고, 파비콘은 `sj-icon.png`, 다크 테마 CSS 변수(`--bg #0d1117` 등)를 씁니다. 영업·출하 계열은 수주관리.html/수요예측.html 프레임워크(KPI 카드, 대표이사 인쇄보고서)를 복제합니다.
+1. 알맞은 분류 폴더(`영업/`, `품질/` 등)에 `<화면>.html`을 만듭니다. `<head>` 맨 앞에 `<base href="../">`를 넣고, `<script src="_lib/sb-env.js"></script><script src="_lib/supabase.js"></script><script src="_lib/cloud.js"></script>`를 넣고(CDN 금지), app_state 키는 `<기능>_v1`로 정합니다. no-cache meta 3종(Cache-Control/Pragma/Expires)을 넣고, 화면에 버전(예: `v1`)을 표시하고, 파비콘은 `sj-icon.png`, 다크 테마 CSS 변수(`--bg #0d1117` 등)를 씁니다. 영업·출하 계열은 수주관리.html/수요예측.html 프레임워크(KPI 카드, 대표이사 인쇄보고서)를 복제합니다.
 2. legacy.html의 `VIEWS.bom_cloud=` 근처에 추가합니다.
    `if(typeof VIEWS!=='undefined'){VIEWS.<viewid>=function(){return '<iframe src="<폴더>/<화면>.html" style="position:fixed;top:54px;left:248px;width:calc(100vw - 248px);height:calc(100vh - 54px);border:0;display:block;background:#fff;z-index:5"></iframe>';};}`
 3. `var _L2V={` 안에 `"<메뉴라벨>":"<viewid>"`를 넣습니다. 라벨은 map_struct의 name과 **공백까지 정확히** 같아야 하므로 공백 있는/없는 형태를 둘 다 등록합니다. 같은 키가 중복되면 뒤쪽이 이기니, 가능하면 기존 항목을 교체합니다.
@@ -243,12 +245,13 @@ tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
 
 **2026-09-28 반영:** 집 PC를 GitHub(사무실 폴더 구조) 기준으로 맞추고, 그 위에 런처 개편(`SEUNGJEONG ERP.html` + index/index2 stub, 설계 링크는 `설계/` 경로), `.gitignore` 통합, `.gitattributes`, `tools/`, `docs/`, 이 CLAUDE.md, `_HANDOFF.md`를 한 커밋으로 올렸습니다. `sos.html`의 meta refresh 경로도 `안전/`로 고쳤습니다.
 
-**진행 중: DB를 회사 NAS의 자체 호스팅 Supabase로 이전(사내 LAN 전용).** 정적 HTML + GitHub 구조는 유지하고(재개발 없음), NAS는 DB만 맡습니다. 기존 외부 Supabase 데이터는 삭제하지 않고 보존하며, 새 서버는 빈 테이블로 시작합니다. 남은 단계:
-1. 관리 대시보드 연결 문제 해결
-2. NAS 웹서버로 ERP 제공
-3. 빈 테이블 생성(`app_state`, `custom_pages`, `bom`, `production`, `item_master`, `partners`, `sales_order` + realtime 게시)
-4. `_lib/cloud.js`와 약 21개 파일의 `SB_URL/SB_KEY` 교체(또는 공통 설정으로 통합)
-5. 자동 백업
+**진행 중: DB = 자체 호스팅 Supabase(Docker).** 외부 클라우드 Supabase 프로젝트는 **삭제됨**(2026-09-30 사용자 확인). 회사 NAS와 집 PC가 **같은 Docker Supabase 구성**을 가지며, 정적 HTML + GitHub 구조는 그대로 유지합니다. 코드 쪽 정리는 끝났습니다(`sb-env.js` 단일 설정, 하드코딩 제거, `tools/supabase-setup.sql`, `설계/db-setup.html`). 남은 단계:
+1. NAS와 집 PC의 Docker Supabase에서 `tools/supabase-setup.sql` 실행(Studio → SQL Editor → Run)
+2. 각 PC 브라우저에서 `설계/db-setup.html`로 주소·anon 키 저장 → 연결 시험 초록색 확인. (또는 NAS 웹서버/PC 저장소에 git 제외 파일 `_lib/sb-config.json`을 둠)
+3. ERP를 **http로** 엽니다: 사무실은 NAS 웹서버, 집은 `python -m http.server 8791` 등. GitHub Pages(https)에서는 사내 http 서버 호출을 브라우저가 막을 수 있습니다(localhost는 대체로 허용).
+4. 관리 대시보드 연결 문제 해결(남아 있다면)
+5. 자동 백업. 옛 클라우드의 `custom_pages`(BOM_LIST·생산계획현황 HTML)와 `bom` 278건은 새 DB에 없으므로, 남은 백업(브라우저백업·엑셀)에서 다시 넣어야 합니다.
+6. NAS ↔ 집 PC는 서로 다른 DB입니다. 데이터까지 같게 하려면 한쪽을 원본으로 정해 덤프·복원합니다(자동 동기화 없음).
 
 주소·계정·키·진단 절차는 **PRIVATE_인프라정보.md에만** 있습니다.
 

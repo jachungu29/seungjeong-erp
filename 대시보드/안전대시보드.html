@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>설비·안전·소방 종합 대시보드 · 승정</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <style>
@@ -93,7 +93,7 @@ tr:nth-child(even) td{background:#f8fafc}
 </div>
 <script src="_lib/supabase.js"></script>
 <script>
-const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY;
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 const el=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

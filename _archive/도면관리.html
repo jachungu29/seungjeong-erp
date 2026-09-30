@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><base href="../">
+<head><base href="../"><script src="_lib/sb-env.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>도면관리 시스템 | Drawing Management System</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
@@ -1860,7 +1860,7 @@ function cleanOrphanFiles(btn) {
 }
 
 // ======================== CLOUD (Supabase · 전 PC 공유) ========================
-const _SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", _SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const _SB_URL=window.SB_URL, _SB_KEY=window.SB_KEY;
 const _CKEY="quality_drawing_v2";
 let _sb=null; try{ if(window.supabase) _sb=window.supabase.createClient(_SB_URL,_SB_KEY); }catch(e){}
 let _cloudSaving=false;

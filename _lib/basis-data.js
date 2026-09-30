@@ -366,8 +366,8 @@
   root.SJ_BASIS = {
     source: '승정_전체양식_서식집_398종_v11.0_ERP설계.html',
     generatedNote: '기준정보 단일 원본 · 불러오기 페이지 전용',
-    supabaseUrl: 'https://gyasbmiordkxcfpwgvio.supabase.co',
-    supabaseKey: 'sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF',
+    supabaseUrl: window.SB_URL,
+    supabaseKey: window.SB_KEY,
     masters: MASTERS
   };
 })(window);

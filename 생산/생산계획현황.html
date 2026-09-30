@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>㈜승정 · 생산계획현황</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -366,7 +366,7 @@ const strip=cells=>`<div class="stats-strip">`+cells.map(c=>`<div class="stat-ca
 const itemOf=key=>{const p=key.split(':');return D[p[0]][+p[1]];};
 
 /* ===== 클라우드(전 PC 공유) ===== */
-const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY;
 let SB=null; try{SB=window.supabase.createClient(SB_URL,SB_KEY);}catch(e){}
 const CKEY="plan_week_2026_07", LSKEY="planweek_2026_07";
 async function cloudGet(k){if(!SB)return null;try{const r=await SB.from('app_state').select('value').eq('key',k).maybeSingle();return r&&r.data?r.data.value:null;}catch(e){return null;}}

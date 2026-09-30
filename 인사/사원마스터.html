@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><base href="../"><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ko"><head><base href="../"><script src="_lib/sb-env.js"></script><meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>사원 마스터 · 승정 ERP</title><link rel="icon" href="sj-icon.png"><link rel="apple-touch-icon" href="sj-icon.png">
 <style>
@@ -109,7 +109,7 @@ const DAYSTATUS=["근무중","종료"];
 const NATS=["한국","베트남","캄보디아","태국","네팔","미얀마","필리핀","우즈베키스탄","중국","기타"];
 const REASONS=["자진퇴사","계약만료","권고사직","정년퇴직","징계해고","기타"];
 const LSKEY="emp_master_v1", CKEY="emp_master_v1";
-const SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co", SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+const SB_URL=window.SB_URL, SB_KEY=window.SB_KEY;
 let sb=null; try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 let EMP={mgr:[],wrk:[],day:[],quit:[]}, dirty=false;
 

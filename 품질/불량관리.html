@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><base href="../">
+<head><base href="../"><script src="_lib/sb-env.js"></script>
 <link rel="icon" href="sj-icon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2338,8 +2338,8 @@ init();
 <script>
 /* ===== 승정 ERP 클라우드 동기화 (불량관리/HFP) ===== */
 (function(){
-  var SB_URL="https://gyasbmiordkxcfpwgvio.supabase.co";
-  var SB_KEY="sb_publishable_oMdTYbr11auTzSaYwY9Jew_qbKO3SbF";
+  var SB_URL=window.SB_URL;
+  var SB_KEY=window.SB_KEY;
   var CKEY="defect_hfp_v1";
   var LKEY="hfp_defect_all";
   function hdr(x){var o={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};if(x)for(var k in x)o[k]=x[k];return o;}

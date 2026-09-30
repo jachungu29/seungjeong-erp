@@ -8,6 +8,8 @@
 _KEYS*
 *접속키*
 BUILD_LOG*.txt
+# DB 접속 설정(주소·키) — PC·NAS 웹서버마다 따로 둠. 형식은 _lib/sb-config.example.json
+_lib/sb-config.json
 
 # 비공개 작업 폴더 (분석 보고서·키·서버 설정 등 — 이 PC에만, 절대 커밋 금지)
 _private/
