@@ -38,3 +38,6 @@ node_modules/
 
 # 파이썬 실행 때 생기는 임시 폴더
 __pycache__/
+
+# 별도 깃허브 저장소(26_seungjeong_ERP) — ERP 폴더 안에서 관리하지만 이 저장소에는 올리지 않음 (2026-09-30)
+26_seungjeong_ERP/

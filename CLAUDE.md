@@ -79,6 +79,8 @@ _lib/                 cloud.js · supabase.js · sj-sheet.js · basis-data.js ·
 _archive/             참고문서·옛 화면(legacy가 아직 iframe으로 여는 것 포함: FMEA, 관리계획서, 도면관리, 조도관리, 수입검사 대장 등)
 eq_photos/            설비 사진 (브랜드 로고 SVG는 화면/ 폴더)
 tools/  docs/         멀티 PC 루틴 bat / 사용자 가이드
+_private/              비공개(깃허브 차단): 백업·분석·나스 접속키
+26_seungjeong_ERP/     사장님의 별도 깃허브 저장소(ERP와 무관, .gitignore로 제외 — 이 저장소에 절대 추가하지 않음)
 ```
 
 | 파일 | 역할 |
